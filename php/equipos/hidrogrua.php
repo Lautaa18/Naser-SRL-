@@ -1,0 +1,1 @@
+<?php $title='Hidrogrúa';$subtitle='Inspecciones, mantenimiento y documentación operativa de hidrogrúas.';$image='Hidrogrua.jpeg';$sectorSlugs=['mantenimiento','hseq','operaciones'];require __DIR__.'/_asset.php';

@@ -1,0 +1,1 @@
+<?php $title='Trabajador';$subtitle='Personal operativo, capacitación, seguridad y documentación asociada.';$image='trabajador-slickline.jpeg';$sectorSlugs=['hseq','rrhh','operaciones'];require __DIR__.'/_asset.php';

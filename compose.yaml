@@ -1,0 +1,53 @@
+services:
+  db:
+    image: mariadb:11
+    container_name: naser_db
+    restart: unless-stopped
+    environment:
+      MARIADB_DATABASE: ${DB_NAME:-naser_sgi_prueba}
+      MARIADB_USER: ${DB_USER:-naser}
+      MARIADB_PASSWORD: ${DB_PASS:-naser2026}
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASS:-root2026}
+    volumes:
+      - naser_db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  web:
+    build: .
+    container_name: naser_web
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    environment:
+      DB_HOST: ${DB_HOST:-db}
+      DB_NAME: ${DB_NAME:-naser_sgi_prueba}
+      DB_USER: ${DB_USER:-naser}
+      DB_PASS: ${DB_PASS:-naser2026}
+      APP_BASE: ${APP_BASE:-}
+    volumes:
+      - ./:/var/www/html
+      - ./naser.ini:/usr/local/etc/php/conf.d/zz-naser.ini:ro
+    depends_on:
+      db:
+        condition: service_healthy
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: naser_phpmyadmin
+    restart: unless-stopped
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: db
+      PMA_USER: root
+      PMA_PASSWORD: ${DB_ROOT_PASS:-root2026}
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  naser_db_data:

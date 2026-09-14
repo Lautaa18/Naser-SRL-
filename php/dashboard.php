@@ -1,0 +1,21 @@
+<?php
+require __DIR__.'/config/auth.php'; requireLogin();
+require __DIR__.'/config/db.php'; require __DIR__.'/config/layout.php';
+$sectores=sectoresVisibles($pdo); $rol=$_SESSION['rol']??'';
+$ids=array_map(fn($s)=>(int)$s['id'],$sectores);
+$totalDocs=0; $totalCarpetas=0;
+if($ids){$ph=implode(',',array_fill(0,count($ids),'?'));$st=$pdo->prepare("SELECT COUNT(*) FROM documentos WHERE activo=1 AND sector_id IN ($ph)");$st->execute($ids);$totalDocs=(int)$st->fetchColumn();$st=$pdo->prepare("SELECT COUNT(*) FROM carpetas WHERE activa=1 AND sector_id IN ($ph)");$st->execute($ids);$totalCarpetas=(int)$st->fetchColumn();}
+$galeria=[
+ ['Trabajador','trabajador-slickline.jpeg','equipos/trabajador.php','Personal operativo y documentación asociada'],
+ ['Camión Slickline','Camion-Naser.png','equipos/camion-slickline.php','Unidad de Slickline, controles e inspecciones'],
+ ['Unidad Liviana','Unidad-liviana.png','equipos/unidad-liviana.php','Documentación de vehículos livianos'],
+ ['Hidrogrúa','Hidrogrua.jpeg','equipos/hidrogrua.php','Registros, inspecciones y documentación']
+];
+?><!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Panel principal | NASER SGI</title><link rel="stylesheet" href="<?=app_url('/style.css')?>"></head><body><div class="app"><?php sidebar($pdo,'inicio');?><main class="content">
+<header class="topbar"><div><p class="eyebrow">SERVICIOS NASER SRL</p><h1>Panel principal</h1><p>Gestión centralizada de documentación, sectores y operaciones.</p></div><div class="top-actions"><span class="status"><i></i>Sistema activo</span><span class="user-chip"><?=h($_SESSION['nombre'])?></span></div></header>
+<section class="dashboard-banner"><img src="<?=app_url('/img/sgi-corporativo.jpeg')?>" alt="Operación NASER"><div class="dashboard-banner-overlay"></div><div class="dashboard-banner-copy"><img src="<?=app_url('/img/logo-naser.png')?>" alt="NASER"><div><span>DIVISIÓN PETRÓLEO</span><strong>Compromiso · Seguridad · Operación</strong></div></div></section>
+<section class="stats"><article><span>ROL ACTUAL</span><strong><?=h($rol==='admin'?'Administrador':ucfirst($rol))?></strong><small>Nivel de acceso asignado</small></article><article><span>SECTORES</span><strong><?=count($sectores)?></strong><small>Sectores visibles</small></article><article><span>DOCUMENTOS</span><strong><?=$totalDocs?></strong><small>Archivos disponibles</small></article><article><span>CARPETAS</span><strong><?=$totalCarpetas?></strong><small>Organización documental</small></article></section>
+<section class="fleet-panel"><div class="section-head"><div><p class="eyebrow">ACCESOS DIRECTOS</p><h2>Flota y equipamiento operativo</h2><p>Ingresá a las fichas de recursos para consultar documentación e información asociada.</p></div></div><div class="fleet-images"><?php foreach($galeria as [$titulo,$img,$url,$desc]):?><a class="fleet-card" href="<?=app_url('/php/'.$url)?>"><div class="fleet-image"><img src="<?=app_url('/img/'.$img)?>" alt="<?=h($titulo)?>"></div><div class="fleet-card-body"><h3><?=h($titulo)?></h3><p><?=h($desc)?></p><span>Ver módulo →</span></div></a><?php endforeach;?></div></section>
+<section class="policy-panel"><p class="eyebrow">INFORMACIÓN GENERAL</p><h2>Política de Calidad, Ambiente, Seguridad y Salud</h2><p>El sistema concentra la información necesaria para acompañar las operaciones de Slickline, Well Testing y Flow Back, con foco en seguridad, calidad, ambiente y mejora continua.</p><div class="policy-grid"><span>✓ Mejora continua</span><span>✓ Cumplimiento legal y normativo</span><span>✓ Prevención de incidentes</span><span>✓ Trabajo seguro y saludable</span></div></section>
+<div class="section-head"><div><p class="eyebrow">GESTIÓN CENTRALIZADA</p><h2>Sectores habilitados</h2></div></div><section class="sector-grid"><?php foreach($sectores as $s):?><article class="sector-card"><div class="sector-code"><?=h(strtoupper(substr($s['nombre'],0,2)))?></div><h3><?=h($s['nombre'])?></h3><p>Carpetas, documentación y procedimientos del sector.</p><div class="card-links"><a href="<?=app_url('/php/sector.php?sector='.urlencode($s['slug']))?>">Abrir sector →</a></div></article><?php endforeach;?></section>
+</main></div></body></html>

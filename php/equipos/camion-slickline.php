@@ -1,0 +1,1 @@
+<?php $title='Camión Slickline';$subtitle='Unidad de Slickline, mantenimiento, inspecciones y registros operativos.';$image='Camion-Naser.png';$sectorSlugs=['operaciones','mantenimiento','hseq'];require __DIR__.'/_asset.php';

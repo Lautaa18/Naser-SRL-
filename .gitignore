@@ -1,0 +1,29 @@
+# Variables y credenciales
+.env
+.env.*
+!.env.example
+CUENTAS_PRUEBA.txt
+
+# Backups
+backups/*
+!backups/.gitkeep
+backup_*.sql
+*.bak
+
+# Documentos cargados
+uploads/*
+!uploads/.gitkeep
+
+# Carpeta NASER duplicada
+/naser/
+
+# Archivos temporales*.log
+*.tmp
+
+# Windows / macOS
+Thumbs.db
+.DS_Store
+
+# Editores
+.vscode/
+.idea/

@@ -1,0 +1,1 @@
+<?php $title='Unidad Liviana';$subtitle='Control de vehículos livianos, mantenimiento e inspecciones.';$image='Unidad-liviana.png';$sectorSlugs=['mantenimiento','hseq','operaciones'];require __DIR__.'/_asset.php';
