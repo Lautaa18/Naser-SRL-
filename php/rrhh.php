@@ -110,6 +110,12 @@ $eventosPorDia=[]; foreach($rows as $r){if(substr($r['fecha_vencimiento'],0,7)==
 <div class="table-wrapper"><table class="module-table"><thead><tr><th>Empleado</th><th>Tipo</th><th>Vencimiento</th><th>Observaciones</th><th>Última modificación</th><?php if($canEdit):?><th>Acciones</th><?php endif;?></tr></thead><tbody>
 <?php foreach($rows as $r):?><tr><td><strong><?=h($r['empleado_nombre'])?></strong></td><td><?=h($r['tipo'])?></td><td><?=h($r['fecha_vencimiento'])?></td><td><?=h($r['observaciones']??'')?></td><td><?=h($r['actualizado_nombre']?:$r['creado_nombre']?:'Sistema')?><br><small><?=h($r['actualizado_en']??$r['creado_en']??'')?></small></td>
 <?php if($canEdit):?><td class="module-actions"><a class="btn secondary" href="?editar=<?=(int)$r['id']?>">Editar</a><form method="post" onsubmit="return confirm('¿Eliminar este registro?')"><input type="hidden" name="accion" value="eliminar"><input type="hidden" name="id" value="<?=(int)$r['id']?>"><button class="btn secondary">Eliminar</button></form></td><?php endif;?></tr><?php endforeach;?>
-</tbody></table></div>
+</tbody>
+</table>
+</div>
 
-</main></div></body></html>
+</main>
+</div>
+</body>
+</html>
+

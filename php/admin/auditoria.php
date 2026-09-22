@@ -1,4 +1,6 @@
 <?php
-require __DIR__.'/../config/auth.php';requireAdmin();require __DIR__.'/../config/db.php';require __DIR__.'/../config/layout.php';
+require __DIR__.'/../config/auth.php';
+requireAdmin();require __DIR__.'/../config/db.php';
+require __DIR__.'/../config/layout.php';
 $rows=$pdo->query('SELECT a.*,u.nombre usuario,u.email FROM actividad a LEFT JOIN usuarios u ON u.id=a.usuario_id ORDER BY a.id DESC LIMIT 300')->fetchAll();
 ?><!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Auditoría | NASER</title><link rel="stylesheet" href="<?=app_url('/style.css')?>"></head><body><div class="app"><?php sidebar($pdo,'auditoria');?><main class="content"><header class="section-top"><div><p class="eyebrow">TRAZABILIDAD</p><h1>Auditoría</h1><p>Últimas acciones registradas por los usuarios del sistema.</p></div></header><section class="table-panel"><div class="table-wrap"><table><thead><tr><th>Fecha</th><th>Usuario</th><th>Acción</th><th>Detalle</th></tr></thead><tbody><?php foreach($rows as $r):?><tr><td><?=h($r['fecha'])?></td><td><strong><?=h($r['usuario']??'Sistema')?></strong><small><?=h($r['email']??'')?></small></td><td><?=h($r['accion'])?></td><td><?=h($r['detalle'])?></td></tr><?php endforeach;?><?php if(!$rows):?><tr><td colspan="4">Todavía no hay movimientos registrados.</td></tr><?php endif;?></tbody></table></div></section></main></div></body></html>

@@ -12,7 +12,7 @@ $sector = $st->fetch();
 
 if (!$sector) {
     http_response_code(404);
-    exit('Sector Ventas no encontrado. Verificá que exista el sector con slug "ventas".');
+    exit('Sector Ventas no encontrado. Verifica que exista el sector con slug "ventas".');
 }
 
 $sid = (int)$sector['id'];
@@ -32,7 +32,7 @@ function ventasAudit(PDO $pdo, int $uid, string $accion, string $detalle): void 
         $st = $pdo->prepare('INSERT INTO actividad(usuario_id,accion,detalle) VALUES(?,?,?)');
         $st->execute([$uid,$accion,$detalle]);
     } catch (Throwable $e) {
-        // Si la tabla actividad no existe o tiene otra estructura, no interrumpir el módulo.
+        // Ignorar si la tabla no existe
     }
 }
 
@@ -43,12 +43,13 @@ function ventasExigirEdicion(bool $canEdit): void {
     }
 }
 
+// 1. REPARACIÓN / MEJORA: Acepta 'En Proceso'
 function normalizarEstadoContrato(string $v): string {
-    return in_array($v,['Activo','Licitación','Finalizado'],true) ? $v : 'Activo';
+    return in_array($v, ['Activo', 'En Proceso', 'Licitación', 'Finalizado'], true) ? $v : 'Activo';
 }
 
 function normalizarEstadoCotizacion(string $v): string {
-    return in_array($v,['Ganada','En Estudio','No Adjudicada'],true) ? $v : 'En Estudio';
+    return in_array($v, ['Ganada', 'En Estudio', 'No Adjudicada'], true) ? $v : 'En Estudio';
 }
 
 $uploadDir = dirname(__DIR__) . '/uploads/ventas';
@@ -63,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $accion = $_POST['accion'] ?? '';
 
         /* =====================================================
-           CLIENTES + CONTRATOS
+           1. CLIENTES + CONTRATOS
            ===================================================== */
         if ($accion === 'guardar_contrato') {
             $id = (int)($_POST['id'] ?? 0);
@@ -129,7 +130,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($accion === 'eliminar_contrato') {
             $id = (int)($_POST['id'] ?? 0);
-
             $st = $pdo->prepare('SELECT cliente_id,numero_contrato FROM ventas_contratos WHERE id=? AND sector_id=? LIMIT 1');
             $st->execute([$id,$sid]);
             $row = $st->fetch();
@@ -150,7 +150,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         /* =====================================================
-           PRECIOS
+           2. PRECIOS
            ===================================================== */
         if ($accion === 'guardar_precio') {
             $id = (int)($_POST['id'] ?? 0);
@@ -187,7 +187,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         /* =====================================================
-           COSTOS OPERATIVOS
+           3. COSTOS OPERATIVOS
            ===================================================== */
         if ($accion === 'guardar_costo') {
             $id = (int)($_POST['id'] ?? 0);
@@ -218,36 +218,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         /* =====================================================
-           COTIZACIONES / KPI
-           ===================================================== */
-        if ($accion === 'guardar_cotizacion') {
-            $clienteId=(int)($_POST['cliente_id']??0);
-            $codigo=trim($_POST['codigo_cotizacion']??'');
-            $monto=(float)($_POST['monto_usd']??0);
-            $estado=normalizarEstadoCotizacion($_POST['estado_kpi']??'En Estudio');
-            $fecha=$_POST['fecha_presentacion']?:date('Y-m-d');
-            $resol=$_POST['fecha_resolucion']?:null;
-
-            if(!$clienteId || $codigo==='') throw new RuntimeException('Seleccioná cliente e ingresá código de cotización.');
-
-            $st=$pdo->prepare('INSERT INTO ventas_cotizaciones
-                (sector_id,codigo_cotizacion,cliente_id,monto_usd,estado_kpi,fecha_presentacion,fecha_resolucion,creado_por,actualizado_por)
-                VALUES(?,?,?,?,?,?,?,?,?)');
-            $st->execute([$sid,$codigo,$clienteId,$monto,$estado,$fecha,$resol,$uid,$uid]);
-
-            ventasAudit($pdo,$uid,'ventas_cotizacion',$codigo);
-            $msg='Cotización registrada.';
-        }
-
-        if ($accion === 'eliminar_cotizacion') {
-            $id=(int)($_POST['id']??0);
-            $pdo->prepare('DELETE FROM ventas_cotizaciones WHERE id=? AND sector_id=?')->execute([$id,$sid]);
-            ventasAudit($pdo,$uid,'ventas_cotizacion_eliminar',"Cotización #$id");
-            $msg='Cotización eliminada.';
-        }
-
-        /* =====================================================
-           PRESENTACIONES / DOSSIERS
+           4. PRESENTACIONES / NASER Y PETRONEU
            ===================================================== */
         if ($accion === 'subir_presentacion') {
             $titulo=trim($_POST['titulo']??'');
@@ -272,7 +243,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $st->execute([$sid,$titulo,$empresa,$categoria,'ventas/'.$safe,$uid]);
 
             ventasAudit($pdo,$uid,'ventas_presentacion',$titulo);
-            $msg='Presentación cargada.';
+            $msg='Presentación cargada exitosamente.';
         }
 
         if ($accion === 'eliminar_presentacion') {
@@ -290,7 +261,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         /* =====================================================
-           CRM
+           5. PLANTILLA DE SEGUIMIENTO CRM INTERACTIVA
            ===================================================== */
         if ($accion === 'guardar_crm') {
             $clienteId=(int)($_POST['cliente_id']??0);
@@ -321,23 +292,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         /* =====================================================
-           ALERTAS
+           6. CALENDARIO INTERACTIVO, COMENTARIOS Y ALARMAS
            ===================================================== */
-        if ($accion === 'guardar_alerta') {
-            $titulo=trim($_POST['titulo']??'');
-            $mensaje=trim($_POST['mensaje']??'');
-            $tipo=trim($_POST['tipo_alerta']??'Aviso');
+        if ($accion === 'guardar_alerta' || $accion === 'guardar_evento_calendario') {
+            $titulo = trim($_POST['titulo'] ?? '');
+            $mensaje = trim($_POST['mensaje'] ?? '');
+            $tipo = trim($_POST['tipo_alerta'] ?? 'Aviso');
+            $fechaAlarma = $_POST['fecha_alarma'] ?? date('Y-m-d');
 
-            if(!in_array($tipo,['Alerta','Aviso','Finanzas','Vencimiento'],true)) $tipo='Aviso';
-            if($titulo==='' || $mensaje==='') throw new RuntimeException('Completá título y mensaje.');
+            if (!in_array($tipo, ['Alerta', 'Aviso', 'Finanzas', 'Vencimiento'], true)) $tipo = 'Aviso';
+            if ($titulo === '' || $mensaje === '') throw new RuntimeException('Completá título y mensaje/comentario.');
 
-            $st=$pdo->prepare('INSERT INTO ventas_notificaciones
-                (sector_id,titulo,mensaje,tipo_alerta,leido,creado_por)
-                VALUES(?,?,?,?,0,?)');
-            $st->execute([$sid,$titulo,$mensaje,$tipo,$uid]);
+            $st = $pdo->prepare('INSERT INTO ventas_notificaciones
+                (sector_id,titulo,mensaje,tipo_alerta,leido,creado_por,created_at)
+                VALUES(?,?,?,?,0,?,?)');
+            $st->execute([$sid, $titulo, $mensaje . " (Fecha asignada: $fechaAlarma)", $tipo, $uid, $fechaAlarma . ' ' . date('H:i:s')]);
 
-            ventasAudit($pdo,$uid,'ventas_alerta',$titulo);
-            $msg='Alerta registrada.';
+            ventasAudit($pdo, $uid, 'ventas_alerta', "$titulo ($fechaAlarma)");
+            $msg = 'Comentario / Alarma agregada al calendario correctamente.';
         }
 
         if ($accion === 'marcar_leida') {
@@ -346,9 +318,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $msg='Notificación marcada como leída.';
         }
 
-        /* =====================================================
-           MENSAJES ENTRE SECTORES
-           ===================================================== */
         if ($accion === 'enviar_mensaje') {
             $destino=trim($_POST['sector_destino']??'');
             $asunto=trim($_POST['asunto']??'');
@@ -423,7 +392,9 @@ $totalCot=count($cotizaciones);
 $ganadas=count(array_filter($cotizaciones,fn($r)=>$r['estado_kpi']==='Ganada'));
 $eficiencia=$totalCot ? round(($ganadas/$totalCot)*100,1) : 0;
 $activos=count(array_filter($contratos,fn($r)=>$r['estado']==='Activo'));
+$enProceso=count(array_filter($contratos,fn($r)=>$r['estado']==='En Proceso'));
 $licitacion=count(array_filter($contratos,fn($r)=>$r['estado']==='Licitación'));
+$finalizados=count(array_filter($contratos,fn($r)=>$r['estado']==='Finalizado'));
 $ticketPromedio=$precios ? array_sum(array_map(fn($r)=>(float)$r['ticket_promedio_tipo_usd'],$precios))/count($precios) : 0;
 $noLeidas=count(array_filter($alertas,fn($r)=>(int)$r['leido']===0));
 
@@ -467,10 +438,19 @@ if($canEdit && !empty($_GET['editar_precio'])){
 .sales-table{width:100%;border-collapse:collapse;min-width:820px}.sales-table th,.sales-table td{padding:11px 12px;border-bottom:1px solid #edf1ee;text-align:left;font-size:12px;vertical-align:top}
 .sales-table th{background:#f1f7f3;color:#27583a;font-size:10px;text-transform:uppercase}.sales-table tr:last-child td{border-bottom:0}
 .sales-actions{display:flex;gap:6px;flex-wrap:wrap}.pill{display:inline-block;padding:4px 8px;border-radius:999px;background:#eef6f0;color:#25623a;font-size:10px;font-weight:900}
-.pill.warn{background:#fff6dd;color:#8a6400}.pill.danger{background:#fff0ee;color:#9d1c13}.notice{padding:13px 15px;border-radius:11px;margin:12px 0;font-weight:700;font-size:13px}.notice.ok{background:#eaf7ef;color:#176337}.notice.err{background:#fff1f0;color:#9b231b}
+.pill.warn{background:#fff6dd;color:#8a6400}.pill.danger{background:#fff0ee;color:#9d1c13}.pill.info{background:#e0f2fe;color:#0369a1}
+.notice{padding:13px 15px;border-radius:11px;margin:12px 0;font-weight:700;font-size:13px}.notice.ok{background:#eaf7ef;color:#176337}.notice.err{background:#fff1f0;color:#9b231b}
 .calc-result{background:var(--vs);border:1px solid #ccebd8;border-radius:13px;padding:16px}.calc-result strong{display:block;font-size:28px;color:var(--vd)}
 .permission{padding:10px 13px;border:1px solid var(--vl);background:#f8faf8;border-radius:11px;font-size:12px;margin-bottom:16px}
-@media(max-width:1000px){.kpi-grid{grid-template-columns:1fr 1fr}}@media(max-width:700px){.kpi-grid,.sales-grid,.sales-form{grid-template-columns:1fr}.sales-form .full{grid-column:auto}}
+
+/* Estilos de Calendario Interactivo */
+.calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin-top: 15px; }
+.calendar-day-head { text-align: center; font-weight: bold; font-size: 11px; padding: 6px; background: #f1f7f3; color: #27583a; border-radius: 6px; }
+.calendar-cell { border: 1px solid var(--vl); min-height: 80px; border-radius: 8px; padding: 6px; background: #fff; cursor: pointer; transition: background 0.2s; }
+.calendar-cell:hover { background: var(--vs); border-color: var(--vg); }
+.calendar-cell.empty { background: #fafafa; cursor: default; border: none; }
+.calendar-date-num { font-weight: bold; font-size: 12px; color: var(--vt); }
+.calendar-event-tag { font-size: 10px; padding: 2px 4px; background: #e0f2fe; color: #0369a1; border-radius: 4px; margin-top: 4px; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 </style>
 </head>
 <body>
@@ -481,7 +461,7 @@ if($canEdit && !empty($_GET['editar_precio'])){
 <section class="sales-hero">
 <p class="eyebrow">SERVICIOS NASER SRL · VENTAS & COMERCIAL</p>
 <h1>Gestión Comercial, Contratos y Precios</h1>
-<p>Clientes, contratos, tarifarios, costos, cotizaciones, CRM, presentaciones y comunicaciones del sector.</p>
+<p>Clientes, contratos, tarifarios, costos, cotizaciones, CRM, presentaciones y calendario interactivo.</p>
 </section>
 
 <div class="permission">
@@ -494,7 +474,7 @@ if($canEdit && !empty($_GET['editar_precio'])){
 
 <section class="kpi-grid">
 <div class="kpi"><span>Conversión cotizaciones</span><strong><?=$eficiencia?>%</strong><small><?=$ganadas?> ganadas de <?=$totalCot?></small></div>
-<div class="kpi"><span>Contratos activos</span><strong><?=$activos?></strong><small>Servicios vigentes</small></div>
+<div class="kpi"><span>Contratos Activos / En Proceso</span><strong><?=$activos?> / <?=$enProceso?></strong><small>Finalizados: <?=$finalizados?></small></div>
 <div class="kpi"><span>En licitación</span><strong><?=$licitacion?></strong><small>Oportunidades/contratos</small></div>
 <div class="kpi"><span>Ticket promedio tipo</span><strong>USD <?=number_format($ticketPromedio,0,',','.')?></strong><small><?=count($precios)?> tarifa(s)</small></div>
 </section>
@@ -503,13 +483,14 @@ if($canEdit && !empty($_GET['editar_precio'])){
 <button class="active" onclick="tabVentas('contratos',this)">1. Clientes y Contratos</button>
 <button onclick="tabVentas('precios',this)">2. Precios y Ticket</button>
 <button onclick="tabVentas('costos',this)">3. Costos Operativos</button>
-<button onclick="tabVentas('presentaciones',this)">4. Presentaciones & KPI</button>
-<button onclick="tabVentas('crm',this)">5. Seguimiento CRM</button>
-<button onclick="tabVentas('alertas',this)">6. Alertas <span class="pill danger"><?=$noLeidas?></span></button>
-<button onclick="tabVentas('mensajes',this)">7. Mensajes</button>
+<button onclick="tabVentas('presentaciones',this)">4. Presentaciones Naser & Petroneu</button>
+<button onclick="tabVentas('crm',this)">5. CRM Interactivo</button>
+<button onclick="tabVentas('calendario',this)">6. Calendario & Alarmas</button>
+<button onclick="tabVentas('alertas',this)">7. Avisos (<span class="pill danger"><?=$noLeidas?></span>)</button>
+<button onclick="tabVentas('mensajes',this)">8. Mensajes</button>
 </div>
 
-<!-- CONTRATOS -->
+<!-- 1. CONTRATOS (ACTIVOS, EN PROCESO, FINALIZADOS) -->
 <section id="tab-contratos" class="sales-tab active">
 <?php if($canEdit):?>
 <div class="sales-card">
@@ -526,7 +507,13 @@ if($canEdit && !empty($_GET['editar_precio'])){
 <label>N° contrato<input name="numero_contrato" required value="<?=h($editContrato['numero_contrato']??'')?>"></label>
 <label>Servicio operativo<input name="servicio_operativo" required value="<?=h($editContrato['servicio_operativo']??'')?>"></label>
 <label>Monto estimado USD<input type="number" step="0.01" name="monto_estimado_usd" value="<?=h($editContrato['monto_estimado_usd']??0)?>"></label>
-<label>Estado<select name="estado"><?php foreach(['Activo','Licitación','Finalizado'] as $v):?><option <?=($editContrato['estado']??'Activo')===$v?'selected':''?>><?=$v?></option><?php endforeach;?></select></label>
+<label>Estado
+    <select name="estado">
+        <?php foreach(['Activo','En Proceso','Licitación','Finalizado'] as $v):?>
+            <option <?=($editContrato['estado']??'Activo')===$v?'selected':''?>><?=$v?></option>
+        <?php endforeach;?>
+    </select>
+</label>
 <label>Fecha inicio<input type="date" name="fecha_inicio" value="<?=h($editContrato['fecha_inicio']??'')?>"></label>
 <label>Fecha fin<input type="date" name="fecha_fin" value="<?=h($editContrato['fecha_fin']??'')?>"></label>
 <label class="full">Observaciones<textarea name="observaciones"><?=h($editContrato['observaciones']??'')?></textarea></label>
@@ -535,66 +522,450 @@ if($canEdit && !empty($_GET['editar_precio'])){
 </div>
 <?php endif;?>
 
-<div class="sales-card"><h2>Directorio de clientes y contratos</h2>
-<div class="sales-table-wrap"><table class="sales-table"><thead><tr><th>Cliente</th><th>Contrato</th><th>Servicio</th><th>Monto</th><th>Vigencia</th><th>Estado</th><th>Responsable</th><?php if($canEdit):?><th>Acciones</th><?php endif;?></tr></thead><tbody>
+<div class="sales-card">
+<h2>Directorio de clientes y contratos</h2>
+<div class="sales-table-wrap">
+<table class="sales-table">
+<thead><tr><th>Cliente</th><th>Contrato</th><th>Servicio</th><th>Monto</th><th>Vigencia</th><th>Estado</th><th>Responsable</th><?php if($canEdit):?><th>Acciones</th><?php endif;?></tr></thead>
+<tbody>
 <?php foreach($contratos as $r):?>
-<tr><td><strong><?=h($r['razon_social'])?></strong><br><small><?=h($r['cuit']??'')?></small></td><td><?=h($r['numero_contrato'])?></td><td><?=h($r['servicio_operativo'])?></td><td>USD <?=number_format((float)$r['monto_estimado_usd'],2,',','.')?></td><td><?=h($r['fecha_inicio']??'')?> → <?=h($r['fecha_fin']??'')?></td><td><span class="pill <?=$r['estado']==='Licitación'?'warn':($r['estado']==='Finalizado'?'danger':'')?>"><?=h($r['estado'])?></span></td><td><?=h($r['actualizado_nombre']??'Sistema')?></td>
-<?php if($canEdit):?><td class="sales-actions"><a class="btn secondary" href="?editar_contrato=<?=(int)$r['id']?>">Editar</a><form method="post" onsubmit="return confirm('¿Eliminar contrato?')"><input type="hidden" name="accion" value="eliminar_contrato"><input type="hidden" name="id" value="<?=(int)$r['id']?>"><button class="btn secondary">Eliminar</button></form></td><?php endif;?>
-</tr><?php endforeach;?>
-</tbody></table></div></div>
+<tr>
+<td><strong><?=h($r['razon_social'])?></strong><br><small><?=h($r['cuit']??'')?></small></td>
+<td><?=h($r['numero_contrato'])?></td>
+<td><?=h($r['servicio_operativo'])?></td>
+<td>USD <?=number_format((float)$r['monto_estimado_usd'],2,',','.')?></td>
+<td><?=h($r['fecha_inicio']??'')?> → <?=h($r['fecha_fin']??'')?></td>
+<td>
+    <span class="pill <?=$r['estado']==='Licitación'?'warn':($r['estado']==='En Proceso'?'info':($r['estado']==='Finalizado'?'danger':''))?>">
+        <?=h($r['estado'])?>
+    </span>
+</td>
+<td><?=h($r['actualizado_nombre']??'Sistema')?></td>
+<?php if($canEdit):?>
+<td class="sales-actions">
+    <a class="btn secondary" href="?editar_contrato=<?=(int)$r['id']?>">Editar</a>
+    <form method="post" onsubmit="return confirm('¿Eliminar contrato?')">
+        <input type="hidden" name="accion" value="eliminar_contrato">
+        <input type="hidden" name="id" value="<?=(int)$r['id']?>">
+        <button class="btn secondary">Eliminar</button>
+    </form>
+</td>
+<?php endif;?>
+</tr>
+<?php endforeach;?>
+</tbody>
+</table>
+</div>
+</div>
 </section>
 
-<!-- PRECIOS -->
+<!-- 2. PRECIOS Y TICKET TIPO -->
 <section id="tab-precios" class="sales-tab">
 <div class="sales-grid">
-<?php if($canEdit):?><div class="sales-card"><h2><?=$editPrecio?'Modificar tarifa':'Nueva tarifa'?></h2><form method="post" class="sales-form">
-<input type="hidden" name="accion" value="guardar_precio"><input type="hidden" name="id" value="<?=h($editPrecio['id']??'')?>">
+<?php if($canEdit):?>
+<div class="sales-card">
+<h2><?=$editPrecio?'Modificar tarifa':'Nueva tarifa'?></h2>
+<form method="post" class="sales-form">
+<input type="hidden" name="accion" value="guardar_precio">
+<input type="hidden" name="id" value="<?=h($editPrecio['id']??'')?>">
 <label class="full">Servicio<input name="servicio_nombre" required value="<?=h($editPrecio['servicio_nombre']??'')?>"></label>
 <label>Unidad<input name="unidad_medida" required placeholder="Por Día / Hora / Etapa" value="<?=h($editPrecio['unidad_medida']??'')?>"></label>
 <label>Modalidad<input name="modalidad" value="<?=h($editPrecio['modalidad']??'')?>"></label>
 <label>Tarifa base USD<input id="tarifaBase" type="number" step="0.01" name="tarifa_base_usd" value="<?=h($editPrecio['tarifa_base_usd']??0)?>"></label>
 <label>Ticket promedio USD<input type="number" step="0.01" name="ticket_promedio_tipo_usd" value="<?=h($editPrecio['ticket_promedio_tipo_usd']??0)?>"></label>
-<div class="full"><button class="btn primary">Guardar tarifa</button></div></form></div><?php endif;?>
-<div class="sales-card"><h2>Calculadora Ticket Tipo</h2><div class="sales-form"><label>Tarifa diaria/base<select id="calcTarifa"><?php foreach($precios as $p):?><option value="<?=h($p['tarifa_base_usd'])?>"><?=h($p['servicio_nombre'])?> — USD <?=number_format((float)$p['tarifa_base_usd'],0,',','.')?></option><?php endforeach;?></select></label><label>Días / unidades<input type="number" id="calcDias" min="1" value="5"></label><label>Recargo / viáticos %<input type="number" id="calcRecargo" min="0" value="15"></label></div><div class="calc-result" style="margin-top:14px"><span>Estimación comercial</span><strong id="calcResultado">USD 0</strong></div></div>
+<div class="full"><button class="btn primary">Guardar tarifa</button></div>
+</form>
 </div>
-<div class="sales-card"><h2>Tarifario vigente</h2><div class="sales-table-wrap"><table class="sales-table"><thead><tr><th>Servicio</th><th>Unidad</th><th>Modalidad</th><th>Tarifa</th><th>Ticket tipo</th><th>Responsable</th><?php if($canEdit):?><th></th><?php endif;?></tr></thead><tbody><?php foreach($precios as $p):?><tr><td><?=h($p['servicio_nombre'])?></td><td><?=h($p['unidad_medida'])?></td><td><?=h($p['modalidad'])?></td><td>USD <?=number_format((float)$p['tarifa_base_usd'],2,',','.')?></td><td>USD <?=number_format((float)$p['ticket_promedio_tipo_usd'],2,',','.')?></td><td><?=h($p['actualizado_nombre']??'Sistema')?></td><?php if($canEdit):?><td class="sales-actions"><a class="btn secondary" href="?editar_precio=<?=(int)$p['id']?>">Editar</a><form method="post"><input type="hidden" name="accion" value="eliminar_precio"><input type="hidden" name="id" value="<?=(int)$p['id']?>"><button class="btn secondary">Eliminar</button></form></td><?php endif;?></tr><?php endforeach;?></tbody></table></div></div>
+<?php endif;?>
+
+<div class="sales-card">
+<h2>Calculadora Ticket Tipo</h2>
+<div class="sales-form">
+<label>Tarifa diaria/base
+<select id="calcTarifa">
+<?php foreach($precios as $p):?>
+<option value="<?=h($p['tarifa_base_usd'])?>"><?=h($p['servicio_nombre'])?> — USD <?=number_format((float)$p['tarifa_base_usd'],0,',','.')?></option>
+<?php endforeach;?>
+</select>
+</label>
+<label>Días / unidades<input type="number" id="calcDias" min="1" value="5"></label>
+<label>Recargo / viáticos %<input type="number" id="calcRecargo" min="0" value="15"></label>
+</div>
+<div class="calc-result" style="margin-top:14px">
+<span>Estimación comercial</span>
+<strong id="calcResultado">USD 0</strong>
+</div>
+</div>
+</div>
+
+<div class="sales-card">
+<h2>Tarifario vigente</h2>
+<div class="sales-table-wrap">
+<table class="sales-table">
+<thead><tr><th>Servicio</th><th>Unidad</th><th>Modalidad</th><th>Tarifa Base</th><th>Ticket Tipo</th><th>Responsable</th><?php if($canEdit):?><th></th><?php endif;?></tr></thead>
+<tbody>
+<?php foreach($precios as $p):?>
+<tr>
+<td><?=h($p['servicio_nombre'])?></td>
+<td><?=h($p['unidad_medida'])?></td>
+<td><?=h($p['modalidad'])?></td>
+<td>USD <?=number_format((float)$p['tarifa_base_usd'],2,',','.')?></td>
+<td>USD <?=number_format((float)$p['ticket_promedio_tipo_usd'],2,',','.')?></td>
+<td><?=h($p['actualizado_nombre']??'Sistema')?></td>
+<?php if($canEdit):?>
+<td class="sales-actions">
+    <a class="btn secondary" href="?editar_precio=<?=(int)$p['id']?>">Editar</a>
+    <form method="post">
+        <input type="hidden" name="accion" value="eliminar_precio">
+        <input type="hidden" name="id" value="<?=(int)$p['id']?>">
+        <button class="btn secondary">Eliminar</button>
+    </form>
+</td>
+<?php endif;?>
+</tr>
+<?php endforeach;?>
+</tbody>
+</table>
+</div>
+</div>
 </section>
 
-<!-- COSTOS -->
+<!-- 3. COSTOS OPERATIVOS -->
 <section id="tab-costos" class="sales-tab">
-<?php if($canEdit):?><div class="sales-card"><h2>Registrar costo operativo</h2><p>Esta sección conserva la idea del archivo original: comparar ingreso comercial con costo directo informado por Finanzas y mantenimiento.</p><form method="post" class="sales-form"><input type="hidden" name="accion" value="guardar_costo"><label class="full">Línea de servicio<input name="linea_servicio" required></label><label>Ingreso diario USD<input type="number" step="0.01" name="ingreso_diario_usd" required></label><label>Costo directo Finanzas USD<input type="number" step="0.01" name="costo_directo_finanzas_usd"></label><label>Costo Mantenimiento USD<input type="number" step="0.01" name="costo_mantenimiento_usd"></label><div><button class="btn primary">Guardar costo</button></div></form></div><?php endif;?>
-<div class="sales-card"><h2>Estructura de costos operativos</h2><div class="sales-table-wrap"><table class="sales-table"><thead><tr><th>Servicio</th><th>Ingreso</th><th>Costo Finanzas</th><th>Mantenimiento</th><th>Margen</th><th>Rentabilidad</th></tr></thead><tbody><?php foreach($costos as $c): $ing=(float)$c['ingreso_diario_usd'];$tot=(float)$c['costo_directo_finanzas_usd']+(float)$c['costo_mantenimiento_usd'];$m=$ing>0?(($ing-$tot)/$ing)*100:0;?><tr><td><?=h($c['linea_servicio'])?></td><td>USD <?=number_format($ing,2,',','.')?></td><td>USD <?=number_format((float)$c['costo_directo_finanzas_usd'],2,',','.')?></td><td>USD <?=number_format((float)$c['costo_mantenimiento_usd'],2,',','.')?></td><td><?=number_format($m,1,',','.')?>%</td><td><span class="pill"><?=h($c['estado_rentabilidad'])?></span></td></tr><?php endforeach;?></tbody></table></div></div>
+<?php if($canEdit):?>
+<div class="sales-card">
+<h2>Registrar costo operativo</h2>
+<p>Compara el ingreso comercial estimado con los costos directos informados por Finanzas y Mantenimiento.</p>
+<form method="post" class="sales-form">
+<input type="hidden" name="accion" value="guardar_costo">
+<label class="full">Línea de servicio<input name="linea_servicio" required></label>
+<label>Ingreso diario USD<input type="number" step="0.01" name="ingreso_diario_usd" required></label>
+<label>Costo directo Finanzas USD<input type="number" step="0.01" name="costo_directo_finanzas_usd"></label>
+<label>Costo Mantenimiento USD<input type="number" step="0.01" name="costo_mantenimiento_usd"></label>
+<div><button class="btn primary">Guardar costo</button></div>
+</form>
+</div>
+<?php endif;?>
+
+<div class="sales-card">
+<h2>Estructura de costos operativos</h2>
+<div class="sales-table-wrap">
+<table class="sales-table">
+<thead><tr><th>Servicio</th><th>Ingreso Diario</th><th>Costo Finanzas</th><th>Mantenimiento</th><th>Margen %</th><th>Rentabilidad</th></tr></thead>
+<tbody>
+<?php foreach($costos as $c): 
+    $ing=(float)$c['ingreso_diario_usd'];
+    $tot=(float)$c['costo_directo_finanzas_usd']+(float)$c['costo_mantenimiento_usd'];
+    $m=$ing>0?(($ing-$tot)/$ing)*100:0;
+?>
+<tr>
+<td><?=h($c['linea_servicio'])?></td>
+<td>USD <?=number_format($ing,2,',','.')?></td>
+<td>USD <?=number_format((float)$c['costo_directo_finanzas_usd'],2,',','.')?></td>
+<td>USD <?=number_format((float)$c['costo_mantenimiento_usd'],2,',','.')?></td>
+<td><?=number_format($m,1,',','.')?>%</td>
+<td><span class="pill"><?=$c['estado_rentabilidad']?></span></td>
+</tr>
+<?php endforeach;?>
+</tbody>
+</table>
+</div>
+</div>
 </section>
 
-<!-- PRESENTACIONES + KPI -->
+<!-- 4. PRESENTACIONES DE NASER Y PETRONEU + KPI -->
 <section id="tab-presentaciones" class="sales-tab">
 <section class="sales-grid">
-<?php if($canEdit):?><div class="sales-card"><h2>Nueva cotización / licitación</h2><form method="post" class="sales-form"><input type="hidden" name="accion" value="guardar_cotizacion"><label>Cliente<select name="cliente_id" required><option value="">Seleccionar...</option><?php foreach($clientes as $c):?><option value="<?=(int)$c['id']?>"><?=h($c['razon_social'])?></option><?php endforeach;?></select></label><label>Código<input name="codigo_cotizacion" required></label><label>Monto USD<input type="number" step="0.01" name="monto_usd"></label><label>Estado<select name="estado_kpi"><option>En Estudio</option><option>Ganada</option><option>No Adjudicada</option></select></label><label>Presentación<input type="date" name="fecha_presentacion" value="<?=date('Y-m-d')?>"></label><label>Resolución<input type="date" name="fecha_resolucion"></label><div><button class="btn primary">Guardar cotización</button></div></form></div>
-<div class="sales-card"><h2>Subir presentación / dossier</h2><form method="post" enctype="multipart/form-data" class="sales-form"><input type="hidden" name="accion" value="subir_presentacion"><label class="full">Título<input name="titulo" required></label><label>Empresa<select name="empresa"><option>Naser</option><option>Petro NCU</option></select></label><label>Categoría<input name="categoria" value="General"></label><label class="full">Archivo<input type="file" name="archivo" required accept=".pdf,.ppt,.pptx,.doc,.docx"></label><div><button class="btn primary">Subir</button></div></form></div><?php endif;?>
-</section>
-<div class="sales-card"><h2>Cotizaciones para KPI</h2><div class="sales-table-wrap"><table class="sales-table"><thead><tr><th>Código</th><th>Cliente</th><th>Monto</th><th>Estado</th><th>Presentación</th><th>Resolución</th><?php if($canEdit):?><th></th><?php endif;?></tr></thead><tbody><?php foreach($cotizaciones as $co):?><tr><td><?=h($co['codigo_cotizacion'])?></td><td><?=h($co['razon_social'])?></td><td>USD <?=number_format((float)$co['monto_usd'],2,',','.')?></td><td><span class="pill"><?=$co['estado_kpi']==='Ganada'?'✓ ':''?><?=h($co['estado_kpi'])?></span></td><td><?=h($co['fecha_presentacion'])?></td><td><?=h($co['fecha_resolucion']??'')?></td><?php if($canEdit):?><td><form method="post"><input type="hidden" name="accion" value="eliminar_cotizacion"><input type="hidden" name="id" value="<?=(int)$co['id']?>"><button class="btn secondary">Eliminar</button></form></td><?php endif;?></tr><?php endforeach;?></tbody></table></div></div>
-<div class="sales-card"><h2>Presentaciones corporativas</h2><div class="sales-table-wrap"><table class="sales-table"><thead><tr><th>Título</th><th>Empresa</th><th>Categoría</th><th>Fecha</th><th>Archivo</th><?php if($canEdit):?><th></th><?php endif;?></tr></thead><tbody><?php foreach($presentaciones as $p): $url=app_url('/uploads/'.implode('/',array_map('rawurlencode',explode('/',$p['archivo_path']))));?><tr><td><?=h($p['titulo'])?></td><td><?=h($p['empresa'])?></td><td><?=h($p['categoria'])?></td><td><?=h($p['fecha_carga'])?></td><td><a class="btn secondary" target="_blank" href="<?=h($url)?>">Abrir</a></td><?php if($canEdit):?><td><form method="post"><input type="hidden" name="accion" value="eliminar_presentacion"><input type="hidden" name="id" value="<?=(int)$p['id']?>"><button class="btn secondary">Eliminar</button></form></td><?php endif;?></tr><?php endforeach;?></tbody></table></div></div>
+<?php if($canEdit):?>
+<div class="sales-card">
+<h2>Nueva cotización / licitación</h2>
+<form method="post" class="sales-form">
+<input type="hidden" name="accion" value="guardar_cotizacion">
+<label>Cliente
+<select name="cliente_id" required>
+<option value="">Seleccionar...</option>
+<?php foreach($clientes as $c):?>
+<option value="<?=(int)$c['id']?>"><?=h($c['razon_social'])?></option>
+<?php endforeach;?>
+</select>
+</label>
+<label>Código<input name="codigo_cotizacion" required></label>
+<label>Monto USD<input type="number" step="0.01" name="monto_usd"></label>
+<label>Estado<select name="estado_kpi"><option>En Estudio</option><option>Ganada</option><option>No Adjudicada</option></select></label>
+<label>Presentación<input type="date" name="fecha_presentacion" value="<?=date('Y-m-d')?>"></label>
+<label>Resolución<input type="date" name="fecha_resolucion"></label>
+<div><button class="btn primary">Guardar cotización</button></div>
+</form>
+</div>
+
+<div class="sales-card">
+<h2>Subir presentación (Naser / Petroneu)</h2>
+<form method="post" enctype="multipart/form-data" class="sales-form">
+<input type="hidden" name="accion" value="subir_presentacion">
+<label class="full">Título<input name="titulo" required></label>
+<label>Empresa
+<select name="empresa">
+<option value="Naser">Naser</option>
+<option value="Petroneu">Petroneu</option>
+</select>
+</label>
+<label>Categoría<input name="categoria" value="General"></label>
+<label class="full">Archivo<input type="file" name="archivo" required accept=".pdf,.ppt,.pptx,.doc,.docx"></label>
+<div><button class="btn primary">Subir</button></div>
+</form>
+</div>
+<?php endif;?>
 </section>
 
-<!-- CRM -->
+<div class="sales-card">
+<h2>Presentaciones corporativas (Dossiers Naser & Petroneu)</h2>
+<div class="sales-table-wrap">
+<table class="sales-table">
+<thead><tr><th>Título</th><th>Empresa</th><th>Categoría</th><th>Fecha</th><th>Archivo</th><?php if($canEdit):?><th></th><?php endif;?></tr></thead>
+<tbody>
+<?php foreach($presentaciones as $p): 
+    $url=app_url('/uploads/'.implode('/',array_map('rawurlencode',explode('/',$p['archivo_path']))));
+?>
+<tr>
+<td><?=h($p['titulo'])?></td>
+<td><span class="pill <?=$p['empresa']==='Petroneu'?'info':''?>"><?=h($p['empresa'])?></span></td>
+<td><?=h($p['categoria'])?></td>
+<td><?=h($p['fecha_carga'])?></td>
+<td><a class="btn secondary" target="_blank" href="<?=h($url)?>">Abrir</a></td>
+<?php if($canEdit):?>
+<td>
+<form method="post">
+<input type="hidden" name="accion" value="eliminar_presentacion">
+<input type="hidden" name="id" value="<?=(int)$p['id']?>">
+<button class="btn secondary">Eliminar</button>
+</form>
+</td>
+<?php endif;?>
+</tr>
+<?php endforeach;?>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+
+<!-- 5. PLANTILLA DE SEGUIMIENTO DE CLIENTES INTERACTIVA (CRM) -->
 <section id="tab-crm" class="sales-tab">
-<?php if($canEdit):?><div class="sales-card"><h2>Nuevo seguimiento comercial</h2><form method="post" class="sales-form"><input type="hidden" name="accion" value="guardar_crm"><label>Cliente<select name="cliente_id" required><option value="">Seleccionar...</option><?php foreach($clientes as $c):?><option value="<?=(int)$c['id']?>"><?=h($c['razon_social'])?></option><?php endforeach;?></select></label><label>Etapa<select name="etapa_pipeline"><option>Prospecto</option><option>Cotizado</option><option>En Negociación</option><option>Cierre Ganado</option><option>Perdido</option></select></label><label class="full">Oportunidad / servicio<input name="oportunidad_servicio" required></label><label>Último contacto<input type="date" name="fecha_ultimo_contacto" value="<?=date('Y-m-d')?>"></label><label>Responsable<input name="responsable_naser" value="<?=h($_SESSION['nombre']??'')?>"></label><label class="full">Próxima acción<textarea name="proxima_accion"></textarea></label><div><button class="btn primary">Guardar seguimiento</button></div></form></div><?php endif;?>
-<div class="sales-card"><h2>Planilla CRM</h2><div class="sales-table-wrap"><table class="sales-table"><thead><tr><th>Cliente</th><th>Oportunidad</th><th>Etapa</th><th>Último contacto</th><th>Próxima acción</th><th>Responsable</th><?php if($canEdit):?><th></th><?php endif;?></tr></thead><tbody><?php foreach($crm as $r):?><tr><td><?=h($r['razon_social'])?></td><td><?=h($r['oportunidad_servicio'])?></td><td><span class="pill"><?=h($r['etapa_pipeline'])?></span></td><td><?=h($r['fecha_ultimo_contacto'])?></td><td><?=h($r['proxima_accion'])?></td><td><?=h($r['responsable_naser'])?></td><?php if($canEdit):?><td><form method="post"><input type="hidden" name="accion" value="eliminar_crm"><input type="hidden" name="id" value="<?=(int)$r['id']?>"><button class="btn secondary">Eliminar</button></form></td><?php endif;?></tr><?php endforeach;?></tbody></table></div></div>
+<?php if($canEdit):?>
+<div class="sales-card">
+<h2>Nuevo seguimiento comercial</h2>
+<form method="post" class="sales-form">
+<input type="hidden" name="accion" value="guardar_crm">
+<label>Cliente
+<select name="cliente_id" required>
+<option value="">Seleccionar...</option>
+<?php foreach($clientes as $c):?>
+<option value="<?=(int)$c['id']?>"><?=h($c['razon_social'])?></option>
+<?php endforeach;?>
+</select>
+</label>
+<label>Etapa
+<select name="etapa_pipeline">
+<option>Prospecto</option>
+<option>Cotizado</option>
+<option>En Negociación</option>
+<option>Cierre Ganado</option>
+<option>Perdido</option>
+</select>
+</label>
+<label class="full">Oportunidad / servicio<input name="oportunidad_servicio" required></label>
+<label>Último contacto<input type="date" name="fecha_ultimo_contacto" value="<?=date('Y-m-d')?>"></label>
+<label>Responsable<input name="responsable_naser" value="<?=h($_SESSION['nombre']??'')?>"></label>
+<label class="full">Próxima acción<textarea name="proxima_accion"></textarea></label>
+<div><button class="btn primary">Guardar seguimiento</button></div>
+</form>
+</div>
+<?php endif;?>
+
+<div class="sales-card">
+<h2>Plantilla interactiva de seguimiento de clientes</h2>
+<div style="margin-bottom: 12px;">
+    <input type="text" id="filtroCrm" onkeyup="filtrarTablaCrm()" placeholder="Buscar por cliente u oportunidad..." style="padding: 8px 12px; border: 1px solid var(--vl); border-radius: 8px; width: 300px;">
+</div>
+<div class="sales-table-wrap">
+<table class="sales-table" id="tablaCrm">
+<thead><tr><th>Cliente</th><th>Oportunidad</th><th>Etapa</th><th>Último contacto</th><th>Próxima acción</th><th>Responsable</th><?php if($canEdit):?><th></th><?php endif;?></tr></thead>
+<tbody>
+<?php foreach($crm as $r):?>
+<tr>
+<td><strong><?=h($r['razon_social'])?></strong></td>
+<td><?=h($r['oportunidad_servicio'])?></td>
+<td><span class="pill <?=in_array($r['etapa_pipeline'],['Cierre Ganado'])?'':'warn'?>"><?=h($r['etapa_pipeline'])?></span></td>
+<td><?=h($r['fecha_ultimo_contacto'])?></td>
+<td><?=h($r['proxima_accion'])?></td>
+<td><?=h($r['responsable_naser'])?></td>
+<?php if($canEdit):?>
+<td>
+<form method="post">
+<input type="hidden" name="accion" value="eliminar_crm">
+<input type="hidden" name="id" value="<?=(int)$r['id']?>">
+<button class="btn secondary">Eliminar</button>
+</form>
+</td>
+<?php endif;?>
+</tr>
+<?php endforeach;?>
+</tbody>
+</table>
+</div>
+</div>
 </section>
 
-<!-- ALERTAS -->
+<!-- 6. CALENDARIO INTERACTIVO (DÍAS, COMENTARIOS Y ALARMAS) -->
+<section id="tab-calendario" class="sales-tab">
+<div class="sales-card">
+<h2>Calendario interactivo comercial</h2>
+<p>Haz clic en cualquier día para registrar comentarios, recordatorios o alarmas para clientes y contratos.</p>
+
+<div class="calendar-grid">
+    <div class="calendar-day-head">Dom</div>
+    <div class="calendar-day-head">Lun</div>
+    <div class="calendar-day-head">Mar</div>
+    <div class="calendar-day-head">Mié</div>
+    <div class="calendar-day-head">Jue</div>
+    <div class="calendar-day-head">Vie</div>
+    <div class="calendar-day-head">Sáb</div>
+
+    <?php
+    $year = date('Y');
+    $month = date('m');
+    $firstDay = mktime(0, 0, 0, $month, 1, $year);
+    $daysInMonth = date('t', $firstDay);
+    $dayOfWeek = date('w', $firstDay);
+
+    // Días vacíos al inicio
+    for ($i = 0; $i < $dayOfWeek; $i++) {
+        echo '<div class="calendar-cell empty"></div>';
+    }
+
+    // Días del mes
+    for ($d = 1; $d <= $daysInMonth; $d++) {
+        $currentDate = sprintf('%04d-%02d-%02d', $year, $month, $d);
+        
+        // Buscar eventos o alarmas creadas para este día
+        $eventosDia = array_filter($alertas, fn($a) => substr($a['created_at'], 0, 10) === $currentDate);
+
+        echo '<div class="calendar-cell" onclick="abrirModalCalendario(\''.$currentDate.'\')">';
+        echo '<div class="calendar-date-num">'.$d.'</div>';
+        foreach ($eventosDia as $ev) {
+            echo '<span class="calendar-event-tag" title="'.h($ev['mensaje']).'">📌 '.h($ev['titulo']).'</span>';
+        }
+        echo '</div>';
+    }
+    ?>
+</div>
+</div>
+
+<!-- Modal / Formulario de Registro para el Calendario -->
+<?php if($canEdit):?>
+<div class="sales-card" id="modalCalendario" style="display:none; border-color: var(--vg);">
+<h3>Agregar comentario / alarma para la fecha: <span id="fechaSeleccionadaTexto"></span></h3>
+<form method="post" class="sales-form">
+<input type="hidden" name="accion" value="guardar_evento_calendario">
+<input type="hidden" name="fecha_alarma" id="inputFechaAlarma">
+<label>Título / Referencia<input name="titulo" required placeholder="Ej. Llamada cliente / Vencimiento de oferta"></label>
+<label>Tipo de Alarma
+<select name="tipo_alerta">
+<option>Aviso</option>
+<option>Alerta</option>
+<option>Vencimiento</option>
+<option>Finanzas</option>
+</select>
+</label>
+<label class="full">Comentarios u observaciones<textarea name="mensaje" required placeholder="Ingresar detalles para este día..."></textarea></label>
+<div class="full">
+<button class="btn primary">Guardar en Calendario</button>
+<button type="button" class="btn secondary" onclick="document.getElementById('modalCalendario').style.display='none'">Cancelar</button>
+</div>
+</form>
+</div>
+<?php endif;?>
+</section>
+
+<!-- 7. ALERTAS -->
 <section id="tab-alertas" class="sales-tab">
-<?php if($canEdit):?><div class="sales-card"><h2>Nueva alerta / aviso</h2><form method="post" class="sales-form"><input type="hidden" name="accion" value="guardar_alerta"><label>Título<input name="titulo" required></label><label>Tipo<select name="tipo_alerta"><option>Aviso</option><option>Alerta</option><option>Finanzas</option><option>Vencimiento</option></select></label><label class="full">Mensaje<textarea name="mensaje" required></textarea></label><div><button class="btn primary">Registrar alerta</button></div></form></div><?php endif;?>
-<div class="sales-card"><h2>Alertas y avisos</h2><div class="sales-table-wrap"><table class="sales-table"><thead><tr><th>Fecha</th><th>Tipo</th><th>Título</th><th>Mensaje</th><th>Estado</th><?php if($canEdit):?><th></th><?php endif;?></tr></thead><tbody><?php foreach($alertas as $a):?><tr><td><?=h($a['created_at'])?></td><td><span class="pill"><?=h($a['tipo_alerta'])?></span></td><td><?=h($a['titulo'])?></td><td><?=h($a['mensaje'])?></td><td><?=$a['leido']?'Leída':'Pendiente'?></td><?php if($canEdit):?><td><?php if(!$a['leido']):?><form method="post"><input type="hidden" name="accion" value="marcar_leida"><input type="hidden" name="id" value="<?=(int)$a['id']?>"><button class="btn secondary">Marcar leída</button></form><?php endif;?></td><?php endif;?></tr><?php endforeach;?></tbody></table></div></div>
+<div class="sales-card">
+<h2>Alertas y Avisos Registrados</h2>
+<div class="sales-table-wrap">
+<table class="sales-table">
+<thead><tr><th>Fecha / Hora</th><th>Tipo</th><th>Título</th><th>Mensaje</th><th>Estado</th><?php if($canEdit):?><th></th><?php endif;?></tr></thead>
+<tbody>
+<?php foreach($alertas as $a):?>
+<tr>
+<td><?=h($a['created_at'])?></td>
+<td><span class="pill"><?=$a['tipo_alerta']?></span></td>
+<td><?=h($a['titulo'])?></td>
+<td><?=h($a['mensaje'])?></td>
+<td><?=$a['leido']?'Leída':'Pendiente'?></td>
+<?php if($canEdit):?>
+<td>
+<?php if(!$a['leido']):?>
+<form method="post">
+<input type="hidden" name="accion" value="marcar_leida">
+<input type="hidden" name="id" value="<?=(int)$a['id']?>">
+<button class="btn secondary">Marcar leída</button>
+</form>
+<?php endif;?>
+</td>
+<?php endif;?>
+</tr>
+<?php endforeach;?>
+</tbody>
+</table>
+</div>
+</div>
 </section>
 
-<!-- MENSAJES -->
+<!-- 8. MENSAJES -->
 <section id="tab-mensajes" class="sales-tab">
-<?php if($canEdit):?><div class="sales-card"><h2>Mensaje entre sectores</h2><p>Registra comunicaciones internas desde Ventas hacia otro sector del SGI.</p><form method="post" class="sales-form"><input type="hidden" name="accion" value="enviar_mensaje"><label>Sector destino<select name="sector_destino" required><option value="">Seleccionar...</option><?php foreach($sectores as $sec): if(mb_strtolower($sec)!=='ventas'):?><option><?=h($sec)?></option><?php endif; endforeach;?></select></label><label>Asunto<input name="asunto" required></label><label class="full">Mensaje<textarea name="mensaje_texto" required></textarea></label><div><button class="btn primary">Registrar mensaje</button></div></form></div><?php endif;?>
-<div class="sales-card"><h2>Historial de comunicaciones</h2><div class="sales-table-wrap"><table class="sales-table"><thead><tr><th>Fecha</th><th>Destino</th><th>Asunto</th><th>Mensaje</th></tr></thead><tbody><?php foreach($mensajes as $m):?><tr><td><?=h($m['fecha_envio'])?></td><td><?=h($m['sector_destino'])?></td><td><?=h($m['asunto'])?></td><td><?=h($m['mensaje_texto'])?></td></tr><?php endforeach;?></tbody></table></div></div>
+<?php if($canEdit):?>
+<div class="sales-card">
+<h2>Mensaje entre sectores</h2>
+<p>Registra comunicaciones internas desde Ventas hacia otro sector del SGI.</p>
+<form method="post" class="sales-form">
+<input type="hidden" name="accion" value="enviar_mensaje">
+<label>Sector destino
+<select name="sector_destino" required>
+<option value="">Seleccionar...</option>
+<?php foreach($sectores as $sec): if(mb_strtolower($sec)!=='ventas'):?>
+<option><?=h($sec)?></option>
+<?php endif; endforeach;?>
+</select>
+</label>
+<label>Asunto<input name="asunto" required></label>
+<label class="full">Mensaje<textarea name="mensaje_texto" required></textarea></label>
+<div><button class="btn primary">Registrar mensaje</button></div>
+</form>
+</div>
+<?php endif;?>
+
+<div class="sales-card">
+<h2>Historial de comunicaciones</h2>
+<div class="sales-table-wrap">
+<table class="sales-table">
+<thead><tr><th>Fecha</th><th>Destino</th><th>Asunto</th><th>Mensaje</th></tr></thead>
+<tbody>
+<?php foreach($mensajes as $m):?>
+<tr>
+<td><?=h($m['fecha_envio'])?></td>
+<td><?=h($m['sector_destino'])?></td>
+<td><?=h($m['asunto'])?></td>
+<td><?=h($m['mensaje_texto'])?></td>
+</tr>
+<?php endforeach;?>
+</tbody>
+</table>
+</div>
+</div>
 </section>
 
-</main></div>
+</main>
+</div>
 
 <script>
 function tabVentas(id,btn){
@@ -604,6 +975,7 @@ function tabVentas(id,btn){
     if(el) el.classList.add('active');
     if(btn) btn.classList.add('active');
 }
+
 function calcTicket(){
     const tarifa=parseFloat(document.getElementById('calcTarifa')?.value||0);
     const dias=parseFloat(document.getElementById('calcDias')?.value||0);
@@ -612,11 +984,41 @@ function calcTicket(){
     const out=document.getElementById('calcResultado');
     if(out) out.textContent='USD '+total.toLocaleString('es-AR',{maximumFractionDigits:2});
 }
+
 ['calcTarifa','calcDias','calcRecargo'].forEach(id=>{
     const e=document.getElementById(id);
     if(e){e.addEventListener('input',calcTicket);e.addEventListener('change',calcTicket);}
 });
 calcTicket();
+
+function filtrarTablaCrm() {
+    const input = document.getElementById('filtroCrm');
+    const filter = input.value.toLowerCase();
+    const table = document.getElementById('tablaCrm');
+    const tr = table.getElementsByTagName('tr');
+
+    for (let i = 1; i < tr.length; i++) {
+        let tdCliente = tr[i].getElementsByTagName('td')[0];
+        let tdOportunidad = tr[i].getElementsByTagName('td')[1];
+        if (tdCliente || tdOportunidad) {
+            let txtValue = (tdCliente.textContent || tdCliente.innerText) + ' ' + (tdOportunidad.textContent || tdOportunidad.innerText);
+            if (txtValue.toLowerCase().indexOf(filter) > -1) {
+                tr[i].style.display = "";
+            } else {
+                tr[i].style.display = "none";
+            }
+        }
+    }
+}
+
+function abrirModalCalendario(fecha) {
+    const modal = document.getElementById('modalCalendario');
+    if (!modal) return;
+    document.getElementById('fechaSeleccionadaTexto').textContent = fecha;
+    document.getElementById('inputFechaAlarma').value = fecha;
+    modal.style.display = 'block';
+    modal.scrollIntoView({ behavior: 'smooth' });
+}
 </script>
 </body>
 </html>

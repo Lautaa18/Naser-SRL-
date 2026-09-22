@@ -105,6 +105,7 @@ if ($inds) {
     $mejorIndicador = $inds[0];
     foreach ($inds as $ind) {
         if ((int)$ind['valor_porcentaje'] > (int)$mejorIndicador['valor_porcentaje']) $mejorIndicador = $ind;
+        
     }
 }
 
@@ -119,7 +120,6 @@ if ($inds) {
 <div class="module-toolbar" id="seguimiento"><h2>Personal y vencimientos</h2></div><div class="table-wrapper"><table class="module-table"><thead><tr><th>Legajo</th><th>Nombre</th><th>DNI</th><th>Carnet</th><th>Curso</th><th>Responsable</th><?php if($canEdit):?><th></th><?php endif;?></tr></thead><tbody><?php foreach($trab as $r):?><tr><td><?=h($r['legajo'])?></td><td><strong><?=h($r['nombre_completo'])?></strong></td><td><?=h($r['dni'])?></td><td><?=h($r['vencimiento_carnet'])?></td><td><?=h($r['vencimiento_defensivo'])?></td><td><?=h($r['actualizado_nombre']??'Sistema')?></td><?php if($canEdit):?><td><form method="post" onsubmit="return confirm('¿Eliminar?')"><input type="hidden" name="accion" value="eliminar"><input type="hidden" name="tabla" value="finanzas_trabajadores"><input type="hidden" name="id" value="<?=(int)$r['id']?>"><button class="btn secondary">Eliminar</button></form></td><?php endif;?></tr><?php endforeach;?></tbody></table></div>
 <?php if($canEdit):?><section class="module-grid"><div class="module-card"><h3>Nuevo indicador</h3><form method="post" class="module-form"><input type="hidden" name="accion" value="indicador_guardar"><label>Indicador<input name="nombre_indicador" required></label><label>Porcentaje<input type="number" min="0" max="100" name="valor" required></label><div><button class="btn primary">Guardar</button></div></form></div><div class="module-card"><h3>Nuevo checklist</h3><form method="post" class="module-form"><input type="hidden" name="accion" value="check_guardar"><label class="full">Requisito<input name="requisito" required></label><label>Categoría<input name="categoria"></label><label>Frecuencia<input name="frecuencia"></label><label>Estado<select name="estado"><option>APROBADO</option><option>PENDIENTE</option><option>OBSERVADO</option></select></label><label><span>Completado</span><input type="checkbox" name="completado" value="1"></label><div><button class="btn primary">Guardar</button></div></form></div></section><?php endif;?>
 
-
 <div class="module-toolbar"><h2>Alertas y avisos de vencimiento</h2><span class="count-pill"><?=count($alertas)?> aviso(s)</span></div>
 <section class="module-grid">
 <div class="module-card"><h3>Listado de trabajadores</h3><p>Control de carnet de conducir y curso de manejo/defensa de conducir.</p><div class="big"><?=count($trab)?></div></div>
@@ -131,9 +131,9 @@ if ($inds) {
 <section class="chart-grid">
     <div class="chart-card">
         <h3>Indicadores del sector</h3>
-        <p>El gráfico se genera automáticamente con los valores cargados por el responsable de Finanzas.</p>
+        <p>El grafico se genera automaticamente con los valores cargados por el responsable de Finanzas.</p>
         <?php if(!$inds): ?>
-            <div class="indicator-empty">Todavía no hay indicadores cargados. Al registrar el primero, aparecerá automáticamente acá.</div>
+            <div class="indicator-empty">Todavia no hay indicadores cargados. Al registrar el primero, aparecerá automáticamente acá.</div>
         <?php else: ?>
             <div class="chart-bars">
                 <?php foreach($inds as $ind): $v=max(0,min(100,(int)$ind['valor_porcentaje'])); ?>
@@ -157,6 +157,19 @@ if ($inds) {
     </div>
 </section>
 
-<div class="module-toolbar" id="indicadores"><h2>Detalle de indicadores</h2></div><div class="table-wrapper"><table class="module-table"><thead><tr><th>Indicador</th><th>Valor</th><th>Actualizado</th><?php if($canEdit):?><th></th><?php endif;?></tr></thead><tbody><?php foreach($inds as $r):?><tr><td><?=h($r['nombre_indicador'])?></td><td><strong><?=(int)$r['valor_porcentaje']?>%</strong></td><td><?=h($r['fecha_actualizacion'])?></td><?php if($canEdit):?><td><form method="post"><input type="hidden" name="accion" value="eliminar"><input type="hidden" name="tabla" value="finanzas_indicadores"><input type="hidden" name="id" value="<?=(int)$r['id']?>"><button class="btn secondary">Eliminar</button></form></td><?php endif;?></tr><?php endforeach;?></tbody></table></div>
+<div class="module-toolbar" id="indicadores"><h2>Detalle de indicadores</h2></div>
+<div class="table-wrapper"><table class="module-table"><thead><tr><th>Indicador</th>
+<th>Valor</th><th>Actualizado</th><?php if($canEdit):?><th>
+
+</th><?php endif;
+?></tr></thead>
+<tbody>
+    <?php 
+    foreach($inds as $r):?><tr><td>
+        <?=h($r['nombre_indicador'])
+        ?></td><td><strong>
+            <?=(int)$r['valor_porcentaje']?>%</strong></td>
+            <td><?=h($r['fecha_actualizacion'])?>
+        </td><?php if($canEdit):?><td><form method="post"><input type="hidden" name="accion" value="eliminar"><input type="hidden" name="tabla" value="finanzas_indicadores"><input type="hidden" name="id" value="<?=(int)$r['id']?>"><button class="btn secondary">Eliminar</button></form></td><?php endif;?></tr><?php endforeach;?></tbody></table></div>
 
 </main></div></body></html>
