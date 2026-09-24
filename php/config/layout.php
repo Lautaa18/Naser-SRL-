@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/auth.php';
+
 function sidebar(PDO $pdo, string $active=''): void {
     $sectores = sectoresVisibles($pdo);
     $rol = $_SESSION['rol'] ?? '';

@@ -5,8 +5,6 @@ requireLogin();
 
 require __DIR__ . '/config/db.php';
 require __DIR__ . '/config/layout.php';
-require __DIR__ . '/config/sector_modules.php';
-
 
 /* =========================================================
    DATOS RECIBIDOS
@@ -254,10 +252,6 @@ $docs = $st->fetchAll();
 
 /* =========================================================
    FUNCIÓN PARA URL DE DOCUMENTOS
-
-   IMPORTANTE:
-   codificamos cada parte de la ruta por separado.
-   Esto evita el problema anterior de %2F.
    ========================================================= */
 
 function documentUrl(string $archivo): string
@@ -341,27 +335,22 @@ function documentUrl(string $archivo): string
 
             <div class="top-actions">
 
+                <!-- BOTONES ESPECIALES POR SECTOR -->
+                <?php if ($slug === 'hseq'): ?>
+                    <a class="btn primary" href="<?= app_url('/php/hseq.php') ?>">Gestión HSEQ</a>
+                <?php elseif ($slug === 'rrhh'): ?>
+                    <a class="btn primary" href="<?= app_url('/php/rrhh.php') ?>">Gestión RRHH</a>
+                <?php elseif ($slug === 'finanzas'): ?>
+                    <a class="btn primary" href="<?= app_url('/php/finanzas.php') ?>">Gestión financiera</a>
+                <?php elseif ($slug === 'compras'): ?>
+                    <a class="btn primary" href="<?= app_url('/php/compras.php') ?>">Gestión de compras</a>
+                <?php elseif ($slug === 'ventas'): ?>
+                    <a class="btn primary" href="<?= app_url('/php/ventas.php') ?>">Gestión comercial</a>
+                <?php endif; ?>
 
-                <!--
-                    BOTÓN DEL MÓDULO ESPECIAL
 
-                    RRHH     -> Gestión RRHH
-                    Finanzas -> Gestión financiera
-                    Compras  -> Gestión de compras
-
-                    Los demás sectores no muestran nada.
-                -->
-
-                <?php botonModuloSector($slug); ?>
-
-
-                <!--
-                    SOLO RESPONSABLE DEL SECTOR O ADMIN
-                    pueden administrar carpetas/documentos.
-                -->
-
+                <!-- SOLO RESPONSABLE DEL SECTOR O ADMIN -->
                 <?php if ($canEdit): ?>
-
 
                     <a
                         class="btn secondary"
@@ -373,7 +362,6 @@ function documentUrl(string $archivo): string
                         Carpetas
                     </a>
 
-
                     <a
                         class="btn primary"
                         href="<?= app_url(
@@ -384,9 +372,7 @@ function documentUrl(string $archivo): string
                         Cargar documentos
                     </a>
 
-
                 <?php endif; ?>
-
 
             </div>
 
@@ -399,7 +385,6 @@ function documentUrl(string $archivo): string
 
         <nav class="breadcrumbs">
 
-
             <a
                 href="<?= app_url(
                     '/php/sector.php?sector=' .
@@ -409,12 +394,9 @@ function documentUrl(string $archivo): string
                 <?= h($s['nombre']) ?>
             </a>
 
-
             <?php foreach ($breadcrumbs as $b): ?>
 
-
                 <span>›</span>
-
 
                 <a
                     href="<?= app_url(
@@ -427,9 +409,7 @@ function documentUrl(string $archivo): string
                     <?= h($b['nombre']) ?>
                 </a>
 
-
             <?php endforeach; ?>
-
 
         </nav>
 
@@ -443,13 +423,11 @@ function documentUrl(string $archivo): string
             class="search-bar"
         >
 
-
             <input
                 type="hidden"
                 name="sector"
                 value="<?= h($slug) ?>"
             >
-
 
             <?php if ($cid): ?>
 
@@ -461,21 +439,17 @@ function documentUrl(string $archivo): string
 
             <?php endif; ?>
 
-
             <input
                 name="q"
                 value="<?= h($q) ?>"
                 placeholder="Buscar por nombre o descripción..."
             >
 
-
             <select name="tipo">
-
 
                 <option value="">
                     Todos los tipos
                 </option>
-
 
                 <?php
 
@@ -506,9 +480,7 @@ function documentUrl(string $archivo): string
 
                 ?>
 
-
                 <?php foreach ($tipos as $valor => $nombre): ?>
-
 
                     <option
                         value="<?= h($valor) ?>"
@@ -522,12 +494,9 @@ function documentUrl(string $archivo): string
 
                     </option>
 
-
                 <?php endforeach; ?>
 
-
             </select>
-
 
             <button
                 class="btn primary"
@@ -535,7 +504,6 @@ function documentUrl(string $archivo): string
             >
                 Buscar
             </button>
-
 
         </form>
 
@@ -545,9 +513,7 @@ function documentUrl(string $archivo): string
              ================================================= -->
 
         <div class="section-head">
-
             <div>
-
                 <p class="eyebrow">
                     CARPETAS
                 </p>
@@ -563,9 +529,7 @@ function documentUrl(string $archivo): string
 
         <section class="folder-grid">
 
-
             <?php if (!$folders): ?>
-
 
                 <div class="empty">
 
@@ -573,12 +537,9 @@ function documentUrl(string $archivo): string
 
                 </div>
 
-
             <?php endif; ?>
 
-
             <?php foreach ($folders as $f): ?>
-
 
                 <a
                     class="folder-card"
@@ -590,11 +551,9 @@ function documentUrl(string $archivo): string
                     ) ?>"
                 >
 
-
                     <span class="folder-icon">
                         📁
                     </span>
-
 
                     <div>
 
@@ -608,17 +567,13 @@ function documentUrl(string $archivo): string
 
                     </div>
 
-
                     <b>
                         ›
                     </b>
 
-
                 </a>
 
-
             <?php endforeach; ?>
-
 
         </section>
 
@@ -641,7 +596,6 @@ function documentUrl(string $archivo): string
 
             </div>
 
-
             <span class="count-pill">
 
                 <?= count($docs) ?> archivo(s)
@@ -653,9 +607,7 @@ function documentUrl(string $archivo): string
 
         <section class="document-grid">
 
-
             <?php if (!$docs): ?>
-
 
                 <div class="empty">
 
@@ -663,12 +615,9 @@ function documentUrl(string $archivo): string
 
                 </div>
 
-
             <?php endif; ?>
 
-
             <?php foreach ($docs as $d): ?>
-
 
                 <?php
 
@@ -685,12 +634,9 @@ function documentUrl(string $archivo): string
 
                 ?>
 
-
                 <article class="document-card">
 
-
                     <div class="doc-meta">
-
 
                         <span class="type-badge">
 
@@ -701,7 +647,6 @@ function documentUrl(string $archivo): string
                             ) ?>
 
                         </span>
-
 
                         <span
                             class="status-pill <?= h(
@@ -715,16 +660,13 @@ function documentUrl(string $archivo): string
 
                         </span>
 
-
                     </div>
-
 
                     <h3>
 
                         <?= h($d['titulo']) ?>
 
                     </h3>
-
 
                     <p>
 
@@ -734,7 +676,6 @@ function documentUrl(string $archivo): string
                         ) ?>
 
                     </p>
-
 
                     <small>
 
@@ -748,7 +689,6 @@ function documentUrl(string $archivo): string
                             $d['fecha_actualizacion']
                         ) ?>
 
-
                         <?php if (!empty($d['fecha_vencimiento'])): ?>
 
                             · Vence
@@ -760,12 +700,9 @@ function documentUrl(string $archivo): string
 
                     </small>
 
-
                     <?php if ($archivo !== ''): ?>
 
-
                         <div class="doc-actions">
-
 
                             <?php if (
                                 in_array(
@@ -780,7 +717,6 @@ function documentUrl(string $archivo): string
                                 )
                             ): ?>
 
-
                                 <button
                                     class="btn secondary"
                                     type="button"
@@ -792,9 +728,7 @@ function documentUrl(string $archivo): string
                                     Vista previa
                                 </button>
 
-
                             <?php endif; ?>
-
 
                             <a
                                 class="btn primary"
@@ -805,21 +739,15 @@ function documentUrl(string $archivo): string
                                 Abrir
                             </a>
 
-
                         </div>
-
 
                     <?php endif; ?>
 
-
                 </article>
-
 
             <?php endforeach; ?>
 
-
         </section>
-
 
     </main>
 
@@ -837,16 +765,13 @@ function documentUrl(string $archivo): string
 
     <div class="modal-box preview-box">
 
-
         <div class="modal-head">
-
 
             <h3 id="previewTitle">
 
                 Vista previa
 
             </h3>
-
 
             <button
                 type="button"
@@ -855,15 +780,12 @@ function documentUrl(string $archivo): string
                 ×
             </button>
 
-
         </div>
-
 
         <iframe
             id="previewFrame"
             title="Vista previa del documento"
         ></iframe>
-
 
     </div>
 
@@ -937,7 +859,6 @@ document.addEventListener(
 );
 
 </script>
-
 
 </body>
 
