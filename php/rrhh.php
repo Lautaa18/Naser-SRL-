@@ -22,11 +22,11 @@ function auditModulo(PDO $pdo,int $uid,string $accion,string $detalle): void {
     } catch(Throwable $e) {}
 }
 function exigirEdicion(bool $canEdit): void {
-    if(!$canEdit) { http_response_code(403); exit('No tenés permiso para modificar este sector.'); }
+    if(!$canEdit) { http_response_code(403); exit('No tenes permiso para modificar este sector.'); }
 }
 ?>
 <!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Gestión de Recursos Humanos | NASER SGI</title><link rel="stylesheet" href="<?=app_url('/style.css')?>">
+<title>Gestion de Recursos Humanos | NASER SGI</title><link rel="stylesheet" href="<?=app_url('/style.css')?>">
 <style>
 :root{--ng:#08783e;--nd:#164c2d;--ns:#edf7f1;--nl:#dfe7e1}
 .module-hero{position:relative;overflow:hidden;background:linear-gradient(125deg,#123f28,#08783e);color:#fff;border-radius:20px;padding:26px 28px;margin:0 0 20px;box-shadow:0 12px 30px rgba(20,70,40,.12)}

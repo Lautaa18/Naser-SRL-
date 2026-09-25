@@ -161,17 +161,17 @@ if ($sgi) {
             </section>
 
             <aside class="quick-panel">
-                <p class="eyebrow">ACCESOS RÁPIDOS</p>
+                <p class="eyebrow">ACCESOS RAPIDOS</p>
                 <h2>Herramientas</h2>
                 <a href="<?= app_url('/php/buscar.php') ?>">🔎 Buscar documentos</a>
                 <?php if (puedeGestionarDocumentos($pdo)): ?>
                     <a href="<?= app_url('/php/admin/documentos.php') ?>">⬆ Carga masiva / ZIP</a>
                     <a href="<?= app_url('/php/admin/carpetas.php') ?>">📁 Administrar carpetas</a>
                 <?php endif; ?>
-                <a href="<?= app_url('/php/operaciones.php') ?>">⚙ Gestión operativa</a>
+                <a href="<?= app_url('/php/operaciones.php') ?>">⚙ Gestion operativa</a>
             </aside>
         </div>
     </main>
 </div>
-</body>
+</body> 
 </html>
