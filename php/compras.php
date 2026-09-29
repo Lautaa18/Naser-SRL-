@@ -58,12 +58,23 @@ try {
         fecha_registro DATETIME DEFAULT CURRENT_TIMESTAMP
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");
 
-    // Intenta agregar columnas faltantes en tablas existentes si no fueron creadas recién
+    $pdo->exec("CREATE TABLE IF NOT EXISTS compras_formularios (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        sector_id INT NOT NULL,
+        codigo_form VARCHAR(100) NOT NULL,
+        proveedor_nombre VARCHAR(150),
+        solicitante VARCHAR(150),
+        fecha_documento DATE,
+        estado VARCHAR(50) DEFAULT 'en_edicion',
+        creado_por INT,
+        creado_en DATETIME DEFAULT CURRENT_TIMESTAMP
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");
+
     @$pdo->exec("ALTER TABLE compras ADD COLUMN monto DECIMAL(12,2) DEFAULT 0.00 AFTER proveedor;");
     @$pdo->exec("ALTER TABLE compras ADD COLUMN moneda VARCHAR(5) DEFAULT 'ARS' AFTER monto;");
     @$pdo->exec("ALTER TABLE compras_encuesta ADD COLUMN fecha_registro DATETIME DEFAULT CURRENT_TIMESTAMP;");
 } catch (Throwable $e) {
-    // Continuar si las columnas o tablas ya existen
+    // Continuar si las tablas o columnas ya existen
 }
 
 function auditModulo(PDO $pdo, int $uid, string $accion, string $detalle): void {
@@ -89,13 +100,12 @@ $etapaNombre = [
 $uploadDir = dirname(__DIR__) . '/uploads/compras';
 if (!is_dir($uploadDir)) @mkdir($uploadDir, 0775, true);
 
-// --- PROCESAMIENTO DE FORMULARIOS ---
+// --- PROCESAMIENTO DE FORMULARIOS DE COMPRAS ---
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exigirEdicion($canEdit);
     try {
         $a = $_POST['accion'] ?? '';
 
-        // 1. Crear / Guardar Pedido
         if ($a === 'guardar') {
             $id = (int)($_POST['id'] ?? 0);
             $desc = trim($_POST['descripcion'] ?? '');
@@ -134,7 +144,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             auditModulo($pdo, $uid, 'compras_guardar', "Compra #$compraId");
         }
 
-        // 2. Subir Documento por Etapa
         if ($a === 'documento_etapa') {
             $id = (int)($_POST['compra_id'] ?? 0);
             $et = max(1, min(6, (int)($_POST['etapa_doc'] ?? 1)));
@@ -150,7 +159,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             $orig = $_FILES['archivo_etapa']['name'];
             $ext = strtolower(pathinfo($orig, PATHINFO_EXTENSION));
-            if (!in_array($ext, ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'jpg', 'png'], true)) throw new RuntimeException('Formato no permitido (Use PDF, Office o imágenes).');
+            if (!in_array($ext, ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'jpg', 'png'], true)) throw new RuntimeException('Formato no permitido.');
             
             $safe = 'compra-' . $id . '-etapa-' . $et . '-' . time() . '.' . $ext;
             if (!move_uploaded_file($_FILES['archivo_etapa']['tmp_name'], $uploadDir . '/' . $safe)) throw new RuntimeException('No se pudo guardar el archivo.');
@@ -165,7 +174,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $msg = 'Documento subido y estado actualizado correctamente.';
         }
 
-        // 3. Registrar Encuesta de Recepción
         if ($a === 'encuesta') {
             $id = (int)($_POST['compra_id'] ?? 0);
             $st = $pdo->prepare('SELECT id FROM compras WHERE id=? AND sector_id=?');
@@ -187,7 +195,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $msg = 'Recepción y evaluación registrada con éxito.';
         }
 
-        // 4. Eliminar Pedido
         if ($a === 'eliminar') {
             $id = (int)($_POST['id'] ?? 0);
             $pdo->prepare('DELETE FROM compras WHERE id=? AND sector_id=?')->execute([$id, $sid]);
@@ -218,6 +225,11 @@ $docsCompra = $docsCompra->fetchAll();
 $encuestas = $pdo->prepare('SELECT e.*, c.codigo, u.nombre AS usuario_evaluador FROM compras_encuesta e JOIN compras c ON c.id=e.compra_id LEFT JOIN usuarios u ON u.id=e.creado_por WHERE c.sector_id=? ORDER BY e.id DESC');
 $encuestas->execute([$sid]);
 $encuestas = $encuestas->fetchAll();
+
+// Carga de Formularios / Checklists de Compras
+$stForms = $pdo->prepare('SELECT f.*, u.nombre AS creado_nombre FROM compras_formularios f LEFT JOIN usuarios u ON u.id = f.creado_por WHERE f.sector_id = ? ORDER BY f.id DESC');
+$stForms->execute([$sid]);
+$formularios = $stForms->fetchAll();
 ?>
 <!doctype html>
 <html lang="es">
@@ -251,6 +263,16 @@ $encuestas = $encuestas->fetchAll();
 .badge-calidad{background:#dcfce7;color:#15803d;padding:3px 6px;border-radius:4px;font-weight:bold;font-size:11px}
 .badge-calidad-obs{background:#fef3c7;color:#b45309}
 .badge-calidad-bad{background:#fee2e2;color:#b91c1c}
+
+/* Estilos para Checklists y Formularios */
+.grid-forms{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-bottom:20px}
+.card-form{background:#fff;border:1px solid var(--nl);border-radius:14px;padding:16px;box-shadow:0 4px 12px rgba(0,0,0,0.03);display:flex;flex-direction:column;justify-content:space-between}
+.card-form h3{margin:0 0 6px;font-size:15px;color:var(--nd)}
+.card-form p{font-size:12px;color:#64748b;margin:0 0 14px}
+.status-pill{display:inline-block;padding:3px 8px;border-radius:12px;font-size:10px;font-weight:800;text-transform:uppercase}
+.status-en_edicion{background:#fef3c7;color:#92400e}
+.status-finalizado{background:#dcfce7;color:#166534}
+
 @media(max-width:900px){.module-grid{grid-template-columns:1fr 1fr}.flow{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:650px){.module-grid,.module-form{grid-template-columns:1fr}.module-form .full{grid-column:auto}.flow{grid-template-columns:repeat(2,1fr)}}
 </style>
@@ -268,6 +290,7 @@ $encuestas = $encuestas->fetchAll();
 
 <div class="module-tabs">
     <a href="<?=app_url('/php/sector.php?sector='.$slug)?>">📁 Documentación del Sector</a>
+    <a href="#formularios">📋 Formularios / Checklists</a>
     <a href="#gestion">⚙ Modificar / Registrar Pedido</a>
     <a href="#seguimiento">📊 Seguimiento</a>
     <a href="#documentos">📎 Adjuntos por Etapa</a>
@@ -308,6 +331,115 @@ $encuestas = $encuestas->fetchAll();
         <div class="big"><?=count(array_filter($rows,fn($r)=>(int)$r['etapa']===6))?></div>
     </div>
 </section>
+
+<!-- SECCIÓN: CHECKLISTS Y FORMULARIOS DE COMPRAS -->
+<div class="module-toolbar" id="formularios">
+  <h2>Formularios y Checklists de Compras</h2>
+  <span class="count-pill"><?=count($formularios)?> cargado(s)</span>
+</div>
+
+<!-- TARJETAS DE LOS FORMULARIOS SEGÚN LOS ARCHIVOS DE COMPRAS -->
+<div class="grid-forms">
+  <div class="card-form">
+    <div>
+      <h3>1. Alta de Proveedores</h3>
+      <p>Registro e incorporación de nuevos proveedores al sistema.</p>
+    </div>
+    <?php if($canEdit): ?>
+      <a href="/php/formularios/alta_proveedores.php?sector_id=<?=$sid?>" class="btn primary">Abrir Formulario</a>
+    <?php endif; ?>
+  </div>
+
+  <div class="card-form">
+    <div>
+      <h3>2. Entrega de Materiales</h3>
+      <p>Constancia de recepción y despacho de insumos/materiales.</p>
+    </div>
+    <?php if($canEdit): ?>
+      <a href="/php/formularios/entrega_materiales.php?sector_id=<?=$sid?>" class="btn primary">Abrir Formulario</a>
+    <?php endif; ?>
+  </div>
+
+  <div class="card-form">
+    <div>
+      <h3>3. Evaluación de Proveedores</h3>
+      <p>Calificación de desempeño, calidad y tiempos de respuesta.</p>
+    </div>
+    <?php if($canEdit): ?>
+      <a href="/php/formularios/evaluacion_proveedores.php?sector_id=<?=$sid?>" class="btn primary">Abrir Formulario</a>
+    <?php endif; ?>
+  </div>
+
+  <div class="card-form">
+    <div>
+      <h3>4. Listado de Proveedores, Productos y Servicios</h3>
+      <p>Catálogo unificado de proveedores y sus rubros.</p>
+    </div>
+    <?php if($canEdit): ?>
+      <a href="/php/formularios/listado_proveedores_productos_servicios.php?sector_id=<?=$sid?>" class="btn primary">Abrir Formulario</a>
+    <?php endif; ?>
+  </div>
+
+  <div class="card-form">
+    <div>
+      <h3>5. Pedido de Materiales y Servicios</h3>
+      <p>Solicitud formal de requerimiento de insumos o contrataciones.</p>
+    </div>
+    <?php if($canEdit): ?>
+      <a href="/php/formularios/pedido_materiales_servicios.php?sector_id=<?=$sid?>" class="btn primary">Abrir Formulario</a>
+    <?php endif; ?>
+  </div>
+
+  <div class="card-form">
+    <div>
+      <h3>6. Seguimiento Proveedor</h3>
+      <p>Control de entregas pendientes, estado de órdenes e incidentes.</p>
+    </div>
+    <?php if($canEdit): ?>
+      <a href="/php/formularios/seguimiento_proveedor.php?sector_id=<?=$sid?>" class="btn primary">Abrir Formulario</a>
+    <?php endif; ?>
+  </div>
+</div>
+
+<!-- TABLA DE HISTORIAL DE FORMULARIOS CARGADOS -->
+<div class="table-wrapper" style="margin-bottom: 30px;">
+  <table class="module-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Código / Tipo Formulario</th>
+        <th>Proveedor / Solicitante</th>
+        <th>Fecha Emisión</th>
+        <th>Estado</th>
+        <th>Cargado por</th>
+        <th>Acción</th>
+      </tr>
+    </thead>
+    <tbody>
+      <?php if(empty($formularios)): ?>
+        <tr><td colspan="7" style="text-align: center; color: #666; padding: 18px;">No hay formularios o checklists registrados aún.</td></tr>
+      <?php else: ?>
+        <?php foreach($formularios as $f): ?>
+        <tr>
+          <td><strong>#<?=$f['id']?></strong></td>
+          <td><strong><?=h($f['codigo_form'])?></strong></td>
+          <td><?=h($f['proveedor_nombre'] ?: $f['solicitante'] ?: '-')?></td>
+          <td><?=h($f['fecha_documento'])?></td>
+          <td>
+            <span class="status-pill status-<?=h($f['estado'])?>">
+              <?=h(str_replace('_', ' ', $f['estado']))?>
+            </span>
+          </td>
+          <td><?=h($f['creado_nombre'] ?: 'Sistema')?></td>
+          <td>
+            <a class="btn secondary" href="/php/formularios/ver.php?id=<?=(int)$f['id']?>">Ver / Editar</a>
+          </td>
+        </tr>
+        <?php endforeach; ?>
+      <?php endif; ?>
+    </tbody>
+  </table>
+</div>
 
 <?php if($canEdit):?>
 <section class="module-card" id="gestion">
