@@ -65,7 +65,7 @@ if ($sgi) {
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>SGI | NASER</title>
-    <link rel="stylesheet" href="<?= app_url('/style.css') ?>?v=20260930">
+    <link rel="stylesheet" href="<?= asset('/style.css') ?>">
 </head>
 <body>
 <div class="app">

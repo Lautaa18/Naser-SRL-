@@ -115,3 +115,14 @@ APP_BASE=/naser
 ```
 
 La conexión de base también se maneja por variables `DB_HOST`, `DB_NAME`, `DB_USER` y `DB_PASS`, por lo que no hace falta reescribir el PHP al moverlo al servidor.
+
+## Seguridad y configuración (actualización 30/09/2026)
+
+- **APP_ENV** en `.env`: `dev` muestra errores y la cuenta demo en el login; `production` los oculta y guarda los errores en `logs/php-errors.log`. En el servidor real usar `APP_ENV=production`.
+- **`.htaccess` en la raíz**: bloquea el acceso web a `.env`, `.git`, `*.sql`, `backups/`, `sql/`, `docker/`, etc. Docker lo activa con `docker/apache-naser.conf` (requiere `docker compose up -d --build` la primera vez).
+- **CSRF**: todos los formularios POST llevan `<?=csrf_field()?>` y cada página llama a `verify_csrf()`. Si agregás un formulario nuevo, agregale `<?=csrf_field()?>`.
+- **Login**: se bloquea 15 minutos tras 5 intentos fallidos (tabla `login_intentos`).
+- **Tablas nuevas**: se definen en `php/config/schema_modulos.php` (se crean solas). No crear tablas dentro de las páginas.
+- **CSS**: usar `asset('/ruta.css')` en vez de `app_url()` para que el navegador baje la versión nueva al cambiar el archivo. Estilos compartidos en `css/modules.css` y `css/checklists.css`.
+- **Páginas de módulo**: usar `require __DIR__ . '/config/modulo.php';` y `cargarModulo($pdo, 'slug')`.
+- **Base de datos**: `base_naser_compartir.sql` ya no se sube a GitHub (el repo es público). Compartirlo por otro medio.

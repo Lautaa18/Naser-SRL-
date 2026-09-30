@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/schema_modulos.php';
 
 function hasColumn(PDO $pdo, string $table, string $column): bool
 {
@@ -984,4 +985,7 @@ function naser_bootstrap(PDO $pdo): void
             }
         }
     }
+
+    // Tablas de los modulos (Compras, RRHH, login...)
+    naser_schema_modulos($pdo);
 }
