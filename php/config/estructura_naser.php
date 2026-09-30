@@ -12,24 +12,38 @@ const NASER_DOMINIO_MAIL = 'gruponaser.com.ar';
 
 function estructuraNaser(): array {
     return [
-        // clave => [Nombre y apellido, super usuario?]
-        // El mail se arma como clave@gruponaser.com.ar  (ej: ariel.costallat@gruponaser.com.ar)
-        // (!) Las claves sin apellido son provisorias: cambialas cuando tengas el apellido.
         // clave => [Nombre y apellido, super usuario?, mail corporativo]
-        // Datos tomados del "Listado de Empleados Actual" (hoja MAILS). Donde no habia mail se usa nombre.apellido.
+        // Datos del "Listado de Empleados Actual" (hojas PERSONAL y MAILS).
+        // (*) = no figuraba en la hoja MAILS: se armo nombre.apellido@gruponaser.com.ar (confirmar)
         'personas' => [
-            'sigifredo'       => ['Sigifredo Pizarro', true, 'sigifredo.pizarro@gruponaser.com.ar'],   // SUPER USUARIO
-            'ariel.costallat' => ['Ariel Costallat', false, 'ariel.costallat@gruponaser.com.ar'],      // responsable en todos los sectores
-            'vanessa'         => ['Vanesa Marcon', false, 'vanesa.marcon@gruponaser.com.ar'],
-            'noelia'          => ['Noelia Cuñelao', false, 'noelia.cunelao@gruponaser.com.ar'],
-            'carina'          => ['Carina Jara', false, 'carina.jara@gruponaser.com.ar'],
-            'victor'          => ['Víctor Bonfils', false, 'victor.bonfils@gruponaser.com.ar'],       // (mail a confirmar)
-            'osvaldo'         => ['Osvaldo Furlan', false, 'osvaldo.furlan@gruponaser.com.ar'],       // (mail a confirmar)
-            'ariel.ibanez'    => ['Ariel Ibañez', false, 'ariel.ibanez@gruponaser.com.ar'],           // (mail a confirmar)
-            'juan'            => ['Juan Basoalto', false, 'juan.basoalto@gruponaser.com.ar'],
-            'silvio'          => ['Silvio Oksman Kritz', false, 'silvio.oksman@gruponaser.com.ar'],   // (mail a confirmar)
-            'cintia'          => ['Cynthia Riquelme', false, 'cynthia.riquelme@gruponaser.com.ar'],   // (mail a confirmar)
-            'andres.belizon'  => ['Andrés Belizón', false, 'andres.belizon@gruponaser.com.ar'],
+            'sigifredo'       => ['Tristán Sigifredo Pizarro', true, 'sigifredo.pizarro@gruponaser.com.ar'],   // SUPER USUARIO
+            'ariel.costallat' => ['Ariel Eduardo Costallat', false, 'ariel.costallat@gruponaser.com.ar'],      // responsable en todos los sectores
+            'vanessa'         => ['Vanesa Lorena Marcon', false, 'vanesa.marcon@gruponaser.com.ar'],
+            'noelia'          => ['Noelia Gisell Cuñelao', false, 'noelia.cunelao@gruponaser.com.ar'],
+            'carina'          => ['Carina Noemí Jara', false, 'carina.jara@gruponaser.com.ar'],
+            'victor'          => ['Víctor Andrés Bonfils', false, 'victor.bonfils@gruponaser.com.ar'],          // (*)
+            'osvaldo'         => ['Osvaldo Adolfo Furlan', false, 'osvaldo.furlan@gruponaser.com.ar'],          // (*)
+            'ariel.ibanez'    => ['Oscar Ariel Ibañez', false, 'ariel.ibanez@gruponaser.com.ar'],               // (*)
+            'juan'            => ['Juan Manuel Basoalto', false, 'juan.basoalto@gruponaser.com.ar'],
+            'silvio'          => ['Silvio Marcelo Oksman Kritz', false, 'silvio.oksman@gruponaser.com.ar'],     // (*)
+            'cintia'          => ['Cynthia Pamela Riquelme', false, 'cynthia.riquelme@gruponaser.com.ar'],      // (*)
+            'andres.belizon'  => ['Juan Andrés Belizón', false, 'andres.belizon@gruponaser.com.ar'],
+
+            // Personal operativo (Slick Line): operadores de Operaciones
+            'diego.espeche'    => ['Diego Sebastián Espeche Miranda', false, 'diego.espeche@gruponaser.com.ar'],
+            'mariano.dominguez'=> ['Roque Mariano Domínguez', false, 'mariano.dominguez@gruponaser.com.ar'],
+            'sergio.medel'     => ['Sergio Emilio Medel', false, 'sergio.medel@gruponaser.com.ar'],
+            'javier.peralta'   => ['Javier Alejandro Peralta', false, 'javier.peralta@gruponaser.com.ar'],
+            'ignacio.vece'     => ['Ignacio Martín Vece', false, 'ignacio.vece@gruponaser.com.ar'],
+            'walter.lucero'    => ['Walter Ricardo Lucero', false, 'walter.lucero@gruponaser.com.ar'],
+            'facundo.grier'    => ['Facundo Grier', false, 'facundo.grier@gruponaser.com.ar'],
+            'daniel.almonacid' => ['Daniel Fernando Almonacid Noriega', false, 'daniel.almonacid@gruponaser.com.ar'],
+            'miguel.decroce'   => ['Miguel Ángel De Croce', false, 'miguel.decroce@gruponaser.com.ar'],
+            'rodrigo.lagos'    => ['Rodrigo Andrés Lagos', false, 'rodrigo.lagos@gruponaser.com.ar'],
+            'marco.echaniz'    => ['Marco Daniel Echaniz', false, 'marco.echaniz@gruponaser.com.ar'],
+            'alan.berrocal'    => ['Alan Alberto Berrocal', false, 'alan.berrocal@gruponaser.com.ar'],
+            'carlos.bermar'    => ['Carlos Alberto Bermar', false, 'carlos.bermar@gruponaser.com.ar'],
+            'lucas.molina'     => ['Lucas Omar Molina', false, 'lucas.molina@gruponaser.com.ar'],               // (*)
         ],
 
         // Responsables por sector: editan, gestionan y APRUEBAN
@@ -45,9 +59,11 @@ function estructuraNaser(): array {
             'sgi'           => ['ariel.costallat'],
         ],
 
-        // Operadores: ven y completan formularios (todavia no hay; agregalos aca o desde la pantalla)
+        // Operadores: ven y completan formularios
         'operadores' => [
-            // 'operaciones' => ['nombre.apellido'],
+            'operaciones' => ['diego.espeche', 'mariano.dominguez', 'sergio.medel', 'javier.peralta', 'ignacio.vece', 'walter.lucero',
+                              'facundo.grier', 'daniel.almonacid', 'miguel.decroce', 'rodrigo.lagos', 'marco.echaniz', 'alan.berrocal',
+                              'carlos.bermar', 'lucas.molina'],
         ],
 
         // Permisos de observacion

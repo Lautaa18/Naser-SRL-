@@ -15,7 +15,7 @@ RedirectMatch 404 ^/(Dockerfile|compose\.yaml)$
 RedirectMatch 404 ^/(backups|logs|sql|docker|naser|Naser-SRL-|formularios|tools)(/|$)
 
 # Scripts de consola: solo se ejecutan desde la terminal
-RedirectMatch 404 ^/php/tools/(importar_documentacion|migrar_uploads)\.php$
+RedirectMatch 404 ^/php/tools/(importar_documentacion|migrar_uploads|crear_usuarios)\.php$
 
 # Cabeceras de seguridad basicas
 <IfModule mod_headers.c>
