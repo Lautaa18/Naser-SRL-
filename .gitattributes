@@ -1,0 +1,19 @@
+# Todos los archivos de texto se guardan con saltos de linea LF en el repo.
+# Evita que Git marque archivos como "modificados" entre Windows y otras PCs.
+* text=auto eol=lf
+
+# Scripts de Windows con CRLF
+*.ps1 text eol=crlf
+*.bat text eol=crlf
+
+# Binarios
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary
+*.pdf binary
+*.zip binary
+*.docx binary
+*.xlsx binary
