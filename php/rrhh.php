@@ -26,7 +26,7 @@ function exigirEdicion(bool $canEdit): void {
 }
 ?>
 <!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Gestión de Recursos Humanos | NASER SGI</title><link rel="stylesheet" href="<?=app_url('/style.css')?>">
+<title>Gestión de Recursos Humanos | NASER SGI</title><link rel="stylesheet" href="<?=app_url('/style.css')?>?v=20260930">
 <style>
 :root{--ng:#08783e;--nd:#164c2d;--ns:#edf7f1;--nl:#dfe7e1}
 .module-hero{position:relative;overflow:hidden;background:linear-gradient(125deg,#123f28,#08783e);color:#fff;border-radius:20px;padding:26px 28px;margin:0 0 20px;box-shadow:0 12px 30px rgba(20,70,40,.12)}
@@ -106,6 +106,22 @@ $mes=(int)($_GET['mes']??date('n')); $anio=(int)($_GET['anio']??date('Y'));
 if($mes<1||$mes>12)$mes=(int)date('n'); if($anio<2020||$anio>2100)$anio=(int)date('Y');
 $primerDia=sprintf('%04d-%02d-01',$anio,$mes); $diasMes=(int)date('t',strtotime($primerDia)); $inicioSemana=(int)date('N',strtotime($primerDia));
 $eventosPorDia=[]; foreach($rows as $r){if(substr($r['fecha_vencimiento'],0,7)===sprintf('%04d-%02d',$anio,$mes)){$d=(int)substr($r['fecha_vencimiento'],8,2);$eventosPorDia[$d][]=$r;}}
+
+// Crea la tabla de checklists si todavia no existe (asi nadie tiene que importar SQL a mano)
+$pdo->exec("CREATE TABLE IF NOT EXISTS rrhh_formularios (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    sector_id INT NOT NULL,
+    codigo_form VARCHAR(100) NOT NULL,
+    empleado_nombre VARCHAR(150),
+    legajo VARCHAR(50),
+    fecha_documento DATE,
+    estado VARCHAR(50) DEFAULT 'en_edicion',
+    datos_json LONGTEXT,
+    creado_por INT,
+    actualizado_por INT,
+    creado_en DATETIME DEFAULT CURRENT_TIMESTAMP,
+    actualizado_en DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
 
 // Consultar Formularios / Checklists
 $stForms = $pdo->prepare('SELECT f.*, u.nombre AS creado_nombre FROM rrhh_formularios f LEFT JOIN usuarios u ON u.id = f.creado_por WHERE f.sector_id = ? ORDER BY f.id DESC');

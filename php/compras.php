@@ -237,7 +237,7 @@ $formularios = $stForms->fetchAll();
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Gestión Integral de Compras | NASER SGI</title>
-<link rel="stylesheet" href="<?=app_url('/style.css')?>">
+<link rel="stylesheet" href="<?=app_url('/style.css')?>?v=20260930">
 <style>
 :root{--ng:#08783e;--nd:#164c2d;--ns:#edf7f1;--nl:#dfe7e1;--warn:#d97706;--danger:#dc2626;--info:#2563eb}
 .module-hero{position:relative;overflow:hidden;background:linear-gradient(125deg,#123f28,#08783e);color:#fff;border-radius:20px;padding:26px 28px;margin:0 0 20px;box-shadow:0 12px 30px rgba(20,70,40,.12)}

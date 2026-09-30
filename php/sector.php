@@ -290,7 +290,7 @@ function documentUrl(string $archivo): string
 
     <link
         rel="stylesheet"
-        href="<?= app_url('/style.css') ?>"
+        href="<?= app_url('/style.css') ?>?v=20260930"
     >
 
 </head>
