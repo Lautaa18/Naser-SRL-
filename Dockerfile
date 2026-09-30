@@ -11,4 +11,8 @@ RUN apt-get update \
 RUN printf "upload_max_filesize=1024M\npost_max_size=1100M\nmax_file_uploads=500\nmemory_limit=1024M\nmax_execution_time=900\nmax_input_time=900\n" \
     > /usr/local/etc/php/conf.d/naser.ini
 
+# Habilita los .htaccess y oculta la version del servidor
+COPY docker/apache-naser.conf /etc/apache2/conf-available/naser.conf
+RUN a2enconf naser
+
 WORKDIR /var/www/html

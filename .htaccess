@@ -1,0 +1,25 @@
+# ==========================================
+# NASER SGI - Proteccion de archivos privados
+# ==========================================
+
+Options -Indexes
+
+# Archivos y carpetas ocultos: .env, .git, .gitignore, .htaccess...
+RedirectMatch 404 /\.(?!well-known)
+
+# Archivos de configuracion, backups y documentacion en la raiz del proyecto
+RedirectMatch 404 ^/[^/]+\.(sql|sh|ps1|ini|md|txt|yaml|yml|bak|log|zip|conf)$
+RedirectMatch 404 ^/(Dockerfile|compose\.yaml)$
+
+# Carpetas internas que no son parte del sitio
+RedirectMatch 404 ^/(backups|logs|sql|docker|naser|Naser-SRL-)(/|$)
+
+# Scripts de consola: solo se ejecutan desde la terminal
+RedirectMatch 404 ^/php/tools/(importar_documentacion|migrar_uploads)\.php$
+
+# Cabeceras de seguridad basicas
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>

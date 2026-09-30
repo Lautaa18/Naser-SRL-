@@ -28,6 +28,7 @@ services:
       DB_USER: ${DB_USER:-naser}
       DB_PASS: ${DB_PASS:-naser2026}
       APP_BASE: ${APP_BASE:-}
+      APP_ENV: ${APP_ENV:-dev}
     volumes:
       - ./:/var/www/html
       - ./naser.ini:/usr/local/etc/php/conf.d/zz-naser.ini:ro
