@@ -44,8 +44,6 @@ function sidebar(PDO $pdo, string $active=''): void {
   </nav>
   <div class="sidebar-user"><strong><?=h($_SESSION['nombre'] ?? '')?></strong><span><?=h($rol==='admin'?'Administrador':ucfirst($rol))?></span><a href="<?=app_url('/php/logout.php')?>">Cerrar sesión</a></div>
 </aside>
-<<<<<<< HEAD
-=======
 <script>
 (function(){
   var body=document.body, btn=document.querySelector('.menu-toggle'),
@@ -62,5 +60,4 @@ function sidebar(PDO $pdo, string $active=''): void {
   window.addEventListener('resize', function(){ if(window.innerWidth>900) cerrar(); });
 })();
 </script>
->>>>>>> 0e380e2 (Cambios)
 <?php }
