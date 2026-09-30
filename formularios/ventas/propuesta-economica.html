@@ -1,0 +1,2568 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>NASER | PGSN11-F2 - Propuesta Económica de Servicio</title>
+
+<style>
+/* =========================================================
+   NASER SRL - PGSN11-F2
+   PROPUESTA ECONÓMICA DE SERVICIO
+   ========================================================= */
+
+:root{
+    --naser:#009b49;
+    --naser-dark:#00783a;
+    --naser-soft:#eaf7f0;
+
+    --black:#111111;
+    --black-2:#1a1a1a;
+
+    --white:#ffffff;
+
+    --gray-bg:#f2f3f5;
+    --gray-100:#f7f7f8;
+    --gray-200:#e4e6e8;
+    --gray-300:#d1d5d8;
+    --gray-500:#7c8389;
+    --gray-700:#444a4f;
+
+    --red:#c93636;
+
+    --sidebar-width:300px;
+
+    --radius:14px;
+    --shadow:0 5px 18px rgba(0,0,0,.08);
+}
+
+/* =========================================================
+   RESET
+   ========================================================= */
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    font-family:Arial, Helvetica, sans-serif;
+    background:var(--gray-bg);
+    color:#202327;
+    min-height:100vh;
+}
+
+button,
+input,
+select,
+textarea{
+    font:inherit;
+}
+
+button{
+    cursor:pointer;
+}
+
+/* =========================================================
+   SIDEBAR
+   ========================================================= */
+
+.sidebar{
+    width:var(--sidebar-width);
+    height:100vh;
+    position:fixed;
+    top:0;
+    left:0;
+
+    background:#0e0e0e;
+    color:white;
+
+    display:flex;
+    flex-direction:column;
+
+    z-index:1000;
+
+    border-right:1px solid #222;
+}
+
+.brand{
+    padding:30px 28px 24px;
+    border-bottom:1px solid #282828;
+}
+
+.brand-logo{
+    font-size:35px;
+    font-weight:900;
+    color:var(--naser);
+    letter-spacing:2px;
+}
+
+.brand-subtitle{
+    margin-top:5px;
+    font-size:11px;
+    color:#999;
+    font-weight:700;
+    letter-spacing:1.6px;
+}
+
+.sidebar-doc{
+    margin:20px 20px 10px;
+    padding:15px;
+
+    background:#171717;
+    border:1px solid #282828;
+    border-left:4px solid var(--naser);
+
+    border-radius:10px;
+}
+
+.sidebar-doc small{
+    color:#888;
+    display:block;
+    font-size:10px;
+    margin-bottom:5px;
+    font-weight:bold;
+    letter-spacing:1px;
+}
+
+.sidebar-doc strong{
+    font-size:14px;
+}
+
+.side-nav{
+    list-style:none;
+    padding:18px 14px;
+    flex:1;
+}
+
+.side-nav li{
+    margin-bottom:7px;
+}
+
+.side-nav a{
+    display:flex;
+    align-items:center;
+    gap:11px;
+
+    padding:12px 14px;
+    border-radius:9px;
+
+    color:#c6c6c6;
+    text-decoration:none;
+
+    font-size:13px;
+    font-weight:700;
+
+    transition:.2s;
+}
+
+.side-nav a:hover{
+    background:#1c1c1c;
+    color:white;
+}
+
+.side-nav .number{
+    width:28px;
+    height:28px;
+    border-radius:50%;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    border:1px solid #414141;
+
+    color:var(--naser);
+    font-size:11px;
+    font-weight:900;
+}
+
+.side-nav a:hover .number{
+    border-color:var(--naser);
+}
+
+.sidebar-footer{
+    padding:20px;
+    font-size:11px;
+    color:#6d6d6d;
+    border-top:1px solid #282828;
+}
+
+/* =========================================================
+   MAIN
+   ========================================================= */
+
+.main{
+    margin-left:var(--sidebar-width);
+    min-height:100vh;
+}
+
+/* =========================================================
+   TOPBAR
+   ========================================================= */
+
+.topbar{
+    height:76px;
+
+    position:sticky;
+    top:0;
+
+    z-index:900;
+
+    background:white;
+    border-bottom:1px solid var(--gray-200);
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    padding:0 32px;
+}
+
+.topbar-left{
+    display:flex;
+    align-items:center;
+    gap:15px;
+}
+
+.menu-btn{
+    display:none;
+
+    width:42px;
+    height:42px;
+
+    border:none;
+    background:#f1f1f1;
+    border-radius:8px;
+
+    font-size:21px;
+}
+
+.breadcrumb{
+    font-size:12px;
+    color:#777;
+}
+
+.breadcrumb strong{
+    color:#181818;
+}
+
+.topbar-right{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.badge{
+    padding:8px 12px;
+    border-radius:20px;
+
+    font-size:11px;
+    font-weight:800;
+}
+
+.badge.document{
+    background:#111;
+    color:white;
+}
+
+.badge.status{
+    background:#e8f6ef;
+    color:var(--naser-dark);
+    border:1px solid #cbeada;
+}
+
+.badge.status.finished{
+    background:#111;
+    color:white;
+    border-color:#111;
+}
+
+/* =========================================================
+   CONTENT
+   ========================================================= */
+
+.content{
+    padding:30px;
+    max-width:1550px;
+    margin:auto;
+}
+
+/* =========================================================
+   HERO
+   ========================================================= */
+
+.hero{
+    background:#101010;
+    color:white;
+
+    border-radius:16px;
+    overflow:hidden;
+
+    border-left:6px solid var(--naser);
+
+    box-shadow:var(--shadow);
+
+    margin-bottom:25px;
+}
+
+.hero-inner{
+    padding:30px 32px;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:25px;
+}
+
+.hero-label{
+    color:var(--naser);
+    font-size:12px;
+    font-weight:900;
+    letter-spacing:2px;
+    margin-bottom:9px;
+}
+
+.hero h1{
+    font-size:30px;
+    line-height:1.15;
+    margin-bottom:10px;
+}
+
+.hero p{
+    color:#aaa;
+    font-size:14px;
+    line-height:1.6;
+    max-width:800px;
+}
+
+.hero-code{
+    min-width:175px;
+    text-align:right;
+}
+
+.hero-code small{
+    display:block;
+    color:#7d7d7d;
+    font-size:10px;
+    font-weight:bold;
+    letter-spacing:1px;
+}
+
+.hero-code strong{
+    display:block;
+    font-size:21px;
+    margin-top:5px;
+}
+
+/* =========================================================
+   PROGRESS
+   ========================================================= */
+
+.progress-card{
+    background:white;
+    border-radius:var(--radius);
+    padding:18px 22px;
+    box-shadow:var(--shadow);
+
+    margin-bottom:22px;
+
+    display:grid;
+    grid-template-columns:1fr auto;
+    gap:15px;
+    align-items:center;
+}
+
+.progress-info{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:8px;
+}
+
+.progress-info strong{
+    font-size:13px;
+}
+
+.progress-info span{
+    font-size:12px;
+    color:#777;
+}
+
+.progress-track{
+    height:8px;
+    background:#e8e8e8;
+    border-radius:20px;
+    overflow:hidden;
+}
+
+.progress-bar{
+    width:0%;
+    height:100%;
+    background:var(--naser);
+    border-radius:20px;
+    transition:.3s;
+}
+
+.progress-percent{
+    min-width:55px;
+    text-align:right;
+
+    font-size:22px;
+    font-weight:900;
+
+    color:var(--naser);
+}
+
+/* =========================================================
+   SECTION
+   ========================================================= */
+
+.section{
+    background:white;
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+
+    margin-bottom:22px;
+    overflow:hidden;
+}
+
+.section-header{
+    background:#151515;
+    color:white;
+
+    padding:16px 20px;
+
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.section-number{
+    width:31px;
+    height:31px;
+
+    border-radius:50%;
+
+    background:var(--naser);
+    color:white;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:12px;
+    font-weight:900;
+
+    flex:none;
+}
+
+.section-title h2{
+    font-size:15px;
+    letter-spacing:.3px;
+}
+
+.section-title p{
+    font-size:11px;
+    color:#8e8e8e;
+    margin-top:3px;
+}
+
+.section-body{
+    padding:24px;
+}
+
+/* =========================================================
+   FORM
+   ========================================================= */
+
+.form-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:18px;
+}
+
+.form-group{
+    display:flex;
+    flex-direction:column;
+    gap:7px;
+}
+
+.form-group.full{
+    grid-column:1/-1;
+}
+
+.form-group label{
+    font-size:11px;
+    font-weight:800;
+    color:#50555a;
+    text-transform:uppercase;
+    letter-spacing:.4px;
+}
+
+.required{
+    color:var(--naser);
+}
+
+input,
+select,
+textarea{
+    width:100%;
+
+    border:1px solid #ccd0d3;
+    background:white;
+
+    border-radius:9px;
+
+    padding:12px 13px;
+
+    outline:none;
+
+    transition:.2s;
+}
+
+textarea{
+    min-height:100px;
+    resize:vertical;
+}
+
+input:focus,
+select:focus,
+textarea:focus{
+    border-color:var(--naser);
+    box-shadow:0 0 0 3px rgba(0,155,73,.10);
+}
+
+.invalid{
+    border-color:var(--red)!important;
+    background:#fff7f7!important;
+}
+
+/* =========================================================
+   ESCUDO CLIENTE
+   ========================================================= */
+
+.client-layout{
+    display:grid;
+    grid-template-columns:1fr 240px;
+    gap:25px;
+}
+
+.logo-upload{
+    border:2px dashed #d2d5d8;
+    border-radius:12px;
+
+    min-height:180px;
+
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+
+    text-align:center;
+
+    padding:20px;
+
+    background:#fafafa;
+}
+
+.logo-preview{
+    display:none;
+
+    max-width:170px;
+    max-height:110px;
+
+    object-fit:contain;
+
+    margin-bottom:12px;
+}
+
+.logo-placeholder{
+    width:70px;
+    height:70px;
+
+    border-radius:50%;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    background:#eceeef;
+
+    color:#777;
+
+    font-size:28px;
+
+    margin-bottom:12px;
+}
+
+.logo-upload strong{
+    font-size:12px;
+}
+
+.logo-upload p{
+    margin-top:5px;
+    font-size:10px;
+    color:#888;
+}
+
+.file-input{
+    display:none;
+}
+
+.file-button{
+    margin-top:13px;
+
+    padding:9px 13px;
+
+    border:none;
+    border-radius:7px;
+
+    background:#111;
+    color:white;
+
+    font-size:11px;
+    font-weight:800;
+}
+
+/* =========================================================
+   INTRODUCTION
+   ========================================================= */
+
+.proposal-intro{
+    padding:18px 20px;
+
+    background:var(--naser-soft);
+    border-left:4px solid var(--naser);
+
+    border-radius:9px;
+
+    line-height:1.6;
+    font-size:13px;
+
+    margin-bottom:20px;
+}
+
+/* =========================================================
+   TABLE
+   ========================================================= */
+
+.table-tools{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:12px;
+
+    margin-bottom:15px;
+}
+
+.table-tools-text strong{
+    display:block;
+    font-size:12px;
+}
+
+.table-tools-text span{
+    display:block;
+    margin-top:3px;
+    color:#828282;
+    font-size:10px;
+}
+
+.table-container{
+    width:100%;
+    overflow-x:auto;
+
+    border:1px solid #d8dadd;
+    border-radius:10px;
+}
+
+.tariff-table{
+    width:100%;
+    min-width:850px;
+
+    border-collapse:collapse;
+}
+
+.tariff-table thead{
+    background:#111;
+    color:white;
+}
+
+.tariff-table th{
+    padding:13px 11px;
+
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:.4px;
+
+    text-align:left;
+
+    border-right:1px solid #292929;
+}
+
+.tariff-table td{
+    border-top:1px solid #dedede;
+    border-right:1px solid #ececec;
+
+    padding:8px;
+    vertical-align:middle;
+}
+
+.tariff-table tbody tr:nth-child(even){
+    background:#fafafa;
+}
+
+.tariff-table tbody tr:hover{
+    background:#f2f9f5;
+}
+
+.tariff-table input,
+.tariff-table select{
+    padding:10px;
+    border-radius:6px;
+}
+
+.ref-column{
+    width:70px;
+}
+
+.um-column{
+    width:120px;
+}
+
+.price-column{
+    width:180px;
+}
+
+.action-column{
+    width:62px;
+    text-align:center!important;
+}
+
+.ref-number{
+    text-align:center;
+    font-weight:bold;
+    background:#f4f4f4!important;
+}
+
+.price-input{
+    text-align:right;
+    font-weight:bold;
+}
+
+.remove-btn{
+    width:34px;
+    height:34px;
+
+    border:none;
+    border-radius:7px;
+
+    background:#f4e8e8;
+    color:#a52626;
+
+    font-size:16px;
+    font-weight:bold;
+}
+
+.remove-btn:hover{
+    background:#a52626;
+    color:white;
+}
+
+/* =========================================================
+   TARIFF TITLE
+   ========================================================= */
+
+.tariff-title{
+    margin-bottom:18px;
+
+    padding:17px;
+
+    border:1px solid #dadada;
+    border-radius:9px;
+
+    text-align:center;
+
+    font-size:18px;
+    font-weight:900;
+
+    letter-spacing:8px;
+
+    color:#222;
+
+    background:#fafafa;
+}
+
+/* =========================================================
+   SUMMARY
+   ========================================================= */
+
+.summary{
+    margin-top:18px;
+
+    display:flex;
+    justify-content:flex-end;
+}
+
+.summary-box{
+    min-width:300px;
+
+    padding:18px;
+
+    border-radius:10px;
+
+    background:#111;
+    color:white;
+}
+
+.summary-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    gap:15px;
+}
+
+.summary-row span{
+    color:#999;
+    font-size:11px;
+    font-weight:bold;
+    text-transform:uppercase;
+}
+
+.summary-row strong{
+    font-size:22px;
+    color:var(--naser);
+}
+
+/* =========================================================
+   NOTE
+   ========================================================= */
+
+.note-box{
+    background:#f6f7f7;
+    border:1px solid #dfe1e3;
+    border-left:4px solid var(--naser);
+
+    border-radius:9px;
+
+    padding:18px 20px;
+}
+
+.note-box strong{
+    display:block;
+    font-size:12px;
+    margin-bottom:9px;
+}
+
+.note-box p{
+    font-size:13px;
+    line-height:1.7;
+}
+
+/* =========================================================
+   ACTIONS
+   ========================================================= */
+
+.actions{
+    position:sticky;
+    bottom:0;
+
+    background:rgba(242,243,245,.95);
+    backdrop-filter:blur(8px);
+
+    border-top:1px solid #ddd;
+
+    padding:15px 0 5px;
+
+    display:flex;
+    justify-content:space-between;
+    gap:12px;
+
+    z-index:50;
+}
+
+.actions-left,
+.actions-right{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+}
+
+.btn{
+    border:none;
+    border-radius:9px;
+
+    padding:12px 17px;
+
+    font-size:11px;
+    font-weight:900;
+
+    transition:.2s;
+}
+
+.btn-primary{
+    background:var(--naser);
+    color:white;
+}
+
+.btn-primary:hover{
+    background:var(--naser-dark);
+}
+
+.btn-dark{
+    background:#111;
+    color:white;
+}
+
+.btn-dark:hover{
+    background:#292929;
+}
+
+.btn-light{
+    background:white;
+    border:1px solid #d2d5d8;
+    color:#303438;
+}
+
+.btn-light:hover{
+    background:#f5f5f5;
+}
+
+.btn-danger{
+    background:#fff;
+    border:1px solid #e7c4c4;
+    color:#a72727;
+}
+
+.btn-danger:hover{
+    background:#a72727;
+    color:white;
+}
+
+/* =========================================================
+   MESSAGE
+   ========================================================= */
+
+.toast{
+    position:fixed;
+
+    right:25px;
+    bottom:25px;
+
+    z-index:3000;
+
+    min-width:260px;
+    max-width:420px;
+
+    padding:14px 17px;
+
+    background:#111;
+    color:white;
+
+    border-left:5px solid var(--naser);
+
+    border-radius:9px;
+
+    box-shadow:0 10px 30px rgba(0,0,0,.25);
+
+    font-size:12px;
+    font-weight:bold;
+
+    transform:translateY(120px);
+    opacity:0;
+
+    transition:.3s;
+}
+
+.toast.show{
+    transform:translateY(0);
+    opacity:1;
+}
+
+.toast.error{
+    border-color:var(--red);
+}
+
+/* =========================================================
+   FINALIZADO
+   ========================================================= */
+
+body.finalized input,
+body.finalized textarea,
+body.finalized select{
+    pointer-events:none;
+    background:#f3f3f3;
+}
+
+body.finalized .remove-btn,
+body.finalized #addRowBtn,
+body.finalized .file-button{
+    display:none;
+}
+
+/* =========================================================
+   OVERLAY MOBILE
+   ========================================================= */
+
+.overlay{
+    display:none;
+
+    position:fixed;
+    inset:0;
+
+    background:rgba(0,0,0,.55);
+
+    z-index:950;
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media(max-width:1000px){
+
+    .sidebar{
+        transform:translateX(-100%);
+        transition:.3s;
+    }
+
+    .sidebar.open{
+        transform:translateX(0);
+    }
+
+    .overlay.show{
+        display:block;
+    }
+
+    .main{
+        margin-left:0;
+    }
+
+    .menu-btn{
+        display:block;
+    }
+
+    .client-layout{
+        grid-template-columns:1fr;
+    }
+}
+
+@media(max-width:700px){
+
+    .topbar{
+        padding:0 15px;
+    }
+
+    .topbar-right .document{
+        display:none;
+    }
+
+    .content{
+        padding:18px 12px;
+    }
+
+    .hero-inner{
+        flex-direction:column;
+        align-items:flex-start;
+        padding:24px 20px;
+    }
+
+    .hero h1{
+        font-size:23px;
+    }
+
+    .hero-code{
+        text-align:left;
+    }
+
+    .form-grid{
+        grid-template-columns:1fr;
+    }
+
+    .form-group.full{
+        grid-column:auto;
+    }
+
+    .section-body{
+        padding:17px;
+    }
+
+    .actions{
+        flex-direction:column;
+    }
+
+    .actions-left,
+    .actions-right{
+        width:100%;
+    }
+
+    .actions .btn{
+        flex:1;
+    }
+
+    .tariff-title{
+        font-size:13px;
+        letter-spacing:4px;
+    }
+}
+
+/* =========================================================
+   PRINT / PDF
+   ========================================================= */
+
+@media print{
+
+    @page{
+        size:A4 landscape;
+        margin:10mm;
+    }
+
+    body{
+        background:white!important;
+        color:black!important;
+    }
+
+    .sidebar,
+    .topbar,
+    .progress-card,
+    .actions,
+    .table-tools,
+    .remove-btn,
+    .file-button,
+    .toast{
+        display:none!important;
+    }
+
+    .main{
+        margin:0!important;
+    }
+
+    .content{
+        max-width:none!important;
+        padding:0!important;
+    }
+
+    .hero{
+        box-shadow:none!important;
+        border:1px solid #222;
+        border-left:5px solid #009b49;
+        margin-bottom:12px;
+    }
+
+    .hero-inner{
+        padding:17px 20px;
+    }
+
+    .hero h1{
+        font-size:21px;
+    }
+
+    .section{
+        box-shadow:none;
+        border:1px solid #bbb;
+        break-inside:avoid;
+        margin-bottom:12px;
+    }
+
+    .section-header{
+        -webkit-print-color-adjust:exact;
+        print-color-adjust:exact;
+    }
+
+    .section-body{
+        padding:15px;
+    }
+
+    .table-container{
+        overflow:visible;
+    }
+
+    .tariff-table{
+        min-width:0;
+    }
+
+    .tariff-table thead{
+        -webkit-print-color-adjust:exact;
+        print-color-adjust:exact;
+    }
+
+    .tariff-table input,
+    .tariff-table select,
+    textarea,
+    input{
+        border:none!important;
+        box-shadow:none!important;
+        background:transparent!important;
+        padding:3px!important;
+        color:black!important;
+    }
+
+    .summary-box{
+        -webkit-print-color-adjust:exact;
+        print-color-adjust:exact;
+    }
+
+    .action-column{
+        display:none!important;
+    }
+
+    .logo-upload{
+        border:1px solid #bbb;
+        min-height:120px;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- =======================================================
+     SIDEBAR
+     ======================================================= -->
+
+<aside class="sidebar" id="sidebar">
+
+    <div class="brand">
+        <div class="brand-logo">NASER</div>
+        <div class="brand-subtitle">SISTEMA DE GESTIÓN INTEGRADO</div>
+    </div>
+
+    <div class="sidebar-doc">
+        <small>DOCUMENTO</small>
+        <strong>PGSN11-F2</strong>
+    </div>
+
+    <ul class="side-nav">
+
+        <li>
+            <a href="#identificacion">
+                <span class="number">01</span>
+                Identificación
+            </a>
+        </li>
+
+        <li>
+            <a href="#tarifario">
+                <span class="number">02</span>
+                Cuadro Tarifario
+            </a>
+        </li>
+
+        <li>
+            <a href="#nota">
+                <span class="number">03</span>
+                Nota
+            </a>
+        </li>
+
+        <li>
+            <a href="#acciones">
+                <span class="number">04</span>
+                Cierre
+            </a>
+        </li>
+
+    </ul>
+
+    <div class="sidebar-footer">
+        NASER SRL<br>
+        Documento interno SGI
+    </div>
+
+</aside>
+
+<div class="overlay" id="overlay"></div>
+
+<!-- =======================================================
+     MAIN
+     ======================================================= -->
+
+<main class="main">
+
+    <!-- TOPBAR -->
+
+    <header class="topbar">
+
+        <div class="topbar-left">
+
+            <button class="menu-btn" id="menuBtn">☰</button>
+
+            <div class="breadcrumb">
+                SGI &nbsp;/&nbsp;
+                <strong>Propuesta Económica</strong>
+            </div>
+
+        </div>
+
+        <div class="topbar-right">
+
+            <span class="badge status" id="statusBadge">
+                EN EDICIÓN
+            </span>
+
+            <span class="badge document">
+                PGSN11-F2
+            </span>
+
+        </div>
+
+    </header>
+
+    <!-- CONTENT -->
+
+    <div class="content">
+
+        <!-- HERO -->
+
+        <section class="hero">
+
+            <div class="hero-inner">
+
+                <div>
+
+                    <div class="hero-label">
+                        NASER SRL
+                    </div>
+
+                    <h1>
+                        Propuesta Económica de Servicio
+                    </h1>
+
+                    <p>
+                        Registro y presentación de propuesta económica
+                        correspondiente a los servicios ofrecidos por NASER SRL.
+                    </p>
+
+                </div>
+
+                <div class="hero-code">
+                    <small>CÓDIGO</small>
+                    <strong>PGSN11-F2</strong>
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- PROGRESO -->
+
+        <section class="progress-card">
+
+            <div>
+
+                <div class="progress-info">
+
+                    <strong>Avance del documento</strong>
+
+                    <span id="progressText">
+                        Complete los campos de la propuesta
+                    </span>
+
+                </div>
+
+                <div class="progress-track">
+                    <div class="progress-bar" id="progressBar"></div>
+                </div>
+
+            </div>
+
+            <div class="progress-percent" id="progressPercent">
+                0%
+            </div>
+
+        </section>
+
+        <!-- ===================================================
+             01 IDENTIFICACIÓN
+             =================================================== -->
+
+        <section class="section" id="identificacion">
+
+            <div class="section-header">
+
+                <div class="section-number">01</div>
+
+                <div class="section-title">
+                    <h2>Identificación de la propuesta</h2>
+                    <p>Datos generales y escudo del cliente</p>
+                </div>
+
+            </div>
+
+            <div class="section-body">
+
+                <div class="client-layout">
+
+                    <div>
+
+                        <div class="form-grid">
+
+                            <div class="form-group full">
+
+                                <label>
+                                    Servicio
+                                    <span class="required">*</span>
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="servicio"
+                                    placeholder="Ej.: Servicio de Slickline / Well Testing / Operación especial"
+                                >
+
+                            </div>
+
+                        </div>
+
+                        <div class="proposal-intro" style="margin-top:20px">
+
+                            <strong>PROPUESTA ECONÓMICA</strong>
+
+                            <br><br>
+
+                            Detallamos a continuación una propuesta de acuerdo
+                            a los servicios descriptos:
+
+                        </div>
+
+                    </div>
+
+                    <!-- ESCUDO CLIENTE -->
+
+                    <div class="logo-upload">
+
+                        <img
+                            id="clientLogoPreview"
+                            class="logo-preview"
+                            alt="Escudo del cliente"
+                        >
+
+                        <div
+                            class="logo-placeholder"
+                            id="logoPlaceholder"
+                        >
+                            ◇
+                        </div>
+
+                        <strong>
+                            Escudo del cliente
+                        </strong>
+
+                        <p>
+                            PNG, JPG o JPEG
+                        </p>
+
+                        <input
+                            type="file"
+                            id="clientLogo"
+                            class="file-input"
+                            accept="image/png,image/jpeg"
+                        >
+
+                        <button
+                            type="button"
+                            class="file-button"
+                            onclick="document.getElementById('clientLogo').click()"
+                        >
+                            CARGAR ESCUDO
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- ===================================================
+             02 CUADRO TARIFARIO
+             =================================================== -->
+
+        <section class="section" id="tarifario">
+
+            <div class="section-header">
+
+                <div class="section-number">02</div>
+
+                <div class="section-title">
+                    <h2>Cuadro Tarifario Propuesto</h2>
+                    <p>Detalle económico de los servicios</p>
+                </div>
+
+            </div>
+
+            <div class="section-body">
+
+                <div class="tariff-title">
+                    CUADRO TARIFARIO PROPUESTO
+                </div>
+
+                <div class="table-tools">
+
+                    <div class="table-tools-text">
+
+                        <strong>
+                            Detalle de referencias
+                        </strong>
+
+                        <span>
+                            Complete descripción, unidad de medida y precio unitario.
+                        </span>
+
+                    </div>
+
+                    <button
+                        type="button"
+                        class="btn btn-primary"
+                        id="addRowBtn"
+                    >
+                        + AGREGAR ÍTEM
+                    </button>
+
+                </div>
+
+                <div class="table-container">
+
+                    <table class="tariff-table">
+
+                        <thead>
+
+                            <tr>
+
+                                <th class="ref-column">
+                                    Ref.
+                                </th>
+
+                                <th>
+                                    Descripción
+                                </th>
+
+                                <th class="um-column">
+                                    UM
+                                </th>
+
+                                <th class="price-column">
+                                    Precio unitario USD
+                                </th>
+
+                                <th class="action-column">
+                                    Acción
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody id="tariffBody">
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+                <div class="summary">
+
+                    <div class="summary-box">
+
+                        <div class="summary-row">
+
+                            <span>
+                                Total referencial USD
+                            </span>
+
+                            <strong id="grandTotal">
+                                USD 0,00
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- ===================================================
+             03 NOTA
+             =================================================== -->
+
+        <section class="section" id="nota">
+
+            <div class="section-header">
+
+                <div class="section-number">03</div>
+
+                <div class="section-title">
+                    <h2>Nota</h2>
+                    <p>Condiciones económicas de la propuesta</p>
+                </div>
+
+            </div>
+
+            <div class="section-body">
+
+                <div class="note-box">
+
+                    <strong>NOTA:</strong>
+
+                    <p>
+                        Los precios están expresados en dólares y no incluyen IVA.
+                    </p>
+
+                </div>
+
+                <div class="form-group full" style="margin-top:18px">
+
+                    <label>
+                        Observaciones adicionales
+                    </label>
+
+                    <textarea
+                        id="observaciones"
+                        placeholder="Ingrese observaciones, condiciones comerciales o aclaraciones adicionales..."
+                    ></textarea>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- ===================================================
+             ACCIONES
+             =================================================== -->
+
+        <div class="actions" id="acciones">
+
+            <div class="actions-left">
+
+                <button
+                    type="button"
+                    class="btn btn-light"
+                    id="clearBtn"
+                >
+                    LIMPIAR
+                </button>
+
+                <button
+                    type="button"
+                    class="btn btn-dark"
+                    id="printBtn"
+                >
+                    IMPRIMIR / PDF
+                </button>
+
+            </div>
+
+            <div class="actions-right">
+
+                <button
+                    type="button"
+                    class="btn btn-light"
+                    id="editBtn"
+                    style="display:none"
+                >
+                    HABILITAR EDICIÓN
+                </button>
+
+                <button
+                    type="button"
+                    class="btn btn-primary"
+                    id="saveBtn"
+                >
+                    GUARDAR
+                </button>
+
+                <button
+                    type="button"
+                    class="btn btn-dark"
+                    id="finishBtn"
+                >
+                    FINALIZAR
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</main>
+
+<!-- TOAST -->
+
+<div class="toast" id="toast"></div>
+
+
+<script>
+
+/* =========================================================
+   NASER PGSN11-F2
+   PROPUESTA ECONÓMICA
+   ========================================================= */
+
+const STORAGE_KEY = "NASER_PGSN11_F2_PROPUESTA_ECONOMICA";
+
+let finalized = false;
+let clientLogoData = "";
+
+/* =========================================================
+   ELEMENTOS
+   ========================================================= */
+
+const servicio = document.getElementById("servicio");
+const observaciones = document.getElementById("observaciones");
+
+const tariffBody = document.getElementById("tariffBody");
+
+const addRowBtn = document.getElementById("addRowBtn");
+
+const saveBtn = document.getElementById("saveBtn");
+const clearBtn = document.getElementById("clearBtn");
+const finishBtn = document.getElementById("finishBtn");
+const printBtn = document.getElementById("printBtn");
+const editBtn = document.getElementById("editBtn");
+
+const statusBadge = document.getElementById("statusBadge");
+
+const progressBar = document.getElementById("progressBar");
+const progressPercent = document.getElementById("progressPercent");
+const progressText = document.getElementById("progressText");
+
+const grandTotal = document.getElementById("grandTotal");
+
+const clientLogo = document.getElementById("clientLogo");
+const clientLogoPreview = document.getElementById("clientLogoPreview");
+const logoPlaceholder = document.getElementById("logoPlaceholder");
+
+const toast = document.getElementById("toast");
+
+/* =========================================================
+   FILAS INICIALES
+   ========================================================= */
+
+function createInitialRows(){
+
+    tariffBody.innerHTML = "";
+
+    for(let i = 1; i <= 7; i++){
+        addRow();
+    }
+
+}
+
+/* =========================================================
+   AGREGAR FILA
+   ========================================================= */
+
+function addRow(data = {}){
+
+    const row = document.createElement("tr");
+
+    row.innerHTML = `
+
+        <td>
+            <input
+                class="ref-number"
+                type="text"
+                readonly
+            >
+        </td>
+
+        <td>
+            <input
+                class="description"
+                type="text"
+                placeholder="Descripción del servicio"
+                value="${escapeHTML(data.description || "")}"
+            >
+        </td>
+
+        <td>
+
+            <input
+                class="um"
+                type="text"
+                placeholder="UM"
+                value="${escapeHTML(data.um || "")}"
+            >
+
+        </td>
+
+        <td>
+
+            <input
+                class="price-input"
+                type="number"
+                min="0"
+                step="0.01"
+                placeholder="0.00"
+                value="${data.price ?? ""}"
+            >
+
+        </td>
+
+        <td class="action-column">
+
+            <button
+                type="button"
+                class="remove-btn"
+                title="Eliminar fila"
+            >
+                ×
+            </button>
+
+        </td>
+
+    `;
+
+    tariffBody.appendChild(row);
+
+    row.querySelector(".remove-btn").addEventListener("click", () => {
+
+        if(finalized) return;
+
+        row.remove();
+
+        updateReferences();
+        calculateTotal();
+        updateProgress();
+        autoSave();
+
+    });
+
+    row.querySelectorAll("input").forEach(input => {
+
+        input.addEventListener("input", () => {
+
+            calculateTotal();
+            updateProgress();
+            autoSave();
+
+        });
+
+    });
+
+    updateReferences();
+    calculateTotal();
+}
+
+/* =========================================================
+   REFERENCIAS
+   ========================================================= */
+
+function updateReferences(){
+
+    const rows = tariffBody.querySelectorAll("tr");
+
+    rows.forEach((row,index) => {
+
+        row.querySelector(".ref-number").value = index + 1;
+
+    });
+
+}
+
+/* =========================================================
+   TOTAL
+   ========================================================= */
+
+function calculateTotal(){
+
+    let total = 0;
+
+    tariffBody
+        .querySelectorAll(".price-input")
+        .forEach(input => {
+
+            const value = parseFloat(input.value);
+
+            if(!isNaN(value)){
+                total += value;
+            }
+
+        });
+
+    grandTotal.textContent =
+        "USD " +
+        total.toLocaleString("es-AR",{
+            minimumFractionDigits:2,
+            maximumFractionDigits:2
+        });
+
+}
+
+/* =========================================================
+   LOGO CLIENTE
+   ========================================================= */
+
+clientLogo.addEventListener("change", function(){
+
+    const file = this.files[0];
+
+    if(!file) return;
+
+    if(!file.type.startsWith("image/")){
+
+        showToast("Seleccione un archivo de imagen válido.", true);
+        return;
+
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = function(e){
+
+        clientLogoData = e.target.result;
+
+        clientLogoPreview.src = clientLogoData;
+        clientLogoPreview.style.display = "block";
+
+        logoPlaceholder.style.display = "none";
+
+        updateProgress();
+        autoSave();
+
+    };
+
+    reader.readAsDataURL(file);
+
+});
+
+/* =========================================================
+   OBTENER FILAS
+   ========================================================= */
+
+function getRows(){
+
+    return [...tariffBody.querySelectorAll("tr")].map(row => ({
+
+        description:
+            row.querySelector(".description").value.trim(),
+
+        um:
+            row.querySelector(".um").value.trim(),
+
+        price:
+            row.querySelector(".price-input").value
+
+    }));
+
+}
+
+/* =========================================================
+   GUARDAR
+   ========================================================= */
+
+function saveData(showMessage = true){
+
+    const data = {
+
+        servicio: servicio.value.trim(),
+
+        observaciones:
+            observaciones.value.trim(),
+
+        logo:
+            clientLogoData,
+
+        rows:
+            getRows(),
+
+        finalized:
+            finalized,
+
+        updatedAt:
+            new Date().toISOString()
+
+    };
+
+    try{
+
+        localStorage.setItem(
+            STORAGE_KEY,
+            JSON.stringify(data)
+        );
+
+        if(showMessage){
+            showToast("Propuesta guardada correctamente.");
+        }
+
+    }catch(error){
+
+        console.error(error);
+
+        showToast(
+            "No se pudo guardar. El escudo del cliente puede ser demasiado pesado.",
+            true
+        );
+
+    }
+
+}
+
+/* =========================================================
+   AUTOGUARDADO
+   ========================================================= */
+
+let autoSaveTimer;
+
+function autoSave(){
+
+    if(finalized) return;
+
+    clearTimeout(autoSaveTimer);
+
+    autoSaveTimer = setTimeout(() => {
+
+        saveData(false);
+
+    },500);
+
+}
+
+/* =========================================================
+   CARGAR
+   ========================================================= */
+
+function loadData(){
+
+    const saved =
+        localStorage.getItem(STORAGE_KEY);
+
+    if(!saved){
+
+        createInitialRows();
+        return;
+
+    }
+
+    try{
+
+        const data = JSON.parse(saved);
+
+        servicio.value =
+            data.servicio || "";
+
+        observaciones.value =
+            data.observaciones || "";
+
+        clientLogoData =
+            data.logo || "";
+
+        if(clientLogoData){
+
+            clientLogoPreview.src =
+                clientLogoData;
+
+            clientLogoPreview.style.display =
+                "block";
+
+            logoPlaceholder.style.display =
+                "none";
+
+        }
+
+        tariffBody.innerHTML = "";
+
+        if(
+            Array.isArray(data.rows) &&
+            data.rows.length
+        ){
+
+            data.rows.forEach(row => {
+                addRow(row);
+            });
+
+        }else{
+
+            createInitialRows();
+
+        }
+
+        finalized =
+            data.finalized === true;
+
+        applyFinalizedState();
+
+        calculateTotal();
+        updateProgress();
+
+    }catch(error){
+
+        console.error(error);
+        createInitialRows();
+
+    }
+
+}
+
+/* =========================================================
+   PROGRESO
+   ========================================================= */
+
+function updateProgress(){
+
+    let completed = 0;
+    let total = 3;
+
+    /* Servicio */
+
+    if(servicio.value.trim()){
+        completed++;
+    }
+
+    /* Al menos un servicio cargado */
+
+    const validRows = getRows().filter(row =>
+        row.description &&
+        row.um &&
+        row.price !== ""
+    );
+
+    if(validRows.length){
+        completed++;
+    }
+
+    /* Escudo cliente */
+
+    if(clientLogoData){
+        completed++;
+    }
+
+    const percentage =
+        Math.round((completed / total) * 100);
+
+    progressBar.style.width =
+        percentage + "%";
+
+    progressPercent.textContent =
+        percentage + "%";
+
+    if(percentage === 100){
+
+        progressText.textContent =
+            "Documento completo";
+
+    }else if(percentage >= 66){
+
+        progressText.textContent =
+            "Propuesta casi completa";
+
+    }else if(percentage >= 33){
+
+        progressText.textContent =
+            "Propuesta en desarrollo";
+
+    }else{
+
+        progressText.textContent =
+            "Complete los campos de la propuesta";
+
+    }
+
+}
+
+/* =========================================================
+   VALIDAR
+   ========================================================= */
+
+function validateForm(){
+
+    let valid = true;
+
+    servicio.classList.remove("invalid");
+
+    if(!servicio.value.trim()){
+
+        servicio.classList.add("invalid");
+
+        valid = false;
+
+    }
+
+    const rows = getRows();
+
+    const validService =
+        rows.some(row =>
+            row.description &&
+            row.um &&
+            row.price !== ""
+        );
+
+    if(!validService){
+
+        valid = false;
+
+        showToast(
+            "Debe completar al menos un ítem del cuadro tarifario.",
+            true
+        );
+
+        document
+            .getElementById("tarifario")
+            .scrollIntoView({
+                behavior:"smooth"
+            });
+
+        return false;
+
+    }
+
+    if(!valid){
+
+        showToast(
+            "Complete el campo Servicio antes de finalizar.",
+            true
+        );
+
+        servicio.scrollIntoView({
+            behavior:"smooth",
+            block:"center"
+        });
+
+        return false;
+
+    }
+
+    return true;
+
+}
+
+/* =========================================================
+   FINALIZAR
+   ========================================================= */
+
+function finishDocument(){
+
+    if(!validateForm()){
+        return;
+    }
+
+    const confirmed = confirm(
+        "¿Desea finalizar la propuesta económica?\n\n" +
+        "El documento quedará bloqueado para evitar modificaciones accidentales."
+    );
+
+    if(!confirmed){
+        return;
+    }
+
+    finalized = true;
+
+    applyFinalizedState();
+
+    saveData(false);
+
+    showToast(
+        "Propuesta económica finalizada correctamente."
+    );
+
+}
+
+/* =========================================================
+   ESTADO FINALIZADO
+   ========================================================= */
+
+function applyFinalizedState(){
+
+    if(finalized){
+
+        document.body.classList.add("finalized");
+
+        statusBadge.textContent =
+            "FINALIZADO";
+
+        statusBadge.classList.add("finished");
+
+        saveBtn.style.display =
+            "none";
+
+        finishBtn.style.display =
+            "none";
+
+        editBtn.style.display =
+            "inline-block";
+
+    }else{
+
+        document.body.classList.remove("finalized");
+
+        statusBadge.textContent =
+            "EN EDICIÓN";
+
+        statusBadge.classList.remove("finished");
+
+        saveBtn.style.display =
+            "inline-block";
+
+        finishBtn.style.display =
+            "inline-block";
+
+        editBtn.style.display =
+            "none";
+
+    }
+
+}
+
+/* =========================================================
+   HABILITAR EDICIÓN
+   ========================================================= */
+
+editBtn.addEventListener("click", () => {
+
+    const confirmed = confirm(
+        "¿Desea habilitar nuevamente la edición de esta propuesta?"
+    );
+
+    if(!confirmed) return;
+
+    finalized = false;
+
+    applyFinalizedState();
+
+    saveData(false);
+
+    showToast(
+        "Edición habilitada nuevamente."
+    );
+
+});
+
+/* =========================================================
+   LIMPIAR
+   ========================================================= */
+
+function clearDocument(){
+
+    const confirmed = confirm(
+        "¿Desea borrar todos los datos de esta propuesta económica?"
+    );
+
+    if(!confirmed){
+        return;
+    }
+
+    localStorage.removeItem(STORAGE_KEY);
+
+    servicio.value = "";
+    observaciones.value = "";
+
+    clientLogo.value = "";
+    clientLogoData = "";
+
+    clientLogoPreview.src = "";
+    clientLogoPreview.style.display = "none";
+
+    logoPlaceholder.style.display = "flex";
+
+    finalized = false;
+
+    createInitialRows();
+
+    applyFinalizedState();
+
+    calculateTotal();
+    updateProgress();
+
+    showToast(
+        "Formulario limpiado correctamente."
+    );
+
+}
+
+/* =========================================================
+   TOAST
+   ========================================================= */
+
+let toastTimer;
+
+function showToast(message,error = false){
+
+    clearTimeout(toastTimer);
+
+    toast.textContent = message;
+
+    toast.classList.toggle(
+        "error",
+        error
+    );
+
+    toast.classList.add("show");
+
+    toastTimer = setTimeout(() => {
+
+        toast.classList.remove("show");
+
+    },3200);
+
+}
+
+/* =========================================================
+   ESCAPE HTML
+   ========================================================= */
+
+function escapeHTML(value){
+
+    return String(value)
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+
+}
+
+/* =========================================================
+   EVENTOS
+   ========================================================= */
+
+addRowBtn.addEventListener("click", () => {
+
+    if(finalized) return;
+
+    addRow();
+
+    updateProgress();
+    autoSave();
+
+});
+
+saveBtn.addEventListener("click", () => {
+
+    saveData(true);
+
+});
+
+clearBtn.addEventListener("click", () => {
+
+    if(finalized){
+
+        showToast(
+            "Habilite la edición antes de limpiar el documento.",
+            true
+        );
+
+        return;
+
+    }
+
+    clearDocument();
+
+});
+
+finishBtn.addEventListener("click", () => {
+
+    finishDocument();
+
+});
+
+printBtn.addEventListener("click", () => {
+
+    window.print();
+
+});
+
+servicio.addEventListener("input", () => {
+
+    servicio.classList.remove("invalid");
+
+    updateProgress();
+    autoSave();
+
+});
+
+observaciones.addEventListener("input", () => {
+
+    autoSave();
+
+});
+
+/* CTRL + S */
+
+document.addEventListener("keydown", event => {
+
+    if(
+        (event.ctrlKey || event.metaKey) &&
+        event.key.toLowerCase() === "s"
+    ){
+
+        event.preventDefault();
+
+        saveData(true);
+
+    }
+
+});
+
+/* =========================================================
+   MOBILE MENU
+   ========================================================= */
+
+const menuBtn =
+    document.getElementById("menuBtn");
+
+const sidebar =
+    document.getElementById("sidebar");
+
+const overlay =
+    document.getElementById("overlay");
+
+menuBtn.addEventListener("click", () => {
+
+    sidebar.classList.toggle("open");
+    overlay.classList.toggle("show");
+
+});
+
+overlay.addEventListener("click", () => {
+
+    sidebar.classList.remove("open");
+    overlay.classList.remove("show");
+
+});
+
+document
+    .querySelectorAll(".side-nav a")
+    .forEach(link => {
+
+        link.addEventListener("click", () => {
+
+            sidebar.classList.remove("open");
+            overlay.classList.remove("show");
+
+        });
+
+    });
+
+/* =========================================================
+   INICIALIZACIÓN
+   ========================================================= */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    () => {
+
+        loadData();
+
+        updateProgress();
+        calculateTotal();
+
+    }
+);
+
+</script>
+
+</body>
+</html>

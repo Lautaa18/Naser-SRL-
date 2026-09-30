@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NASER SRL | No Conformidad</title>
+
+<style>
+:root{
+  --naser:#009b49;
+  --naser-dark:#007a3a;
+  --black:#0d0d0d;
+  --white:#fff;
+  --bg:#f2f4f5;
+  --line:#dce1e4;
+  --text:#191919;
+  --muted:#73777b;
+  --danger:#a62b2b;
+  --danger-soft:#fff1f1;
+  --warning:#ad7000;
+  --warning-soft:#fff7e8;
+  --blue:#1f5f8b;
+  --sidebar:275px;
+  --shadow:0 10px 30px rgba(0,0,0,.06);
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:Inter,"Segoe UI",Arial,sans-serif;
+}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+input,select,textarea{outline:none}
+
+/* SIDEBAR */
+.sidebar{
+  position:fixed;
+  inset:0 auto 0 0;
+  width:var(--sidebar);
+  background:linear-gradient(180deg,#090909,#151515);
+  color:#fff;
+  padding:28px 20px;
+  display:flex;
+  flex-direction:column;
+  z-index:1000;
+}
+.brand{
+  display:flex;
+  align-items:center;
+  gap:13px;
+  padding:0 8px 25px;
+  border-bottom:1px solid #303030;
+}
+.brand-mark{
+  width:46px;height:46px;
+  display:grid;place-items:center;
+  background:var(--naser);
+  font-size:23px;font-weight:900;
+}
+.brand-name{font-size:21px;font-weight:900;letter-spacing:3px}
+.brand-sub{font-size:9px;letter-spacing:4px;color:#999;margin-top:2px}
+.side-label{
+  padding:25px 8px 13px;
+  font-size:9px;font-weight:800;
+  color:#727272;letter-spacing:1.5px;
+}
+.nav{display:grid;gap:5px}
+.nav-link{
+  display:flex;align-items:center;gap:12px;
+  min-height:45px;padding:10px 12px;
+  color:#aaa;text-decoration:none;
+  border-left:3px solid transparent;
+  font-size:11px;transition:.2s;
+}
+.nav-link span{width:25px;color:#666;font-size:9px;font-weight:900}
+.nav-link:hover{background:#1c1c1c;color:#fff}
+.nav-link.active{
+  color:#fff;border-left-color:var(--naser);
+  background:linear-gradient(90deg,rgba(0,155,73,.18),rgba(0,155,73,.02));
+}
+.nav-link.active span{color:var(--naser)}
+.side-footer{
+  margin-top:auto;padding:18px 8px 0;
+  border-top:1px solid #303030;
+  color:#666;font-size:9px;line-height:1.8;
+}
+.side-footer strong{display:block;color:#aaa}
+
+/* MAIN */
+.main{margin-left:var(--sidebar);min-height:100vh}
+.topbar{
+  height:84px;
+  position:sticky;top:0;z-index:800;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 40px;background:#fff;border-bottom:1px solid var(--line);
+}
+.topbar-left{display:flex;align-items:center;gap:15px}
+.crumb{font-size:9px;color:#92969a;letter-spacing:1.2px;margin-bottom:5px}
+.topbar h1{margin:0;font-size:20px}
+.control{
+  display:flex;align-items:center;gap:8px;
+  font-size:9px;font-weight:800;letter-spacing:1px;color:#555;
+}
+.control i{
+  width:8px;height:8px;border-radius:50%;
+  background:var(--naser);box-shadow:0 0 0 5px rgba(0,155,73,.1);
+}
+.finished{
+  display:none;padding:8px 11px;
+  background:var(--naser);color:#fff;
+  font-size:9px;font-weight:900;letter-spacing:.6px;
+}
+.finished.show{display:block}
+.menu-btn{
+  display:none;width:41px;height:41px;
+  border:1px solid var(--line);background:#fff;
+}
+
+.content{width:min(1450px,calc(100% - 50px));margin:30px auto 60px}
+
+/* HERO */
+.hero{
+  min-height:190px;margin-bottom:20px;padding:38px 42px;
+  display:flex;align-items:center;justify-content:space-between;gap:30px;
+  color:#fff;
+  background:
+    radial-gradient(circle at 90% 0%,rgba(0,155,73,.25),transparent 35%),
+    linear-gradient(120deg,#0c0c0c,#181818);
+  border-left:5px solid var(--naser);
+  box-shadow:var(--shadow);
+}
+.hero-tag{color:var(--naser);font-size:9px;font-weight:900;letter-spacing:2px}
+.hero h2{margin:10px 0;font-size:clamp(27px,3vw,39px);line-height:1}
+.hero h2 span{color:var(--naser)}
+.hero p{max-width:760px;margin:0;color:#aaa;font-size:12px;line-height:1.7}
+.hero-meta{min-width:230px;padding-left:28px;border-left:1px solid #393939}
+.hero-meta small,.hero-meta span{display:block;color:#777;font-size:9px;letter-spacing:1px}
+.hero-meta strong{display:block;margin:8px 0;font-size:13px}
+
+/* METRICS */
+.metrics{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:14px;
+  margin-bottom:20px;
+}
+.metric{
+  background:#fff;border:1px solid var(--line);
+  box-shadow:var(--shadow);padding:18px 20px;
+}
+.metric small{
+  display:block;color:var(--muted);
+  font-size:8px;font-weight:900;letter-spacing:1.2px;margin-bottom:8px;
+}
+.metric strong{font-size:24px}
+.metric.green strong{color:var(--naser)}
+.metric.red strong{color:var(--danger)}
+.metric.warning strong{color:var(--warning)}
+.metric.blue strong{color:var(--blue)}
+
+.progress-card{
+  background:#fff;border:1px solid var(--line);
+  box-shadow:var(--shadow);padding:20px 24px;margin-bottom:20px;
+}
+.progress-top{
+  display:flex;justify-content:space-between;align-items:flex-end;
+  gap:20px;margin-bottom:12px;
+}
+.progress-top small{
+  display:block;color:var(--muted);
+  font-size:8px;font-weight:900;letter-spacing:1.3px;
+}
+.progress-top strong{display:block;margin-top:5px;font-size:13px}
+.progress-value{font-size:22px;font-weight:900;color:var(--naser)}
+.track{height:7px;background:#e8ecee;border-radius:30px;overflow:hidden}
+.bar{height:100%;width:0;background:var(--naser);border-radius:30px;transition:.2s}
+
+/* CARDS */
+.card{
+  margin-bottom:20px;background:#fff;border:1px solid var(--line);
+  box-shadow:var(--shadow);overflow:hidden;
+}
+.card-head{
+  display:flex;align-items:center;gap:15px;
+  padding:21px 25px;border-bottom:1px solid var(--line);
+}
+.num{
+  width:39px;height:39px;flex:none;
+  display:grid;place-items:center;
+  background:#111;color:#fff;font-size:10px;font-weight:900;
+}
+.card-head h3{margin:0;font-size:15px}
+.card-head p{margin:5px 0 0;color:var(--muted);font-size:10px}
+
+.grid{
+  padding:25px;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:20px;
+}
+.field{min-width:0}
+.field.span2{grid-column:span 2}
+.field.full{grid-column:1/-1}
+.field label{
+  display:block;margin-bottom:7px;
+  color:#444;font-size:9px;font-weight:900;
+  letter-spacing:.6px;text-transform:uppercase;
+}
+.req::after{content:" *";color:var(--naser)}
+.field input,.field select,.field textarea{
+  width:100%;
+  border:1px solid #d6dade;
+  background:#fafafa;
+  transition:.2s;
+}
+.field input,.field select{height:43px;padding:0 12px}
+.field textarea{min-height:105px;padding:12px;resize:vertical}
+.field input:focus,.field select:focus,.field textarea:focus{
+  background:#fff;border-color:var(--naser);
+  box-shadow:0 0 0 3px rgba(0,155,73,.07);
+}
+
+/* BLOCKS */
+.alert-box{
+  margin:25px;padding:16px 18px;
+  border-left:4px solid var(--danger);
+  background:var(--danger-soft);
+  color:#6e2424;font-size:10px;line-height:1.6;
+}
+.cause-box{
+  margin:0 25px 25px;
+  border:1px solid var(--line);
+  background:#fafafa;
+}
+.cause-title{
+  padding:10px 14px;
+  background:#111;color:#fff;
+  font-size:9px;font-weight:900;letter-spacing:.7px;
+}
+.cause-content{
+  padding:18px;
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:18px;
+}
+
+/* STATUS */
+.status-panel{
+  margin:0 25px 25px;
+  padding:20px;
+  border:1px solid var(--line);
+  background:#fafafa;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:20px;
+}
+.status-panel small{
+  display:block;color:#777;
+  font-size:8px;font-weight:900;letter-spacing:1px;
+}
+.status-panel strong{
+  display:block;margin-top:7px;font-size:18px;
+}
+.status-value{
+  font-size:28px;font-weight:900;color:var(--warning);
+}
+.status-panel.closed{
+  background:#edf9f2;border-color:#a7d8ba;
+}
+.status-panel.closed .status-value{color:var(--naser)}
+.status-panel.overdue{
+  background:var(--danger-soft);border-color:#dfacac;
+}
+.status-panel.overdue .status-value{color:var(--danger)}
+
+/* ACTIONS */
+.actions{
+  display:flex;justify-content:flex-end;
+  gap:10px;flex-wrap:wrap;margin:25px 0;
+}
+.btn{
+  min-height:44px;padding:0 20px;
+  border:1px solid #111;
+  font-size:9px;font-weight:900;letter-spacing:.7px;
+}
+.btn-light{background:#fff;color:#111}
+.btn-light:hover{background:#eee}
+.btn-dark{background:#111;color:#fff}
+.btn-dark:hover{background:#292929}
+.btn-green{background:var(--naser);border-color:var(--naser);color:#fff}
+.btn-green:hover{background:var(--naser-dark)}
+
+.msg{
+  display:none;margin-bottom:20px;padding:14px 17px;
+  font-size:11px;font-weight:700;
+}
+.msg.ok{display:block;background:#edf9f2;color:#086933;border:1px solid #9fd4b7}
+.msg.err{display:block;background:#fff1f1;color:#922929;border:1px solid #dfacac}
+
+.footer{
+  padding-top:20px;border-top:1px solid #d5dade;
+  display:flex;justify-content:space-between;gap:20px;
+  color:#888;font-size:8px;
+}
+.footer strong{color:#222}
+.sidebar-overlay{display:none}
+
+@media(max-width:1100px){
+  .grid{grid-template-columns:repeat(2,1fr)}
+  .metrics{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:850px){
+  .sidebar{transform:translateX(-100%);transition:.25s}
+  .sidebar.open{transform:translateX(0)}
+  .sidebar-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:900}
+  .sidebar-overlay.show{display:block}
+  .main{margin-left:0}
+  .menu-btn{display:block}
+  .topbar{padding:0 18px}
+  .control{display:none}
+  .hero{flex-direction:column;align-items:flex-start;padding:30px 26px}
+  .hero-meta{width:100%;padding:18px 0 0;border-left:0;border-top:1px solid #393939}
+}
+@media(max-width:600px){
+  .content{width:calc(100% - 28px)}
+  .grid,.metrics,.cause-content{grid-template-columns:1fr}
+  .field.span2,.field.full{grid-column:auto}
+  .hero h2{font-size:25px}
+  .actions{flex-direction:column}
+  .btn{width:100%}
+  .footer{flex-direction:column}
+  .status-panel{flex-direction:column;align-items:flex-start}
+}
+@media print{
+  body{background:#fff}
+  .sidebar,.topbar,.actions,.metrics,.progress-card{display:none!important}
+  .main{margin-left:0}
+  .content{width:100%;margin:0}
+  .card,.hero{box-shadow:none}
+}
+</style>
+</head>
+
+<body>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<aside class="sidebar" id="sidebar">
+  <div class="brand">
+    <div class="brand-mark">N</div>
+    <div>
+      <div class="brand-name">NASER</div>
+      <div class="brand-sub">SRL</div>
+    </div>
+  </div>
+
+  <div class="side-label">SISTEMA DE GESTIÓN INTEGRADO</div>
+
+  <nav class="nav">
+    <a class="nav-link active" href="#identificacion"><span>01</span>Identificación</a>
+    <a class="nav-link" href="#descripcion"><span>02</span>No conformidad</a>
+    <a class="nav-link" href="#causas"><span>03</span>Análisis de causas</a>
+    <a class="nav-link" href="#acciones"><span>04</span>Acciones</a>
+    <a class="nav-link" href="#seguimiento"><span>05</span>Seguimiento</a>
+    <a class="nav-link" href="#cierre"><span>06</span>Cierre</a>
+  </nav>
+
+  <div class="side-footer">
+    SGI / HSEQ
+    <strong>NO CONFORMIDAD</strong>
+    NASER SRL
+  </div>
+</aside>
+
+<main class="main">
+<header class="topbar">
+  <div class="topbar-left">
+    <button class="menu-btn" id="menuBtn" type="button">☰</button>
+    <div>
+      <div class="crumb">NASER SRL / SGI / NO CONFORMIDAD</div>
+      <h1>No Conformidad</h1>
+    </div>
+  </div>
+
+  <div style="display:flex;align-items:center;gap:14px">
+    <div class="finished" id="finishedBadge">✓ NO CONFORMIDAD CERRADA</div>
+    <div class="control"><i></i> REGISTRO ACTIVO</div>
+  </div>
+</header>
+
+<div class="content">
+
+<section class="hero">
+  <div>
+    <div class="hero-tag">SISTEMA DE GESTIÓN INTEGRADO</div>
+    <h2>NO <span>CONFORMIDAD</span></h2>
+    <p>
+      Registro, análisis, tratamiento, seguimiento y cierre de una no conformidad
+      detectada dentro del Sistema de Gestión Integrado de NASER SRL.
+    </p>
+  </div>
+
+  <div class="hero-meta">
+    <small>DOCUMENTO</small>
+    <strong>NO CONFORMIDAD</strong>
+    <span id="heroDoc">Código y revisión editables</span>
+  </div>
+</section>
+
+<div class="metrics">
+  <div class="metric red">
+    <small>ESTADO</small>
+    <strong id="stEstado">ABIERTA</strong>
+  </div>
+
+  <div class="metric warning">
+    <small>DÍAS HASTA VENCIMIENTO</small>
+    <strong id="stDias">—</strong>
+  </div>
+
+  <div class="metric green">
+    <small>EFICACIA VERIFICADA</small>
+    <strong id="stEficacia">NO</strong>
+  </div>
+
+  <div class="metric blue">
+    <small>FORMULARIO COMPLETADO</small>
+    <strong id="stProgreso">0%</strong>
+  </div>
+</div>
+
+<section class="progress-card">
+  <div class="progress-top">
+    <div>
+      <small>PROGRESO DEL REGISTRO</small>
+      <strong id="progressText">0 campos requeridos completos</strong>
+    </div>
+    <div class="progress-value" id="progressPct">0%</div>
+  </div>
+  <div class="track"><div class="bar" id="progressBar"></div></div>
+</section>
+
+<div class="msg" id="message"></div>
+
+<section class="card" id="identificacion">
+  <div class="card-head">
+    <div class="num">01</div>
+    <div>
+      <h3>Identificación de la No Conformidad</h3>
+      <p>Datos generales y origen del desvío.</p>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="field">
+      <label>Código del documento</label>
+      <input id="codigoDocumento" placeholder="Ej. PGSN04-F5">
+    </div>
+
+    <div class="field">
+      <label>Revisión</label>
+      <input id="revision" placeholder="Ej. Rev.00">
+    </div>
+
+    <div class="field">
+      <label>N° de No Conformidad</label>
+      <input id="numeroNC" placeholder="Ej. NC-2026-001">
+    </div>
+
+    <div class="field">
+      <label class="req">Fecha de detección</label>
+      <input id="fechaDeteccion" type="date">
+    </div>
+
+    <div class="field span2">
+      <label class="req">Proceso / Sector</label>
+      <input id="procesoSector" placeholder="Proceso o sector involucrado">
+    </div>
+
+    <div class="field">
+      <label class="req">Origen</label>
+      <select id="origen">
+        <option value="">Seleccionar</option>
+        <option>Auditoría interna</option>
+        <option>Auditoría externa</option>
+        <option>Inspección</option>
+        <option>Incidente / accidente</option>
+        <option>Reclamo de cliente</option>
+        <option>Reclamo interno</option>
+        <option>Desvío operativo</option>
+        <option>Incumplimiento legal</option>
+        <option>Otro</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>Detectada por</label>
+      <input id="detectadaPor" placeholder="Nombre y apellido">
+    </div>
+
+    <div class="field span2">
+      <label>Norma / Requisito / Procedimiento</label>
+      <input id="requisito" placeholder="Ej. ISO 9001: 8.5 / procedimiento interno...">
+    </div>
+
+    <div class="field span2">
+      <label>Clasificación</label>
+      <select id="clasificacion">
+        <option value="">Seleccionar</option>
+        <option>Menor</option>
+        <option>Mayor</option>
+        <option>Crítica</option>
+      </select>
+    </div>
+  </div>
+</section>
+
+<section class="card" id="descripcion">
+  <div class="card-head">
+    <div class="num">02</div>
+    <div>
+      <h3>Descripción de la No Conformidad</h3>
+      <p>Detalle del incumplimiento y evidencia objetiva.</p>
+    </div>
+  </div>
+
+  <div class="alert-box">
+    Una No Conformidad debe describir de forma concreta qué requisito no se cumplió,
+    qué evidencia objetiva lo demuestra y dónde/cuándo fue detectado.
+  </div>
+
+  <div class="grid">
+    <div class="field full">
+      <label class="req">Descripción de la No Conformidad</label>
+      <textarea id="descripcionNC" placeholder="Describa claramente el incumplimiento detectado..."></textarea>
+    </div>
+
+    <div class="field full">
+      <label class="req">Evidencia objetiva</label>
+      <textarea id="evidencia" placeholder="Documentos, registros, observaciones, fotografías, testimonios, etc."></textarea>
+    </div>
+
+    <div class="field full">
+      <label>Corrección inmediata realizada</label>
+      <textarea id="correccionInmediata" placeholder="Acción inmediata adoptada para contener o corregir el desvío..."></textarea>
+    </div>
+  </div>
+</section>
+
+<section class="card" id="causas">
+  <div class="card-head">
+    <div class="num">03</div>
+    <div>
+      <h3>Análisis de causas</h3>
+      <p>Determinación de la causa que originó la No Conformidad.</p>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="field">
+      <label>Método de análisis</label>
+      <select id="metodoAnalisis">
+        <option value="">Seleccionar</option>
+        <option>5 Porqués</option>
+        <option>Ishikawa</option>
+        <option>Árbol de causas</option>
+        <option>Análisis directo</option>
+        <option>Otro</option>
+      </select>
+    </div>
+
+    <div class="field span2">
+      <label class="req">Causa raíz</label>
+      <textarea id="causaRaiz" placeholder="Causa raíz identificada..."></textarea>
+    </div>
+
+    <div class="field">
+      <label>Responsable del análisis</label>
+      <input id="responsableAnalisis" placeholder="Nombre y apellido">
+    </div>
+  </div>
+
+  <div class="cause-box">
+    <div class="cause-title">ANÁLISIS COMPLEMENTARIO</div>
+    <div class="cause-content">
+      <div class="field">
+        <label>¿Por qué ocurrió?</label>
+        <textarea id="porque1" placeholder="Causa inicial..."></textarea>
+      </div>
+
+      <div class="field">
+        <label>¿Por qué no se detectó antes?</label>
+        <textarea id="porque2" placeholder="Falla de control o detección..."></textarea>
+      </div>
+
+      <div class="field">
+        <label>Factores contribuyentes</label>
+        <textarea id="factores" placeholder="Personas, método, equipos, entorno, documentación..."></textarea>
+      </div>
+
+      <div class="field">
+        <label>Controles existentes</label>
+        <textarea id="controles" placeholder="Controles existentes y por qué no fueron suficientes..."></textarea>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="card" id="acciones">
+  <div class="card-head">
+    <div class="num">04</div>
+    <div>
+      <h3>Acción correctiva</h3>
+      <p>Acciones definidas para eliminar la causa raíz y evitar la repetición.</p>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="field full">
+      <label class="req">Acción correctiva definida</label>
+      <textarea id="accionCorrectiva" placeholder="Describa la acción correctiva a implementar..."></textarea>
+    </div>
+
+    <div class="field span2">
+      <label class="req">Responsable de implementación</label>
+      <input id="responsableAccion" placeholder="Nombre y apellido">
+    </div>
+
+    <div class="field">
+      <label class="req">Fecha compromiso</label>
+      <input id="fechaCompromiso" type="date">
+    </div>
+
+    <div class="field">
+      <label>Fecha de implementación</label>
+      <input id="fechaImplementacion" type="date">
+    </div>
+
+    <div class="field full">
+      <label>Recursos / Evidencias de implementación</label>
+      <textarea id="evidenciaImplementacion" placeholder="Registros, documentos, capacitaciones, fotografías, órdenes de trabajo..."></textarea>
+    </div>
+  </div>
+</section>
+
+<section class="card" id="seguimiento">
+  <div class="card-head">
+    <div class="num">05</div>
+    <div>
+      <h3>Seguimiento y verificación</h3>
+      <p>Control del avance y evaluación de la eficacia de la acción correctiva.</p>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="field">
+      <label>Estado</label>
+      <select id="estado">
+        <option value="ABIERTA">ABIERTA</option>
+        <option value="EN TRATAMIENTO">EN TRATAMIENTO</option>
+        <option value="PENDIENTE DE VERIFICACIÓN">PENDIENTE DE VERIFICACIÓN</option>
+        <option value="CERRADA">CERRADA</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>Fecha de seguimiento</label>
+      <input id="fechaSeguimiento" type="date">
+    </div>
+
+    <div class="field span2">
+      <label>Responsable de seguimiento</label>
+      <input id="responsableSeguimiento" placeholder="Nombre y apellido">
+    </div>
+
+    <div class="field full">
+      <label>Resultado del seguimiento</label>
+      <textarea id="resultadoSeguimiento" placeholder="Resultado de la verificación realizada..."></textarea>
+    </div>
+
+    <div class="field">
+      <label class="req">¿Acción eficaz?</label>
+      <select id="eficaz">
+        <option value="">Seleccionar</option>
+        <option value="SI">SÍ</option>
+        <option value="NO">NO</option>
+        <option value="PENDIENTE">PENDIENTE</option>
+      </select>
+    </div>
+
+    <div class="field span2">
+      <label>Evidencia de eficacia</label>
+      <textarea id="evidenciaEficacia" placeholder="Evidencia que demuestra la eficacia de la acción..."></textarea>
+    </div>
+  </div>
+
+  <div class="status-panel" id="statusPanel">
+    <div>
+      <small>ESTADO ACTUAL</small>
+      <strong id="statusText">NO CONFORMIDAD ABIERTA</strong>
+    </div>
+    <div class="status-value" id="statusValue">ABIERTA</div>
+  </div>
+</section>
+
+<section class="card" id="cierre">
+  <div class="card-head">
+    <div class="num">06</div>
+    <div>
+      <h3>Cierre de la No Conformidad</h3>
+      <p>Responsables y conclusión del cierre.</p>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="field span2">
+      <label>Responsable del sector</label>
+      <input id="responsableSector" placeholder="Nombre y apellido">
+    </div>
+
+    <div class="field span2">
+      <label class="req">Responsable SGI / HSEQ</label>
+      <input id="responsableSGI" placeholder="Nombre y apellido">
+    </div>
+
+    <div class="field">
+      <label>Fecha de cierre</label>
+      <input id="fechaCierre" type="date">
+    </div>
+
+    <div class="field full">
+      <label>Observaciones de cierre</label>
+      <textarea id="observacionesCierre" placeholder="Conclusiones u observaciones finales..."></textarea>
+    </div>
+  </div>
+</section>
+
+<div class="actions">
+  <button class="btn btn-light" type="button" id="clearBtn">LIMPIAR</button>
+  <button class="btn btn-light" type="button" onclick="window.print()">IMPRIMIR / PDF</button>
+  <button class="btn btn-dark" type="button" id="saveBtn">GUARDAR PROGRESO</button>
+  <button class="btn btn-green" type="button" id="finishBtn">FINALIZAR / CERRAR NC</button>
+</div>
+
+<footer class="footer">
+  <strong>NASER SRL</strong>
+  <span>Sistema de Gestión Integrado</span>
+  <span>No Conformidad</span>
+</footer>
+
+</div>
+</main>
+
+<script>
+const STORAGE_KEY = "NASER_NO_CONFORMIDAD_V1";
+
+const camposRequeridos = [
+  "fechaDeteccion",
+  "procesoSector",
+  "origen",
+  "descripcionNC",
+  "evidencia",
+  "causaRaiz",
+  "accionCorrectiva",
+  "responsableAccion",
+  "fechaCompromiso",
+  "eficaz",
+  "responsableSGI"
+];
+
+function value(id){
+  return document.getElementById(id)?.value?.trim() || "";
+}
+
+function collect(){
+  return {
+    codigoDocumento:value("codigoDocumento"),
+    revision:value("revision"),
+    numeroNC:value("numeroNC"),
+    fechaDeteccion:value("fechaDeteccion"),
+    procesoSector:value("procesoSector"),
+    origen:value("origen"),
+    detectadaPor:value("detectadaPor"),
+    requisito:value("requisito"),
+    clasificacion:value("clasificacion"),
+
+    descripcionNC:value("descripcionNC"),
+    evidencia:value("evidencia"),
+    correccionInmediata:value("correccionInmediata"),
+
+    metodoAnalisis:value("metodoAnalisis"),
+    causaRaiz:value("causaRaiz"),
+    responsableAnalisis:value("responsableAnalisis"),
+    porque1:value("porque1"),
+    porque2:value("porque2"),
+    factores:value("factores"),
+    controles:value("controles"),
+
+    accionCorrectiva:value("accionCorrectiva"),
+    responsableAccion:value("responsableAccion"),
+    fechaCompromiso:value("fechaCompromiso"),
+    fechaImplementacion:value("fechaImplementacion"),
+    evidenciaImplementacion:value("evidenciaImplementacion"),
+
+    estado:value("estado"),
+    fechaSeguimiento:value("fechaSeguimiento"),
+    responsableSeguimiento:value("responsableSeguimiento"),
+    resultadoSeguimiento:value("resultadoSeguimiento"),
+    eficaz:value("eficaz"),
+    evidenciaEficacia:value("evidenciaEficacia"),
+
+    responsableSector:value("responsableSector"),
+    responsableSGI:value("responsableSGI"),
+    fechaCierre:value("fechaCierre"),
+    observacionesCierre:value("observacionesCierre"),
+
+    finalizada:document.getElementById("finishedBadge").classList.contains("show")
+  };
+}
+
+function restore(data){
+  if(!data) return;
+
+  Object.entries(data).forEach(([id,val])=>{
+    if(id==="finalizada") return;
+    const el=document.getElementById(id);
+    if(el) el.value=val ?? "";
+  });
+
+  if(data.finalizada){
+    document.getElementById("finishedBadge").classList.add("show");
+  }
+
+  actualizarPaneles();
+}
+
+function guardar(mostrar=true){
+  localStorage.setItem(STORAGE_KEY,JSON.stringify(collect()));
+
+  if(mostrar){
+    mensaje("No Conformidad guardada correctamente.","ok");
+  }
+}
+
+function mensaje(texto,tipo="ok"){
+  const box=document.getElementById("message");
+  box.className="msg " + tipo;
+  box.textContent=texto;
+  box.scrollIntoView({behavior:"smooth",block:"center"});
+}
+
+let timer;
+function autoGuardar(){
+  clearTimeout(timer);
+  timer=setTimeout(()=>{
+    actualizarPaneles();
+    guardar(false);
+  },300);
+}
+
+function progreso(){
+  const completos=camposRequeridos.filter(id=>value(id)).length;
+  const total=camposRequeridos.length;
+  const pct=Math.round((completos/total)*100);
+
+  document.getElementById("stProgreso").textContent=pct+"%";
+  document.getElementById("progressPct").textContent=pct+"%";
+  document.getElementById("progressBar").style.width=pct+"%";
+  document.getElementById("progressText").textContent=
+    `${completos} de ${total} campos requeridos completos`;
+
+  return {completos,total,pct};
+}
+
+function diasHasta(fecha){
+  if(!fecha) return null;
+
+  const hoy=new Date();
+  hoy.setHours(0,0,0,0);
+
+  const destino=new Date(fecha+"T00:00:00");
+  const diff=destino-hoy;
+
+  return Math.ceil(diff/86400000);
+}
+
+function actualizarPaneles(){
+  progreso();
+
+  const estado=value("estado") || "ABIERTA";
+  const eficaz=value("eficaz");
+
+  document.getElementById("stEstado").textContent=estado;
+  document.getElementById("stEficacia").textContent=
+    eficaz==="SI" ? "SÍ" :
+    eficaz==="NO" ? "NO" :
+    eficaz==="PENDIENTE" ? "PEND." : "NO";
+
+  const dias=diasHasta(value("fechaCompromiso"));
+
+  if(dias===null){
+    document.getElementById("stDias").textContent="—";
+  }else if(dias>=0){
+    document.getElementById("stDias").textContent=dias;
+  }else{
+    document.getElementById("stDias").textContent="VENCIDA";
+  }
+
+  const panel=document.getElementById("statusPanel");
+  const text=document.getElementById("statusText");
+  const valueEl=document.getElementById("statusValue");
+
+  panel.className="status-panel";
+  valueEl.textContent=estado;
+
+  if(estado==="CERRADA"){
+    panel.classList.add("closed");
+    text.textContent="NO CONFORMIDAD CERRADA";
+  }else if(dias!==null && dias<0){
+    panel.classList.add("overdue");
+    text.textContent="NO CONFORMIDAD VENCIDA / FUERA DE PLAZO";
+  }else{
+    text.textContent="NO CONFORMIDAD " + estado;
+  }
+
+  const codigo=value("codigoDocumento");
+  const rev=value("revision");
+
+  document.getElementById("heroDoc").textContent =
+    [codigo,rev].filter(Boolean).join(" · ") || "Código y revisión editables";
+}
+
+function validar(){
+  const mensajes = {
+    fechaDeteccion:"Debe completar la fecha de detección.",
+    procesoSector:"Debe completar el proceso o sector.",
+    origen:"Debe seleccionar el origen.",
+    descripcionNC:"Debe describir la No Conformidad.",
+    evidencia:"Debe completar la evidencia objetiva.",
+    causaRaiz:"Debe completar la causa raíz.",
+    accionCorrectiva:"Debe definir la acción correctiva.",
+    responsableAccion:"Debe completar el responsable de implementación.",
+    fechaCompromiso:"Debe completar la fecha compromiso.",
+    eficaz:"Debe indicar si la acción fue eficaz.",
+    responsableSGI:"Debe completar el responsable SGI / HSEQ."
+  };
+
+  for(const id of camposRequeridos){
+    if(!value(id)){
+      mensaje(mensajes[id],"err");
+      document.getElementById(id).focus();
+      return false;
+    }
+  }
+
+  if(value("estado")==="CERRADA"){
+    if(value("eficaz")!=="SI"){
+      mensaje("Para cerrar la No Conformidad, la acción debe estar verificada como eficaz.","err");
+      return false;
+    }
+
+    if(!value("fechaCierre")){
+      mensaje("Debe completar la fecha de cierre.","err");
+      document.getElementById("fechaCierre").focus();
+      return false;
+    }
+  }
+
+  return true;
+}
+
+function finalizar(){
+  if(!validar()) return;
+
+  if(value("eficaz")==="SI"){
+    document.getElementById("estado").value="CERRADA";
+
+    if(!value("fechaCierre")){
+      const d=new Date();
+      const y=d.getFullYear();
+      const m=String(d.getMonth()+1).padStart(2,"0");
+      const day=String(d.getDate()).padStart(2,"0");
+      document.getElementById("fechaCierre").value=`${y}-${m}-${day}`;
+    }
+  }
+
+  document.getElementById("finishedBadge").classList.add("show");
+
+  actualizarPaneles();
+  guardar(false);
+
+  mensaje("No Conformidad finalizada correctamente.","ok");
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function limpiar(){
+  if(!confirm("¿Seguro que desea limpiar toda la No Conformidad?")) return;
+
+  document.querySelectorAll("input").forEach(el=>el.value="");
+  document.querySelectorAll("textarea").forEach(el=>el.value="");
+  document.querySelectorAll("select").forEach(el=>el.selectedIndex=0);
+
+  document.getElementById("estado").value="ABIERTA";
+  document.getElementById("finishedBadge").classList.remove("show");
+
+  localStorage.removeItem(STORAGE_KEY);
+
+  colocarFecha();
+  actualizarPaneles();
+
+  mensaje("Formulario limpiado correctamente.","ok");
+}
+
+function colocarFecha(){
+  if(value("fechaDeteccion")) return;
+
+  const d=new Date();
+  const y=d.getFullYear();
+  const m=String(d.getMonth()+1).padStart(2,"0");
+  const day=String(d.getDate()).padStart(2,"0");
+
+  document.getElementById("fechaDeteccion").value=`${y}-${m}-${day}`;
+}
+
+/* AUTOGUARDADO */
+document.addEventListener("input",autoGuardar);
+document.addEventListener("change",autoGuardar);
+
+/* BOTONES */
+document.getElementById("saveBtn").addEventListener("click",()=>guardar(true));
+document.getElementById("finishBtn").addEventListener("click",finalizar);
+document.getElementById("clearBtn").addEventListener("click",limpiar);
+
+/* MOBILE */
+const sidebar=document.getElementById("sidebar");
+const overlay=document.getElementById("sidebarOverlay");
+
+document.getElementById("menuBtn").addEventListener("click",()=>{
+  sidebar.classList.toggle("open");
+  overlay.classList.toggle("show");
+});
+
+overlay.addEventListener("click",()=>{
+  sidebar.classList.remove("open");
+  overlay.classList.remove("show");
+});
+
+/* NAV */
+const navLinks=[...document.querySelectorAll(".nav-link")];
+const sectionIds=[
+  "identificacion","descripcion","causas",
+  "acciones","seguimiento","cierre"
+];
+
+const observer=new IntersectionObserver(entries=>{
+  entries.forEach(entry=>{
+    if(!entry.isIntersecting) return;
+
+    navLinks.forEach(x=>x.classList.remove("active"));
+
+    const active=document.querySelector(
+      `.nav-link[href="#${entry.target.id}"]`
+    );
+
+    if(active) active.classList.add("active");
+  });
+},{threshold:.2});
+
+sectionIds.forEach(id=>{
+  const el=document.getElementById(id);
+  if(el) observer.observe(el);
+});
+
+/* INIT */
+colocarFecha();
+
+const saved=localStorage.getItem(STORAGE_KEY);
+
+if(saved){
+  try{
+    restore(JSON.parse(saved));
+  }catch(e){
+    console.error("Error al restaurar:",e);
+    actualizarPaneles();
+  }
+}else{
+  actualizarPaneles();
+}
+</script>
+</body>
+</html>

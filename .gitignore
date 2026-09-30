@@ -34,3 +34,6 @@ Thumbs.db
 # Editores
 .vscode/
 .idea/
+
+# Versiones viejas / duplicadas de formularios (no se usan)
+formularios/_otros/

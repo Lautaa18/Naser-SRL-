@@ -5,6 +5,7 @@ requireLogin();
 
 require __DIR__ . '/config/db.php';
 require __DIR__ . '/config/layout.php';
+require_once __DIR__ . '/config/formularios_catalogo.php';
 
 /* =========================================================
    DATOS RECIBIDOS
@@ -346,6 +347,9 @@ function documentUrl(string $archivo): string
                     <a class="btn primary" href="<?= app_url('/php/compras.php') ?>">Gestión de compras</a>
                 <?php elseif ($slug === 'ventas'): ?>
                     <a class="btn primary" href="<?= app_url('/php/ventas.php') ?>">Gestión comercial</a>
+                <?php endif; ?>
+                <?php if (formulariosDeSector($slug)): ?>
+                    <a class="btn primary" href="<?= h(app_url('/php/formularios/index.php') . '?sector=' . urlencode($slug)) ?>">✎ Formularios</a>
                 <?php endif; ?>
 
 

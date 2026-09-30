@@ -1,0 +1,2933 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>PGSN04-F8 | Minuta de Reunión | NASER</title>
+
+<style>
+
+/* =========================================================
+   VARIABLES NASER
+========================================================= */
+
+:root{
+    --verde:#009b49;
+    --verde-oscuro:#00783a;
+    --verde-claro:#eaf7f0;
+
+    --negro:#111111;
+    --negro-suave:#1b1b1b;
+
+    --blanco:#ffffff;
+
+    --gris-fondo:#f4f5f7;
+    --gris-borde:#d9dde3;
+    --gris-texto:#6b7280;
+
+    --rojo:#dc3545;
+    --rojo-claro:#fff0f1;
+
+    --amarillo:#d99b18;
+    --amarillo-claro:#fff7e3;
+
+    --sombra:0 5px 18px rgba(0,0,0,.07);
+}
+
+
+/* =========================================================
+   RESET
+========================================================= */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    font-family:Arial, Helvetica, sans-serif;
+    background:var(--gris-fondo);
+    color:#222;
+}
+
+
+/* =========================================================
+   SIDEBAR
+========================================================= */
+
+.sidebar{
+    position:fixed;
+    top:0;
+    left:0;
+
+    width:255px;
+    height:100vh;
+
+    background:var(--negro);
+    color:white;
+
+    z-index:1000;
+
+    display:flex;
+    flex-direction:column;
+}
+
+
+.logo{
+    padding:30px 24px;
+    border-bottom:1px solid #303030;
+}
+
+
+.logo h1{
+    font-size:28px;
+    letter-spacing:2px;
+    font-weight:800;
+    color:white;
+}
+
+
+.sidebar-title{
+    padding:24px 24px 10px;
+
+    color:#747474;
+
+    font-size:10px;
+    font-weight:bold;
+    letter-spacing:1px;
+}
+
+
+.nav-item{
+    display:flex;
+    align-items:center;
+
+    gap:13px;
+
+    padding:14px 22px;
+
+    color:#bbb;
+
+    text-decoration:none;
+
+    border-left:4px solid transparent;
+
+    transition:.2s;
+}
+
+
+.nav-item:hover,
+.nav-item.active{
+    color:white;
+    background:#191919;
+    border-left-color:var(--verde);
+}
+
+
+.nav-number{
+    color:var(--verde);
+    font-weight:bold;
+}
+
+
+/* =========================================================
+   MAIN
+========================================================= */
+
+.main{
+    margin-left:255px;
+    min-height:100vh;
+}
+
+
+/* =========================================================
+   TOPBAR
+========================================================= */
+
+.topbar{
+    min-height:70px;
+
+    background:white;
+
+    border-bottom:1px solid var(--gris-borde);
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    gap:20px;
+
+    padding:0 32px;
+
+    position:sticky;
+    top:0;
+
+    z-index:100;
+}
+
+
+.breadcrumb{
+    color:#666;
+    font-size:12px;
+}
+
+
+.topbar-right{
+    display:flex;
+    align-items:center;
+    gap:9px;
+}
+
+
+.document-code{
+    padding:8px 12px;
+
+    border-radius:6px;
+
+    background:var(--verde-claro);
+    color:var(--verde-oscuro);
+
+    font-size:11px;
+    font-weight:bold;
+}
+
+
+.status-badge{
+    padding:8px 12px;
+
+    border-radius:6px;
+
+    background:#f0f1f2;
+    color:#666;
+
+    font-size:11px;
+    font-weight:bold;
+}
+
+
+.status-badge.finalizado{
+    background:var(--verde-claro);
+    color:var(--verde-oscuro);
+}
+
+
+/* =========================================================
+   CONTENT
+========================================================= */
+
+.content{
+    width:100%;
+    max-width:1500px;
+
+    margin:auto;
+
+    padding:28px;
+}
+
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.hero{
+    position:relative;
+
+    overflow:hidden;
+
+    padding:32px 34px;
+
+    margin-bottom:24px;
+
+    border-radius:11px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #101010,
+            #202020
+        );
+
+    color:white;
+}
+
+
+.hero::after{
+    content:"";
+
+    position:absolute;
+
+    width:230px;
+    height:230px;
+
+    top:-90px;
+    right:-65px;
+
+    border-radius:50%;
+
+    background:rgba(0,155,73,.16);
+}
+
+
+.hero small{
+    color:var(--verde);
+
+    font-size:10px;
+
+    font-weight:bold;
+
+    letter-spacing:2px;
+}
+
+
+.hero h2{
+    margin-top:9px;
+    font-size:30px;
+}
+
+
+.hero p{
+    max-width:850px;
+
+    margin-top:11px;
+
+    color:#c9c9c9;
+
+    font-size:13px;
+    line-height:1.6;
+}
+
+
+/* =========================================================
+   CARD
+========================================================= */
+
+.card{
+    background:white;
+
+    border:1px solid var(--gris-borde);
+
+    border-radius:11px;
+
+    box-shadow:var(--sombra);
+
+    margin-bottom:26px;
+
+    overflow:hidden;
+}
+
+
+.card-head{
+    display:flex;
+    align-items:center;
+
+    gap:13px;
+
+    padding:19px 22px;
+
+    border-bottom:1px solid var(--gris-borde);
+}
+
+
+.card-number{
+    width:40px;
+    height:40px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    flex:none;
+
+    border-radius:7px;
+
+    background:#151515;
+
+    color:var(--verde);
+
+    font-weight:bold;
+}
+
+
+.card-title h3{
+    font-size:17px;
+}
+
+
+.card-title p{
+    margin-top:4px;
+    color:#777;
+    font-size:12px;
+}
+
+
+.card-body{
+    padding:22px;
+}
+
+
+/* =========================================================
+   INFO
+========================================================= */
+
+.info-box{
+    margin-bottom:20px;
+
+    padding:15px 17px;
+
+    border:1px solid var(--gris-borde);
+
+    border-left:4px solid var(--verde);
+
+    border-radius:7px;
+
+    background:#fafafa;
+
+    color:#555;
+
+    font-size:12px;
+
+    line-height:1.6;
+}
+
+
+.info-box strong{
+    color:var(--verde-oscuro);
+}
+
+
+/* =========================================================
+   DATOS GENERALES
+========================================================= */
+
+.form-grid{
+    display:grid;
+
+    grid-template-columns:
+        repeat(2,1fr);
+
+    gap:15px;
+}
+
+
+.form-group{
+    display:flex;
+    flex-direction:column;
+    gap:7px;
+}
+
+
+.form-group.full{
+    grid-column:1 / -1;
+}
+
+
+.form-group label{
+    color:#555;
+
+    font-size:11px;
+
+    font-weight:bold;
+
+    text-transform:uppercase;
+}
+
+
+.form-control{
+    width:100%;
+
+    padding:10px 11px;
+
+    border:1px solid var(--gris-borde);
+
+    border-radius:6px;
+
+    background:white;
+
+    outline:none;
+
+    font-family:inherit;
+
+    font-size:12px;
+
+    transition:.2s;
+}
+
+
+textarea.form-control{
+    min-height:80px;
+    resize:vertical;
+}
+
+
+.form-control:focus{
+    border-color:var(--verde);
+
+    box-shadow:
+        0 0 0 2px
+        rgba(0,155,73,.08);
+}
+
+
+/* =========================================================
+   TABLAS
+========================================================= */
+
+.table-wrapper{
+    width:100%;
+
+    overflow-x:auto;
+
+    border:1px solid var(--gris-borde);
+
+    border-radius:8px;
+}
+
+
+table{
+    width:100%;
+
+    min-width:950px;
+
+    border-collapse:collapse;
+}
+
+
+thead{
+    background:#171717;
+
+    color:white;
+}
+
+
+th{
+    padding:12px 10px;
+
+    border-right:1px solid #383838;
+
+    text-align:left;
+
+    font-size:11px;
+}
+
+
+th:last-child{
+    border-right:none;
+}
+
+
+td{
+    padding:7px;
+
+    border-right:1px solid var(--gris-borde);
+
+    border-bottom:1px solid var(--gris-borde);
+
+    vertical-align:middle;
+}
+
+
+td:last-child{
+    border-right:none;
+}
+
+
+tbody tr:nth-child(even){
+    background:#f7f8f9;
+}
+
+
+tbody tr:hover{
+    background:#f1f8f4;
+}
+
+
+/* =========================================================
+   CAMPOS DE TABLA
+========================================================= */
+
+.table-input,
+.table-textarea{
+    width:100%;
+
+    padding:9px;
+
+    border:1px solid transparent;
+
+    border-radius:5px;
+
+    background:transparent;
+
+    outline:none;
+
+    font-family:inherit;
+
+    font-size:12px;
+
+    transition:.2s;
+}
+
+
+.table-textarea{
+    min-height:55px;
+
+    resize:vertical;
+}
+
+
+.table-input:focus,
+.table-textarea:focus{
+    background:white;
+
+    border-color:var(--verde);
+
+    box-shadow:
+        0 0 0 2px
+        rgba(0,155,73,.08);
+}
+
+
+/* =========================================================
+   BOTÓN ELIMINAR
+========================================================= */
+
+.delete-row{
+    width:32px;
+    height:32px;
+
+    border:none;
+
+    border-radius:5px;
+
+    background:var(--rojo-claro);
+
+    color:#c7242d;
+
+    cursor:pointer;
+
+    font-size:18px;
+
+    font-weight:bold;
+
+    transition:.2s;
+}
+
+
+.delete-row:hover{
+    background:var(--rojo);
+    color:white;
+}
+
+
+/* =========================================================
+   BOTONES
+========================================================= */
+
+.actions{
+    display:flex;
+    flex-wrap:wrap;
+
+    gap:9px;
+
+    margin-top:18px;
+}
+
+
+.btn{
+    padding:11px 17px;
+
+    border:none;
+
+    border-radius:6px;
+
+    font-size:11px;
+
+    font-weight:bold;
+
+    cursor:pointer;
+
+    transition:.2s;
+}
+
+
+.btn:hover{
+    transform:translateY(-1px);
+}
+
+
+.btn-green{
+    background:var(--verde);
+    color:white;
+}
+
+
+.btn-green:hover{
+    background:var(--verde-oscuro);
+}
+
+
+.btn-dark{
+    background:#171717;
+    color:white;
+}
+
+
+.btn-light{
+    background:white;
+
+    color:#333;
+
+    border:1px solid var(--gris-borde);
+}
+
+
+.btn-danger{
+    color:#c7242d;
+
+    background:var(--rojo-claro);
+
+    border:1px solid #efc0c4;
+}
+
+
+.btn-danger:hover{
+    color:white;
+    background:var(--rojo);
+}
+
+
+.btn-warning{
+    color:#835c00;
+
+    background:var(--amarillo-claro);
+
+    border:1px solid #efd59a;
+}
+
+
+/* =========================================================
+   MENSAJES
+========================================================= */
+
+.message{
+    display:none;
+
+    margin-top:15px;
+
+    padding:11px 14px;
+
+    border-radius:6px;
+
+    font-size:12px;
+
+    font-weight:bold;
+}
+
+
+.message.success{
+    color:var(--verde-oscuro);
+
+    background:var(--verde-claro);
+
+    border:1px solid #bbe3cc;
+}
+
+
+.message.error{
+    color:#aa1c24;
+
+    background:var(--rojo-claro);
+
+    border:1px solid #f0bcc1;
+}
+
+
+/* =========================================================
+   FINALIZADO
+========================================================= */
+
+.locked input,
+.locked textarea{
+    pointer-events:none;
+
+    opacity:.75;
+}
+
+
+.locked .delete-row,
+.locked .btn-add{
+    pointer-events:none;
+
+    opacity:.35;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media(max-width:1050px){
+
+    .sidebar{
+        width:80px;
+    }
+
+    .logo{
+        padding:26px 12px;
+    }
+
+    .logo h1{
+        font-size:15px;
+        text-align:center;
+    }
+
+    .sidebar-title,
+    .nav-item span:not(.nav-number){
+        display:none;
+    }
+
+    .nav-item{
+        justify-content:center;
+        padding:15px;
+    }
+
+    .main{
+        margin-left:80px;
+    }
+
+}
+
+
+@media(max-width:700px){
+
+    .sidebar{
+        display:none;
+    }
+
+    .main{
+        margin-left:0;
+    }
+
+    .content{
+        padding:15px;
+    }
+
+    .topbar{
+        padding:0 15px;
+    }
+
+    .document-code{
+        display:none;
+    }
+
+    .hero{
+        padding:25px 21px;
+    }
+
+    .hero h2{
+        font-size:24px;
+    }
+
+    .form-grid{
+        grid-template-columns:1fr;
+    }
+
+    .form-group.full{
+        grid-column:auto;
+    }
+
+}
+
+
+/* =========================================================
+   PRINT
+========================================================= */
+
+@media print{
+
+    body{
+        background:white;
+    }
+
+    .sidebar,
+    .topbar,
+    .actions,
+    .delete-row{
+        display:none !important;
+    }
+
+    .main{
+        margin-left:0;
+    }
+
+    .content{
+        padding:10px;
+        max-width:none;
+    }
+
+    .card{
+        box-shadow:none;
+        break-inside:avoid;
+    }
+
+    table{
+        min-width:0;
+    }
+
+    input,
+    textarea{
+        border:none !important;
+        box-shadow:none !important;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+
+<!-- =========================================================
+     SIDEBAR
+========================================================= -->
+
+<aside class="sidebar">
+
+    <div class="logo">
+
+        <h1>
+            NASER
+        </h1>
+
+    </div>
+
+
+    <div class="sidebar-title">
+        DOCUMENTO
+    </div>
+
+
+    <a
+        href="#datos"
+        class="nav-item active"
+    >
+
+        <span class="nav-number">
+            01
+        </span>
+
+        <span>
+            Datos de reunión
+        </span>
+
+    </a>
+
+
+    <a
+        href="#temas"
+        class="nav-item"
+    >
+
+        <span class="nav-number">
+            02
+        </span>
+
+        <span>
+            Temas tratados
+        </span>
+
+    </a>
+
+
+    <a
+        href="#participantes"
+        class="nav-item"
+    >
+
+        <span class="nav-number">
+            03
+        </span>
+
+        <span>
+            Participantes
+        </span>
+
+    </a>
+
+
+    <a
+        href="#cierre"
+        class="nav-item"
+    >
+
+        <span class="nav-number">
+            04
+        </span>
+
+        <span>
+            Cierre
+        </span>
+
+    </a>
+
+</aside>
+
+
+<!-- =========================================================
+     MAIN
+========================================================= -->
+
+<main
+    class="main"
+    id="mainContent"
+>
+
+
+<!-- =========================================================
+     TOPBAR
+========================================================= -->
+
+<header class="topbar">
+
+    <div class="breadcrumb">
+        NASER / Reuniones / Minuta de Reunión
+    </div>
+
+
+    <div class="topbar-right">
+
+        <div
+            class="status-badge"
+            id="statusBadge"
+        >
+            EN EDICIÓN
+        </div>
+
+
+        <div class="document-code">
+            PGSN04-F8 · Rev.02 Sep25
+        </div>
+
+    </div>
+
+</header>
+
+
+
+<div class="content">
+
+
+<!-- =========================================================
+     HERO
+========================================================= -->
+
+<section class="hero">
+
+    <small>
+        GESTIÓN DE REUNIONES
+    </small>
+
+    <h2>
+        Minuta de Reunión
+    </h2>
+
+    <p>
+        Registro de temas tratados, acciones requeridas,
+        responsables, fechas y participantes de la reunión.
+    </p>
+
+</section>
+
+
+
+<!-- =========================================================
+     01 DATOS
+========================================================= -->
+
+<section
+    class="card"
+    id="datos"
+>
+
+
+    <div class="card-head">
+
+        <div class="card-number">
+            01
+        </div>
+
+
+        <div class="card-title">
+
+            <h3>
+                Datos de la reunión
+            </h3>
+
+            <p>
+                Información general de la reunión.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="card-body">
+
+
+        <div class="form-grid">
+
+
+            <div class="form-group">
+
+                <label>
+                    Fecha
+                </label>
+
+                <input
+                    type="date"
+                    id="fechaReunion"
+                    class="form-control"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Lugar
+                </label>
+
+                <input
+                    type="text"
+                    id="lugar"
+                    class="form-control"
+                    placeholder="Ingrese el lugar"
+                >
+
+            </div>
+
+
+            <div class="form-group full">
+
+                <label>
+                    Tema
+                </label>
+
+                <input
+                    type="text"
+                    id="tema"
+                    class="form-control"
+                    placeholder="Tema principal de la reunión"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Fecha de próxima reunión
+                </label>
+
+                <input
+                    type="date"
+                    id="proximaReunion"
+                    class="form-control"
+                >
+
+            </div>
+
+
+        </div>
+
+
+        <div class="actions">
+
+            <button
+                type="button"
+                class="btn btn-dark"
+                onclick="guardarMinuta(true)"
+            >
+                GUARDAR
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     02 TEMAS TRATADOS
+========================================================= -->
+
+<section
+    class="card"
+    id="temas"
+>
+
+
+    <div class="card-head">
+
+        <div class="card-number">
+            02
+        </div>
+
+
+        <div class="card-title">
+
+            <h3>
+                Temas tratados
+            </h3>
+
+            <p>
+                Acciones requeridas y responsables.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="card-body">
+
+
+        <div class="info-box">
+
+            Registre cada <strong>tema tratado</strong>,
+            la acción requerida, el responsable y la fecha
+            correspondiente.
+
+        </div>
+
+
+        <div class="table-wrapper">
+
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th style="width:28%;">
+                            Temas Tratados
+                        </th>
+
+                        <th style="width:32%;">
+                            Acciones Requeridas
+                        </th>
+
+                        <th style="width:20%;">
+                            Responsable
+                        </th>
+
+                        <th style="width:14%;">
+                            Fecha
+                        </th>
+
+                        <th style="width:55px;">
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="tablaTemas">
+                </tbody>
+
+            </table>
+
+
+        </div>
+
+
+        <div class="actions">
+
+            <button
+                type="button"
+                class="btn btn-green btn-add"
+                onclick="agregarTema()"
+            >
+                + AGREGAR TEMA
+            </button>
+
+
+            <button
+                type="button"
+                class="btn btn-dark"
+                onclick="guardarMinuta(true)"
+            >
+                GUARDAR
+            </button>
+
+
+            <button
+                type="button"
+                class="btn btn-danger"
+                onclick="limpiarTemas()"
+            >
+                LIMPIAR
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     03 PARTICIPANTES
+========================================================= -->
+
+<section
+    class="card"
+    id="participantes"
+>
+
+
+    <div class="card-head">
+
+        <div class="card-number">
+            03
+        </div>
+
+
+        <div class="card-title">
+
+            <h3>
+                Participantes
+            </h3>
+
+            <p>
+                Registro de las personas presentes.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="card-body">
+
+
+        <div class="table-wrapper">
+
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th style="width:40%;">
+                            Apellido y Nombre
+                        </th>
+
+                        <th style="width:30%;">
+                            Función
+                        </th>
+
+                        <th style="width:24%;">
+                            Firma
+                        </th>
+
+                        <th style="width:55px;">
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="tablaParticipantes">
+                </tbody>
+
+            </table>
+
+
+        </div>
+
+
+        <div class="actions">
+
+            <button
+                type="button"
+                class="btn btn-green btn-add"
+                onclick="agregarParticipante()"
+            >
+                + AGREGAR PARTICIPANTE
+            </button>
+
+
+            <button
+                type="button"
+                class="btn btn-dark"
+                onclick="guardarMinuta(true)"
+            >
+                GUARDAR
+            </button>
+
+
+            <button
+                type="button"
+                class="btn btn-danger"
+                onclick="limpiarParticipantes()"
+            >
+                LIMPIAR
+            </button>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     04 CIERRE
+========================================================= -->
+
+<section
+    class="card"
+    id="cierre"
+>
+
+
+    <div class="card-head">
+
+        <div class="card-number">
+            04
+        </div>
+
+
+        <div class="card-title">
+
+            <h3>
+                Cierre de la minuta
+            </h3>
+
+            <p>
+                Guardado, validación y finalización.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="card-body">
+
+
+        <div
+            class="message success"
+            id="mensajeExito"
+        >
+            ✓ Minuta guardada correctamente.
+        </div>
+
+
+        <div
+            class="message error"
+            id="mensajeError"
+        >
+        </div>
+
+
+        <div class="actions">
+
+            <button
+                type="button"
+                class="btn btn-dark"
+                onclick="guardarMinuta(true)"
+            >
+                GUARDAR
+            </button>
+
+
+            <button
+                type="button"
+                class="btn btn-green"
+                id="btnFinalizar"
+                onclick="finalizarMinuta()"
+            >
+                FINALIZAR FORMULARIO
+            </button>
+
+
+            <button
+                type="button"
+                class="btn btn-warning"
+                id="btnEditar"
+                onclick="habilitarEdicion()"
+                style="display:none;"
+            >
+                HABILITAR EDICIÓN
+            </button>
+
+
+            <button
+                type="button"
+                class="btn btn-light"
+                onclick="window.print()"
+            >
+                IMPRIMIR / PDF
+            </button>
+
+
+            <button
+                type="button"
+                class="btn btn-danger"
+                onclick="limpiarTodo()"
+            >
+                LIMPIAR TODO
+            </button>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+</div>
+
+</main>
+
+
+<script>
+
+/* =========================================================
+   CONFIGURACIÓN
+========================================================= */
+
+const STORAGE_KEY =
+    "naser_pgsn04_f8_minuta";
+
+
+let datos =
+    crearDatosIniciales();
+
+
+/* =========================================================
+   DATOS INICIALES
+========================================================= */
+
+function crearDatosIniciales(){
+
+    return{
+
+        fechaReunion:"",
+        lugar:"",
+        tema:"",
+        proximaReunion:"",
+
+        temas:[
+            crearTemaVacio(),
+            crearTemaVacio(),
+            crearTemaVacio()
+        ],
+
+        participantes:[
+            crearParticipanteVacio(),
+            crearParticipanteVacio(),
+            crearParticipanteVacio()
+        ],
+
+        finalizado:false
+
+    };
+
+}
+
+
+/* =========================================================
+   TEMA VACÍO
+========================================================= */
+
+function crearTemaVacio(){
+
+    return{
+
+        tema:"",
+        accion:"",
+        responsable:"",
+        fecha:""
+
+    };
+
+}
+
+
+/* =========================================================
+   PARTICIPANTE VACÍO
+========================================================= */
+
+function crearParticipanteVacio(){
+
+    return{
+
+        nombre:"",
+        funcion:"",
+        firma:""
+
+    };
+
+}
+
+
+/* =========================================================
+   CARGAR
+========================================================= */
+
+function cargarMinuta(){
+
+    const guardado =
+        localStorage.getItem(
+            STORAGE_KEY
+        );
+
+
+    if(guardado){
+
+        try{
+
+            const parsed =
+                JSON.parse(
+                    guardado
+                );
+
+
+            datos = {
+                ...crearDatosIniciales(),
+                ...parsed
+            };
+
+        }
+        catch(error){
+
+            datos =
+                crearDatosIniciales();
+
+        }
+
+    }
+
+
+    if(
+        !Array.isArray(datos.temas) ||
+        datos.temas.length === 0
+    ){
+
+        datos.temas = [
+            crearTemaVacio()
+        ];
+
+    }
+
+
+    if(
+        !Array.isArray(datos.participantes) ||
+        datos.participantes.length === 0
+    ){
+
+        datos.participantes = [
+            crearParticipanteVacio()
+        ];
+
+    }
+
+
+    completarGenerales();
+
+    renderTemas();
+
+    renderParticipantes();
+
+    actualizarEstado();
+
+}
+
+
+/* =========================================================
+   COMPLETAR DATOS
+========================================================= */
+
+function completarGenerales(){
+
+    document
+        .getElementById("fechaReunion")
+        .value =
+            datos.fechaReunion || "";
+
+
+    document
+        .getElementById("lugar")
+        .value =
+            datos.lugar || "";
+
+
+    document
+        .getElementById("tema")
+        .value =
+            datos.tema || "";
+
+
+    document
+        .getElementById("proximaReunion")
+        .value =
+            datos.proximaReunion || "";
+
+}
+
+
+/* =========================================================
+   LEER DATOS GENERALES
+========================================================= */
+
+function leerGenerales(){
+
+    datos.fechaReunion =
+        document
+            .getElementById("fechaReunion")
+            .value;
+
+
+    datos.lugar =
+        document
+            .getElementById("lugar")
+            .value;
+
+
+    datos.tema =
+        document
+            .getElementById("tema")
+            .value;
+
+
+    datos.proximaReunion =
+        document
+            .getElementById("proximaReunion")
+            .value;
+
+}
+
+
+/* =========================================================
+   RENDER TEMAS
+========================================================= */
+
+function renderTemas(){
+
+    const tbody =
+        document.getElementById(
+            "tablaTemas"
+        );
+
+
+    tbody.innerHTML =
+        "";
+
+
+    datos.temas.forEach(
+        (item,index) => {
+
+
+            const fila =
+                document.createElement(
+                    "tr"
+                );
+
+
+            fila.innerHTML = `
+
+                <td>
+
+                    <textarea
+                        class="table-textarea"
+                        placeholder="Tema tratado"
+                    >${escaparTexto(item.tema)}</textarea>
+
+                </td>
+
+
+                <td>
+
+                    <textarea
+                        class="table-textarea"
+                        placeholder="Acción requerida"
+                    >${escaparTexto(item.accion)}</textarea>
+
+                </td>
+
+
+                <td>
+
+                    <input
+                        type="text"
+                        class="table-input"
+                        placeholder="Responsable"
+                        value="${escaparAtributo(item.responsable)}"
+                    >
+
+                </td>
+
+
+                <td>
+
+                    <input
+                        type="date"
+                        class="table-input"
+                        value="${escaparAtributo(item.fecha)}"
+                    >
+
+                </td>
+
+
+                <td>
+
+                    <button
+                        type="button"
+                        class="delete-row"
+                        title="Eliminar tema"
+                    >
+                        ×
+                    </button>
+
+                </td>
+
+            `;
+
+
+            const campos =
+                fila.querySelectorAll(
+                    ".table-input, .table-textarea"
+                );
+
+
+            campos[0].oninput =
+                function(){
+
+                    datos
+                        .temas[index]
+                        .tema =
+                            this.value;
+
+
+                    guardarMinuta();
+
+                };
+
+
+            campos[1].oninput =
+                function(){
+
+                    datos
+                        .temas[index]
+                        .accion =
+                            this.value;
+
+
+                    guardarMinuta();
+
+                };
+
+
+            campos[2].oninput =
+                function(){
+
+                    datos
+                        .temas[index]
+                        .responsable =
+                            this.value;
+
+
+                    guardarMinuta();
+
+                };
+
+
+            campos[3].oninput =
+                function(){
+
+                    datos
+                        .temas[index]
+                        .fecha =
+                            this.value;
+
+
+                    guardarMinuta();
+
+                };
+
+
+            fila
+                .querySelector(
+                    ".delete-row"
+                )
+                .onclick =
+                function(){
+
+                    eliminarTema(
+                        index
+                    );
+
+                };
+
+
+            tbody.appendChild(
+                fila
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   AGREGAR TEMA
+========================================================= */
+
+function agregarTema(){
+
+    if(datos.finalizado){
+
+        mostrarError(
+            "La minuta está finalizada."
+        );
+
+        return;
+
+    }
+
+
+    datos.temas.push(
+        crearTemaVacio()
+    );
+
+
+    guardarMinuta();
+
+    renderTemas();
+
+
+    const filas =
+        document.querySelectorAll(
+            "#tablaTemas tr"
+        );
+
+
+    if(filas.length){
+
+        filas[
+            filas.length - 1
+        ]
+        .querySelector(
+            ".table-textarea"
+        )
+        .focus();
+
+    }
+
+}
+
+
+/* =========================================================
+   ELIMINAR TEMA
+========================================================= */
+
+function eliminarTema(index){
+
+    if(datos.finalizado){
+
+        mostrarError(
+            "La minuta está finalizada."
+        );
+
+        return;
+
+    }
+
+
+    const confirmar =
+        confirm(
+            "¿Desea eliminar este tema?"
+        );
+
+
+    if(!confirmar){
+        return;
+    }
+
+
+    datos.temas.splice(
+        index,
+        1
+    );
+
+
+    if(
+        datos.temas.length === 0
+    ){
+
+        datos.temas.push(
+            crearTemaVacio()
+        );
+
+    }
+
+
+    guardarMinuta();
+
+    renderTemas();
+
+}
+
+
+/* =========================================================
+   PARTICIPANTES
+========================================================= */
+
+function renderParticipantes(){
+
+    const tbody =
+        document.getElementById(
+            "tablaParticipantes"
+        );
+
+
+    tbody.innerHTML =
+        "";
+
+
+    datos.participantes.forEach(
+        (item,index) => {
+
+
+            const fila =
+                document.createElement(
+                    "tr"
+                );
+
+
+            fila.innerHTML = `
+
+                <td>
+
+                    <input
+                        type="text"
+                        class="table-input"
+                        placeholder="Apellido y nombre"
+                        value="${escaparAtributo(item.nombre)}"
+                    >
+
+                </td>
+
+
+                <td>
+
+                    <input
+                        type="text"
+                        class="table-input"
+                        placeholder="Función"
+                        value="${escaparAtributo(item.funcion)}"
+                    >
+
+                </td>
+
+
+                <td>
+
+                    <input
+                        type="text"
+                        class="table-input"
+                        placeholder="Firma / aclaración"
+                        value="${escaparAtributo(item.firma)}"
+                    >
+
+                </td>
+
+
+                <td>
+
+                    <button
+                        type="button"
+                        class="delete-row"
+                        title="Eliminar participante"
+                    >
+                        ×
+                    </button>
+
+                </td>
+
+            `;
+
+
+            const campos =
+                fila.querySelectorAll(
+                    ".table-input"
+                );
+
+
+            campos[0].oninput =
+                function(){
+
+                    datos
+                        .participantes[index]
+                        .nombre =
+                            this.value;
+
+
+                    guardarMinuta();
+
+                };
+
+
+            campos[1].oninput =
+                function(){
+
+                    datos
+                        .participantes[index]
+                        .funcion =
+                            this.value;
+
+
+                    guardarMinuta();
+
+                };
+
+
+            campos[2].oninput =
+                function(){
+
+                    datos
+                        .participantes[index]
+                        .firma =
+                            this.value;
+
+
+                    guardarMinuta();
+
+                };
+
+
+            fila
+                .querySelector(
+                    ".delete-row"
+                )
+                .onclick =
+                function(){
+
+                    eliminarParticipante(
+                        index
+                    );
+
+                };
+
+
+            tbody.appendChild(
+                fila
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   AGREGAR PARTICIPANTE
+========================================================= */
+
+function agregarParticipante(){
+
+    if(datos.finalizado){
+
+        mostrarError(
+            "La minuta está finalizada."
+        );
+
+        return;
+
+    }
+
+
+    datos.participantes.push(
+        crearParticipanteVacio()
+    );
+
+
+    guardarMinuta();
+
+    renderParticipantes();
+
+
+    const filas =
+        document.querySelectorAll(
+            "#tablaParticipantes tr"
+        );
+
+
+    if(filas.length){
+
+        filas[
+            filas.length - 1
+        ]
+        .querySelector(
+            ".table-input"
+        )
+        .focus();
+
+    }
+
+}
+
+
+/* =========================================================
+   ELIMINAR PARTICIPANTE
+========================================================= */
+
+function eliminarParticipante(index){
+
+    if(datos.finalizado){
+
+        mostrarError(
+            "La minuta está finalizada."
+        );
+
+        return;
+
+    }
+
+
+    const confirmar =
+        confirm(
+            "¿Desea eliminar este participante?"
+        );
+
+
+    if(!confirmar){
+        return;
+    }
+
+
+    datos.participantes.splice(
+        index,
+        1
+    );
+
+
+    if(
+        datos.participantes.length === 0
+    ){
+
+        datos.participantes.push(
+            crearParticipanteVacio()
+        );
+
+    }
+
+
+    guardarMinuta();
+
+    renderParticipantes();
+
+}
+
+
+/* =========================================================
+   GUARDAR
+========================================================= */
+
+function guardarMinuta(
+    mostrarMensaje = false
+){
+
+    leerGenerales();
+
+
+    localStorage.setItem(
+
+        STORAGE_KEY,
+
+        JSON.stringify(
+            datos
+        )
+
+    );
+
+
+    if(mostrarMensaje){
+
+        mostrarExito();
+
+    }
+
+}
+
+
+/* =========================================================
+   VALIDACIONES
+========================================================= */
+
+function validarMinuta(){
+
+    leerGenerales();
+
+
+    const errores =
+        [];
+
+
+/* =========================================================
+   FECHA
+========================================================= */
+
+    if(
+        datos.fechaReunion.trim() === ""
+    ){
+
+        errores.push(
+            "Debe ingresar la fecha de la reunión."
+        );
+
+    }
+
+
+/* =========================================================
+   LUGAR
+========================================================= */
+
+    if(
+        datos.lugar.trim() === ""
+    ){
+
+        errores.push(
+            "Debe ingresar el lugar de la reunión."
+        );
+
+    }
+
+
+/* =========================================================
+   TEMA GENERAL
+========================================================= */
+
+    if(
+        datos.tema.trim() === ""
+    ){
+
+        errores.push(
+            "Debe ingresar el tema de la reunión."
+        );
+
+    }
+
+
+/* =========================================================
+   TEMAS TRATADOS
+========================================================= */
+
+    const temasValidos =
+        datos.temas.filter(
+            item =>
+                item.tema.trim() !== ""
+        );
+
+
+    if(
+        temasValidos.length === 0
+    ){
+
+        errores.push(
+            "Debe registrar al menos un tema tratado."
+        );
+
+    }
+
+
+/* =========================================================
+   CONDICIONAL DE ACCIONES
+========================================================= */
+
+    datos.temas.forEach(
+        (item,index) => {
+
+
+            /*
+                Si hay acción requerida,
+                debe tener responsable.
+            */
+
+            if(
+                item.accion.trim() !== ""
+            ){
+
+                if(
+                    item.responsable.trim() === ""
+                ){
+
+                    errores.push(
+                        `La acción del tema ${index + 1} no tiene responsable.`
+                    );
+
+                }
+
+
+                if(
+                    item.fecha.trim() === ""
+                ){
+
+                    errores.push(
+                        `La acción del tema ${index + 1} no tiene fecha.`
+                    );
+
+                }
+
+            }
+
+        }
+    );
+
+
+/* =========================================================
+   PARTICIPANTES
+========================================================= */
+
+    const participantesValidos =
+        datos.participantes.filter(
+            item =>
+                item.nombre.trim() !== ""
+        );
+
+
+    if(
+        participantesValidos.length === 0
+    ){
+
+        errores.push(
+            "Debe registrar al menos un participante."
+        );
+
+    }
+
+
+    return errores;
+
+}
+
+
+/* =========================================================
+   FINALIZAR
+========================================================= */
+
+function finalizarMinuta(){
+
+    const errores =
+        validarMinuta();
+
+
+    if(
+        errores.length > 0
+    ){
+
+        mostrarError(
+            errores.join("<br>")
+        );
+
+        return;
+
+    }
+
+
+    const confirmar =
+        confirm(
+            "¿Confirma que desea finalizar la minuta? Los campos quedarán bloqueados."
+        );
+
+
+    if(!confirmar){
+        return;
+    }
+
+
+    datos.finalizado =
+        true;
+
+
+    guardarMinuta();
+
+
+    actualizarEstado();
+
+}
+
+
+/* =========================================================
+   HABILITAR EDICIÓN
+========================================================= */
+
+function habilitarEdicion(){
+
+    const confirmar =
+        confirm(
+            "¿Desea volver a habilitar la edición?"
+        );
+
+
+    if(!confirmar){
+        return;
+    }
+
+
+    datos.finalizado =
+        false;
+
+
+    guardarMinuta();
+
+
+    actualizarEstado();
+
+}
+
+
+/* =========================================================
+   ESTADO
+========================================================= */
+
+function actualizarEstado(){
+
+    const main =
+        document.getElementById(
+            "mainContent"
+        );
+
+
+    const badge =
+        document.getElementById(
+            "statusBadge"
+        );
+
+
+    const btnFinalizar =
+        document.getElementById(
+            "btnFinalizar"
+        );
+
+
+    const btnEditar =
+        document.getElementById(
+            "btnEditar"
+        );
+
+
+    if(datos.finalizado){
+
+        main.classList.add(
+            "locked"
+        );
+
+
+        badge.textContent =
+            "FINALIZADO";
+
+
+        badge.classList.add(
+            "finalizado"
+        );
+
+
+        btnFinalizar.style.display =
+            "none";
+
+
+        btnEditar.style.display =
+            "inline-block";
+
+
+        btnEditar.style.pointerEvents =
+            "auto";
+
+    }
+    else{
+
+        main.classList.remove(
+            "locked"
+        );
+
+
+        badge.textContent =
+            "EN EDICIÓN";
+
+
+        badge.classList.remove(
+            "finalizado"
+        );
+
+
+        btnFinalizar.style.display =
+            "inline-block";
+
+
+        btnEditar.style.display =
+            "none";
+
+    }
+
+}
+
+
+/* =========================================================
+   LIMPIAR TEMAS
+========================================================= */
+
+function limpiarTemas(){
+
+    if(datos.finalizado){
+
+        mostrarError(
+            "La minuta está finalizada."
+        );
+
+        return;
+
+    }
+
+
+    const confirmar =
+        confirm(
+            "¿Desea limpiar todos los temas tratados?"
+        );
+
+
+    if(!confirmar){
+        return;
+    }
+
+
+    datos.temas = [
+
+        crearTemaVacio(),
+
+        crearTemaVacio(),
+
+        crearTemaVacio()
+
+    ];
+
+
+    guardarMinuta();
+
+    renderTemas();
+
+}
+
+
+/* =========================================================
+   LIMPIAR PARTICIPANTES
+========================================================= */
+
+function limpiarParticipantes(){
+
+    if(datos.finalizado){
+
+        mostrarError(
+            "La minuta está finalizada."
+        );
+
+        return;
+
+    }
+
+
+    const confirmar =
+        confirm(
+            "¿Desea limpiar todos los participantes?"
+        );
+
+
+    if(!confirmar){
+        return;
+    }
+
+
+    datos.participantes = [
+
+        crearParticipanteVacio(),
+
+        crearParticipanteVacio(),
+
+        crearParticipanteVacio()
+
+    ];
+
+
+    guardarMinuta();
+
+    renderParticipantes();
+
+}
+
+
+/* =========================================================
+   LIMPIAR TODO
+========================================================= */
+
+function limpiarTodo(){
+
+    if(datos.finalizado){
+
+        mostrarError(
+            "Primero debe habilitar la edición."
+        );
+
+        return;
+
+    }
+
+
+    const confirmar =
+        confirm(
+            "¿Desea eliminar toda la información de la minuta?"
+        );
+
+
+    if(!confirmar){
+        return;
+    }
+
+
+    localStorage.removeItem(
+        STORAGE_KEY
+    );
+
+
+    datos =
+        crearDatosIniciales();
+
+
+    completarGenerales();
+
+    renderTemas();
+
+    renderParticipantes();
+
+    actualizarEstado();
+
+}
+
+
+/* =========================================================
+   ÉXITO
+========================================================= */
+
+function mostrarExito(){
+
+    const mensaje =
+        document.getElementById(
+            "mensajeExito"
+        );
+
+
+    mensaje.style.display =
+        "block";
+
+
+    setTimeout(
+        function(){
+
+            mensaje.style.display =
+                "none";
+
+        },
+
+        2200
+    );
+
+}
+
+
+/* =========================================================
+   ERROR
+========================================================= */
+
+function mostrarError(texto){
+
+    const mensaje =
+        document.getElementById(
+            "mensajeError"
+        );
+
+
+    mensaje.innerHTML =
+        "⚠ " + texto;
+
+
+    mensaje.style.display =
+        "block";
+
+
+    mensaje.scrollIntoView({
+
+        behavior:"smooth",
+
+        block:"center"
+
+    });
+
+
+    setTimeout(
+        function(){
+
+            mensaje.style.display =
+                "none";
+
+        },
+
+        6000
+    );
+
+}
+
+
+/* =========================================================
+   ESCAPE
+========================================================= */
+
+function escaparTexto(valor){
+
+    if(
+        valor === null ||
+        valor === undefined
+    ){
+
+        return "";
+
+    }
+
+
+    return String(valor)
+
+        .replaceAll(
+            "&",
+            "&amp;"
+        )
+
+        .replaceAll(
+            "<",
+            "&lt;"
+        )
+
+        .replaceAll(
+            ">",
+            "&gt;"
+        );
+
+}
+
+
+function escaparAtributo(valor){
+
+    if(
+        valor === null ||
+        valor === undefined
+    ){
+
+        return "";
+
+    }
+
+
+    return String(valor)
+
+        .replaceAll(
+            "&",
+            "&amp;"
+        )
+
+        .replaceAll(
+            '"',
+            "&quot;"
+        )
+
+        .replaceAll(
+            "'",
+            "&#039;"
+        )
+
+        .replaceAll(
+            "<",
+            "&lt;"
+        )
+
+        .replaceAll(
+            ">",
+            "&gt;"
+        );
+
+}
+
+
+/* =========================================================
+   GUARDADO AUTOMÁTICO
+========================================================= */
+
+document.addEventListener(
+    "input",
+    function(event){
+
+        if(datos.finalizado){
+            return;
+        }
+
+
+        if(
+            event.target.id === "fechaReunion" ||
+            event.target.id === "lugar" ||
+            event.target.id === "tema" ||
+            event.target.id === "proximaReunion"
+        ){
+
+            guardarMinuta();
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   INICIO
+========================================================= */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function(){
+
+        cargarMinuta();
+
+    }
+);
+
+</script>
+
+</body>
+</html>

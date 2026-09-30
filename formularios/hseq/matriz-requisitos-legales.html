@@ -1,0 +1,2803 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>NASER | Matriz de Requisitos Legales</title>
+
+<style>
+
+:root{
+    --green:#009b49;
+    --green-dark:#007b3a;
+    --green-light:#eaf7f0;
+
+    --black:#101010;
+    --bg:#f3f4f6;
+    --white:#ffffff;
+
+    --border:#d9dde3;
+    --text:#15191e;
+    --muted:#68717d;
+
+    --warning:#b54708;
+    --shadow:0 8px 28px rgba(16,24,40,.06);
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    font-family:Arial, Helvetica, sans-serif;
+    background:var(--bg);
+    color:var(--text);
+}
+
+.app{
+    min-height:100vh;
+    display:flex;
+}
+
+/* =========================================================
+   SIDEBAR
+========================================================= */
+
+.sidebar{
+    position:fixed;
+    top:0;
+    bottom:0;
+    left:0;
+
+    width:320px;
+
+    background:#0d0d0d;
+    color:#fff;
+
+    border-right:1px solid #222;
+
+    z-index:1000;
+}
+
+.brand{
+    height:120px;
+
+    display:flex;
+    align-items:center;
+
+    padding:0 34px;
+
+    border-bottom:1px solid #2a2a2a;
+
+    font-size:34px;
+    font-weight:900;
+    letter-spacing:4px;
+}
+
+.sidebar-section{
+    padding:29px 0;
+}
+
+.sidebar-label{
+    padding:0 34px 14px;
+
+    color:#77808b;
+
+    font-size:12px;
+    letter-spacing:1.3px;
+
+    text-transform:uppercase;
+}
+
+.nav-link{
+    min-height:58px;
+
+    display:flex;
+    align-items:center;
+
+    gap:15px;
+
+    padding:0 30px;
+
+    text-decoration:none;
+
+    color:#e6e6e6;
+
+    border-left:4px solid transparent;
+
+    transition:.2s;
+}
+
+.nav-link:hover{
+    background:#151515;
+}
+
+.nav-link.active{
+    background:#191919;
+    border-left-color:var(--green);
+}
+
+.nav-number{
+    width:28px;
+
+    color:#00bd5a;
+
+    font-size:18px;
+    font-weight:800;
+}
+
+.nav-name{
+    font-size:17px;
+}
+
+/* =========================================================
+   MAIN
+========================================================= */
+
+.main{
+    width:calc(100% - 320px);
+    margin-left:320px;
+}
+
+/* =========================================================
+   TOPBAR
+========================================================= */
+
+.topbar{
+    min-height:82px;
+
+    padding:0 40px;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    gap:20px;
+
+    background:#fff;
+
+    border-bottom:1px solid var(--border);
+}
+
+.breadcrumb{
+    color:#59616c;
+    font-size:14px;
+}
+
+.top-actions{
+    display:flex;
+    gap:10px;
+    align-items:center;
+}
+
+.badge{
+    padding:10px 15px;
+
+    border-radius:9px;
+
+    font-size:12px;
+    font-weight:800;
+
+    white-space:nowrap;
+}
+
+.badge-edit{
+    background:#f0f1f2;
+    color:#59616c;
+}
+
+.badge-doc{
+    background:var(--green-light);
+    color:#007a3a;
+}
+
+/* =========================================================
+   PAGE
+========================================================= */
+
+.page{
+    padding:35px;
+}
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.hero{
+    position:relative;
+
+    min-height:195px;
+
+    display:flex;
+    align-items:center;
+
+    overflow:hidden;
+
+    padding:40px 42px;
+
+    color:#fff;
+
+    background:
+        linear-gradient(
+            110deg,
+            #111 0%,
+            #171717 100%
+        );
+
+    border-radius:15px;
+}
+
+.hero::after{
+    content:"";
+
+    position:absolute;
+
+    width:310px;
+    height:310px;
+
+    right:-85px;
+    top:-120px;
+
+    border-radius:50%;
+
+    background:rgba(0,155,73,.20);
+}
+
+.hero-content{
+    position:relative;
+    z-index:2;
+}
+
+.hero-kicker{
+    margin-bottom:14px;
+
+    color:#00c65e;
+
+    font-size:13px;
+    font-weight:800;
+
+    letter-spacing:3px;
+}
+
+.hero h1{
+    margin-bottom:15px;
+
+    font-size:38px;
+    line-height:1.1;
+}
+
+.hero p{
+    max-width:1100px;
+
+    color:#e6e8eb;
+
+    font-size:15px;
+    line-height:1.6;
+}
+
+/* =========================================================
+   CONTEXTO
+========================================================= */
+
+.context-grid{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+
+    gap:14px;
+
+    margin-top:28px;
+}
+
+.context-card{
+    background:#fff;
+
+    border:1px solid var(--border);
+
+    border-radius:11px;
+
+    padding:17px 18px;
+}
+
+.context-card span{
+    display:block;
+
+    margin-bottom:6px;
+
+    color:#717986;
+
+    font-size:10px;
+    font-weight:800;
+
+    text-transform:uppercase;
+    letter-spacing:.7px;
+}
+
+.context-card strong{
+    display:block;
+
+    color:#171a1f;
+
+    font-size:14px;
+}
+
+/* =========================================================
+   INDICADORES
+========================================================= */
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+
+    gap:14px;
+
+    margin:16px 0 25px;
+}
+
+.stat{
+    min-height:105px;
+
+    padding:20px;
+
+    background:#fff;
+
+    border:1px solid var(--border);
+
+    border-radius:11px;
+}
+
+.stat-title{
+    display:block;
+
+    margin-bottom:8px;
+
+    color:#68717c;
+
+    font-size:11px;
+    font-weight:700;
+
+    text-transform:uppercase;
+}
+
+.stat-value{
+    display:block;
+
+    font-size:32px;
+    font-weight:900;
+}
+
+.stat-value.green{
+    color:var(--green);
+}
+
+.stat-value.warning{
+    color:var(--warning);
+}
+
+/* =========================================================
+   DOCUMENT CARD
+========================================================= */
+
+.document-card{
+    overflow:hidden;
+
+    background:#fff;
+
+    border:1px solid var(--border);
+
+    border-radius:15px;
+
+    box-shadow:var(--shadow);
+}
+
+.document-header{
+    min-height:98px;
+
+    display:flex;
+    align-items:center;
+
+    gap:17px;
+
+    padding:22px 27px;
+
+    border-bottom:1px solid var(--border);
+}
+
+.document-number{
+    width:50px;
+    height:50px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    flex-shrink:0;
+
+    border-radius:9px;
+
+    background:#111;
+
+    color:#00c45e;
+
+    font-size:18px;
+    font-weight:900;
+}
+
+.document-title h2{
+    margin-bottom:5px;
+    font-size:20px;
+}
+
+.document-title p{
+    color:#6c7480;
+    font-size:13px;
+}
+
+.document-body{
+    padding:27px;
+}
+
+/* =========================================================
+   INFO
+========================================================= */
+
+.info{
+    padding:18px 20px;
+
+    margin-bottom:23px;
+
+    background:#fbfcfc;
+
+    border:1px solid #d9e7df;
+    border-left:4px solid var(--green);
+
+    border-radius:9px;
+
+    color:#4c5560;
+
+    font-size:13px;
+    line-height:1.65;
+}
+
+.info strong{
+    color:#007a39;
+}
+
+/* =========================================================
+   SECTION
+========================================================= */
+
+.section{
+    margin-bottom:23px;
+
+    overflow:hidden;
+
+    border:1px solid var(--border);
+
+    border-radius:12px;
+}
+
+.section-header{
+    min-height:65px;
+
+    display:flex;
+    align-items:center;
+
+    gap:13px;
+
+    padding:14px 18px;
+
+    background:#f8f9fa;
+
+    border-bottom:1px solid var(--border);
+}
+
+.section-number{
+    width:36px;
+    height:36px;
+
+    flex-shrink:0;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    border-radius:8px;
+
+    background:var(--green-light);
+
+    color:var(--green);
+
+    font-size:12px;
+    font-weight:900;
+}
+
+.section-header h3{
+    margin-bottom:3px;
+    font-size:15px;
+}
+
+.section-header p{
+    color:#707884;
+    font-size:12px;
+}
+
+.section-body{
+    padding:19px;
+}
+
+/* =========================================================
+   TOOLBAR
+========================================================= */
+
+.toolbar{
+    display:flex;
+
+    justify-content:space-between;
+    align-items:center;
+
+    gap:15px;
+
+    margin-bottom:16px;
+}
+
+.filters{
+    display:flex;
+    flex-wrap:wrap;
+
+    gap:9px;
+
+    flex:1;
+}
+
+.search{
+    min-width:350px;
+    flex:1;
+}
+
+.search,
+.select-filter{
+    height:42px;
+
+    border:1px solid #d4d9df;
+
+    border-radius:8px;
+
+    padding:0 12px;
+
+    background:#fff;
+
+    color:#303640;
+
+    outline:none;
+
+    font-size:12px;
+}
+
+.select-filter{
+    min-width:160px;
+}
+
+.search:focus,
+.select-filter:focus{
+    border-color:var(--green);
+
+    box-shadow:0 0 0 3px rgba(0,155,73,.08);
+}
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+.btn{
+    min-height:41px;
+
+    padding:0 16px;
+
+    border:none;
+
+    border-radius:8px;
+
+    font-size:12px;
+    font-weight:800;
+
+    cursor:pointer;
+
+    transition:.2s;
+}
+
+.btn:hover{
+    transform:translateY(-1px);
+}
+
+.btn-green{
+    background:var(--green);
+    color:#fff;
+}
+
+.btn-green:hover{
+    background:var(--green-dark);
+}
+
+.btn-dark{
+    background:#181818;
+    color:#fff;
+}
+
+.btn-light{
+    background:#eef0f2;
+    color:#4a525d;
+}
+
+/* =========================================================
+   TABLE
+========================================================= */
+
+.table-container{
+    position:relative;
+
+    width:100%;
+    max-height:650px;
+
+    overflow:auto;
+
+    border:1px solid var(--border);
+
+    border-radius:10px;
+}
+
+.matrix{
+    width:100%;
+
+    min-width:2450px;
+
+    border-collapse:separate;
+    border-spacing:0;
+
+    background:#fff;
+}
+
+.matrix thead th{
+    position:sticky;
+    top:0;
+
+    z-index:10;
+
+    height:52px;
+
+    padding:10px;
+
+    background:#121212;
+
+    color:#fff;
+
+    border-right:1px solid #313131;
+    border-bottom:1px solid #313131;
+
+    font-size:10px;
+
+    text-align:center;
+    text-transform:uppercase;
+
+    white-space:nowrap;
+}
+
+.matrix tbody td{
+    padding:8px;
+
+    background:#fff;
+
+    border-right:1px solid #e2e5e9;
+    border-bottom:1px solid #e2e5e9;
+
+    vertical-align:top;
+}
+
+.matrix tbody tr:hover td{
+    background:#fafcfb;
+}
+
+/* COLUMNAS FIJAS */
+
+.matrix th:nth-child(1),
+.matrix td:nth-child(1){
+    position:sticky;
+
+    left:0;
+
+    z-index:7;
+
+    min-width:55px;
+    width:55px;
+}
+
+.matrix th:nth-child(2),
+.matrix td:nth-child(2){
+    position:sticky;
+
+    left:55px;
+
+    z-index:7;
+
+    min-width:200px;
+}
+
+.matrix tbody td:nth-child(1),
+.matrix tbody td:nth-child(2){
+    background:#fbfbfc;
+}
+
+.matrix thead th:nth-child(1),
+.matrix thead th:nth-child(2){
+    z-index:15;
+    background:#0d0d0d;
+}
+
+.row-id{
+    min-height:42px;
+
+    display:flex;
+
+    justify-content:center;
+    align-items:center;
+
+    color:var(--green);
+
+    font-size:14px;
+    font-weight:900;
+}
+
+/* =========================================================
+   INPUTS
+========================================================= */
+
+.table-input,
+.table-select,
+.table-textarea{
+    width:100%;
+
+    border:1px solid #d7dbe1;
+
+    border-radius:6px;
+
+    padding:8px 9px;
+
+    background:#fff;
+
+    color:#222;
+
+    font-family:inherit;
+
+    font-size:11px;
+
+    outline:none;
+}
+
+.table-input,
+.table-select{
+    min-height:38px;
+}
+
+.table-textarea{
+    min-height:70px;
+
+    resize:vertical;
+
+    line-height:1.4;
+}
+
+.table-input:focus,
+.table-select:focus,
+.table-textarea:focus{
+    border-color:var(--green);
+
+    box-shadow:0 0 0 2px rgba(0,155,73,.08);
+}
+
+/* =========================================================
+   COLUMN WIDTHS
+========================================================= */
+
+.c-norma{
+    min-width:200px;
+}
+
+.c-descripcion{
+    min-width:340px;
+}
+
+.c-autoridad{
+    min-width:210px;
+}
+
+.c-observaciones{
+    min-width:250px;
+}
+
+.c-obligacion{
+    min-width:330px;
+}
+
+.c-frecuencia{
+    min-width:140px;
+}
+
+.c-tipo{
+    min-width:210px;
+}
+
+.c-prioridad{
+    min-width:120px;
+}
+
+.c-venc{
+    min-width:140px;
+}
+
+.c-responsable{
+    min-width:190px;
+}
+
+.c-estado{
+    min-width:160px;
+}
+
+.c-verificacion{
+    min-width:240px;
+}
+
+.c-obsev{
+    min-width:250px;
+}
+
+.c-action{
+    min-width:75px;
+}
+
+/* =========================================================
+   DELETE
+========================================================= */
+
+.delete-btn{
+    width:35px;
+    height:35px;
+
+    display:block;
+
+    margin:auto;
+
+    border:none;
+
+    border-radius:7px;
+
+    background:#f0f1f2;
+
+    color:#606872;
+
+    cursor:pointer;
+
+    font-size:18px;
+}
+
+.delete-btn:hover{
+    background:#fee4e2;
+    color:#b42318;
+}
+
+/* =========================================================
+   CIERRE
+========================================================= */
+
+.close-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+
+    gap:16px;
+}
+
+.field{
+    display:flex;
+    flex-direction:column;
+
+    gap:7px;
+}
+
+.field.full{
+    grid-column:1/-1;
+}
+
+.field label{
+    color:#4e5661;
+
+    font-size:10px;
+    font-weight:800;
+
+    text-transform:uppercase;
+    letter-spacing:.5px;
+}
+
+.field input,
+.field textarea{
+    width:100%;
+
+    border:1px solid #d4d9df;
+
+    border-radius:8px;
+
+    padding:11px 12px;
+
+    font-size:13px;
+
+    outline:none;
+}
+
+.field textarea{
+    min-height:110px;
+    resize:vertical;
+}
+
+.field input:focus,
+.field textarea:focus{
+    border-color:var(--green);
+
+    box-shadow:0 0 0 3px rgba(0,155,73,.08);
+}
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.form-footer{
+    display:flex;
+
+    justify-content:space-between;
+    align-items:center;
+
+    gap:15px;
+
+    padding-top:4px;
+}
+
+.status{
+    color:#68717b;
+
+    font-size:12px;
+}
+
+.status strong{
+    color:#16191d;
+}
+
+.footer-buttons{
+    display:flex;
+    gap:9px;
+}
+
+/* =========================================================
+   EMPTY
+========================================================= */
+
+.empty{
+    padding:32px !important;
+
+    text-align:center;
+
+    color:#777f89;
+
+    font-size:13px;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media(max-width:1200px){
+
+    .sidebar{
+        width:270px;
+    }
+
+    .main{
+        width:calc(100% - 270px);
+        margin-left:270px;
+    }
+
+    .context-grid{
+        grid-template-columns:repeat(3,1fr);
+    }
+
+    .stats{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+}
+
+@media(max-width:760px){
+
+    .app{
+        display:block;
+    }
+
+    .sidebar{
+        position:relative;
+
+        width:100%;
+
+        min-height:auto;
+    }
+
+    .main{
+        width:100%;
+        margin-left:0;
+    }
+
+    .brand{
+        height:85px;
+    }
+
+    .topbar{
+        padding:18px 20px;
+
+        flex-direction:column;
+
+        align-items:flex-start;
+    }
+
+    .page{
+        padding:18px;
+    }
+
+    .hero{
+        padding:28px 23px;
+    }
+
+    .hero h1{
+        font-size:29px;
+    }
+
+    .context-grid,
+    .stats,
+    .close-grid{
+        grid-template-columns:1fr;
+    }
+
+    .toolbar{
+        flex-direction:column;
+
+        align-items:stretch;
+    }
+
+    .filters{
+        flex-direction:column;
+    }
+
+    .search,
+    .select-filter{
+        width:100%;
+        min-width:0;
+    }
+
+    .form-footer{
+        flex-direction:column;
+
+        align-items:stretch;
+    }
+
+    .footer-buttons{
+        flex-direction:column;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<!-- =========================================================
+     SIDEBAR
+========================================================= -->
+
+<aside class="sidebar">
+
+    <div class="brand">
+        NASER
+    </div>
+
+    <div class="sidebar-section">
+
+        <div class="sidebar-label">
+            DOCUMENTO
+        </div>
+
+        <a
+            href="#matriz"
+            class="nav-link active"
+        >
+
+            <span class="nav-number">
+                01
+            </span>
+
+            <span class="nav-name">
+                Matriz Legal
+            </span>
+
+        </a>
+
+        <a
+            href="#cierre"
+            class="nav-link"
+        >
+
+            <span class="nav-number">
+                02
+            </span>
+
+            <span class="nav-name">
+                Cierre
+            </span>
+
+        </a>
+
+    </div>
+
+</aside>
+
+<!-- =========================================================
+     MAIN
+========================================================= -->
+
+<main class="main">
+
+<header class="topbar">
+
+    <div class="breadcrumb">
+        NASER / Gestión / Matriz de Requisitos Legales
+    </div>
+
+    <div class="top-actions">
+
+        <span
+            class="badge badge-edit"
+            id="estadoSuperior"
+        >
+            EN EDICIÓN
+        </span>
+
+        <span class="badge badge-doc">
+            PGSN05-F1 · Rev.02 Jul.25
+        </span>
+
+    </div>
+
+</header>
+
+<div class="page">
+
+<!-- =========================================================
+     HERO
+========================================================= -->
+
+<section class="hero">
+
+    <div class="hero-content">
+
+        <div class="hero-kicker">
+            GESTIÓN DE REQUISITOS LEGALES
+        </div>
+
+        <h1>
+            Matriz de Requisitos Legales
+        </h1>
+
+        <p>
+            Registro, evaluación y seguimiento de normativa,
+            obligaciones legales, autoridades de aplicación,
+            responsables, vencimientos y estado de cumplimiento
+            de Servicios Naser S.R.L.
+        </p>
+
+    </div>
+
+</section>
+
+<!-- =========================================================
+     CONTEXTO
+========================================================= -->
+
+<section class="context-grid">
+
+    <div class="context-card">
+
+        <span>Empresa</span>
+
+        <strong>
+            Servicios Naser S.R.L.
+        </strong>
+
+    </div>
+
+    <div class="context-card">
+
+        <span>Servicio</span>
+
+        <strong>
+            Neuquén
+        </strong>
+
+    </div>
+
+    <div class="context-card">
+
+        <span>Área</span>
+
+        <strong>
+            Calidad
+        </strong>
+
+    </div>
+
+    <div class="context-card">
+
+        <span>Alcance</span>
+
+        <strong>
+            Nacional
+        </strong>
+
+    </div>
+
+    <div class="context-card">
+
+        <span>Clasificación</span>
+
+        <strong>
+            Normativa General
+        </strong>
+
+    </div>
+
+</section>
+
+<!-- =========================================================
+     INDICADORES
+========================================================= -->
+
+<section class="stats">
+
+    <div class="stat">
+
+        <span class="stat-title">
+            Total de requisitos
+        </span>
+
+        <span
+            class="stat-value"
+            id="totalRequisitos"
+        >
+            0
+        </span>
+
+    </div>
+
+    <div class="stat">
+
+        <span class="stat-title">
+            Con verificación
+        </span>
+
+        <span
+            class="stat-value green"
+            id="totalVerificados"
+        >
+            0
+        </span>
+
+    </div>
+
+    <div class="stat">
+
+        <span class="stat-title">
+            Cumplidos
+        </span>
+
+        <span
+            class="stat-value green"
+            id="totalCumplidos"
+        >
+            0
+        </span>
+
+    </div>
+
+    <div class="stat">
+
+        <span class="stat-title">
+            Pendientes
+        </span>
+
+        <span
+            class="stat-value warning"
+            id="totalPendientes"
+        >
+            0
+        </span>
+
+    </div>
+
+</section>
+
+<!-- =========================================================
+     DOCUMENTO
+========================================================= -->
+
+<section
+    class="document-card"
+    id="matriz"
+>
+
+    <div class="document-header">
+
+        <div class="document-number">
+            01
+        </div>
+
+        <div class="document-title">
+
+            <h2>
+                Matriz de Requisitos Legales
+            </h2>
+
+            <p>
+                PGSN05-F1 · Rev.02 Jul.25
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="document-body">
+
+        <div class="info">
+
+            Registre cada <strong>requisito legal</strong>
+            identificado indicando la norma, descripción,
+            autoridad de aplicación, obligación,
+            frecuencia, prioridad, responsable,
+            estado y evidencia de verificación.
+
+        </div>
+
+        <!-- =================================================
+             MATRIZ
+        ================================================== -->
+
+        <section class="section">
+
+            <div class="section-header">
+
+                <div class="section-number">
+                    01
+                </div>
+
+                <div>
+
+                    <h3>
+                        Requisitos legales
+                    </h3>
+
+                    <p>
+                        Registro y evaluación de normativa
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="section-body">
+
+                <!-- TOOLBAR -->
+
+                <div class="toolbar">
+
+                    <div class="filters">
+
+                        <input
+                            type="search"
+                            class="search"
+                            id="buscar"
+                            placeholder="Buscar norma, descripción, obligación o responsable..."
+                            oninput="renderTabla()"
+                        >
+
+                        <select
+                            class="select-filter"
+                            id="filtroEstado"
+                            onchange="renderTabla()"
+                        >
+
+                            <option value="">
+                                Estado · Todos
+                            </option>
+
+                            <option value="Pendiente">
+                                Pendiente
+                            </option>
+
+                            <option value="En seguimiento">
+                                En seguimiento
+                            </option>
+
+                            <option value="Cumplido">
+                                Cumplido
+                            </option>
+
+                            <option value="No aplica">
+                                No aplica
+                            </option>
+
+                        </select>
+
+                        <select
+                            class="select-filter"
+                            id="filtroPrioridad"
+                            onchange="renderTabla()"
+                        >
+
+                            <option value="">
+                                Prioridad · Todas
+                            </option>
+
+                            <option value="Alta">
+                                Alta
+                            </option>
+
+                            <option value="Media">
+                                Media
+                            </option>
+
+                            <option value="Baja">
+                                Baja
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                    <button
+                        type="button"
+                        class="btn btn-green"
+                        onclick="agregarRegistro()"
+                    >
+                        + AGREGAR REQUISITO
+                    </button>
+
+                </div>
+
+                <!-- TABLE -->
+
+                <div class="table-container">
+
+                    <table class="matrix">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>ID</th>
+
+                                <th>NORMA</th>
+
+                                <th>DESCRIPCIÓN</th>
+
+                                <th>
+                                    AUTORIDAD DE APLICACIÓN
+                                </th>
+
+                                <th>
+                                    OBSERVACIONES
+                                </th>
+
+                                <th>
+                                    OBLIGACIÓN
+                                </th>
+
+                                <th>
+                                    FRECUENCIA
+                                </th>
+
+                                <th>
+                                    TIPO
+                                </th>
+
+                                <th>
+                                    PRIORIDAD
+                                </th>
+
+                                <th>
+                                    VENCIMIENTO
+                                </th>
+
+                                <th>
+                                    RESPONSABLE
+                                </th>
+
+                                <th>
+                                    ESTADO
+                                </th>
+
+                                <th>
+                                    VERIFICACIÓN
+                                </th>
+
+                                <th>
+                                    OBSERVACIONES EV.
+                                </th>
+
+                                <th>
+                                    ACCIÓN
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody id="tbody">
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- =================================================
+             CIERRE
+        ================================================== -->
+
+        <section
+            class="section"
+            id="cierre"
+        >
+
+            <div class="section-header">
+
+                <div class="section-number">
+                    02
+                </div>
+
+                <div>
+
+                    <h3>
+                        Cierre de evaluación
+                    </h3>
+
+                    <p>
+                        Información y observaciones generales
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="section-body">
+
+                <div class="close-grid">
+
+                    <div class="field">
+
+                        <label>
+                            Responsable de revisión
+                        </label>
+
+                        <input
+                            type="text"
+                            id="responsableRevision"
+                            placeholder="Apellido y nombre"
+                        >
+
+                    </div>
+
+                    <div class="field">
+
+                        <label>
+                            Fecha de revisión
+                        </label>
+
+                        <input
+                            type="date"
+                            id="fechaRevision"
+                        >
+
+                    </div>
+
+                    <div class="field full">
+
+                        <label>
+                            Observaciones generales
+                        </label>
+
+                        <textarea
+                            id="observacionesGenerales"
+                            placeholder="Ingrese observaciones generales de la evaluación..."
+                        ></textarea>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- =================================================
+             FOOTER
+        ================================================== -->
+
+        <div class="form-footer">
+
+            <div class="status">
+
+                Estado:
+
+                <strong id="estadoFormulario">
+                    Documento en edición
+                </strong>
+
+            </div>
+
+            <div class="footer-buttons">
+
+                <button
+                    type="button"
+                    class="btn btn-light"
+                    onclick="limpiarFormulario()"
+                >
+                    LIMPIAR
+                </button>
+
+                <button
+                    type="button"
+                    class="btn btn-dark"
+                    onclick="guardarFormulario()"
+                >
+                    GUARDAR
+                </button>
+
+                <button
+                    type="button"
+                    class="btn btn-green"
+                    onclick="finalizarFormulario()"
+                >
+                    FINALIZAR FORMULARIO
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+</div>
+
+</main>
+
+</div>
+
+<script>
+
+/* =========================================================
+   REGISTROS
+========================================================= */
+
+let registros = [];
+
+
+/* =========================================================
+   NUEVO REGISTRO
+========================================================= */
+
+function nuevoRegistro(){
+
+    return{
+
+        uid:
+            Date.now().toString() +
+            Math.random().toString(16).slice(2),
+
+        norma:"",
+
+        descripcion:"",
+
+        autoridad:"",
+
+        observaciones:"",
+
+        obligacion:"",
+
+        frecuencia:"",
+
+        tipo:"",
+
+        prioridad:"",
+
+        vencimiento:"",
+
+        responsable:"",
+
+        estado:"Pendiente",
+
+        verificacion:"",
+
+        observacionesEv:""
+
+    };
+
+}
+
+
+/* =========================================================
+   AGREGAR
+========================================================= */
+
+function agregarRegistro(){
+
+    registros.push(
+        nuevoRegistro()
+    );
+
+    renderTabla();
+
+    actualizarIndicadores();
+
+}
+
+
+/* =========================================================
+   ACTUALIZAR
+========================================================= */
+
+function actualizar(
+    uid,
+    campo,
+    valor
+){
+
+    const registro =
+        registros.find(
+            item =>
+                item.uid === uid
+        );
+
+    if(!registro){
+        return;
+    }
+
+    registro[campo] =
+        valor;
+
+    actualizarIndicadores();
+
+}
+
+
+/* =========================================================
+   ELIMINAR
+========================================================= */
+
+function eliminar(uid){
+
+    const confirmar =
+        confirm(
+            "¿Desea eliminar este requisito legal?"
+        );
+
+    if(!confirmar){
+        return;
+    }
+
+    registros =
+        registros.filter(
+            item =>
+                item.uid !== uid
+        );
+
+    renderTabla();
+
+    actualizarIndicadores();
+
+}
+
+
+/* =========================================================
+   SEGURIDAD HTML
+========================================================= */
+
+function escapeHTML(valor){
+
+    return String(
+        valor ?? ""
+    )
+    .replaceAll(
+        "&",
+        "&amp;"
+    )
+    .replaceAll(
+        "<",
+        "&lt;"
+    )
+    .replaceAll(
+        ">",
+        "&gt;"
+    )
+    .replaceAll(
+        '"',
+        "&quot;"
+    );
+
+}
+
+
+/* =========================================================
+   OPTIONS
+========================================================= */
+
+function options(
+    lista,
+    seleccionado
+){
+
+    return lista
+        .map(
+            item => {
+
+                const texto =
+                    item === ""
+                    ? "Seleccionar"
+                    : item;
+
+                return `
+
+                    <option
+                        value="${escapeHTML(item)}"
+                        ${
+                            item === seleccionado
+                            ? "selected"
+                            : ""
+                        }
+                    >
+                        ${escapeHTML(texto)}
+                    </option>
+
+                `;
+
+            }
+        )
+        .join("");
+
+}
+
+
+/* =========================================================
+   FILTRAR
+========================================================= */
+
+function obtenerFiltrados(){
+
+    const buscar =
+        document
+        .getElementById(
+            "buscar"
+        )
+        .value
+        .toLowerCase()
+        .trim();
+
+
+    const estado =
+        document
+        .getElementById(
+            "filtroEstado"
+        )
+        .value;
+
+
+    const prioridad =
+        document
+        .getElementById(
+            "filtroPrioridad"
+        )
+        .value;
+
+
+    return registros.filter(
+        registro => {
+
+            const texto = (
+
+                registro.norma + " " +
+
+                registro.descripcion + " " +
+
+                registro.autoridad + " " +
+
+                registro.obligacion + " " +
+
+                registro.responsable
+
+            ).toLowerCase();
+
+
+            const coincideTexto =
+                !buscar ||
+                texto.includes(
+                    buscar
+                );
+
+
+            const coincideEstado =
+                !estado ||
+                registro.estado === estado;
+
+
+            const coincidePrioridad =
+                !prioridad ||
+                registro.prioridad === prioridad;
+
+
+            return (
+                coincideTexto &&
+                coincideEstado &&
+                coincidePrioridad
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   TABLA
+========================================================= */
+
+function renderTabla(){
+
+    const tbody =
+        document.getElementById(
+            "tbody"
+        );
+
+
+    tbody.innerHTML = "";
+
+
+    const filtrados =
+        obtenerFiltrados();
+
+
+    if(
+        filtrados.length === 0
+    ){
+
+        const fila =
+            document.createElement(
+                "tr"
+            );
+
+
+        fila.innerHTML = `
+
+            <td
+                colspan="15"
+                class="empty"
+            >
+                No hay requisitos legales que coincidan
+                con los filtros seleccionados.
+            </td>
+
+        `;
+
+
+        tbody.appendChild(
+            fila
+        );
+
+
+        return;
+
+    }
+
+
+    filtrados.forEach(
+        registro => {
+
+            const numero =
+                registros.findIndex(
+                    item =>
+                        item.uid === registro.uid
+                ) + 1;
+
+
+            const fila =
+                document.createElement(
+                    "tr"
+                );
+
+
+            fila.innerHTML = `
+
+                <td>
+
+                    <div class="row-id">
+                        ${numero}
+                    </div>
+
+                </td>
+
+
+                <td class="c-norma">
+
+                    <textarea
+                        class="table-textarea"
+                        placeholder="Ej: Ley 24.240"
+                        oninput="actualizar(
+                            '${registro.uid}',
+                            'norma',
+                            this.value
+                        )"
+                    >${escapeHTML(registro.norma)}</textarea>
+
+                </td>
+
+
+                <td class="c-descripcion">
+
+                    <textarea
+                        class="table-textarea"
+                        placeholder="Descripción de la normativa..."
+                        oninput="actualizar(
+                            '${registro.uid}',
+                            'descripcion',
+                            this.value
+                        )"
+                    >${escapeHTML(registro.descripcion)}</textarea>
+
+                </td>
+
+
+                <td class="c-autoridad">
+
+                    <textarea
+                        class="table-textarea"
+                        placeholder="Autoridad de aplicación..."
+                        oninput="actualizar(
+                            '${registro.uid}',
+                            'autoridad',
+                            this.value
+                        )"
+                    >${escapeHTML(registro.autoridad)}</textarea>
+
+                </td>
+
+
+                <td class="c-observaciones">
+
+                    <textarea
+                        class="table-textarea"
+                        placeholder="Observaciones..."
+                        oninput="actualizar(
+                            '${registro.uid}',
+                            'observaciones',
+                            this.value
+                        )"
+                    >${escapeHTML(registro.observaciones)}</textarea>
+
+                </td>
+
+
+                <td class="c-obligacion">
+
+                    <textarea
+                        class="table-textarea"
+                        placeholder="Obligación legal..."
+                        oninput="actualizar(
+                            '${registro.uid}',
+                            'obligacion',
+                            this.value
+                        )"
+                    >${escapeHTML(registro.obligacion)}</textarea>
+
+                </td>
+
+
+                <td class="c-frecuencia">
+
+                    <select
+                        class="table-select"
+                        onchange="actualizar(
+                            '${registro.uid}',
+                            'frecuencia',
+                            this.value
+                        )"
+                    >
+
+                        ${options(
+                            [
+                                "",
+                                "Única",
+                                "Mensual",
+                                "Trimestral",
+                                "Semestral",
+                                "Anual",
+                                "Periódica",
+                                "Cuando corresponda"
+                            ],
+                            registro.frecuencia
+                        )}
+
+                    </select>
+
+                </td>
+
+
+                <td class="c-tipo">
+
+                    <select
+                        class="table-select"
+                        onchange="actualizar(
+                            '${registro.uid}',
+                            'tipo',
+                            this.value
+                        )"
+                    >
+
+                        ${options(
+                            [
+                                "",
+                                "Procedimiento/Registro",
+                                "Provisión/Adecuación",
+                                "Tratamiento/Medida de Prevención",
+                                "Habilitación/Permiso",
+                                "Estudio/Medición/Auditoría",
+                                "Otro"
+                            ],
+                            registro.tipo
+                        )}
+
+                    </select>
+
+                </td>
+
+
+                <td class="c-prioridad">
+
+                    <select
+                        class="table-select"
+                        onchange="actualizar(
+                            '${registro.uid}',
+                            'prioridad',
+                            this.value
+                        )"
+                    >
+
+                        ${options(
+                            [
+                                "",
+                                "Alta",
+                                "Media",
+                                "Baja"
+                            ],
+                            registro.prioridad
+                        )}
+
+                    </select>
+
+                </td>
+
+
+                <td class="c-venc">
+
+                    <input
+                        type="date"
+                        class="table-input"
+
+                        value="${escapeHTML(
+                            registro.vencimiento
+                        )}"
+
+                        onchange="actualizar(
+                            '${registro.uid}',
+                            'vencimiento',
+                            this.value
+                        )"
+                    >
+
+                </td>
+
+
+                <td class="c-responsable">
+
+                    <input
+                        type="text"
+                        class="table-input"
+
+                        placeholder="Responsable"
+
+                        value="${escapeHTML(
+                            registro.responsable
+                        )}"
+
+                        oninput="actualizar(
+                            '${registro.uid}',
+                            'responsable',
+                            this.value
+                        )"
+                    >
+
+                </td>
+
+
+                <td class="c-estado">
+
+                    <select
+                        class="table-select"
+
+                        onchange="actualizar(
+                            '${registro.uid}',
+                            'estado',
+                            this.value
+                        )"
+                    >
+
+                        ${options(
+                            [
+                                "Pendiente",
+                                "En seguimiento",
+                                "Cumplido",
+                                "No aplica"
+                            ],
+                            registro.estado
+                        )}
+
+                    </select>
+
+                </td>
+
+
+                <td class="c-verificacion">
+
+                    <textarea
+                        class="table-textarea"
+                        placeholder="Verificación..."
+                        oninput="actualizar(
+                            '${registro.uid}',
+                            'verificacion',
+                            this.value
+                        )"
+                    >${escapeHTML(registro.verificacion)}</textarea>
+
+                </td>
+
+
+                <td class="c-obsev">
+
+                    <textarea
+                        class="table-textarea"
+                        placeholder="Observaciones de evaluación..."
+                        oninput="actualizar(
+                            '${registro.uid}',
+                            'observacionesEv',
+                            this.value
+                        )"
+                    >${escapeHTML(registro.observacionesEv)}</textarea>
+
+                </td>
+
+
+                <td class="c-action">
+
+                    <button
+                        type="button"
+                        class="delete-btn"
+                        title="Eliminar"
+
+                        onclick="eliminar(
+                            '${registro.uid}'
+                        )"
+                    >
+                        ×
+                    </button>
+
+                </td>
+
+            `;
+
+
+            tbody.appendChild(
+                fila
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   INDICADORES
+========================================================= */
+
+function actualizarIndicadores(){
+
+    const total =
+        registros.length;
+
+
+    const verificados =
+        registros.filter(
+            registro =>
+                registro.verificacion
+                    .trim() !== ""
+        ).length;
+
+
+    const cumplidos =
+        registros.filter(
+            registro =>
+                registro.estado ===
+                "Cumplido"
+        ).length;
+
+
+    const pendientes =
+        registros.filter(
+            registro =>
+                registro.estado ===
+                "Pendiente" ||
+
+                registro.estado ===
+                "En seguimiento"
+        ).length;
+
+
+    document.getElementById(
+        "totalRequisitos"
+    ).textContent =
+        total;
+
+
+    document.getElementById(
+        "totalVerificados"
+    ).textContent =
+        verificados;
+
+
+    document.getElementById(
+        "totalCumplidos"
+    ).textContent =
+        cumplidos;
+
+
+    document.getElementById(
+        "totalPendientes"
+    ).textContent =
+        pendientes;
+
+}
+
+
+/* =========================================================
+   GUARDAR
+========================================================= */
+
+function guardarFormulario(){
+
+    const datos = {
+
+        codigo:
+            "PGSN05-F1",
+
+        revision:
+            "Rev.02",
+
+        fechaDocumento:
+            "Jul.25",
+
+        empresa:
+            "Servicios Naser S.R.L.",
+
+        servicio:
+            "Neuquén",
+
+        area:
+            "Calidad",
+
+        alcance:
+            "Nacional",
+
+        clasificacion:
+            "Normativa General",
+
+        responsableRevision:
+            document
+            .getElementById(
+                "responsableRevision"
+            )
+            .value,
+
+        fechaRevision:
+            document
+            .getElementById(
+                "fechaRevision"
+            )
+            .value,
+
+        observacionesGenerales:
+            document
+            .getElementById(
+                "observacionesGenerales"
+            )
+            .value,
+
+        registros:
+            registros
+
+    };
+
+
+    localStorage.setItem(
+        "NASER_PGSN05_F1",
+        JSON.stringify(
+            datos
+        )
+    );
+
+
+    document.getElementById(
+        "estadoFormulario"
+    ).textContent =
+        "Cambios guardados";
+
+
+    alert(
+        "Matriz guardada correctamente."
+    );
+
+}
+
+
+/* =========================================================
+   FINALIZAR
+========================================================= */
+
+function finalizarFormulario(){
+
+    if(
+        registros.length === 0
+    ){
+
+        alert(
+            "Debe registrar al menos un requisito legal."
+        );
+
+        return;
+
+    }
+
+
+    const incompletos =
+        registros.filter(
+            registro =>
+                !registro.norma.trim()
+        );
+
+
+    if(
+        incompletos.length > 0
+    ){
+
+        alert(
+            "Hay requisitos sin completar en el campo Norma."
+        );
+
+        return;
+
+    }
+
+
+    if(
+        !document
+        .getElementById(
+            "responsableRevision"
+        )
+        .value
+        .trim()
+    ){
+
+        alert(
+            "Debe completar el Responsable de revisión."
+        );
+
+        return;
+
+    }
+
+
+    guardarFormulario();
+
+
+    document.getElementById(
+        "estadoFormulario"
+    ).textContent =
+        "Documento finalizado";
+
+
+    document.getElementById(
+        "estadoSuperior"
+    ).textContent =
+        "FINALIZADO";
+
+
+    alert(
+        "PGSN05-F1 finalizado correctamente."
+    );
+
+}
+
+
+/* =========================================================
+   LIMPIAR
+========================================================= */
+
+function limpiarFormulario(){
+
+    const confirmar =
+        confirm(
+            "¿Desea limpiar toda la matriz?"
+        );
+
+
+    if(!confirmar){
+        return;
+    }
+
+
+    registros = [];
+
+
+    document.getElementById(
+        "responsableRevision"
+    ).value = "";
+
+
+    document.getElementById(
+        "fechaRevision"
+    ).value = "";
+
+
+    document.getElementById(
+        "observacionesGenerales"
+    ).value = "";
+
+
+    localStorage.removeItem(
+        "NASER_PGSN05_F1"
+    );
+
+
+    document.getElementById(
+        "estadoFormulario"
+    ).textContent =
+        "Documento en edición";
+
+
+    document.getElementById(
+        "estadoSuperior"
+    ).textContent =
+        "EN EDICIÓN";
+
+
+    registros.push(
+        nuevoRegistro()
+    );
+
+
+    renderTabla();
+
+    actualizarIndicadores();
+
+}
+
+
+/* =========================================================
+   CARGAR DATOS
+========================================================= */
+
+function cargarFormulario(){
+
+    const guardado =
+        localStorage.getItem(
+            "NASER_PGSN05_F1"
+        );
+
+
+    if(!guardado){
+
+        registros = [
+            nuevoRegistro()
+        ];
+
+
+        renderTabla();
+
+        actualizarIndicadores();
+
+        return;
+
+    }
+
+
+    try{
+
+        const datos =
+            JSON.parse(
+                guardado
+            );
+
+
+        registros =
+            Array.isArray(
+                datos.registros
+            )
+            ? datos.registros
+            : [];
+
+
+        /*
+        Limpieza de campos de versiones anteriores.
+        Si anteriormente existían P, A/R u organismo,
+        directamente no se utilizan.
+        */
+
+        registros =
+            registros.map(
+                registro => ({
+
+                    uid:
+                        registro.uid ||
+                        Date.now().toString() +
+                        Math.random()
+                        .toString(16)
+                        .slice(2),
+
+                    norma:
+                        registro.norma || "",
+
+                    descripcion:
+                        registro.descripcion || "",
+
+                    autoridad:
+                        registro.autoridad || "",
+
+                    observaciones:
+                        registro.observaciones || "",
+
+                    obligacion:
+                        registro.obligacion || "",
+
+                    frecuencia:
+                        registro.frecuencia || "",
+
+                    tipo:
+                        registro.tipo || "",
+
+                    prioridad:
+                        registro.prioridad || "",
+
+                    vencimiento:
+                        registro.vencimiento || "",
+
+                    responsable:
+                        registro.responsable || "",
+
+                    estado:
+                        registro.estado ||
+                        "Pendiente",
+
+                    verificacion:
+                        registro.verificacion || "",
+
+                    observacionesEv:
+                        registro.observacionesEv || ""
+
+                })
+            );
+
+
+        document.getElementById(
+            "responsableRevision"
+        ).value =
+            datos.responsableRevision ||
+            "";
+
+
+        document.getElementById(
+            "fechaRevision"
+        ).value =
+            datos.fechaRevision ||
+            "";
+
+
+        document.getElementById(
+            "observacionesGenerales"
+        ).value =
+            datos.observacionesGenerales ||
+            "";
+
+
+        if(
+            registros.length === 0
+        ){
+
+            registros.push(
+                nuevoRegistro()
+            );
+
+        }
+
+
+        renderTabla();
+
+        actualizarIndicadores();
+
+    }
+
+    catch(error){
+
+        console.error(
+            "Error al cargar la matriz:",
+            error
+        );
+
+
+        registros = [
+            nuevoRegistro()
+        ];
+
+
+        renderTabla();
+
+        actualizarIndicadores();
+
+    }
+
+}
+
+
+/* =========================================================
+   INICIO
+========================================================= */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    cargarFormulario
+);
+
+</script>
+
+</body>
+</html>

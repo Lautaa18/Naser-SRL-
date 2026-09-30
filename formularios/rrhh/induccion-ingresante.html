@@ -1,0 +1,1472 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NASER | PGSN13-F3 - Inducción al Personal Ingresante</title>
+
+<style>
+/* =========================================================
+   NASER SRL - PGSN13-F3
+   INDUCCIÓN AL PERSONAL INGRESANTE
+   Rev.00 Nov.25
+   ========================================================= */
+
+:root{
+    --naser:#009b49;
+    --naser-dark:#00773a;
+    --naser-soft:#eaf7f0;
+
+    --black:#111111;
+    --black-soft:#1a1a1a;
+
+    --white:#ffffff;
+
+    --gray-bg:#f2f3f5;
+    --gray-100:#f7f7f8;
+    --gray-200:#e3e6e8;
+    --gray-300:#cfd4d8;
+    --gray-500:#7a8085;
+    --gray-700:#454b50;
+
+    --danger:#c53434;
+
+    --sidebar-width:290px;
+
+    --radius:14px;
+    --shadow:0 5px 18px rgba(0,0,0,.08);
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    min-height:100vh;
+    background:var(--gray-bg);
+    color:#202428;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+button,
+input,
+select,
+textarea{
+    font:inherit;
+}
+
+button{
+    cursor:pointer;
+}
+
+/* =========================================================
+   SIDEBAR
+   ========================================================= */
+
+.sidebar{
+    position:fixed;
+    top:0;
+    left:0;
+    width:var(--sidebar-width);
+    height:100vh;
+    background:#0d0d0d;
+    color:#fff;
+    z-index:1000;
+    display:flex;
+    flex-direction:column;
+    border-right:1px solid #242424;
+}
+
+.brand{
+    padding:30px 26px 24px;
+    border-bottom:1px solid #282828;
+}
+
+.brand-logo{
+    color:var(--naser);
+    font-size:36px;
+    font-weight:900;
+    letter-spacing:2px;
+}
+
+.brand-subtitle{
+    margin-top:4px;
+    color:#8a8a8a;
+    font-size:10px;
+    font-weight:700;
+    letter-spacing:1.5px;
+}
+
+.doc-box{
+    margin:20px;
+    padding:14px 15px;
+    background:#171717;
+    border:1px solid #292929;
+    border-left:4px solid var(--naser);
+    border-radius:10px;
+}
+
+.doc-box span{
+    display:block;
+    color:#777;
+    font-size:9px;
+    font-weight:900;
+    letter-spacing:1px;
+    margin-bottom:5px;
+}
+
+.doc-box strong{
+    display:block;
+    font-size:15px;
+}
+
+.doc-box small{
+    display:block;
+    margin-top:4px;
+    color:#989898;
+    font-size:10px;
+}
+
+.side-nav{
+    list-style:none;
+    padding:10px 14px 20px;
+    flex:1;
+    overflow-y:auto;
+}
+
+.side-nav li{
+    margin-bottom:6px;
+}
+
+.side-nav a{
+    text-decoration:none;
+    color:#bdbdbd;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:11px 13px;
+    border-radius:9px;
+    font-size:12px;
+    font-weight:700;
+    transition:.2s;
+}
+
+.side-nav a:hover{
+    background:#1b1b1b;
+    color:#fff;
+}
+
+.nav-number{
+    width:28px;
+    height:28px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border:1px solid #3c3c3c;
+    border-radius:50%;
+    color:var(--naser);
+    font-size:10px;
+    font-weight:900;
+    flex:none;
+}
+
+.sidebar-footer{
+    padding:18px 20px;
+    border-top:1px solid #292929;
+    color:#666;
+    font-size:10px;
+    line-height:1.5;
+}
+
+/* =========================================================
+   MAIN
+   ========================================================= */
+
+.main{
+    margin-left:var(--sidebar-width);
+    min-height:100vh;
+}
+
+/* =========================================================
+   TOPBAR
+   ========================================================= */
+
+.topbar{
+    position:sticky;
+    top:0;
+    z-index:900;
+    height:75px;
+    background:#fff;
+    border-bottom:1px solid var(--gray-200);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:0 30px;
+}
+
+.topbar-left{
+    display:flex;
+    align-items:center;
+    gap:14px;
+}
+
+.menu-btn{
+    display:none;
+    width:40px;
+    height:40px;
+    border:none;
+    border-radius:8px;
+    background:#f0f0f0;
+    font-size:20px;
+}
+
+.breadcrumb{
+    color:#777;
+    font-size:12px;
+}
+
+.breadcrumb strong{
+    color:#1b1b1b;
+}
+
+.topbar-right{
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
+
+.badge{
+    padding:8px 11px;
+    border-radius:20px;
+    font-size:10px;
+    font-weight:900;
+}
+
+.badge-code{
+    background:#111;
+    color:#fff;
+}
+
+.badge-status{
+    color:#007138;
+    background:#e8f7ef;
+    border:1px solid #c7ebd8;
+}
+
+.badge-status.finished{
+    background:#111;
+    color:#fff;
+    border-color:#111;
+}
+
+/* =========================================================
+   CONTENT
+   ========================================================= */
+
+.content{
+    max-width:1450px;
+    margin:auto;
+    padding:30px;
+}
+
+/* =========================================================
+   HERO
+   ========================================================= */
+
+.hero{
+    margin-bottom:22px;
+    background:#101010;
+    color:#fff;
+    border-radius:16px;
+    border-left:6px solid var(--naser);
+    box-shadow:var(--shadow);
+    overflow:hidden;
+}
+
+.hero-inner{
+    padding:28px 30px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:25px;
+}
+
+.hero-label{
+    margin-bottom:8px;
+    color:var(--naser);
+    font-size:11px;
+    font-weight:900;
+    letter-spacing:1.8px;
+}
+
+.hero h1{
+    font-size:29px;
+    line-height:1.15;
+    margin-bottom:8px;
+}
+
+.hero p{
+    max-width:820px;
+    color:#a5a5a5;
+    font-size:13px;
+    line-height:1.6;
+}
+
+.hero-code{
+    min-width:180px;
+    text-align:right;
+}
+
+.hero-code span{
+    display:block;
+    color:#777;
+    font-size:9px;
+    font-weight:900;
+    letter-spacing:1px;
+}
+
+.hero-code strong{
+    display:block;
+    margin-top:4px;
+    font-size:20px;
+}
+
+.hero-code small{
+    color:#999;
+    font-size:10px;
+}
+
+/* =========================================================
+   PROGRESS
+   ========================================================= */
+
+.progress-card{
+    margin-bottom:22px;
+    padding:17px 20px;
+    background:#fff;
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+    display:grid;
+    grid-template-columns:1fr auto;
+    gap:15px;
+}
+
+.progress-info{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:8px;
+}
+
+.progress-info strong{
+    font-size:12px;
+}
+
+.progress-info span{
+    color:#787878;
+    font-size:11px;
+}
+
+.progress-track{
+    height:8px;
+    background:#e6e7e8;
+    border-radius:20px;
+    overflow:hidden;
+}
+
+.progress-bar{
+    width:0%;
+    height:100%;
+    background:var(--naser);
+    border-radius:20px;
+    transition:.3s;
+}
+
+.progress-percent{
+    display:flex;
+    align-items:center;
+    color:var(--naser);
+    font-size:21px;
+    font-weight:900;
+}
+
+/* =========================================================
+   SECTIONS
+   ========================================================= */
+
+.section{
+    margin-bottom:22px;
+    background:#fff;
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+    overflow:hidden;
+}
+
+.section-header{
+    padding:15px 20px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+    background:#151515;
+    color:#fff;
+}
+
+.section-number{
+    width:31px;
+    height:31px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:var(--naser);
+    border-radius:50%;
+    font-size:11px;
+    font-weight:900;
+    flex:none;
+}
+
+.section-title h2{
+    font-size:14px;
+}
+
+.section-title p{
+    margin-top:2px;
+    color:#8e8e8e;
+    font-size:10px;
+}
+
+.section-body{
+    padding:22px;
+}
+
+/* =========================================================
+   FORM
+   ========================================================= */
+
+.form-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:16px;
+}
+
+.form-group{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+}
+
+.form-group.full{
+    grid-column:1/-1;
+}
+
+.form-group label{
+    color:#4e5458;
+    font-size:10px;
+    font-weight:900;
+    text-transform:uppercase;
+    letter-spacing:.4px;
+}
+
+.required{
+    color:var(--naser);
+}
+
+input,
+textarea{
+    width:100%;
+    padding:11px 12px;
+    background:#fff;
+    border:1px solid #ccd0d3;
+    border-radius:8px;
+    outline:none;
+    transition:.2s;
+}
+
+input:focus,
+textarea:focus{
+    border-color:var(--naser);
+    box-shadow:0 0 0 3px rgba(0,155,73,.10);
+}
+
+textarea{
+    min-height:140px;
+    resize:vertical;
+}
+
+.invalid{
+    border-color:var(--danger)!important;
+    background:#fff7f7!important;
+}
+
+/* =========================================================
+   TABLES / CHECKLIST
+   ========================================================= */
+
+.training-table{
+    width:100%;
+    border-collapse:collapse;
+    border:1px solid #d7dadd;
+    overflow:hidden;
+}
+
+.training-table thead th{
+    background:#a6ca87;
+    color:#111;
+    border:1px solid #839c6d;
+    padding:10px 8px;
+    font-size:12px;
+    font-weight:900;
+    text-align:center;
+}
+
+.training-table td{
+    border:1px solid #d8dbdd;
+    padding:8px;
+    font-size:13px;
+}
+
+.training-table td:last-child{
+    width:140px;
+    text-align:center;
+}
+
+.training-table tbody tr:nth-child(even){
+    background:#fafafa;
+}
+
+.training-table tbody tr:hover{
+    background:#f4fbf7;
+}
+
+.subsection-row td{
+    background:#a6ca87 !important;
+    color:#111;
+    font-weight:900;
+    text-align:center;
+    font-size:13px;
+    border-color:#839c6d;
+}
+
+.checkbox-cell{
+    text-align:center;
+}
+
+.checkbox-cell input[type="checkbox"]{
+    width:18px;
+    height:18px;
+    accent-color:var(--naser);
+    cursor:pointer;
+}
+
+/* =========================================================
+   OBSERVATIONS
+   ========================================================= */
+
+.note-box{
+    background:#f7f8f8;
+    border:1px solid #dfe2e4;
+    border-left:4px solid var(--naser);
+    border-radius:9px;
+    padding:18px 20px;
+}
+
+/* =========================================================
+   ACTIONS
+   ========================================================= */
+
+.actions{
+    position:sticky;
+    bottom:0;
+    z-index:100;
+    padding:14px 0 5px;
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+    background:rgba(242,243,245,.95);
+    backdrop-filter:blur(8px);
+    border-top:1px solid #ddd;
+}
+
+.actions-left,
+.actions-right{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+}
+
+.btn{
+    padding:11px 16px;
+    border:none;
+    border-radius:8px;
+    font-size:10px;
+    font-weight:900;
+    transition:.2s;
+}
+
+.btn-green{
+    background:var(--naser);
+    color:#fff;
+}
+
+.btn-green:hover{
+    background:var(--naser-dark);
+}
+
+.btn-dark{
+    background:#111;
+    color:#fff;
+}
+
+.btn-light{
+    background:#fff;
+    color:#333;
+    border:1px solid #d2d5d7;
+}
+
+.btn-danger{
+    background:#fff;
+    color:#a52727;
+    border:1px solid #e4c7c7;
+}
+
+/* =========================================================
+   TOAST
+   ========================================================= */
+
+.toast{
+    position:fixed;
+    right:25px;
+    bottom:25px;
+    z-index:3000;
+    min-width:260px;
+    max-width:420px;
+    padding:14px 16px;
+    transform:translateY(100px);
+    opacity:0;
+    background:#111;
+    color:#fff;
+    border-left:5px solid var(--naser);
+    border-radius:8px;
+    box-shadow:0 10px 30px rgba(0,0,0,.25);
+    font-size:11px;
+    font-weight:bold;
+    transition:.3s;
+}
+
+.toast.show{
+    transform:translateY(0);
+    opacity:1;
+}
+
+.toast.error{
+    border-color:var(--danger);
+}
+
+/* =========================================================
+   FINALIZADO
+   ========================================================= */
+
+body.finalized input,
+body.finalized textarea{
+    pointer-events:none;
+    background:#f2f2f2;
+}
+
+/* =========================================================
+   OVERLAY
+   ========================================================= */
+
+.overlay{
+    display:none;
+    position:fixed;
+    inset:0;
+    z-index:950;
+    background:rgba(0,0,0,.55);
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media(max-width:1000px){
+    .sidebar{
+        transform:translateX(-100%);
+        transition:.3s;
+    }
+
+    .sidebar.open{
+        transform:translateX(0);
+    }
+
+    .overlay.show{
+        display:block;
+    }
+
+    .main{
+        margin-left:0;
+    }
+
+    .menu-btn{
+        display:block;
+    }
+}
+
+@media(max-width:760px){
+    .content{
+        padding:16px 10px;
+    }
+
+    .topbar{
+        padding:0 14px;
+    }
+
+    .badge-code{
+        display:none;
+    }
+
+    .hero-inner{
+        padding:22px 19px;
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    .hero h1{
+        font-size:22px;
+    }
+
+    .hero-code{
+        text-align:left;
+    }
+
+    .form-grid{
+        grid-template-columns:1fr;
+    }
+
+    .training-table{
+        min-width:620px;
+    }
+
+    .table-wrap{
+        overflow-x:auto;
+    }
+
+    .actions{
+        flex-direction:column;
+    }
+
+    .actions-left,
+    .actions-right{
+        width:100%;
+    }
+
+    .actions .btn{
+        flex:1;
+    }
+}
+
+/* =========================================================
+   PRINT / PDF
+   ========================================================= */
+
+@media print{
+    @page{
+        size:A4 portrait;
+        margin:8mm;
+    }
+
+    body{
+        background:#fff!important;
+    }
+
+    .sidebar,
+    .topbar,
+    .progress-card,
+    .actions,
+    .toast{
+        display:none!important;
+    }
+
+    .main{
+        margin:0!important;
+    }
+
+    .content{
+        max-width:none;
+        padding:0;
+    }
+
+    .hero{
+        margin-bottom:10px;
+        box-shadow:none;
+        border:1px solid #222;
+        border-left:5px solid #009b49;
+    }
+
+    .hero-inner{
+        padding:12px 16px;
+    }
+
+    .hero h1{
+        font-size:20px;
+    }
+
+    .hero p{
+        display:none;
+    }
+
+    .section{
+        margin-bottom:10px;
+        box-shadow:none;
+        border:1px solid #aaa;
+        break-inside:avoid;
+    }
+
+    .section-header{
+        padding:9px 13px;
+        -webkit-print-color-adjust:exact;
+        print-color-adjust:exact;
+    }
+
+    .section-body{
+        padding:12px;
+    }
+
+    input,
+    textarea{
+        border:none!important;
+        background:transparent!important;
+        box-shadow:none!important;
+        padding:4px 0!important;
+    }
+
+    .training-table thead th,
+    .subsection-row td{
+        -webkit-print-color-adjust:exact;
+        print-color-adjust:exact;
+    }
+}
+
+</style>
+</head>
+<body>
+
+<aside class="sidebar" id="sidebar">
+    <div class="brand">
+        <div class="brand-logo">NASER</div>
+        <div class="brand-subtitle">SISTEMA DE GESTIÓN INTEGRADO</div>
+    </div>
+
+    <div class="doc-box">
+        <span>DOCUMENTO</span>
+        <strong>PGSN13-F3</strong>
+        <small>Rev.00 Nov.25</small>
+    </div>
+
+    <ul class="side-nav">
+        <li>
+            <a href="#datosGenerales">
+                <span class="nav-number">01</span>
+                Datos generales
+            </a>
+        </li>
+        <li>
+            <a href="#temario">
+                <span class="nav-number">02</span>
+                Temario y formación
+            </a>
+        </li>
+        <li>
+            <a href="#observaciones">
+                <span class="nav-number">03</span>
+                Observaciones
+            </a>
+        </li>
+        <li>
+            <a href="#accionesFinales">
+                <span class="nav-number">04</span>
+                Cierre
+            </a>
+        </li>
+    </ul>
+
+    <div class="sidebar-footer">
+        NASER SRL<br>
+        PGSN13-F3<br>
+        Registro digital SGI
+    </div>
+</aside>
+
+<div class="overlay" id="overlay"></div>
+
+<main class="main">
+
+    <header class="topbar">
+        <div class="topbar-left">
+            <button class="menu-btn" id="menuBtn">☰</button>
+
+            <div class="breadcrumb">
+                SGI &nbsp;/&nbsp;
+                <strong>Inducción al Personal Ingresante</strong>
+            </div>
+        </div>
+
+        <div class="topbar-right">
+            <span class="badge badge-status" id="statusBadge">EN EDICIÓN</span>
+            <span class="badge badge-code">PGSN13-F3</span>
+        </div>
+    </header>
+
+    <div class="content">
+
+        <!-- HERO -->
+        <section class="hero">
+            <div class="hero-inner">
+                <div>
+                    <div class="hero-label">NASER SRL</div>
+                    <h1>Inducción al Personal Ingresante</h1>
+                    <p>
+                        Registro de inducción inicial, formación interna y formación externa
+                        del personal ingresante de NASER SRL.
+                    </p>
+                </div>
+
+                <div class="hero-code">
+                    <span>CÓDIGO</span>
+                    <strong>PGSN13-F3</strong>
+                    <small>Rev.00 Nov.25</small>
+                </div>
+            </div>
+        </section>
+
+        <!-- PROGRESO -->
+        <section class="progress-card">
+            <div>
+                <div class="progress-info">
+                    <strong>Avance del formulario</strong>
+                    <span id="progressText">Complete los datos requeridos</span>
+                </div>
+
+                <div class="progress-track">
+                    <div class="progress-bar" id="progressBar"></div>
+                </div>
+            </div>
+
+            <div class="progress-percent" id="progressPercent">0%</div>
+        </section>
+
+        <!-- DATOS GENERALES -->
+        <section class="section" id="datosGenerales">
+            <div class="section-header">
+                <div class="section-number">01</div>
+
+                <div class="section-title">
+                    <h2>Datos generales</h2>
+                    <p>Identificación del personal ingresante</p>
+                </div>
+            </div>
+
+            <div class="section-body">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Fecha de inicio <span class="required">*</span></label>
+                        <input type="date" id="fechaInicio">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Fecha de finalización</label>
+                        <input type="date" id="fechaFinalizacion">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Apellido y nombre <span class="required">*</span></label>
+                        <input type="text" id="apellidoNombre" placeholder="Apellido y nombre">
+                    </div>
+
+                    <div class="form-group">
+                        <label>DNI <span class="required">*</span></label>
+                        <input type="text" id="dni" placeholder="DNI">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Puesto a ocupar <span class="required">*</span></label>
+                        <input type="text" id="puesto" placeholder="Puesto a ocupar">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Instructores</label>
+                        <input type="text" id="instructores" placeholder="Instructores responsables">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TEMARIO -->
+        <section class="section" id="temario">
+            <div class="section-header">
+                <div class="section-number">02</div>
+
+                <div class="section-title">
+                    <h2>Temario y formación</h2>
+                    <p>Control de inducción y capacitaciones realizadas</p>
+                </div>
+            </div>
+
+            <div class="section-body">
+                <div class="table-wrap">
+                    <table class="training-table" id="trainingTable">
+                        <thead>
+                            <tr>
+                                <th>Temas de inducción</th>
+                                <th>Realizado</th>
+                            </tr>
+                        </thead>
+                        <tbody id="trainingBody">
+                            <!-- JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- OBSERVACIONES -->
+        <section class="section" id="observaciones">
+            <div class="section-header">
+                <div class="section-number">03</div>
+
+                <div class="section-title">
+                    <h2>Observaciones</h2>
+                    <p>Aclaraciones y comentarios adicionales</p>
+                </div>
+            </div>
+
+            <div class="section-body">
+                <div class="note-box">
+                    <div class="form-group full">
+                        <label>Observaciones</label>
+                        <textarea id="obs" placeholder="Ingrese observaciones..."></textarea>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ACCIONES -->
+        <div class="actions" id="accionesFinales">
+            <div class="actions-left">
+                <button type="button" class="btn btn-light" id="clearBtn">LIMPIAR</button>
+                <button type="button" class="btn btn-dark" id="printBtn">IMPRIMIR / PDF</button>
+            </div>
+
+            <div class="actions-right">
+                <button type="button" class="btn btn-light" id="editBtn" style="display:none">HABILITAR EDICIÓN</button>
+                <button type="button" class="btn btn-green" id="saveBtn">GUARDAR</button>
+                <button type="button" class="btn btn-dark" id="finishBtn">FINALIZAR FORMULARIO</button>
+            </div>
+        </div>
+
+    </div>
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* =========================================================
+   CONFIGURACIÓN
+   ========================================================= */
+
+const STORAGE_KEY = "NASER_PGSN13_F3_INDUCCION_INGRESANTE";
+let finalized = false;
+
+const induccionItems = [
+    "Presentación de la organización",
+    "Organigrama",
+    "Perfil de puesto",
+    "Plan de carrera",
+    "Comunicaciones sobre plataformas digitales",
+    "Política de HSEQ",
+    "Sistema de Gestión de Servicios NASER SRL",
+    "Análisis de riesgos",
+    "Observaciones preventivas",
+    "Roles ante emergencias",
+    "Uso de vehículos",
+    "Resultados de examen médico",
+    "Manual HSE",
+    "Recorrido por instalaciones"
+];
+
+const formacionInternaItems = [
+    "Alertas HSE",
+    "Procedimientos operativos",
+    "Análisis de riesgos - Uso de EPP - Detención de tareas – Autocontrol",
+    "Preventivo - Respuesta ante emergencias - RCP y Primeros auxilios",
+    "Gestión de Residuos",
+    "10 reglas de Oro",
+    "Trabajo en Altura",
+    "Operador de Torque hidráulico"
+];
+
+const formacionExternaItems = [
+    "PASE",
+    "Conducción Preventiva de Vehículos Livianos",
+    "Conducción Preventiva de Vehículos Pesados",
+    "Inducción Fluxus",
+    "Eslingador y Señalero de Izaje",
+    "Operador de Izaje",
+    "Supervisor de Izaje",
+    "Well Control"
+];
+
+/* =========================================================
+   CREAR TABLA
+   ========================================================= */
+
+function createTrainingTable(){
+    const tbody = document.getElementById("trainingBody");
+    tbody.innerHTML = "";
+
+    addSectionRows(tbody, "Temas de inducción", induccionItems, "induccion");
+    addSectionRows(tbody, "Formación interna", formacionInternaItems, "interna");
+    addSectionRows(tbody, "Formación externa", formacionExternaItems, "externa");
+}
+
+function addSectionRows(tbody, title, items, prefix){
+    const sectionRow = document.createElement("tr");
+    sectionRow.className = "subsection-row";
+    sectionRow.innerHTML = `<td colspan="2">${title}</td>`;
+    tbody.appendChild(sectionRow);
+
+    items.forEach((item, index) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+            <td>${item}</td>
+            <td class="checkbox-cell">
+                <input type="checkbox" id="${prefix}_${index}" data-group="${prefix}">
+            </td>
+        `;
+        tbody.appendChild(tr);
+    });
+}
+
+/* =========================================================
+   GUARDAR Y CARGAR
+   ========================================================= */
+
+const fieldIds = [
+    "fechaInicio",
+    "fechaFinalizacion",
+    "apellidoNombre",
+    "dni",
+    "puesto",
+    "instructores",
+    "obs"
+];
+
+function getFormData(){
+    const fields = {};
+    fieldIds.forEach(id => {
+        const el = document.getElementById(id);
+        fields[id] = el ? el.value : "";
+    });
+
+    const checks = {};
+    document.querySelectorAll('input[type="checkbox"]').forEach(chk => {
+        checks[chk.id] = chk.checked;
+    });
+
+    return {
+        fields,
+        checks,
+        finalized,
+        updatedAt:new Date().toISOString()
+    };
+}
+
+function saveData(showMessage = true){
+    try{
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(getFormData()));
+        if(showMessage){
+            showToast("Formulario guardado correctamente.");
+        }
+    }catch(error){
+        console.error(error);
+        showToast("No se pudo guardar el formulario.", true);
+    }
+}
+
+function loadData(){
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if(!saved) return;
+
+    try{
+        const data = JSON.parse(saved);
+
+        if(data.fields){
+            Object.entries(data.fields).forEach(([id, value]) => {
+                const el = document.getElementById(id);
+                if(el) el.value = value || "";
+            });
+        }
+
+        if(data.checks){
+            Object.entries(data.checks).forEach(([id, checked]) => {
+                const el = document.getElementById(id);
+                if(el) el.checked = !!checked;
+            });
+        }
+
+        finalized = data.finalized === true;
+        applyFinalizedState();
+
+    }catch(error){
+        console.error(error);
+    }
+}
+
+/* =========================================================
+   PROGRESO
+   ========================================================= */
+
+function updateProgress(){
+    let completed = 0;
+    const total = 7;
+
+    const fechaInicio = document.getElementById("fechaInicio").value;
+    const apellidoNombre = document.getElementById("apellidoNombre").value.trim();
+    const dni = document.getElementById("dni").value.trim();
+    const puesto = document.getElementById("puesto").value.trim();
+
+    if(fechaInicio) completed++;
+    if(apellidoNombre) completed++;
+    if(dni) completed++;
+    if(puesto) completed++;
+
+    if(document.querySelectorAll('input[data-group="induccion"]:checked').length > 0) completed++;
+    if(document.querySelectorAll('input[data-group="interna"]:checked').length > 0) completed++;
+    if(document.querySelectorAll('input[data-group="externa"]:checked').length > 0) completed++;
+
+    const percent = Math.round(completed / total * 100);
+
+    document.getElementById("progressBar").style.width = percent + "%";
+    document.getElementById("progressPercent").textContent = percent + "%";
+
+    const text = document.getElementById("progressText");
+    if(percent === 100){
+        text.textContent = "Formulario completo";
+    }else if(percent >= 70){
+        text.textContent = "Formulario casi completo";
+    }else if(percent >= 40){
+        text.textContent = "Formulario en desarrollo";
+    }else{
+        text.textContent = "Complete los datos requeridos";
+    }
+}
+
+/* =========================================================
+   VALIDACIÓN
+   ========================================================= */
+
+function validate(){
+    const required = [
+        "fechaInicio",
+        "apellidoNombre",
+        "dni",
+        "puesto"
+    ];
+
+    let valid = true;
+
+    required.forEach(id => {
+        const el = document.getElementById(id);
+        el.classList.remove("invalid");
+
+        if(!el.value.trim()){
+            el.classList.add("invalid");
+            valid = false;
+        }
+    });
+
+    if(!valid){
+        showToast("Complete Fecha de inicio, Apellido y nombre, DNI y Puesto antes de finalizar.", true);
+        document.getElementById("datosGenerales").scrollIntoView({ behavior:"smooth", block:"start" });
+        return false;
+    }
+
+    return true;
+}
+
+/* =========================================================
+   FINALIZAR
+   ========================================================= */
+
+function finishForm(){
+    if(!validate()) return;
+
+    const confirmed = confirm(
+        "¿Desea finalizar el formulario PGSN13-F3?\n\n" +
+        "Una vez finalizado quedará bloqueado para evitar modificaciones accidentales."
+    );
+
+    if(!confirmed) return;
+
+    finalized = true;
+    applyFinalizedState();
+    saveData(false);
+    showToast("Formulario finalizado correctamente.");
+}
+
+function applyFinalizedState(){
+    const badge = document.getElementById("statusBadge");
+    const saveBtn = document.getElementById("saveBtn");
+    const finishBtn = document.getElementById("finishBtn");
+    const editBtn = document.getElementById("editBtn");
+
+    if(finalized){
+        document.body.classList.add("finalized");
+        badge.textContent = "FINALIZADO";
+        badge.classList.add("finished");
+        saveBtn.style.display = "none";
+        finishBtn.style.display = "none";
+        editBtn.style.display = "inline-block";
+    }else{
+        document.body.classList.remove("finalized");
+        badge.textContent = "EN EDICIÓN";
+        badge.classList.remove("finished");
+        saveBtn.style.display = "inline-block";
+        finishBtn.style.display = "inline-block";
+        editBtn.style.display = "none";
+    }
+}
+
+/* =========================================================
+   AUTOGUARDADO
+   ========================================================= */
+
+let saveTimer;
+
+function autoSave(){
+    if(finalized) return;
+
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(() => {
+        saveData(false);
+    }, 500);
+}
+
+/* =========================================================
+   LIMPIAR
+   ========================================================= */
+
+function clearForm(){
+    if(finalized){
+        showToast("Habilite la edición antes de limpiar el formulario.", true);
+        return;
+    }
+
+    const confirmed = confirm("¿Desea borrar todos los datos del formulario?");
+    if(!confirmed) return;
+
+    localStorage.removeItem(STORAGE_KEY);
+    location.reload();
+}
+
+/* =========================================================
+   TOAST
+   ========================================================= */
+
+let toastTimer;
+
+function showToast(message, error = false){
+    const toast = document.getElementById("toast");
+    clearTimeout(toastTimer);
+
+    toast.textContent = message;
+    toast.classList.toggle("error", error);
+    toast.classList.add("show");
+
+    toastTimer = setTimeout(() => {
+        toast.classList.remove("show");
+    }, 3000);
+}
+
+/* =========================================================
+   MENU MOBILE
+   ========================================================= */
+
+const sidebar = document.getElementById("sidebar");
+const overlay = document.getElementById("overlay");
+
+document.getElementById("menuBtn").addEventListener("click", () => {
+    sidebar.classList.toggle("open");
+    overlay.classList.toggle("show");
+});
+
+overlay.addEventListener("click", () => {
+    sidebar.classList.remove("open");
+    overlay.classList.remove("show");
+});
+
+/* =========================================================
+   INICIALIZACIÓN
+   ========================================================= */
+
+document.addEventListener("DOMContentLoaded", () => {
+    createTrainingTable();
+    loadData();
+    updateProgress();
+
+    document.querySelectorAll("input, textarea").forEach(el => {
+        el.addEventListener("input", () => {
+            updateProgress();
+            autoSave();
+        });
+
+        el.addEventListener("change", () => {
+            updateProgress();
+            autoSave();
+        });
+    });
+});
+
+/* =========================================================
+   BOTONES
+   ========================================================= */
+
+document.getElementById("saveBtn").addEventListener("click", () => {
+    saveData(true);
+});
+
+document.getElementById("finishBtn").addEventListener("click", finishForm);
+
+document.getElementById("clearBtn").addEventListener("click", clearForm);
+
+document.getElementById("printBtn").addEventListener("click", () => {
+    window.print();
+});
+
+document.getElementById("editBtn").addEventListener("click", () => {
+    const confirmed = confirm("¿Desea habilitar nuevamente la edición?");
+    if(!confirmed) return;
+
+    finalized = false;
+    applyFinalizedState();
+    saveData(false);
+    showToast("Edición habilitada nuevamente.");
+});
+
+/* =========================================================
+   CTRL + S
+   ========================================================= */
+
+document.addEventListener("keydown", event => {
+    if((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "s"){
+        event.preventDefault();
+        saveData(true);
+    }
+});
+</script>
+
+</body>
+</html>

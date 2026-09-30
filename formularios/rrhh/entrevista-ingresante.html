@@ -1,0 +1,2808 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>NASER SRL | Entrevista al Personal Ingresante</title>
+
+<style>
+
+/* =========================================================
+   NASER SRL
+   ENTREVISTA AL PERSONAL INGRESANTE
+   PGSN02-F2 - Rev.01 - Jul.25
+========================================================= */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+:root{
+    --black:#0d0d0d;
+    --white:#ffffff;
+    --bg:#f2f2f2;
+    --border:#d8d8d8;
+    --text:#111111;
+    --muted:#777777;
+    --green:#71a800;
+    --red:#b42318;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    font-family:Arial, Helvetica, sans-serif;
+    background:var(--bg);
+    color:var(--text);
+}
+
+/* =========================================================
+   SIDEBAR
+========================================================= */
+
+.sidebar{
+    position:fixed;
+    left:0;
+    top:0;
+    width:335px;
+    height:100vh;
+    background:var(--black);
+    color:white;
+    padding:40px 28px;
+    overflow-y:auto;
+    z-index:1000;
+}
+
+.brand{
+    display:flex;
+    align-items:center;
+    gap:18px;
+    padding:0 8px 35px;
+    border-bottom:1px solid #333;
+}
+
+.logo{
+    width:60px;
+    height:60px;
+    background:white;
+    color:black;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:30px;
+    font-weight:900;
+}
+
+.brand h1{
+    font-size:29px;
+    letter-spacing:7px;
+}
+
+.brand small{
+    color:#aaa;
+    letter-spacing:5px;
+}
+
+.sidebar-title{
+    margin:35px 10px 20px;
+    color:#888;
+    font-size:11px;
+    letter-spacing:3px;
+    line-height:1.5;
+}
+
+.menu{
+    list-style:none;
+}
+
+.menu a{
+    display:flex;
+    align-items:flex-start;
+    gap:15px;
+    color:#ccc;
+    text-decoration:none;
+    padding:14px 12px;
+    border-left:2px solid transparent;
+    font-size:12px;
+    line-height:1.4;
+    transition:.2s;
+}
+
+.menu a:hover,
+.menu a.active{
+    color:white;
+    background:#171717;
+    border-left-color:white;
+}
+
+.menu-number{
+    min-width:25px;
+    color:#777;
+    font-size:10px;
+    padding-top:2px;
+}
+
+/* =========================================================
+   MAIN
+========================================================= */
+
+.main{
+    margin-left:335px;
+    min-height:100vh;
+}
+
+.topbar{
+    min-height:125px;
+    background:white;
+    border-bottom:1px solid #ddd;
+    padding:28px 50px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+}
+
+.topbar-left{
+    display:flex;
+    align-items:center;
+}
+
+.breadcrumb{
+    color:#777;
+    font-size:11px;
+    letter-spacing:3px;
+    margin-bottom:16px;
+}
+
+.topbar h2{
+    font-size:28px;
+}
+
+.control-active{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-size:11px;
+    letter-spacing:2px;
+}
+
+.control-dot{
+    width:10px;
+    height:10px;
+    background:#111;
+    border-radius:50%;
+}
+
+.mobile-menu{
+    display:none;
+}
+
+.page{
+    max-width:1600px;
+    margin:auto;
+    padding:45px 48px 100px;
+}
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.hero{
+    background:#111;
+    color:white;
+    padding:45px;
+    display:grid;
+    grid-template-columns:1fr 270px;
+    gap:40px;
+    margin-bottom:30px;
+}
+
+.hero-label{
+    color:#999;
+    font-size:10px;
+    letter-spacing:4px;
+    margin-bottom:20px;
+}
+
+.hero h1{
+    font-size:34px;
+    margin-bottom:14px;
+}
+
+.hero p{
+    color:#ddd;
+    line-height:1.6;
+    max-width:850px;
+}
+
+.document{
+    border-left:1px solid #444;
+    padding-left:35px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+}
+
+.document span{
+    color:#888;
+    font-size:10px;
+    letter-spacing:3px;
+    margin-bottom:12px;
+}
+
+.document strong{
+    font-size:18px;
+    margin-bottom:8px;
+}
+
+.document small{
+    color:#bbb;
+    line-height:1.7;
+}
+
+/* =========================================================
+   PROGRESO
+========================================================= */
+
+.progress-panel{
+    background:#111;
+    color:white;
+    padding:28px 30px;
+    margin-bottom:28px;
+}
+
+.progress-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:25px;
+    margin-bottom:20px;
+}
+
+.progress-label{
+    display:block;
+    color:#888;
+    font-size:9px;
+    letter-spacing:2.5px;
+    margin-bottom:8px;
+}
+
+.progress-top h3{
+    font-size:23px;
+}
+
+.progress-counter{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    font-size:17px;
+}
+
+.progress-counter span{
+    color:#777;
+}
+
+.progress-track{
+    width:100%;
+    height:9px;
+    background:#333;
+    overflow:hidden;
+}
+
+.progress-bar{
+    height:100%;
+    width:0%;
+    background:white;
+    transition:.35s;
+}
+
+/* =========================================================
+   CARDS
+========================================================= */
+
+.card{
+    background:white;
+    border:1px solid var(--border);
+    margin-bottom:28px;
+    scroll-margin-top:25px;
+}
+
+.card-header{
+    min-height:100px;
+    padding:27px 32px;
+    border-bottom:1px solid var(--border);
+    display:flex;
+    align-items:center;
+    gap:18px;
+}
+
+.card-number{
+    width:44px;
+    height:44px;
+    background:#111;
+    color:white;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:11px;
+    font-weight:bold;
+    flex-shrink:0;
+}
+
+.card-title h3{
+    font-size:19px;
+    margin-bottom:6px;
+}
+
+.card-title p{
+    color:#777;
+    font-size:13px;
+}
+
+.card-body{
+    padding:32px;
+}
+
+/* =========================================================
+   DATOS PERSONALES
+========================================================= */
+
+.form-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:22px;
+}
+
+.form-group{
+    min-width:0;
+}
+
+.form-group.span-2{
+    grid-column:span 2;
+}
+
+.form-group.full{
+    grid-column:1/-1;
+}
+
+.form-group label{
+    display:block;
+    font-size:10px;
+    font-weight:bold;
+    letter-spacing:.6px;
+    margin-bottom:9px;
+}
+
+.form-control{
+    width:100%;
+    min-height:55px;
+    background:#fafafa;
+    border:1px solid #ccc;
+    padding:0 15px;
+    font-size:14px;
+    outline:none;
+}
+
+.form-control:focus{
+    border-color:#111;
+    background:white;
+}
+
+textarea.form-control{
+    padding:15px;
+    min-height:110px;
+    resize:vertical;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+/* =========================================================
+   PREGUNTAS
+========================================================= */
+
+.questions{
+    display:grid;
+    gap:13px;
+}
+
+.question{
+    display:grid;
+    grid-template-columns:50px minmax(280px, 42%) 1fr;
+    border:1px solid #ddd;
+    background:#fafafa;
+    min-height:70px;
+}
+
+.question-number{
+    background:#111;
+    color:white;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:11px;
+    font-weight:bold;
+}
+
+.question-text{
+    display:flex;
+    align-items:center;
+    padding:16px 18px;
+    font-size:11px;
+    line-height:1.5;
+    font-weight:bold;
+    border-right:1px solid #ddd;
+}
+
+.question textarea,
+.question input{
+    width:100%;
+    border:0;
+    background:white;
+    padding:16px;
+    outline:none;
+    font-family:Arial, Helvetica, sans-serif;
+    font-size:13px;
+    resize:vertical;
+}
+
+/* =========================================================
+   COMENTARIOS
+========================================================= */
+
+.detail-grid{
+    display:grid;
+    gap:13px;
+}
+
+.detail-row{
+    display:grid;
+    grid-template-columns:180px 1fr;
+    min-height:75px;
+    border:1px solid #ddd;
+}
+
+.detail-label{
+    display:flex;
+    align-items:center;
+    padding:17px;
+    background:#f4f4f4;
+    border-right:1px solid #ddd;
+    font-size:10px;
+    font-weight:bold;
+    letter-spacing:.6px;
+}
+
+.detail-row textarea,
+.detail-row input,
+.detail-row select{
+    width:100%;
+    border:0;
+    background:white;
+    padding:16px;
+    outline:none;
+    font-family:Arial, Helvetica, sans-serif;
+    font-size:13px;
+    resize:vertical;
+}
+
+/* =========================================================
+   RECOMENDACIONES
+========================================================= */
+
+.recommendation-row{
+    display:grid;
+    grid-template-columns:230px 1fr;
+    min-height:65px;
+    border:1px solid #ddd;
+    margin-bottom:12px;
+}
+
+.recommendation-label{
+    background:#f4f4f4;
+    border-right:1px solid #ddd;
+    display:flex;
+    align-items:center;
+    padding:17px;
+    font-size:10px;
+    font-weight:bold;
+}
+
+.recommendation-options{
+    display:flex;
+    align-items:center;
+    gap:25px;
+    padding:15px 20px;
+    background:white;
+}
+
+.radio-label{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-size:11px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.radio-label input{
+    width:18px;
+    height:18px;
+    accent-color:#111;
+}
+
+/* =========================================================
+   PARTICIPANTES
+========================================================= */
+
+.participants{
+    display:grid;
+    gap:12px;
+}
+
+.participant{
+    display:grid;
+    grid-template-columns:50px 1fr;
+    border:1px solid #ddd;
+    min-height:60px;
+}
+
+.participant-number{
+    background:#111;
+    color:white;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:11px;
+    font-weight:bold;
+}
+
+.participant input{
+    border:0;
+    outline:none;
+    padding:0 16px;
+    font-size:13px;
+}
+
+/* =========================================================
+   ERROR
+========================================================= */
+
+.field-error{
+    border:2px solid var(--red) !important;
+    background:#fff7f7 !important;
+}
+
+.question-error{
+    outline:2px solid var(--red);
+    outline-offset:-2px;
+}
+
+/* =========================================================
+   ACCIONES
+========================================================= */
+
+.actions{
+    display:flex;
+    justify-content:flex-end;
+    gap:12px;
+    margin-top:30px;
+    flex-wrap:wrap;
+}
+
+.btn{
+    min-width:160px;
+    padding:15px 20px;
+    border:1px solid #111;
+    cursor:pointer;
+    font-size:11px;
+    font-weight:bold;
+    letter-spacing:1px;
+}
+
+.btn-light{
+    background:white;
+    color:#111;
+}
+
+.btn-light:hover{
+    background:#eee;
+}
+
+.btn-finish{
+    min-width:220px;
+    background:#111;
+    color:white;
+}
+
+.btn-finish:hover{
+    background:#333;
+}
+
+.btn:disabled{
+    opacity:.5;
+    cursor:not-allowed;
+}
+
+/* =========================================================
+   MENSAJES
+========================================================= */
+
+.message{
+    display:none;
+    margin-top:15px;
+    padding:17px 20px;
+    border:1px solid #ddd;
+    background:white;
+    font-size:12px;
+}
+
+.message.success{
+    border-left:4px solid var(--green);
+}
+
+.message.error{
+    border-left:4px solid var(--red);
+}
+
+.finished-banner{
+    display:none;
+    background:#111;
+    color:white;
+    padding:22px 25px;
+    margin-bottom:25px;
+}
+
+.finished-banner strong{
+    display:block;
+    font-size:17px;
+    margin-bottom:7px;
+}
+
+.finished-banner span{
+    color:#bbb;
+    font-size:12px;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media(max-width:1100px){
+
+    .sidebar{
+        width:260px;
+    }
+
+    .main{
+        margin-left:260px;
+    }
+
+    .form-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .hero{
+        grid-template-columns:1fr;
+    }
+
+    .document{
+        border-left:0;
+        border-top:1px solid #444;
+        padding-left:0;
+        padding-top:25px;
+    }
+
+    .question{
+        grid-template-columns:45px 40% 1fr;
+    }
+}
+
+@media(max-width:760px){
+
+    .sidebar{
+        width:290px;
+        transform:translateX(-100%);
+        transition:.3s;
+    }
+
+    .sidebar.open{
+        transform:translateX(0);
+    }
+
+    .main{
+        margin-left:0;
+    }
+
+    .mobile-menu{
+        display:block;
+        width:45px;
+        height:45px;
+        background:#111;
+        color:white;
+        border:0;
+        font-size:20px;
+        margin-right:15px;
+    }
+
+    .topbar{
+        padding:20px;
+    }
+
+    .breadcrumb,
+    .control-active{
+        display:none;
+    }
+
+    .topbar h2{
+        font-size:18px;
+    }
+
+    .page{
+        padding:22px 13px 60px;
+    }
+
+    .hero{
+        padding:28px 23px;
+    }
+
+    .hero h1{
+        font-size:25px;
+    }
+
+    .form-grid{
+        grid-template-columns:1fr;
+    }
+
+    .form-group.span-2{
+        grid-column:span 1;
+    }
+
+    .question{
+        grid-template-columns:45px 1fr;
+    }
+
+    .question-text{
+        border-right:0;
+    }
+
+    .question textarea,
+    .question input{
+        grid-column:1/-1;
+        min-height:90px;
+        border-top:1px solid #ddd;
+    }
+
+    .detail-row,
+    .recommendation-row{
+        grid-template-columns:1fr;
+    }
+
+    .detail-label,
+    .recommendation-label{
+        border-right:0;
+        border-bottom:1px solid #ddd;
+    }
+
+    .actions{
+        flex-direction:column;
+    }
+
+    .btn{
+        width:100%;
+    }
+
+}
+
+/* =========================================================
+   PRINT
+========================================================= */
+
+@media print{
+
+    .sidebar,
+    .topbar,
+    .actions,
+    .message{
+        display:none !important;
+    }
+
+    .main{
+        margin:0;
+    }
+
+    .page{
+        padding:0;
+        max-width:none;
+    }
+
+    body{
+        background:white;
+    }
+
+    .hero,
+    .progress-panel,
+    .card-number,
+    .question-number,
+    .participant-number{
+        -webkit-print-color-adjust:exact;
+        print-color-adjust:exact;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- =========================================================
+     SIDEBAR
+========================================================= -->
+
+<aside class="sidebar" id="sidebar">
+
+    <div class="brand">
+
+        <div class="logo">N</div>
+
+        <div>
+            <h1>NASER</h1>
+            <small>SRL</small>
+        </div>
+
+    </div>
+
+    <div class="sidebar-title">
+        SISTEMA DE GESTIÓN<br>
+        INTEGRADO
+    </div>
+
+    <ul class="menu">
+
+        <li>
+            <a href="#datos" class="nav-link active">
+                <span class="menu-number">01</span>
+                Datos Personales
+            </a>
+        </li>
+
+        <li>
+            <a href="#personal" class="nav-link">
+                <span class="menu-number">02</span>
+                Ámbito Personal
+            </a>
+        </li>
+
+        <li>
+            <a href="#laboral" class="nav-link">
+                <span class="menu-number">03</span>
+                Ámbito Laboral
+            </a>
+        </li>
+
+        <li>
+            <a href="#profesional" class="nav-link">
+                <span class="menu-number">04</span>
+                Ámbito Profesional
+            </a>
+        </li>
+
+        <li>
+            <a href="#entrevistado" class="nav-link">
+                <span class="menu-number">05</span>
+                Preguntas Entrevistado
+            </a>
+        </li>
+
+        <li>
+            <a href="#comentarios" class="nav-link">
+                <span class="menu-number">06</span>
+                Comentarios
+            </a>
+        </li>
+
+        <li>
+            <a href="#recomendaciones" class="nav-link">
+                <span class="menu-number">07</span>
+                Recomendaciones
+            </a>
+        </li>
+
+        <li>
+            <a href="#participantes" class="nav-link">
+                <span class="menu-number">08</span>
+                Participantes
+            </a>
+        </li>
+
+    </ul>
+
+</aside>
+
+<!-- =========================================================
+     MAIN
+========================================================= -->
+
+<main class="main">
+
+<header class="topbar">
+
+    <div class="topbar-left">
+
+        <button
+            class="mobile-menu"
+            onclick="toggleMenu()">
+            ☰
+        </button>
+
+        <div>
+
+            <div class="breadcrumb">
+                NASER SRL / SGI / RECURSOS HUMANOS
+            </div>
+
+            <h2>
+                Entrevista al Personal Ingresante
+            </h2>
+
+        </div>
+
+    </div>
+
+    <div class="control-active">
+
+        <div class="control-dot"></div>
+
+        CONTROL ACTIVO
+
+    </div>
+
+</header>
+
+<div class="page">
+
+<!-- =========================================================
+     HERO
+========================================================= -->
+
+<section class="hero">
+
+    <div>
+
+        <div class="hero-label">
+            RECURSOS HUMANOS · PERSONAL INGRESANTE
+        </div>
+
+        <h1>
+            Entrevista al Personal Ingresante
+        </h1>
+
+        <p>
+            Registro digital de datos personales, preguntas de ámbito
+            personal, laboral y profesional, comentarios de entrevistadores,
+            recomendaciones y participantes de la entrevista.
+        </p>
+
+    </div>
+
+    <div class="document">
+
+        <span>DOCUMENTO</span>
+
+        <strong>PGSN02-F2</strong>
+
+        <small>
+            Rev.01<br>
+            Jul.25
+        </small>
+
+    </div>
+
+</section>
+
+<!-- =========================================================
+     FINALIZADO
+========================================================= -->
+
+<div
+    class="finished-banner"
+    id="finishedBanner">
+
+    <strong>
+        ENTREVISTA FINALIZADA
+    </strong>
+
+    <span id="finishedDate"></span>
+
+</div>
+
+<!-- =========================================================
+     PROGRESO
+========================================================= -->
+
+<section class="progress-panel">
+
+    <div class="progress-top">
+
+        <div>
+
+            <span class="progress-label">
+                PROGRESO DE LA ENTREVISTA
+            </span>
+
+            <h3 id="progressText">
+                0% completado
+            </h3>
+
+        </div>
+
+        <div class="progress-counter">
+
+            <strong id="completedFields">0</strong>
+
+            <span>/</span>
+
+            <strong id="requiredFields">0</strong>
+
+        </div>
+
+    </div>
+
+    <div class="progress-track">
+
+        <div
+            class="progress-bar"
+            id="progressBar">
+        </div>
+
+    </div>
+
+</section>
+
+<!-- =========================================================
+     1 DATOS PERSONALES
+========================================================= -->
+
+<section class="card observe" id="datos">
+
+    <div class="card-header">
+
+        <div class="card-number">
+            01
+        </div>
+
+        <div class="card-title">
+
+            <h3>
+                Datos Personales
+            </h3>
+
+            <p>
+                Información correspondiente al personal ingresante.
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="form-grid">
+
+            <div class="form-group">
+
+                <label>FECHA *</label>
+
+                <input
+                    type="date"
+                    id="fecha"
+                    class="form-control required-field">
+
+            </div>
+
+            <div class="form-group span-2">
+
+                <label>APELLIDO Y NOMBRE *</label>
+
+                <input
+                    type="text"
+                    id="apellidoNombre"
+                    class="form-control required-field"
+                    placeholder="Apellido y nombre">
+
+            </div>
+
+            <div class="form-group">
+
+                <label>EDAD *</label>
+
+                <input
+                    type="number"
+                    id="edad"
+                    min="0"
+                    class="form-control required-field"
+                    placeholder="Edad">
+
+            </div>
+
+            <div class="form-group">
+
+                <label>DNI *</label>
+
+                <input
+                    type="text"
+                    id="dni"
+                    class="form-control required-field"
+                    placeholder="DNI">
+
+            </div>
+
+            <div class="form-group span-2">
+
+                <label>EMAIL *</label>
+
+                <input
+                    type="email"
+                    id="email"
+                    class="form-control required-field"
+                    placeholder="Correo electrónico">
+
+            </div>
+
+            <div class="form-group">
+
+                <label>TELÉFONO *</label>
+
+                <input
+                    type="tel"
+                    id="telefono"
+                    class="form-control required-field"
+                    placeholder="Teléfono">
+
+            </div>
+
+            <div class="form-group span-2">
+
+                <label>DIRECCIÓN *</label>
+
+                <input
+                    type="text"
+                    id="direccion"
+                    class="form-control required-field"
+                    placeholder="Dirección">
+
+            </div>
+
+            <div class="form-group span-2">
+
+                <label>TÍTULO / NIVEL DE ESTUDIO *</label>
+
+                <input
+                    type="text"
+                    id="tituloEstudio"
+                    class="form-control required-field"
+                    placeholder="Título o nivel de estudio">
+
+            </div>
+
+            <div class="form-group span-2">
+
+                <label>INSTITUCIÓN *</label>
+
+                <input
+                    type="text"
+                    id="institucion"
+                    class="form-control required-field"
+                    placeholder="Institución">
+
+            </div>
+
+            <div class="form-group span-2">
+
+                <label>EXPERIENCIA EN EL PUESTO *</label>
+
+                <textarea
+                    id="experiencia"
+                    class="form-control required-field"
+                    placeholder="Experiencia relacionada con el puesto..."></textarea>
+
+            </div>
+
+            <div class="form-group span-2">
+
+                <label>OTRA INFORMACIÓN *</label>
+
+                <textarea
+                    id="otraInformacion"
+                    class="form-control required-field"
+                    placeholder="Otra información relevante..."></textarea>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- =========================================================
+     2 ÁMBITO PERSONAL
+========================================================= -->
+
+<section class="card observe" id="personal">
+
+    <div class="card-header">
+
+        <div class="card-number">
+            02
+        </div>
+
+        <div class="card-title">
+
+            <h3>
+                Preguntas de Ámbito Personal
+            </h3>
+
+            <p>
+                Respuestas del personal entrevistado.
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="card-body">
+
+        <div
+            class="questions"
+            id="personalQuestions">
+        </div>
+
+    </div>
+
+</section>
+
+<!-- =========================================================
+     3 ÁMBITO LABORAL
+========================================================= -->
+
+<section class="card observe" id="laboral">
+
+    <div class="card-header">
+
+        <div class="card-number">
+            03
+        </div>
+
+        <div class="card-title">
+
+            <h3>
+                Preguntas de Ámbito Laboral
+            </h3>
+
+            <p>
+                Motivación y conocimiento laboral del postulante.
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="card-body">
+
+        <div
+            class="questions"
+            id="laboralQuestions">
+        </div>
+
+    </div>
+
+</section>
+
+<!-- =========================================================
+     4 ÁMBITO PROFESIONAL
+========================================================= -->
+
+<section class="card observe" id="profesional">
+
+    <div class="card-header">
+
+        <div class="card-number">
+            04
+        </div>
+
+        <div class="card-title">
+
+            <h3>
+                Preguntas de Ámbito Profesional
+            </h3>
+
+            <p>
+                Expectativas y proyección profesional.
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="card-body">
+
+        <div
+            class="questions"
+            id="professionalQuestions">
+        </div>
+
+    </div>
+
+</section>
+
+<!-- =========================================================
+     5 PREGUNTAS ENTREVISTADO
+========================================================= -->
+
+<section class="card observe" id="entrevistado">
+
+    <div class="card-header">
+
+        <div class="card-number">
+            05
+        </div>
+
+        <div class="card-title">
+
+            <h3>
+                Preguntas Planteadas por el Entrevistado
+            </h3>
+
+            <p>
+                Espacio fijo para registrar hasta tres preguntas.
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="questions">
+
+            <div class="question">
+
+                <div class="question-number">01</div>
+
+                <div class="question-text">
+                    PREGUNTA DEL ENTREVISTADO
+                </div>
+
+                <textarea
+                    id="preguntaEntrevistado1"
+                    class="required-field"
+                    placeholder="Ingrese la pregunta..."></textarea>
+
+            </div>
+
+            <div class="question">
+
+                <div class="question-number">02</div>
+
+                <div class="question-text">
+                    PREGUNTA DEL ENTREVISTADO
+                </div>
+
+                <textarea
+                    id="preguntaEntrevistado2"
+                    class="required-field"
+                    placeholder="Ingrese la pregunta..."></textarea>
+
+            </div>
+
+            <div class="question">
+
+                <div class="question-number">03</div>
+
+                <div class="question-text">
+                    PREGUNTA DEL ENTREVISTADO
+                </div>
+
+                <textarea
+                    id="preguntaEntrevistado3"
+                    class="required-field"
+                    placeholder="Ingrese la pregunta..."></textarea>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- =========================================================
+     6 COMENTARIOS
+========================================================= -->
+
+<section class="card observe" id="comentarios">
+
+    <div class="card-header">
+
+        <div class="card-number">
+            06
+        </div>
+
+        <div class="card-title">
+
+            <h3>
+                Comentarios de Entrevistadores
+            </h3>
+
+            <p>
+                Evaluación de las áreas participantes.
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="detail-grid">
+
+            <div class="detail-row">
+
+                <div class="detail-label">
+                    RRHH *
+                </div>
+
+                <textarea
+                    id="comentarioRRHH"
+                    class="required-field"
+                    placeholder="Comentarios de RRHH..."></textarea>
+
+            </div>
+
+            <div class="detail-row">
+
+                <div class="detail-label">
+                    HSEQ *
+                </div>
+
+                <textarea
+                    id="comentarioHSEQ"
+                    class="required-field"
+                    placeholder="Comentarios de HSEQ..."></textarea>
+
+            </div>
+
+            <div class="detail-row">
+
+                <div class="detail-label">
+                    OPERATIVA *
+                </div>
+
+                <textarea
+                    id="comentarioOperativa"
+                    class="required-field"
+                    placeholder="Comentarios del área operativa..."></textarea>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- =========================================================
+     7 RECOMENDACIONES
+========================================================= -->
+
+<section class="card observe" id="recomendaciones">
+
+    <div class="card-header">
+
+        <div class="card-number">
+            07
+        </div>
+
+        <div class="card-title">
+
+            <h3>
+                Recomendaciones
+            </h3>
+
+            <p>
+                Seleccione SÍ o NO para cada recomendación.
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="card-body">
+
+        <div id="recommendationsContainer"></div>
+
+    </div>
+
+</section>
+
+<!-- =========================================================
+     8 PARTICIPANTES
+========================================================= -->
+
+<section class="card observe" id="participantes">
+
+    <div class="card-header">
+
+        <div class="card-number">
+            08
+        </div>
+
+        <div class="card-title">
+
+            <h3>
+                Participantes de la Entrevista
+            </h3>
+
+            <p>
+                Nómina fija de hasta cinco participantes.
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="participants">
+
+            <div class="participant">
+
+                <div class="participant-number">01</div>
+
+                <input
+                    type="text"
+                    id="participante1"
+                    class="required-field"
+                    placeholder="Nombre y apellido">
+
+            </div>
+
+            <div class="participant">
+
+                <div class="participant-number">02</div>
+
+                <input
+                    type="text"
+                    id="participante2"
+                    class="required-field"
+                    placeholder="Nombre y apellido">
+
+            </div>
+
+            <div class="participant">
+
+                <div class="participant-number">03</div>
+
+                <input
+                    type="text"
+                    id="participante3"
+                    class="required-field"
+                    placeholder="Nombre y apellido">
+
+            </div>
+
+            <div class="participant">
+
+                <div class="participant-number">04</div>
+
+                <input
+                    type="text"
+                    id="participante4"
+                    class="required-field"
+                    placeholder="Nombre y apellido">
+
+            </div>
+
+            <div class="participant">
+
+                <div class="participant-number">05</div>
+
+                <input
+                    type="text"
+                    id="participante5"
+                    class="required-field"
+                    placeholder="Nombre y apellido">
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- =========================================================
+     ACCIONES
+========================================================= -->
+
+<div class="actions">
+
+    <button
+        type="button"
+        class="btn btn-light"
+        onclick="saveInterview()">
+
+        GUARDAR
+
+    </button>
+
+    <button
+        type="button"
+        class="btn btn-light"
+        onclick="clearInterview()">
+
+        LIMPIAR
+
+    </button>
+
+    <button
+        type="button"
+        class="btn btn-finish"
+        id="finishButton"
+        onclick="finishInterview()">
+
+        FINALIZAR CHECKLIST
+
+    </button>
+
+</div>
+
+<div
+    class="message"
+    id="systemMessage">
+</div>
+
+</div>
+
+</main>
+
+<script>
+
+/* =========================================================
+   CONFIGURACIÓN
+========================================================= */
+
+const STORAGE_KEY =
+    "naserEntrevistaPersonalIngresante";
+
+/* =========================================================
+   PREGUNTAS FIJAS
+   NO SE PUEDEN AGREGAR / ELIMINAR / MODIFICAR
+========================================================= */
+
+const personalQuestions = [
+
+    "¿Cómo está compuesta su familia?",
+
+    "¿Dónde vive usted y su familia?",
+
+    "¿Cómo es su relación con su familia?",
+
+    "¿Consume alcohol o drogas?",
+
+    "¿Toma medicación de forma crónica?",
+
+    "¿Tiene vehículo propio?",
+
+    "¿Tiene casa propia?",
+
+    "¿Cuáles son sus intereses fuera del trabajo?",
+
+    "¿Qué hábitos tiene fuera del trabajo?"
+
+];
+
+const laboralQuestions = [
+
+    "¿Por qué quiere trabajar en NASER SRL?",
+
+    "¿Cuánto conoce del trabajo y por qué?",
+
+    "¿Cómo era un día en su anterior empleo?",
+
+    "¿Conoce a alguien que trabaje en NASER SRL?",
+
+    "¿Tiene negocio personal además del trabajo?",
+
+    "¿Alguna vez sufrió un accidente de trabajo?"
+
+];
+
+const professionalQuestions = [
+
+    "¿Cuáles son sus expectativas profesionales?",
+
+    "¿En qué tiempo tiene previsto realizarlas?",
+
+    "¿Tiene interés en un tema particular?",
+
+    "¿Se encuentra en otro proceso de selección?"
+
+];
+
+const recommendations = [
+
+    "Evaluar por Gerencia",
+
+    "2da Entrevista",
+
+    "Realizar Examen Médico",
+
+    "Ingreso"
+
+];
+
+/* =========================================================
+   CREAR PREGUNTAS
+========================================================= */
+
+function renderQuestions(
+    questions,
+    containerId,
+    prefix
+){
+
+    const container =
+        document.getElementById(
+            containerId
+        );
+
+    container.innerHTML =
+        "";
+
+    questions.forEach(
+        (question,index)=>{
+
+            const row =
+                document.createElement(
+                    "div"
+                );
+
+            row.className =
+                "question";
+
+            row.innerHTML = `
+
+                <div class="question-number">
+
+                    ${String(index + 1).padStart(2,"0")}
+
+                </div>
+
+                <div class="question-text">
+
+                    ${question}
+
+                </div>
+
+                <textarea
+                    id="${prefix}${index + 1}"
+                    class="required-field"
+                    placeholder="Ingrese la respuesta..."></textarea>
+
+            `;
+
+            container.appendChild(
+                row
+            );
+
+        }
+    );
+
+}
+
+/* =========================================================
+   RECOMENDACIONES
+========================================================= */
+
+function renderRecommendations(){
+
+    const container =
+        document.getElementById(
+            "recommendationsContainer"
+        );
+
+    recommendations.forEach(
+        (recommendation,index)=>{
+
+            const row =
+                document.createElement(
+                    "div"
+                );
+
+            row.className =
+                "recommendation-row";
+
+            row.innerHTML = `
+
+                <div class="recommendation-label">
+
+                    ${recommendation}
+
+                </div>
+
+                <div class="recommendation-options">
+
+                    <label class="radio-label">
+
+                        <input
+                            type="radio"
+                            name="recommendation-${index}"
+                            value="SI"
+                            class="recommendation-radio">
+
+                        SÍ
+
+                    </label>
+
+                    <label class="radio-label">
+
+                        <input
+                            type="radio"
+                            name="recommendation-${index}"
+                            value="NO"
+                            class="recommendation-radio">
+
+                        NO
+
+                    </label>
+
+                </div>
+
+            `;
+
+            container.appendChild(
+                row
+            );
+
+        }
+    );
+
+}
+
+/* =========================================================
+   PROGRESO
+========================================================= */
+
+function updateProgress(){
+
+    let total =
+        0;
+
+    let completed =
+        0;
+
+    document
+    .querySelectorAll(
+        ".required-field"
+    )
+    .forEach(
+        field=>{
+
+            total++;
+
+            if(
+                field.value.trim()
+                !== ""
+            ){
+
+                completed++;
+
+            }
+
+        }
+    );
+
+    recommendations.forEach(
+        (item,index)=>{
+
+            total++;
+
+            if(
+                document.querySelector(
+                    `input[name="recommendation-${index}"]:checked`
+                )
+            ){
+
+                completed++;
+
+            }
+
+        }
+    );
+
+    const percentage =
+        total === 0
+        ? 0
+        : Math.round(
+            completed /
+            total *
+            100
+        );
+
+    document.getElementById(
+        "completedFields"
+    ).textContent =
+        completed;
+
+    document.getElementById(
+        "requiredFields"
+    ).textContent =
+        total;
+
+    document.getElementById(
+        "progressText"
+    ).textContent =
+        percentage +
+        "% completado";
+
+    document.getElementById(
+        "progressBar"
+    ).style.width =
+        percentage +
+        "%";
+
+}
+
+/* =========================================================
+   OBTENER DATOS
+========================================================= */
+
+function getInterviewData(){
+
+    const fields =
+        {};
+
+    document
+    .querySelectorAll(
+        "input:not([type='radio']), textarea"
+    )
+    .forEach(
+        field=>{
+
+            if(field.id){
+
+                fields[field.id] =
+                    field.value;
+
+            }
+
+        }
+    );
+
+    const recommendationData =
+        [];
+
+    recommendations.forEach(
+        (recommendation,index)=>{
+
+            const checked =
+                document.querySelector(
+                    `input[name="recommendation-${index}"]:checked`
+                );
+
+            recommendationData.push({
+
+                recommendation:
+                    recommendation,
+
+                value:
+                    checked
+                    ? checked.value
+                    : ""
+
+            });
+
+        }
+    );
+
+    return{
+
+        fields,
+
+        recommendations:
+            recommendationData,
+
+        savedAt:
+            new Date()
+            .toISOString()
+
+    };
+
+}
+
+/* =========================================================
+   GUARDAR
+========================================================= */
+
+function saveInterview(){
+
+    const data =
+        getInterviewData();
+
+    localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify(
+            data
+        )
+    );
+
+    showMessage(
+        "Entrevista guardada correctamente.",
+        "success"
+    );
+
+}
+
+/* =========================================================
+   CARGAR
+========================================================= */
+
+function loadInterview(){
+
+    const saved =
+        localStorage.getItem(
+            STORAGE_KEY
+        );
+
+    if(!saved){
+        return;
+    }
+
+    try{
+
+        const data =
+            JSON.parse(
+                saved
+            );
+
+        if(data.fields){
+
+            Object.keys(
+                data.fields
+            )
+            .forEach(
+                id=>{
+
+                    const field =
+                        document.getElementById(
+                            id
+                        );
+
+                    if(field){
+
+                        field.value =
+                            data.fields[id];
+
+                    }
+
+                }
+            );
+
+        }
+
+        if(data.recommendations){
+
+            data.recommendations
+            .forEach(
+                (recommendation,index)=>{
+
+                    if(
+                        !recommendation.value
+                    ){
+                        return;
+                    }
+
+                    const radio =
+                        document.querySelector(
+                            `input[name="recommendation-${index}"][value="${recommendation.value}"]`
+                        );
+
+                    if(radio){
+
+                        radio.checked =
+                            true;
+
+                    }
+
+                }
+            );
+
+        }
+
+        if(data.finished){
+
+            showFinishedState(
+                data.finishedAt
+            );
+
+            lockInterview();
+
+        }
+
+    }
+    catch(error){
+
+        console.error(
+            "Error al cargar entrevista:",
+            error
+        );
+
+    }
+
+}
+
+/* =========================================================
+   VALIDACIÓN
+========================================================= */
+
+function validateInterview(){
+
+    let valid =
+        true;
+
+    let missing =
+        0;
+
+    let firstError =
+        null;
+
+    document
+    .querySelectorAll(
+        ".field-error"
+    )
+    .forEach(
+        field=>{
+
+            field.classList.remove(
+                "field-error"
+            );
+
+        }
+    );
+
+    document
+    .querySelectorAll(
+        ".question-error"
+    )
+    .forEach(
+        row=>{
+
+            row.classList.remove(
+                "question-error"
+            );
+
+        }
+    );
+
+    /* CAMPOS */
+
+    document
+    .querySelectorAll(
+        ".required-field"
+    )
+    .forEach(
+        field=>{
+
+            if(
+                field.value.trim()
+                === ""
+            ){
+
+                valid =
+                    false;
+
+                missing++;
+
+                field.classList.add(
+                    "field-error"
+                );
+
+                if(!firstError){
+
+                    firstError =
+                        field;
+
+                }
+
+            }
+
+        }
+    );
+
+    /* RECOMENDACIONES */
+
+    recommendations.forEach(
+        (item,index)=>{
+
+            const checked =
+                document.querySelector(
+                    `input[name="recommendation-${index}"]:checked`
+                );
+
+            if(!checked){
+
+                valid =
+                    false;
+
+                missing++;
+
+                const row =
+                    document
+                    .querySelector(
+                        `input[name="recommendation-${index}"]`
+                    )
+                    .closest(
+                        ".recommendation-row"
+                    );
+
+                row.classList.add(
+                    "question-error"
+                );
+
+                if(!firstError){
+
+                    firstError =
+                        row;
+
+                }
+
+            }
+
+        }
+    );
+
+    return{
+
+        valid,
+        missing,
+        firstError
+
+    };
+
+}
+
+/* =========================================================
+   FINALIZAR
+========================================================= */
+
+function finishInterview(){
+
+    const validation =
+        validateInterview();
+
+    if(
+        !validation.valid
+    ){
+
+        showMessage(
+            `No se puede finalizar. Faltan ${validation.missing} campos o respuestas obligatorias.`,
+            "error"
+        );
+
+        if(
+            validation.firstError
+        ){
+
+            validation
+            .firstError
+            .scrollIntoView({
+
+                behavior:"smooth",
+                block:"center"
+
+            });
+
+        }
+
+        return;
+
+    }
+
+    const confirmation =
+        confirm(
+            "Todos los campos están completos. ¿Desea finalizar la entrevista?"
+        );
+
+    if(!confirmation){
+        return;
+    }
+
+    const data =
+        getInterviewData();
+
+    data.finished =
+        true;
+
+    data.finishedAt =
+        new Date()
+        .toISOString();
+
+    localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify(
+            data
+        )
+    );
+
+    showFinishedState(
+        data.finishedAt
+    );
+
+    lockInterview();
+
+    document.getElementById(
+        "progressText"
+    ).textContent =
+        "100% completado";
+
+    document.getElementById(
+        "progressBar"
+    ).style.width =
+        "100%";
+
+    showMessage(
+        "Entrevista finalizada correctamente.",
+        "success"
+    );
+
+    window.scrollTo({
+
+        top:0,
+        behavior:"smooth"
+
+    });
+
+}
+
+/* =========================================================
+   ESTADO FINALIZADO
+========================================================= */
+
+function showFinishedState(
+    dateValue
+){
+
+    const banner =
+        document.getElementById(
+            "finishedBanner"
+        );
+
+    banner.style.display =
+        "block";
+
+    const date =
+        dateValue
+        ? new Date(
+            dateValue
+        )
+        : new Date();
+
+    document.getElementById(
+        "finishedDate"
+    ).textContent =
+        "Finalizada el " +
+        date.toLocaleDateString(
+            "es-AR"
+        ) +
+        " a las " +
+        date.toLocaleTimeString(
+            "es-AR",
+            {
+                hour:"2-digit",
+                minute:"2-digit"
+            }
+        );
+
+}
+
+/* =========================================================
+   BLOQUEAR
+========================================================= */
+
+function lockInterview(){
+
+    document
+    .querySelectorAll(
+        "input, textarea"
+    )
+    .forEach(
+        element=>{
+
+            element.disabled =
+                true;
+
+        }
+    );
+
+    document.getElementById(
+        "finishButton"
+    ).disabled =
+        true;
+
+}
+
+/* =========================================================
+   LIMPIAR
+========================================================= */
+
+function clearInterview(){
+
+    const confirmation =
+        confirm(
+            "¿Está seguro de que desea limpiar completamente la entrevista?"
+        );
+
+    if(!confirmation){
+        return;
+    }
+
+    localStorage.removeItem(
+        STORAGE_KEY
+    );
+
+    document
+    .querySelectorAll(
+        "input, textarea"
+    )
+    .forEach(
+        element=>{
+
+            element.disabled =
+                false;
+
+            element.classList.remove(
+                "field-error"
+            );
+
+            if(
+                element.type ===
+                "radio"
+            ){
+
+                element.checked =
+                    false;
+
+            }
+            else{
+
+                element.value =
+                    "";
+
+            }
+
+        }
+    );
+
+    document
+    .querySelectorAll(
+        ".question-error"
+    )
+    .forEach(
+        element=>{
+
+            element.classList.remove(
+                "question-error"
+            );
+
+        }
+    );
+
+    document.getElementById(
+        "finishedBanner"
+    ).style.display =
+        "none";
+
+    document.getElementById(
+        "finishButton"
+    ).disabled =
+        false;
+
+    setToday();
+
+    updateProgress();
+
+    showMessage(
+        "Entrevista limpiada correctamente.",
+        "success"
+    );
+
+}
+
+/* =========================================================
+   FECHA
+========================================================= */
+
+function setToday(){
+
+    const input =
+        document.getElementById(
+            "fecha"
+        );
+
+    if(
+        input.value !== ""
+    ){
+        return;
+    }
+
+    const now =
+        new Date();
+
+    const year =
+        now.getFullYear();
+
+    const month =
+        String(
+            now.getMonth() + 1
+        ).padStart(
+            2,
+            "0"
+        );
+
+    const day =
+        String(
+            now.getDate()
+        ).padStart(
+            2,
+            "0"
+        );
+
+    input.value =
+        `${year}-${month}-${day}`;
+
+}
+
+/* =========================================================
+   MENSAJES
+========================================================= */
+
+function showMessage(
+    text,
+    type
+){
+
+    const message =
+        document.getElementById(
+            "systemMessage"
+        );
+
+    message.className =
+        "message " +
+        type;
+
+    message.textContent =
+        text;
+
+    message.style.display =
+        "block";
+
+    setTimeout(
+        ()=>{
+
+            message.style.display =
+                "none";
+
+        },
+        5000
+    );
+
+}
+
+/* =========================================================
+   ACTUALIZACIÓN
+========================================================= */
+
+document.addEventListener(
+    "input",
+    event=>{
+
+        event.target
+        .classList
+        .remove(
+            "field-error"
+        );
+
+        updateProgress();
+
+    }
+);
+
+document.addEventListener(
+    "change",
+    event=>{
+
+        const recommendation =
+            event.target.closest(
+                ".recommendation-row"
+            );
+
+        if(recommendation){
+
+            recommendation
+            .classList
+            .remove(
+                "question-error"
+            );
+
+        }
+
+        updateProgress();
+
+    }
+);
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+function toggleMenu(){
+
+    document.getElementById(
+        "sidebar"
+    )
+    .classList
+    .toggle(
+        "open"
+    );
+
+}
+
+/* =========================================================
+   NAVEGACIÓN
+========================================================= */
+
+function startNavigation(){
+
+    const links =
+        document.querySelectorAll(
+            ".nav-link"
+        );
+
+    const sections =
+        document.querySelectorAll(
+            ".observe"
+        );
+
+    const observer =
+        new IntersectionObserver(
+            entries=>{
+
+                entries.forEach(
+                    entry=>{
+
+                        if(
+                            entry.isIntersecting
+                        ){
+
+                            links.forEach(
+                                link=>{
+
+                                    link
+                                    .classList
+                                    .remove(
+                                        "active"
+                                    );
+
+                                }
+                            );
+
+                            const active =
+                                document.querySelector(
+                                    `.nav-link[href="#${entry.target.id}"]`
+                                );
+
+                            if(active){
+
+                                active
+                                .classList
+                                .add(
+                                    "active"
+                                );
+
+                            }
+
+                        }
+
+                    }
+                );
+
+            },
+            {
+                threshold:.2,
+                rootMargin:
+                    "-15% 0px -60% 0px"
+            }
+        );
+
+    sections.forEach(
+        section=>{
+
+            observer.observe(
+                section
+            );
+
+        }
+    );
+
+    links.forEach(
+        link=>{
+
+            link.addEventListener(
+                "click",
+                ()=>{
+
+                    if(
+                        window.innerWidth
+                        <=760
+                    ){
+
+                        document
+                        .getElementById(
+                            "sidebar"
+                        )
+                        .classList
+                        .remove(
+                            "open"
+                        );
+
+                    }
+
+                }
+            );
+
+        }
+    );
+
+}
+
+/* =========================================================
+   INICIALIZACIÓN
+========================================================= */
+
+renderQuestions(
+    personalQuestions,
+    "personalQuestions",
+    "personal"
+);
+
+renderQuestions(
+    laboralQuestions,
+    "laboralQuestions",
+    "laboral"
+);
+
+renderQuestions(
+    professionalQuestions,
+    "professionalQuestions",
+    "profesional"
+);
+
+renderRecommendations();
+
+setToday();
+
+loadInterview();
+
+updateProgress();
+
+startNavigation();
+
+</script>
+
+</body>
+</html>

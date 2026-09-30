@@ -1,0 +1,2648 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>NASER SRL | Informe Médico Laboral</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+:root{
+    --black:#0d0d0d;
+    --white:#fff;
+    --bg:#f2f2f2;
+    --border:#d8d8d8;
+    --muted:#777;
+    --green:#71a800;
+    --red:#b42318;
+    --gray:#777;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    font-family:Arial, Helvetica, sans-serif;
+    background:var(--bg);
+    color:#111;
+}
+
+/* =====================================================
+   SIDEBAR
+===================================================== */
+
+.sidebar{
+    position:fixed;
+    top:0;
+    left:0;
+    width:335px;
+    height:100vh;
+    background:var(--black);
+    color:white;
+    padding:40px 28px;
+    overflow-y:auto;
+    z-index:1000;
+}
+
+.brand{
+    display:flex;
+    align-items:center;
+    gap:18px;
+    padding:0 8px 35px;
+    border-bottom:1px solid #333;
+}
+
+.logo{
+    width:60px;
+    height:60px;
+    background:white;
+    color:black;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:30px;
+    font-weight:900;
+}
+
+.brand h1{
+    font-size:29px;
+    letter-spacing:7px;
+}
+
+.brand small{
+    color:#aaa;
+    letter-spacing:5px;
+}
+
+.sidebar-title{
+    margin:35px 10px 20px;
+    color:#888;
+    font-size:11px;
+    letter-spacing:3px;
+    line-height:1.5;
+}
+
+.menu{
+    list-style:none;
+}
+
+.menu a{
+    display:flex;
+    gap:15px;
+    color:#ccc;
+    text-decoration:none;
+    padding:15px 12px;
+    border-left:2px solid transparent;
+    font-size:12px;
+    transition:.2s;
+}
+
+.menu a:hover,
+.menu a.active{
+    color:white;
+    background:#171717;
+    border-left-color:white;
+}
+
+.menu-number{
+    color:#777;
+    min-width:25px;
+    font-size:10px;
+}
+
+/* =====================================================
+   MAIN
+===================================================== */
+
+.main{
+    margin-left:335px;
+    min-height:100vh;
+}
+
+.topbar{
+    min-height:125px;
+    background:white;
+    border-bottom:1px solid #ddd;
+    padding:28px 50px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+}
+
+.topbar-left{
+    display:flex;
+    align-items:center;
+}
+
+.breadcrumb{
+    color:#777;
+    font-size:11px;
+    letter-spacing:3px;
+    margin-bottom:16px;
+}
+
+.topbar h2{
+    font-size:28px;
+}
+
+.control-active{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-size:11px;
+    letter-spacing:2px;
+}
+
+.control-dot{
+    width:10px;
+    height:10px;
+    background:#111;
+    border-radius:50%;
+}
+
+.mobile-menu{
+    display:none;
+}
+
+.page{
+    max-width:1600px;
+    margin:auto;
+    padding:45px 48px 100px;
+}
+
+/* =====================================================
+   HERO
+===================================================== */
+
+.hero{
+    background:#111;
+    color:white;
+    padding:45px;
+    display:grid;
+    grid-template-columns:1fr 270px;
+    gap:40px;
+    margin-bottom:30px;
+}
+
+.hero-label{
+    color:#999;
+    font-size:10px;
+    letter-spacing:4px;
+    margin-bottom:20px;
+}
+
+.hero h1{
+    font-size:34px;
+    margin-bottom:14px;
+}
+
+.hero p{
+    color:#ddd;
+    line-height:1.6;
+    max-width:850px;
+}
+
+.document{
+    border-left:1px solid #444;
+    padding-left:35px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+}
+
+.document span{
+    color:#888;
+    font-size:10px;
+    letter-spacing:3px;
+    margin-bottom:12px;
+}
+
+.document strong{
+    font-size:18px;
+    margin-bottom:8px;
+}
+
+.document small{
+    color:#bbb;
+    line-height:1.7;
+}
+
+/* =====================================================
+   PROGRESO
+===================================================== */
+
+.progress-panel{
+    background:#111;
+    color:white;
+    padding:28px 30px;
+    margin-bottom:28px;
+}
+
+.progress-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
+}
+
+.progress-label{
+    display:block;
+    color:#888;
+    font-size:9px;
+    letter-spacing:2.5px;
+    margin-bottom:8px;
+}
+
+.progress-top h3{
+    font-size:23px;
+}
+
+.progress-counter{
+    display:flex;
+    gap:6px;
+    font-size:17px;
+}
+
+.progress-counter span{
+    color:#777;
+}
+
+.progress-track{
+    height:9px;
+    background:#333;
+}
+
+.progress-bar{
+    width:0;
+    height:100%;
+    background:white;
+    transition:.3s;
+}
+
+/* =====================================================
+   CARDS
+===================================================== */
+
+.card{
+    background:white;
+    border:1px solid var(--border);
+    margin-bottom:28px;
+    scroll-margin-top:25px;
+}
+
+.card-header{
+    min-height:100px;
+    padding:27px 32px;
+    border-bottom:1px solid var(--border);
+    display:flex;
+    align-items:center;
+    gap:18px;
+}
+
+.card-number{
+    width:44px;
+    height:44px;
+    background:#111;
+    color:white;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:11px;
+    font-weight:bold;
+}
+
+.card-title h3{
+    font-size:19px;
+    margin-bottom:6px;
+}
+
+.card-title p{
+    color:#777;
+    font-size:13px;
+}
+
+.card-body{
+    padding:32px;
+}
+
+/* =====================================================
+   FORMULARIOS
+===================================================== */
+
+.form-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:22px;
+}
+
+.form-group.span-2{
+    grid-column:span 2;
+}
+
+.form-group.full{
+    grid-column:1/-1;
+}
+
+.form-group label{
+    display:block;
+    font-size:10px;
+    font-weight:bold;
+    margin-bottom:9px;
+    letter-spacing:.6px;
+}
+
+.form-control{
+    width:100%;
+    min-height:55px;
+    border:1px solid #ccc;
+    background:#fafafa;
+    padding:0 15px;
+    outline:none;
+    font-size:14px;
+}
+
+.form-control:focus{
+    border-color:#111;
+    background:white;
+}
+
+textarea.form-control{
+    min-height:120px;
+    padding:15px;
+    resize:vertical;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+/* =====================================================
+   EXAMEN MÉDICO
+===================================================== */
+
+.table-wrapper{
+    overflow-x:auto;
+}
+
+.medical-table{
+    width:100%;
+    min-width:950px;
+    border-collapse:collapse;
+}
+
+.medical-table th{
+    background:#111;
+    color:white;
+    padding:16px 12px;
+    font-size:10px;
+    letter-spacing:1px;
+    border-right:1px solid #333;
+}
+
+.medical-table td{
+    border-bottom:1px solid #ddd;
+    padding:13px 12px;
+    font-size:12px;
+}
+
+.medical-table tbody tr:nth-child(even){
+    background:#fafafa;
+}
+
+.exam-name{
+    font-weight:bold;
+}
+
+.radio-cell{
+    width:100px;
+    text-align:center;
+}
+
+.medical-radio{
+    width:19px;
+    height:19px;
+    cursor:pointer;
+    accent-color:#111;
+}
+
+.exam-observation{
+    width:100%;
+    height:42px;
+    padding:0 12px;
+    border:1px solid #ccc;
+    background:white;
+    outline:none;
+}
+
+.exam-apto{
+    border-left:4px solid var(--green);
+}
+
+.exam-no-apto{
+    border-left:4px solid var(--red);
+}
+
+.exam-nr{
+    border-left:4px solid var(--gray);
+}
+
+/* =====================================================
+   CONCLUSIONES
+===================================================== */
+
+.conclusion-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:15px;
+}
+
+.conclusion{
+    border:1px solid #ddd;
+    background:#fafafa;
+}
+
+.conclusion-title{
+    padding:13px 16px;
+    font-size:10px;
+    font-weight:bold;
+    border-bottom:1px solid #ddd;
+}
+
+.conclusion-body{
+    padding:15px;
+}
+
+.conclusion-body select,
+.conclusion-body input{
+    width:100%;
+    min-height:50px;
+    border:1px solid #ccc;
+    padding:0 13px;
+    background:white;
+}
+
+/* =====================================================
+   VALIDACIÓN MÉDICA
+===================================================== */
+
+.validation-box{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:22px;
+}
+
+.validation-item label{
+    display:block;
+    font-size:10px;
+    font-weight:bold;
+    margin-bottom:9px;
+}
+
+.validation-item input{
+    width:100%;
+    height:55px;
+    border:1px solid #ccc;
+    padding:0 15px;
+    background:#fafafa;
+}
+
+/* =====================================================
+   ERRORES
+===================================================== */
+
+.field-error{
+    border:2px solid var(--red) !important;
+    background:#fff7f7 !important;
+}
+
+.row-error{
+    outline:2px solid var(--red);
+    outline-offset:-2px;
+}
+
+/* =====================================================
+   RESUMEN
+===================================================== */
+
+.summary{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    background:white;
+    border:1px solid #ddd;
+    margin-bottom:28px;
+}
+
+.summary-box{
+    padding:22px;
+    border-right:1px solid #ddd;
+}
+
+.summary-box:last-child{
+    border-right:0;
+}
+
+.summary-box span{
+    display:block;
+    color:#777;
+    font-size:9px;
+    letter-spacing:1.5px;
+    margin-bottom:10px;
+}
+
+.summary-box strong{
+    font-size:28px;
+}
+
+/* =====================================================
+   BOTONES
+===================================================== */
+
+.actions{
+    display:flex;
+    justify-content:flex-end;
+    gap:12px;
+    margin-top:30px;
+}
+
+.btn{
+    min-width:160px;
+    padding:15px 20px;
+    border:1px solid #111;
+    cursor:pointer;
+    font-size:11px;
+    font-weight:bold;
+    letter-spacing:1px;
+}
+
+.btn-light{
+    background:white;
+}
+
+.btn-light:hover{
+    background:#eee;
+}
+
+.btn-finish{
+    min-width:220px;
+    background:#111;
+    color:white;
+}
+
+.btn-finish:hover{
+    background:#333;
+}
+
+.btn:disabled{
+    opacity:.5;
+    cursor:not-allowed;
+}
+
+/* =====================================================
+   MENSAJES
+===================================================== */
+
+.message{
+    display:none;
+    margin-top:15px;
+    padding:17px 20px;
+    border:1px solid #ddd;
+    background:white;
+    font-size:12px;
+}
+
+.message.success{
+    border-left:4px solid var(--green);
+}
+
+.message.error{
+    border-left:4px solid var(--red);
+}
+
+.finished-banner{
+    display:none;
+    background:#111;
+    color:white;
+    padding:22px 25px;
+    margin-bottom:25px;
+}
+
+.finished-banner strong{
+    display:block;
+    margin-bottom:7px;
+}
+
+.finished-banner span{
+    color:#bbb;
+    font-size:12px;
+}
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media(max-width:1100px){
+
+    .sidebar{
+        width:260px;
+    }
+
+    .main{
+        margin-left:260px;
+    }
+
+    .form-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .hero{
+        grid-template-columns:1fr;
+    }
+
+    .document{
+        border-left:0;
+        border-top:1px solid #444;
+        padding-left:0;
+        padding-top:25px;
+    }
+}
+
+@media(max-width:760px){
+
+    .sidebar{
+        width:290px;
+        transform:translateX(-100%);
+        transition:.3s;
+    }
+
+    .sidebar.open{
+        transform:translateX(0);
+    }
+
+    .main{
+        margin-left:0;
+    }
+
+    .mobile-menu{
+        display:block;
+        width:45px;
+        height:45px;
+        background:#111;
+        color:white;
+        border:0;
+        font-size:20px;
+        margin-right:15px;
+    }
+
+    .topbar{
+        padding:20px;
+    }
+
+    .breadcrumb,
+    .control-active{
+        display:none;
+    }
+
+    .topbar h2{
+        font-size:19px;
+    }
+
+    .page{
+        padding:22px 13px 60px;
+    }
+
+    .hero{
+        padding:28px 23px;
+    }
+
+    .hero h1{
+        font-size:25px;
+    }
+
+    .form-grid,
+    .conclusion-grid,
+    .validation-box,
+    .summary{
+        grid-template-columns:1fr;
+    }
+
+    .form-group.span-2{
+        grid-column:span 1;
+    }
+
+    .actions{
+        flex-direction:column;
+    }
+
+    .btn{
+        width:100%;
+    }
+}
+
+/* =====================================================
+   PRINT
+===================================================== */
+
+@media print{
+
+    .sidebar,
+    .topbar,
+    .actions,
+    .message{
+        display:none !important;
+    }
+
+    .main{
+        margin:0;
+    }
+
+    .page{
+        padding:0;
+    }
+
+    body{
+        background:white;
+    }
+
+    .hero,
+    .progress-panel,
+    .card-number,
+    .medical-table th{
+        -webkit-print-color-adjust:exact;
+        print-color-adjust:exact;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+
+<aside class="sidebar" id="sidebar">
+
+    <div class="brand">
+
+        <div class="logo">N</div>
+
+        <div>
+            <h1>NASER</h1>
+            <small>SRL</small>
+        </div>
+
+    </div>
+
+    <div class="sidebar-title">
+        SISTEMA DE GESTIÓN<br>
+        INTEGRADO
+    </div>
+
+    <ul class="menu">
+
+        <li>
+            <a href="#datos" class="nav-link active">
+                <span class="menu-number">01</span>
+                Datos Personales
+            </a>
+        </li>
+
+        <li>
+            <a href="#examen" class="nav-link">
+                <span class="menu-number">02</span>
+                Examen Médico
+            </a>
+        </li>
+
+        <li>
+            <a href="#conclusiones" class="nav-link">
+                <span class="menu-number">03</span>
+                Conclusiones
+            </a>
+        </li>
+
+        <li>
+            <a href="#observaciones" class="nav-link">
+                <span class="menu-number">04</span>
+                Observaciones
+            </a>
+        </li>
+
+        <li>
+            <a href="#validacion" class="nav-link">
+                <span class="menu-number">05</span>
+                Validación Médica
+            </a>
+        </li>
+
+    </ul>
+
+</aside>
+
+<main class="main">
+
+<!-- TOPBAR -->
+
+<header class="topbar">
+
+    <div class="topbar-left">
+
+        <button
+            class="mobile-menu"
+            onclick="toggleMenu()">
+            ☰
+        </button>
+
+        <div>
+
+            <div class="breadcrumb">
+                NASER SRL / SGI / MEDICINA LABORAL
+            </div>
+
+            <h2>
+                Informe Médico Laboral
+            </h2>
+
+        </div>
+
+    </div>
+
+    <div class="control-active">
+
+        <div class="control-dot"></div>
+
+        CONTROL ACTIVO
+
+    </div>
+
+</header>
+
+<div class="page">
+
+<!-- HERO -->
+
+<section class="hero">
+
+    <div>
+
+        <div class="hero-label">
+            RECURSOS HUMANOS · MEDICINA LABORAL
+        </div>
+
+        <h1>
+            Informe Médico Laboral
+        </h1>
+
+        <p>
+            Registro digital para documentar datos personales,
+            exámenes médicos laborales, conclusiones, observaciones
+            y validación médica del trabajador.
+        </p>
+
+    </div>
+
+    <div class="document">
+
+        <span>DOCUMENTO</span>
+
+        <strong>PGSN02-F3</strong>
+
+        <small>
+            Rev.00<br>
+            Jul.25
+        </small>
+
+    </div>
+
+</section>
+
+<div
+    class="finished-banner"
+    id="finishedBanner">
+
+    <strong>INFORME MÉDICO FINALIZADO</strong>
+
+    <span id="finishedDate"></span>
+
+</div>
+
+<!-- PROGRESO -->
+
+<section class="progress-panel">
+
+    <div class="progress-top">
+
+        <div>
+
+            <span class="progress-label">
+                PROGRESO DEL INFORME
+            </span>
+
+            <h3 id="progressText">
+                0% completado
+            </h3>
+
+        </div>
+
+        <div class="progress-counter">
+
+            <strong id="completedFields">0</strong>
+            <span>/</span>
+            <strong id="requiredFields">0</strong>
+
+        </div>
+
+    </div>
+
+    <div class="progress-track">
+
+        <div
+            class="progress-bar"
+            id="progressBar">
+        </div>
+
+    </div>
+
+</section>
+
+<!-- =====================================================
+     1 DATOS PERSONALES
+===================================================== -->
+
+<section class="card observe" id="datos">
+
+    <div class="card-header">
+
+        <div class="card-number">01</div>
+
+        <div class="card-title">
+
+            <h3>Datos Personales</h3>
+
+            <p>
+                Información del trabajador evaluado.
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="form-grid">
+
+            <div class="form-group">
+
+                <label>FECHA *</label>
+
+                <input
+                    type="date"
+                    id="fecha"
+                    class="form-control required-field">
+
+            </div>
+
+            <div class="form-group span-2">
+
+                <label>APELLIDO Y NOMBRE *</label>
+
+                <input
+                    type="text"
+                    id="apellidoNombre"
+                    class="form-control required-field"
+                    placeholder="Apellido y nombre">
+
+            </div>
+
+            <div class="form-group">
+
+                <label>EDAD *</label>
+
+                <input
+                    type="number"
+                    id="edad"
+                    min="0"
+                    class="form-control required-field"
+                    placeholder="Edad">
+
+            </div>
+
+            <div class="form-group span-2">
+
+                <label>FECHA DE NACIMIENTO *</label>
+
+                <input
+                    type="date"
+                    id="fechaNacimiento"
+                    class="form-control required-field">
+
+            </div>
+
+            <div class="form-group span-2">
+
+                <label>CUIL *</label>
+
+                <input
+                    type="text"
+                    id="cuil"
+                    class="form-control required-field"
+                    placeholder="CUIL">
+
+            </div>
+
+            <div class="form-group span-2">
+
+                <label>TAREA A DESARROLLAR *</label>
+
+                <input
+                    type="text"
+                    id="tarea"
+                    class="form-control required-field"
+                    placeholder="Tarea a desarrollar">
+
+            </div>
+
+            <div class="form-group span-2">
+
+                <label>MANO HÁBIL *</label>
+
+                <select
+                    id="manoHabil"
+                    class="form-control required-field">
+
+                    <option value="">
+                        Seleccionar
+                    </option>
+
+                    <option value="DERECHA">
+                        Derecha
+                    </option>
+
+                    <option value="IZQUIERDA">
+                        Izquierda
+                    </option>
+
+                    <option value="AMBIDIESTRO">
+                        Ambidiestro
+                    </option>
+
+                </select>
+
+            </div>
+
+            <div class="form-group full">
+
+                <label>ANTECEDENTES MÉDICOS *</label>
+
+                <textarea
+                    id="antecedentes"
+                    class="form-control required-field"
+                    placeholder="Ingrese antecedentes médicos. Si no posee, indicar 'Sin antecedentes'."></textarea>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- =====================================================
+     2 EXAMEN MÉDICO
+===================================================== -->
+
+<section class="card observe" id="examen">
+
+    <div class="card-header">
+
+        <div class="card-number">02</div>
+
+        <div class="card-title">
+
+            <h3>Examen Médico</h3>
+
+            <p>
+                Estudios y evaluaciones médicas laborales.
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="form-grid" style="margin-bottom:30px;">
+
+            <div class="form-group span-2">
+
+                <label>TIPO DE EXAMEN *</label>
+
+                <select
+                    id="tipoExamen"
+                    class="form-control required-field">
+
+                    <option value="">
+                        Seleccionar
+                    </option>
+
+                    <option>Preocupacional</option>
+
+                    <option>Periódico</option>
+
+                    <option>Post ocupacional</option>
+
+                    <option>Cambio de tarea</option>
+
+                    <option>Reintegro laboral</option>
+
+                    <option>Otro</option>
+
+                </select>
+
+            </div>
+
+            <div class="form-group span-2">
+
+                <label>FECHA DE REALIZACIÓN *</label>
+
+                <input
+                    type="date"
+                    id="fechaRealizacion"
+                    class="form-control required-field">
+
+            </div>
+
+        </div>
+
+        <div class="table-wrapper">
+
+            <table class="medical-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>EXAMEN / ESTUDIO</th>
+
+                        <th>APTO</th>
+
+                        <th>NO APTO</th>
+
+                        <th>NO REALIZADO</th>
+
+                        <th>RESULTADO / OBSERVACIÓN</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody id="medicalBody"></tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- RESUMEN -->
+
+<div class="summary">
+
+    <div class="summary-box">
+
+        <span>TOTAL ESTUDIOS</span>
+
+        <strong id="totalStudies">0</strong>
+
+    </div>
+
+    <div class="summary-box">
+
+        <span>APTOS</span>
+
+        <strong id="aptoStudies">0</strong>
+
+    </div>
+
+    <div class="summary-box">
+
+        <span>NO APTOS</span>
+
+        <strong id="noAptoStudies">0</strong>
+
+    </div>
+
+    <div class="summary-box">
+
+        <span>NO REALIZADOS</span>
+
+        <strong id="nrStudies">0</strong>
+
+    </div>
+
+</div>
+
+<!-- =====================================================
+     3 CONCLUSIONES
+===================================================== -->
+
+<section class="card observe" id="conclusiones">
+
+    <div class="card-header">
+
+        <div class="card-number">03</div>
+
+        <div class="card-title">
+
+            <h3>Conclusiones</h3>
+
+            <p>
+                Resultado general de la evaluación laboral.
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="conclusion-grid">
+
+            <div class="conclusion">
+
+                <div class="conclusion-title">
+                    EL TRABAJADOR SE ENCUENTRA *
+                </div>
+
+                <div class="conclusion-body">
+
+                    <select
+                        id="estadoTrabajador"
+                        class="required-field">
+
+                        <option value="">
+                            Seleccionar
+                        </option>
+
+                        <option value="APTO">
+                            Apto
+                        </option>
+
+                        <option value="APTO_CON_RESTRICCIONES">
+                            Apto con restricciones
+                        </option>
+
+                        <option value="NO_APTO">
+                            No apto
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+            <div class="conclusion">
+
+                <div class="conclusion-title">
+                    PRE EXISTENCIAS *
+                </div>
+
+                <div class="conclusion-body">
+
+                    <select
+                        id="preexistencias"
+                        class="required-field">
+
+                        <option value="">
+                            Seleccionar
+                        </option>
+
+                        <option value="SI">Sí</option>
+                        <option value="NO">No</option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+            <div class="conclusion">
+
+                <div class="conclusion-title">
+                    REQUIERE HOMOLOGACIÓN *
+                </div>
+
+                <div class="conclusion-body">
+
+                    <select
+                        id="homologacion"
+                        class="required-field">
+
+                        <option value="">
+                            Seleccionar
+                        </option>
+
+                        <option value="SI">Sí</option>
+                        <option value="NO">No</option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+            <div class="conclusion">
+
+                <div class="conclusion-title">
+                    OTROS *
+                </div>
+
+                <div class="conclusion-body">
+
+                    <input
+                        type="text"
+                        id="otros"
+                        class="required-field"
+                        placeholder="Detalle o indique 'No aplica'">
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- =====================================================
+     4 OBSERVACIONES
+===================================================== -->
+
+<section class="card observe" id="observaciones">
+
+    <div class="card-header">
+
+        <div class="card-number">04</div>
+
+        <div class="card-title">
+
+            <h3>Observaciones</h3>
+
+            <p>
+                Información complementaria del informe.
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="form-group full">
+
+            <label>OBSERVACIONES *</label>
+
+            <textarea
+                id="observacionesMedicas"
+                class="form-control required-field"
+                style="min-height:220px;"
+                placeholder="Ingrese las observaciones correspondientes. Si no existen, indicar 'Sin observaciones'."></textarea>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- =====================================================
+     5 VALIDACIÓN
+===================================================== -->
+
+<section class="card observe" id="validacion">
+
+    <div class="card-header">
+
+        <div class="card-number">05</div>
+
+        <div class="card-title">
+
+            <h3>Validación Médica</h3>
+
+            <p>
+                Identificación del profesional responsable de la evaluación.
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="validation-box">
+
+            <div class="validation-item">
+
+                <label>
+                    PROFESIONAL MÉDICO *
+                </label>
+
+                <input
+                    type="text"
+                    id="profesionalMedico"
+                    class="required-field"
+                    placeholder="Nombre y apellido">
+
+            </div>
+
+            <div class="validation-item">
+
+                <label>
+                    MATRÍCULA PROFESIONAL *
+                </label>
+
+                <input
+                    type="text"
+                    id="matricula"
+                    class="required-field"
+                    placeholder="Matrícula">
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ACCIONES -->
+
+<div class="actions">
+
+    <button
+        type="button"
+        class="btn btn-light"
+        onclick="saveChecklist()">
+
+        GUARDAR
+
+    </button>
+
+    <button
+        type="button"
+        class="btn btn-light"
+        onclick="clearChecklist()">
+
+        LIMPIAR
+
+    </button>
+
+    <button
+        type="button"
+        class="btn btn-finish"
+        id="finishButton"
+        onclick="finishChecklist()">
+
+        FINALIZAR CHECKLIST
+
+    </button>
+
+</div>
+
+<div
+    class="message"
+    id="systemMessage">
+</div>
+
+</div>
+
+</main>
+
+<script>
+
+/* =====================================================
+   CONFIGURACIÓN
+===================================================== */
+
+const STORAGE_KEY =
+    "naserInformeMedicoLaboralPGSN02F3";
+
+const medicalStudies = [
+
+    "Examen Físico",
+
+    "Columna Vertebral",
+
+    "Radiografía de Tórax",
+
+    "Audiograma",
+
+    "Laboratorio",
+
+    "Screen Alcohol y Drogas",
+
+    "Electrocardiograma",
+
+    "Electroencefalograma",
+
+    "Oftalmológico",
+
+    "Osteo Mio Articular",
+
+    "Test Psicométrico"
+
+];
+
+/* =====================================================
+   GENERAR ESTUDIOS FIJOS
+===================================================== */
+
+function renderMedicalStudies(){
+
+    const body =
+        document.getElementById(
+            "medicalBody"
+        );
+
+    body.innerHTML = "";
+
+    medicalStudies.forEach(
+        (study,index)=>{
+
+            const row =
+                document.createElement(
+                    "tr"
+                );
+
+            row.innerHTML = `
+
+                <td class="exam-name">
+                    ${index + 1}. ${study}
+                </td>
+
+                <td class="radio-cell">
+
+                    <input
+                        type="radio"
+                        class="medical-radio"
+                        name="study-${index}"
+                        value="apto">
+
+                </td>
+
+                <td class="radio-cell">
+
+                    <input
+                        type="radio"
+                        class="medical-radio"
+                        name="study-${index}"
+                        value="no-apto">
+
+                </td>
+
+                <td class="radio-cell">
+
+                    <input
+                        type="radio"
+                        class="medical-radio"
+                        name="study-${index}"
+                        value="nr">
+
+                </td>
+
+                <td>
+
+                    <input
+                        type="text"
+                        id="studyObservation-${index}"
+                        class="exam-observation"
+                        placeholder="Resultado / observación">
+
+                </td>
+
+            `;
+
+            body.appendChild(
+                row
+            );
+
+        }
+    );
+
+}
+
+/* =====================================================
+   ESTADO DE ESTUDIO
+===================================================== */
+
+document.addEventListener(
+    "change",
+    event=>{
+
+        if(
+            !event.target
+            .classList
+            .contains(
+                "medical-radio"
+            )
+        ){
+            return;
+        }
+
+        const row =
+            event.target.closest(
+                "tr"
+            );
+
+        row.classList.remove(
+            "exam-apto",
+            "exam-no-apto",
+            "exam-nr",
+            "row-error"
+        );
+
+        if(
+            event.target.value ===
+            "apto"
+        ){
+
+            row.classList.add(
+                "exam-apto"
+            );
+
+        }
+
+        if(
+            event.target.value ===
+            "no-apto"
+        ){
+
+            row.classList.add(
+                "exam-no-apto"
+            );
+
+        }
+
+        if(
+            event.target.value ===
+            "nr"
+        ){
+
+            row.classList.add(
+                "exam-nr"
+            );
+
+        }
+
+        updateSummary();
+
+        updateProgress();
+
+    }
+);
+
+/* =====================================================
+   RESUMEN
+===================================================== */
+
+function updateSummary(){
+
+    const apto =
+        document.querySelectorAll(
+            '.medical-radio[value="apto"]:checked'
+        ).length;
+
+    const noApto =
+        document.querySelectorAll(
+            '.medical-radio[value="no-apto"]:checked'
+        ).length;
+
+    const nr =
+        document.querySelectorAll(
+            '.medical-radio[value="nr"]:checked'
+        ).length;
+
+    document.getElementById(
+        "totalStudies"
+    ).textContent =
+        medicalStudies.length;
+
+    document.getElementById(
+        "aptoStudies"
+    ).textContent =
+        apto;
+
+    document.getElementById(
+        "noAptoStudies"
+    ).textContent =
+        noApto;
+
+    document.getElementById(
+        "nrStudies"
+    ).textContent =
+        nr;
+
+}
+
+/* =====================================================
+   PROGRESO
+===================================================== */
+
+function updateProgress(){
+
+    let total = 0;
+    let completed = 0;
+
+    document
+    .querySelectorAll(
+        ".required-field"
+    )
+    .forEach(
+        field=>{
+
+            total++;
+
+            if(
+                field.value.trim()
+                !== ""
+            ){
+
+                completed++;
+
+            }
+
+        }
+    );
+
+    medicalStudies.forEach(
+        (study,index)=>{
+
+            /* ESTADO */
+
+            total++;
+
+            if(
+                document.querySelector(
+                    `input[name="study-${index}"]:checked`
+                )
+            ){
+
+                completed++;
+
+            }
+
+            /* OBSERVACIÓN */
+
+            total++;
+
+            const observation =
+                document.getElementById(
+                    `studyObservation-${index}`
+                );
+
+            if(
+                observation.value.trim()
+                !== ""
+            ){
+
+                completed++;
+
+            }
+
+        }
+    );
+
+    const percentage =
+        total === 0
+        ? 0
+        : Math.round(
+            completed /
+            total *
+            100
+        );
+
+    document.getElementById(
+        "completedFields"
+    ).textContent =
+        completed;
+
+    document.getElementById(
+        "requiredFields"
+    ).textContent =
+        total;
+
+    document.getElementById(
+        "progressText"
+    ).textContent =
+        percentage +
+        "% completado";
+
+    document.getElementById(
+        "progressBar"
+    ).style.width =
+        percentage +
+        "%";
+
+}
+
+/* =====================================================
+   OBTENER DATOS
+===================================================== */
+
+function getChecklistData(){
+
+    const fields = {};
+
+    document
+    .querySelectorAll(
+        ".required-field"
+    )
+    .forEach(
+        field=>{
+
+            fields[field.id] =
+                field.value;
+
+        }
+    );
+
+    const studies =
+        medicalStudies.map(
+            (study,index)=>{
+
+                const checked =
+                    document.querySelector(
+                        `input[name="study-${index}"]:checked`
+                    );
+
+                return{
+
+                    study:study,
+
+                    status:
+                        checked
+                        ? checked.value
+                        : "",
+
+                    observation:
+                        document.getElementById(
+                            `studyObservation-${index}`
+                        ).value
+
+                };
+
+            }
+        );
+
+    return{
+
+        fields,
+        studies,
+
+        savedAt:
+            new Date()
+            .toISOString()
+
+    };
+
+}
+
+/* =====================================================
+   GUARDAR
+===================================================== */
+
+function saveChecklist(){
+
+    const data =
+        getChecklistData();
+
+    localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify(data)
+    );
+
+    showMessage(
+        "Informe médico guardado correctamente.",
+        "success"
+    );
+
+}
+
+/* =====================================================
+   CARGAR
+===================================================== */
+
+function loadChecklist(){
+
+    const saved =
+        localStorage.getItem(
+            STORAGE_KEY
+        );
+
+    if(!saved){
+        return;
+    }
+
+    try{
+
+        const data =
+            JSON.parse(saved);
+
+        if(data.fields){
+
+            Object.keys(
+                data.fields
+            )
+            .forEach(
+                id=>{
+
+                    const field =
+                        document.getElementById(
+                            id
+                        );
+
+                    if(field){
+
+                        field.value =
+                            data.fields[id];
+
+                    }
+
+                }
+            );
+
+        }
+
+        if(data.studies){
+
+            data.studies.forEach(
+                (study,index)=>{
+
+                    if(study.status){
+
+                        const radio =
+                            document.querySelector(
+                                `input[name="study-${index}"][value="${study.status}"]`
+                            );
+
+                        if(radio){
+
+                            radio.checked =
+                                true;
+
+                            const row =
+                                radio.closest("tr");
+
+                            if(
+                                study.status ===
+                                "apto"
+                            ){
+
+                                row.classList.add(
+                                    "exam-apto"
+                                );
+
+                            }
+
+                            if(
+                                study.status ===
+                                "no-apto"
+                            ){
+
+                                row.classList.add(
+                                    "exam-no-apto"
+                                );
+
+                            }
+
+                            if(
+                                study.status ===
+                                "nr"
+                            ){
+
+                                row.classList.add(
+                                    "exam-nr"
+                                );
+
+                            }
+
+                        }
+
+                    }
+
+                    const observation =
+                        document.getElementById(
+                            `studyObservation-${index}`
+                        );
+
+                    if(observation){
+
+                        observation.value =
+                            study.observation || "";
+
+                    }
+
+                }
+            );
+
+        }
+
+        if(data.finished){
+
+            showFinishedState(
+                data.finishedAt
+            );
+
+            lockChecklist();
+
+        }
+
+    }
+    catch(error){
+
+        console.error(
+            error
+        );
+
+    }
+
+}
+
+/* =====================================================
+   VALIDAR
+===================================================== */
+
+function validateChecklist(){
+
+    let valid = true;
+    let missing = 0;
+    let firstError = null;
+
+    document
+    .querySelectorAll(
+        ".field-error"
+    )
+    .forEach(
+        field=>
+            field.classList.remove(
+                "field-error"
+            )
+    );
+
+    document
+    .querySelectorAll(
+        ".row-error"
+    )
+    .forEach(
+        row=>
+            row.classList.remove(
+                "row-error"
+            )
+    );
+
+    /* CAMPOS GENERALES */
+
+    document
+    .querySelectorAll(
+        ".required-field"
+    )
+    .forEach(
+        field=>{
+
+            if(
+                field.value.trim()
+                === ""
+            ){
+
+                valid = false;
+
+                missing++;
+
+                field.classList.add(
+                    "field-error"
+                );
+
+                if(!firstError){
+
+                    firstError =
+                        field;
+
+                }
+
+            }
+
+        }
+    );
+
+    /* EXÁMENES */
+
+    medicalStudies.forEach(
+        (study,index)=>{
+
+            const checked =
+                document.querySelector(
+                    `input[name="study-${index}"]:checked`
+                );
+
+            const observation =
+                document.getElementById(
+                    `studyObservation-${index}`
+                );
+
+            const row =
+                observation.closest("tr");
+
+            if(!checked){
+
+                valid = false;
+
+                missing++;
+
+                row.classList.add(
+                    "row-error"
+                );
+
+                if(!firstError){
+
+                    firstError =
+                        row;
+
+                }
+
+            }
+
+            if(
+                observation.value.trim()
+                === ""
+            ){
+
+                valid = false;
+
+                missing++;
+
+                observation.classList.add(
+                    "field-error"
+                );
+
+                if(!firstError){
+
+                    firstError =
+                        observation;
+
+                }
+
+            }
+
+        }
+    );
+
+    return{
+        valid,
+        missing,
+        firstError
+    };
+
+}
+
+/* =====================================================
+   FINALIZAR
+===================================================== */
+
+function finishChecklist(){
+
+    const validation =
+        validateChecklist();
+
+    if(
+        !validation.valid
+    ){
+
+        showMessage(
+            `No se puede finalizar. Faltan ${validation.missing} campos o controles obligatorios.`,
+            "error"
+        );
+
+        if(
+            validation.firstError
+        ){
+
+            validation
+            .firstError
+            .scrollIntoView({
+                behavior:"smooth",
+                block:"center"
+            });
+
+        }
+
+        return;
+
+    }
+
+    const confirmation =
+        confirm(
+            "Todos los campos están completos. ¿Desea finalizar el Informe Médico Laboral?"
+        );
+
+    if(!confirmation){
+        return;
+    }
+
+    const data =
+        getChecklistData();
+
+    data.finished =
+        true;
+
+    data.finishedAt =
+        new Date()
+        .toISOString();
+
+    localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify(data)
+    );
+
+    showFinishedState(
+        data.finishedAt
+    );
+
+    lockChecklist();
+
+    showMessage(
+        "Informe Médico Laboral finalizado correctamente.",
+        "success"
+    );
+
+    window.scrollTo({
+        top:0,
+        behavior:"smooth"
+    });
+
+}
+
+/* =====================================================
+   FINALIZADO
+===================================================== */
+
+function showFinishedState(
+    value
+){
+
+    document.getElementById(
+        "finishedBanner"
+    ).style.display =
+        "block";
+
+    const date =
+        new Date(value);
+
+    document.getElementById(
+        "finishedDate"
+    ).textContent =
+        "Finalizado el " +
+        date.toLocaleDateString(
+            "es-AR"
+        ) +
+        " a las " +
+        date.toLocaleTimeString(
+            "es-AR",
+            {
+                hour:"2-digit",
+                minute:"2-digit"
+            }
+        );
+
+}
+
+/* =====================================================
+   BLOQUEAR
+===================================================== */
+
+function lockChecklist(){
+
+    document
+    .querySelectorAll(
+        "input, textarea, select"
+    )
+    .forEach(
+        field=>{
+
+            field.disabled =
+                true;
+
+        }
+    );
+
+    document.getElementById(
+        "finishButton"
+    ).disabled =
+        true;
+
+}
+
+/* =====================================================
+   LIMPIAR
+===================================================== */
+
+function clearChecklist(){
+
+    const confirmation =
+        confirm(
+            "¿Desea limpiar completamente el Informe Médico Laboral?"
+        );
+
+    if(!confirmation){
+        return;
+    }
+
+    localStorage.removeItem(
+        STORAGE_KEY
+    );
+
+    document
+    .querySelectorAll(
+        "input, textarea, select"
+    )
+    .forEach(
+        field=>{
+
+            field.disabled =
+                false;
+
+            field.classList.remove(
+                "field-error"
+            );
+
+            if(
+                field.type ===
+                "radio"
+            ){
+
+                field.checked =
+                    false;
+
+            }
+            else{
+
+                field.value =
+                    "";
+
+            }
+
+        }
+    );
+
+    document
+    .querySelectorAll(
+        "#medicalBody tr"
+    )
+    .forEach(
+        row=>{
+
+            row.classList.remove(
+                "exam-apto",
+                "exam-no-apto",
+                "exam-nr",
+                "row-error"
+            );
+
+        }
+    );
+
+    document.getElementById(
+        "finishedBanner"
+    ).style.display =
+        "none";
+
+    document.getElementById(
+        "finishButton"
+    ).disabled =
+        false;
+
+    setToday();
+
+    updateSummary();
+
+    updateProgress();
+
+    showMessage(
+        "Informe limpiado correctamente.",
+        "success"
+    );
+
+}
+
+/* =====================================================
+   FECHA ACTUAL
+===================================================== */
+
+function setToday(){
+
+    const field =
+        document.getElementById(
+            "fecha"
+        );
+
+    if(field.value){
+        return;
+    }
+
+    const date =
+        new Date();
+
+    const year =
+        date.getFullYear();
+
+    const month =
+        String(
+            date.getMonth()+1
+        ).padStart(2,"0");
+
+    const day =
+        String(
+            date.getDate()
+        ).padStart(2,"0");
+
+    field.value =
+        `${year}-${month}-${day}`;
+
+}
+
+/* =====================================================
+   MENSAJES
+===================================================== */
+
+function showMessage(
+    text,
+    type
+){
+
+    const message =
+        document.getElementById(
+            "systemMessage"
+        );
+
+    message.className =
+        "message " + type;
+
+    message.textContent =
+        text;
+
+    message.style.display =
+        "block";
+
+    setTimeout(
+        ()=>{
+            message.style.display =
+                "none";
+        },
+        5000
+    );
+
+}
+
+/* =====================================================
+   CAMBIOS
+===================================================== */
+
+document.addEventListener(
+    "input",
+    event=>{
+
+        event.target
+        .classList
+        .remove(
+            "field-error"
+        );
+
+        updateProgress();
+
+    }
+);
+
+document.addEventListener(
+    "change",
+    event=>{
+
+        event.target
+        .classList
+        .remove(
+            "field-error"
+        );
+
+        updateProgress();
+
+    }
+);
+
+/* =====================================================
+   MENÚ
+===================================================== */
+
+function toggleMenu(){
+
+    document.getElementById(
+        "sidebar"
+    ).classList.toggle(
+        "open"
+    );
+
+}
+
+/* =====================================================
+   NAVEGACIÓN
+===================================================== */
+
+function startNavigation(){
+
+    const links =
+        document.querySelectorAll(
+            ".nav-link"
+        );
+
+    const sections =
+        document.querySelectorAll(
+            ".observe"
+        );
+
+    const observer =
+        new IntersectionObserver(
+            entries=>{
+
+                entries.forEach(
+                    entry=>{
+
+                        if(
+                            entry.isIntersecting
+                        ){
+
+                            links.forEach(
+                                link=>
+                                    link.classList.remove(
+                                        "active"
+                                    )
+                            );
+
+                            const link =
+                                document.querySelector(
+                                    `.nav-link[href="#${entry.target.id}"]`
+                                );
+
+                            if(link){
+
+                                link.classList.add(
+                                    "active"
+                                );
+
+                            }
+
+                        }
+
+                    }
+                );
+
+            },
+            {
+                threshold:.2,
+                rootMargin:
+                    "-15% 0px -60% 0px"
+            }
+        );
+
+    sections.forEach(
+        section=>
+            observer.observe(
+                section
+            )
+    );
+
+}
+
+/* =====================================================
+   INICIAR
+===================================================== */
+
+renderMedicalStudies();
+
+setToday();
+
+loadChecklist();
+
+updateSummary();
+
+updateProgress();
+
+startNavigation();
+
+</script>
+
+</body>
+</html>

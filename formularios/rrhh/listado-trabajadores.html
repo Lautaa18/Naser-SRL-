@@ -1,0 +1,361 @@
+<!-- =========================================================
+     NASER SRL · LISTADO DE TRABAJADORES
+     PGSN02-F4 · Rev.01 · Jul. 2025
+     HTML + CSS + JAVASCRIPT EN UN SOLO BLOQUE
+========================================================= -->
+<section id="naser-trabajadores" class="naser-personal">
+<style>
+#naser-trabajadores{
+ --negro:#0b0b0b;--negro2:#171717;--blanco:#fff;--gris:#f3f4f6;
+ --borde:#d8dadd;--texto:#171717;--verde:#16843d;--amarillo:#e4aa00;
+ --rojo:#c62828;--azul:#1f5f8b;
+ font-family:Arial,Helvetica,sans-serif;color:var(--texto);background:var(--gris);
+ border:1px solid #ddd;border-radius:18px;overflow:hidden
+}
+#naser-trabajadores *{box-sizing:border-box}
+#naser-trabajadores .hero{background:var(--negro);color:#fff;padding:26px 28px;display:flex;justify-content:space-between;gap:20px;align-items:center;flex-wrap:wrap}
+#naser-trabajadores .hero h2{margin:0;font-size:28px;letter-spacing:.3px}
+#naser-trabajadores .hero p{margin:6px 0 0;color:#cfcfcf}
+#naser-trabajadores .rev{border:1px solid #555;border-radius:10px;padding:9px 13px;font-weight:700}
+#naser-trabajadores .body{padding:22px}
+#naser-trabajadores .stats{display:grid;grid-template-columns:repeat(5,minmax(130px,1fr));gap:12px;margin-bottom:18px}
+#naser-trabajadores .stat{background:#fff;border:1px solid var(--borde);border-radius:14px;padding:15px;cursor:pointer;transition:.15s}
+#naser-trabajadores .stat:hover{transform:translateY(-2px);box-shadow:0 6px 18px #00000012}
+#naser-trabajadores .stat b{display:block;font-size:25px;margin-top:4px}
+#naser-trabajadores .stat small{font-weight:700;color:#666}
+#naser-trabajadores .stat.verde{border-left:6px solid var(--verde)}
+#naser-trabajadores .stat.amarillo{border-left:6px solid var(--amarillo)}
+#naser-trabajadores .stat.rojo{border-left:6px solid var(--rojo)}
+#naser-trabajadores .stat.azul{border-left:6px solid var(--azul)}
+#naser-trabajadores .panel{background:#fff;border:1px solid var(--borde);border-radius:14px;padding:16px;margin-bottom:16px}
+#naser-trabajadores button,#naser-trabajadores input,#naser-trabajadores select,#naser-trabajadores textarea{font:inherit}
+#naser-trabajadores input,#naser-trabajadores select,#naser-trabajadores textarea{width:100%;border:1px solid #c9cbd0;border-radius:9px;padding:10px 11px;background:#fff;color:#111}
+#naser-trabajadores input,#naser-trabajadores select{height:42px}
+#naser-trabajadores textarea{min-height:78px;resize:vertical}
+#naser-trabajadores button{border:0;border-radius:9px;padding:10px 14px;font-weight:700;cursor:pointer}
+#naser-trabajadores .btn-dark{background:#111;color:#fff}
+#naser-trabajadores .btn-light{background:#eceef0;color:#111}
+#naser-trabajadores .btn-green{background:var(--verde);color:#fff}
+#naser-trabajadores .btn-delete{background:#fff;color:var(--rojo);border:1px solid #e0b1b1}
+#naser-trabajadores .toolbar{display:grid;grid-template-columns:2fr repeat(4,1fr);gap:10px}
+#naser-trabajadores .quick,#naser-trabajadores .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+#naser-trabajadores .resultbar{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap;margin:0 0 10px}
+#naser-trabajadores .legend{font-size:12px;color:#666}
+#naser-trabajadores .table-wrap{overflow:auto;max-height:650px;border:1px solid var(--borde);border-radius:12px}
+#naser-trabajadores table{width:100%;border-collapse:separate;border-spacing:0;min-width:1550px;background:#fff}
+#naser-trabajadores th{position:sticky;top:0;z-index:2;background:#111;color:#fff;text-align:left;padding:12px 10px;font-size:12px}
+#naser-trabajadores td{padding:10px;border-bottom:1px solid #e7e7e7;font-size:13px;vertical-align:middle}
+#naser-trabajadores tbody tr:hover{background:#f7f7f7}
+#naser-trabajadores .badge{display:inline-flex;align-items:center;justify-content:center;padding:6px 9px;border-radius:999px;font-size:11px;font-weight:800;white-space:nowrap}
+#naser-trabajadores .ok{background:#dff3e5;color:#0b652d}
+#naser-trabajadores .warn{background:#fff1b8;color:#755600}
+#naser-trabajadores .bad{background:#ffe0e0;color:#9f1515}
+#naser-trabajadores .neutral{background:#ececec;color:#555}
+#naser-trabajadores .alta-panel{border:2px solid #111}
+#naser-trabajadores .alta-toggle{width:100%;display:flex;align-items:center;justify-content:space-between;gap:15px;background:#fff;color:#111;padding:0;text-align:left}
+#naser-trabajadores .toggle-left{display:flex;align-items:center;gap:12px}
+#naser-trabajadores .toggle-icon{width:38px;height:38px;display:grid;place-items:center;border-radius:50%;background:#111;color:#fff;font-size:25px;font-weight:900}
+#naser-trabajadores .toggle-title{font-size:18px;font-weight:900}
+#naser-trabajadores .toggle-sub{font-size:12px;color:#666;margin-top:3px;font-weight:400}
+#naser-trabajadores .chevron{font-size:22px;font-weight:900;transition:.2s}
+#naser-trabajadores .collapsible{display:none;padding-top:16px;margin-top:14px;border-top:1px solid #ddd}
+#naser-trabajadores .alta-panel.open .collapsible{display:block}
+#naser-trabajadores .alta-panel.open .chevron{transform:rotate(180deg)}
+#naser-trabajadores .section-title{margin:20px 0 10px;padding:9px 12px;background:#111;color:#fff;border-radius:9px;font-size:13px;letter-spacing:.2px}
+#naser-trabajadores .form-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+#naser-trabajadores .field label{display:block;font-size:11px;font-weight:800;color:#555;margin:0 0 5px}
+#naser-trabajadores .span2{grid-column:span 2}
+#naser-trabajadores .span4{grid-column:1/-1}
+#naser-trabajadores .training-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+#naser-trabajadores .training{border:1px solid #ddd;border-radius:12px;padding:12px;background:#fafafa}
+#naser-trabajadores .training h4{margin:0 0 9px;font-size:12px}
+#naser-trabajadores .mini{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+#naser-trabajadores .mini label{font-size:10px;font-weight:800;color:#666}
+#naser-trabajadores .editor{display:none}
+#naser-trabajadores .editor.open{display:block}
+#naser-trabajadores .empty{text-align:center;padding:35px;color:#666}
+#naser-trabajadores .msg{display:none;margin-top:10px;padding:10px 12px;border-radius:9px;font-size:12px;font-weight:700}
+#naser-trabajadores .msg.okmsg{display:block;background:#e4f5e9;color:#12632e}
+#naser-trabajadores .msg.errmsg{display:block;background:#ffe5e5;color:#9b1717}
+#naser-trabajadores .modal{position:fixed;inset:0;background:#0009;z-index:99999;display:none;align-items:center;justify-content:center;padding:20px}
+#naser-trabajadores .modal.open{display:flex}
+#naser-trabajadores .modal-card{width:min(1050px,100%);max-height:90vh;overflow:auto;background:#fff;border-radius:16px;padding:20px}
+#naser-trabajadores .modal-head{display:flex;justify-content:space-between;gap:15px;align-items:start;border-bottom:1px solid #ddd;padding-bottom:12px}
+#naser-trabajadores .detail-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+#naser-trabajadores .detail{background:#f6f6f6;border-radius:8px;padding:9px}
+#naser-trabajadores .detail small{display:block;color:#666;font-weight:800;margin-bottom:3px}
+@media(max-width:1050px){#naser-trabajadores .stats{grid-template-columns:repeat(2,1fr)}#naser-trabajadores .toolbar{grid-template-columns:1fr 1fr}#naser-trabajadores .form-grid{grid-template-columns:repeat(2,1fr)}#naser-trabajadores .training-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:650px){#naser-trabajadores .body{padding:12px}#naser-trabajadores .stats,#naser-trabajadores .toolbar,#naser-trabajadores .form-grid,#naser-trabajadores .training-grid,#naser-trabajadores .detail-grid{grid-template-columns:1fr}#naser-trabajadores .span2{grid-column:auto}}
+</style>
+
+<div class="hero">
+ <div><h2>LISTADO DE TRABAJADORES</h2><p>Gestión de personal, documentación, licencias, capacitaciones y vencimientos</p></div>
+ <div class="rev">PGSN02-F4 · Rev.01 · Jul. 2025</div>
+</div>
+
+<div class="body">
+ <div class="stats">
+  <div class="stat" data-fast="todos"><small>TOTAL TRABAJADORES</small><b id="stTotal">0</b></div>
+  <div class="stat verde" data-fast="vigentes"><small>DOCUMENTACIÓN VIGENTE</small><b id="stVigentes">0</b></div>
+  <div class="stat amarillo" data-fast="proximos"><small>PRÓXIMOS A VENCER</small><b id="stProximos">0</b></div>
+  <div class="stat rojo" data-fast="vencidos"><small>CON VENCIMIENTOS</small><b id="stVencidos">0</b></div>
+  <div class="stat azul"><small>UNIDADES / SERVICIOS</small><b id="stUnidades">0</b></div>
+ </div>
+
+ <div class="panel alta-panel" id="altaPanel">
+  <button class="alta-toggle" id="toggleAlta" type="button">
+   <span class="toggle-left"><span class="toggle-icon" id="toggleIcon">+</span><span><span class="toggle-title">AGREGAR TRABAJADOR</span><span class="toggle-sub">Alta y actualización del registro PGSN02-F4.</span></span></span>
+   <span class="chevron">⌄</span>
+  </button>
+  <div class="collapsible">
+   <form id="workerForm" autocomplete="off">
+    <input type="hidden" id="editId">
+    <div class="section-title">01 · IDENTIFICACIÓN Y DATOS PERSONALES</div>
+    <div class="form-grid">
+     <div class="field"><label>FECHA DE ACTUALIZACIÓN</label><input id="fechaActualizacion" type="date"></div>
+     <div class="field"><label>N° LEGAJO *</label><input id="legajo" required></div>
+     <div class="field span2"><label>APELLIDO Y NOMBRE *</label><input id="nombre" required></div>
+     <div class="field"><label>DNI</label><input id="dni"></div>
+     <div class="field"><label>CUIL</label><input id="cuil"></div>
+     <div class="field"><label>FECHA DE NACIMIENTO</label><input id="fechaNacimiento" type="date"></div>
+     <div class="field"><label>EDAD</label><input id="edad" readonly></div>
+     <div class="field span2"><label>DOMICILIO</label><input id="domicilio"></div>
+     <div class="field"><label>CP</label><input id="cp"></div>
+     <div class="field"><label>LOCALIDAD</label><input id="localidad"></div>
+     <div class="field"><label>PROVINCIA</label><input id="provincia"></div>
+     <div class="field"><label>TELÉFONO</label><input id="telefono"></div>
+     <div class="field"><label>CORREO ELECTRÓNICO PERSONAL</label><input id="correoPersonal" type="email"></div>
+     <div class="field"><label>NIVEL DE ESTUDIOS</label><input id="nivelEstudios"></div>
+     <div class="field"><label>ESPECIALIDAD / TÍTULO</label><input id="titulo"></div>
+    </div>
+
+    <div class="section-title">02 · INFORMACIÓN LABORAL</div>
+    <div class="form-grid">
+     <div class="field"><label>UNIDAD DE NEGOCIO</label><input id="unidadNegocio"></div>
+     <div class="field"><label>SERVICIO</label><input id="servicio"></div>
+     <div class="field"><label>INGRESO</label><input id="ingreso" type="date"></div>
+     <div class="field"><label>ANTIGÜEDAD</label><input id="antiguedad" readonly></div>
+     <div class="field"><label>CARGO / FUNCIÓN</label><input id="cargo"></div>
+     <div class="field"><label>OBRA SOCIAL</label><input id="obraSocial"></div>
+     <div class="field"><label>CONVENIO</label><input id="convenio"></div>
+     <div class="field"><label>ENCUADRE</label><input id="encuadre"></div>
+     <div class="field"><label>CATEGORÍA</label><input id="categoria"></div>
+     <div class="field"><label>AFILIACIÓN SINDICAL</label><select id="afiliacionSindical"><option value="">Sin informar</option><option>SI</option><option>NO</option></select></div>
+     <div class="field"><label>MUTUAL</label><input id="mutual"></div>
+     <div class="field"><label>DEPÓSITO</label><input id="deposito"></div>
+     <div class="field span2"><label>CORREO ELECTRÓNICO CORPORATIVO</label><input id="correoCorporativo" type="email"></div>
+    </div>
+
+    <div class="section-title">03 · LICENCIAS, FLOTA Y CNRT</div>
+    <div class="form-grid">
+     <div class="field"><label>LICENCIA DE CONDUCIR</label><select id="licencia"><option value="">Sin informar</option><option>SI</option><option>NO</option></select></div>
+     <div class="field"><label>CATEGORÍA LICENCIA</label><input id="categoriaLicencia"></div>
+     <div class="field"><label>VENCIMIENTO LICENCIA</label><input id="vencLicencia" type="date"></div>
+     <div class="field"><label>FLOTA LIVIANA</label><select id="flotaLiviana"><option value="">N/A</option><option>SI</option><option>NO</option></select></div>
+     <div class="field"><label>FLOTA PESADA</label><select id="flotaPesada"><option value="">N/A</option><option>SI</option><option>NO</option></select></div>
+     <div class="field"><label>MANEJO DEFENSIVO</label><select id="manejoDefensivo"><option value="">Sin informar</option><option>SI</option><option>NO</option></select></div>
+     <div class="field"><label>VENC. MANEJO DEFENSIVO</label><input id="vencManejo" type="date"></div>
+     <div class="field"><label>CNRT</label><select id="cnrt"><option value="">N/A</option><option>SI</option><option>NO</option></select></div>
+     <div class="field"><label>VENCIMIENTO CNRT</label><input id="vencCnrt" type="date"></div>
+     <div class="field"><label>CARGAS GENERALES</label><select id="cargasGenerales"><option value="">N/A</option><option>SI</option><option>NO</option></select></div>
+     <div class="field"><label>VENCIMIENTO CARGAS</label><input id="vencCargas" type="date"></div>
+     <div class="field"><label>PSICOFÍSICO</label><select id="psicofisico"><option value="">N/A</option><option>APTO</option><option>NO APTO</option></select></div>
+     <div class="field"><label>VENCIMIENTO PSICOFÍSICO</label><input id="vencPsicofisico" type="date"></div>
+    </div>
+
+    <div class="section-title">04 · CAPACITACIONES Y HABILITACIONES</div>
+    <div class="training-grid" id="trainingGrid"></div>
+
+    <div class="section-title">05 · EXÁMENES MÉDICOS Y EVALUACIONES</div>
+    <div class="form-grid">
+     <div class="field"><label>TIPO DE EXAMEN MÉDICO</label><input id="examenTipo"></div>
+     <div class="field"><label>FECHA REALIZACIÓN</label><input id="examenRealizacion" type="date"></div>
+     <div class="field"><label>VENCIMIENTO</label><input id="examenVencimiento" type="date"></div>
+     <div class="field"><label>RESULTADO</label><input id="examenResultado"></div>
+     <div class="field span4"><label>OBSERVACIONES</label><textarea id="observaciones"></textarea></div>
+    </div>
+    <div class="actions">
+     <button class="btn-green" type="submit" id="saveBtn">Agregar trabajador</button>
+     <button class="btn-light" type="button" id="clearBtn">Limpiar campos</button>
+     <button class="btn-light" type="button" id="cancelEdit" style="display:none">Cancelar edición</button>
+    </div>
+    <div class="msg" id="formMsg"></div>
+   </form>
+  </div>
+ </div>
+
+ <div class="panel">
+  <div class="toolbar">
+   <input id="buscar" type="search" placeholder="Buscar por nombre, legajo, DNI, CUIL, cargo...">
+   <select id="fUnidad"><option value="">Todas las unidades</option></select>
+   <select id="fServicio"><option value="">Todos los servicios</option></select>
+   <select id="fCargo"><option value="">Todos los cargos</option></select>
+   <select id="fEstado"><option value="">Todos los estados</option><option value="vigente">Documentación vigente</option><option value="proximo">Próximo a vencer</option><option value="vencido">Con vencimientos</option><option value="sinfecha">Sin vencimientos cargados</option></select>
+  </div>
+  <div class="quick">
+   <button class="btn-dark" data-fast="todos">Ver todo</button>
+   <button class="btn-light" data-fast="vigentes">Vigentes</button>
+   <button class="btn-light" data-fast="proximos">Próximos a vencer</button>
+   <button class="btn-light" data-fast="vencidos">Vencidos</button>
+   <button class="btn-light" id="limpiarFiltros">Limpiar filtros</button>
+   <button class="btn-green" id="exportCsv">Exportar CSV</button>
+  </div>
+ </div>
+
+ <div class="resultbar"><strong id="resultado">0 trabajadores encontrados</strong><span class="legend">Los estados se calculan automáticamente según los vencimientos registrados.</span></div>
+ <div class="table-wrap">
+  <table>
+   <thead><tr><th>LEGAJO</th><th>APELLIDO Y NOMBRE</th><th>DNI</th><th>CUIL</th><th>UNIDAD</th><th>SERVICIO</th><th>INGRESO</th><th>CARGO / FUNCIÓN</th><th>TELÉFONO</th><th>LICENCIA</th><th>CNRT</th><th>ESTADO DOC.</th><th>ACCIONES</th></tr></thead>
+   <tbody id="workerBody"></tbody>
+  </table>
+ </div>
+</div>
+
+<div class="modal" id="detailModal">
+ <div class="modal-card">
+  <div class="modal-head"><div><h3 id="detailName" style="margin:0"></h3><div id="detailSub" class="legend"></div></div><button class="btn-dark" id="closeModal">Cerrar</button></div>
+  <div id="detailContent"></div>
+ </div>
+</div>
+
+<script>
+(function(){
+ const $=id=>document.getElementById(id);
+ const KEY="naser_pgsn02_f4_trabajadores_v1";
+ const trainings=[
+  ["wellControl","WELL CONTROL"],["operadorTorque","OPERADOR TORQUE"],
+  ["trabajoAltura","TRABAJO Y RESCATE EN ALTURA"],["eslingador","ESLINGADOR Y SEÑALERO"],
+  ["operador","OPERADOR"],["supervisor","SUPERVISOR"],["izaje","IZAJE"]
+ ];
+ let workers=[];
+ try{workers=JSON.parse(localStorage.getItem(KEY)||"[]");if(!Array.isArray(workers))workers=[]}catch(e){workers=[]}
+
+ $("trainingGrid").innerHTML=trainings.map(([k,n])=>`<div class="training"><h4>${n}</h4><div class="mini">
+  <div><label>REALIZACIÓN</label><input type="date" id="${k}Real"></div>
+  <div><label>VENCIMIENTO</label><input type="date" id="${k}Venc"></div>
+ </div></div>`).join("");
+
+ function esc(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
+ function today(){let d=new Date();d.setHours(0,0,0,0);return d}
+ function days(date){if(!date)return null;let d=new Date(date+"T00:00:00");if(isNaN(d))return null;return Math.ceil((d-today())/86400000)}
+ function age(date){if(!date)return"";let b=new Date(date+"T00:00:00"),n=new Date(),a=n.getFullYear()-b.getFullYear();if(n<new Date(n.getFullYear(),b.getMonth(),b.getDate()))a--;return a>=0?a:""}
+ function seniority(date){if(!date)return"";let b=new Date(date+"T00:00:00"),n=new Date();if(b>n)return"";let y=n.getFullYear()-b.getFullYear(),m=n.getMonth()-b.getMonth();if(n.getDate()<b.getDate())m--;if(m<0){y--;m+=12}return (y?y+" año"+(y!==1?"s":""):"")+(y&&m?" · ":"")+(m?m+" mes"+(m!==1?"es":""):(!y?"< 1 mes":""))}
+ function dateAR(v){if(!v)return"—";let p=v.split("-");return p.length===3?`${p[2]}/${p[1]}/${p[0]}`:v}
+ function expiryDates(w){
+  let a=["vencLicencia","vencManejo","vencCnrt","vencCargas","vencPsicofisico","examenVencimiento"].map(k=>w[k]).filter(Boolean);
+  trainings.forEach(([k])=>{if(w[k+"Venc"])a.push(w[k+"Venc"])});
+  return a;
+ }
+ function state(w){
+  let a=expiryDates(w);if(!a.length)return{key:"sinfecha",txt:"SIN FECHAS",cls:"neutral"};
+  let ds=a.map(days).filter(x=>x!==null);
+  if(ds.some(x=>x<0))return{key:"vencido",txt:"VENCIDO",cls:"bad"};
+  if(ds.some(x=>x<=30))return{key:"proximo",txt:"PRÓXIMO",cls:"warn"};
+  return{key:"vigente",txt:"VIGENTE",cls:"ok"};
+ }
+ function persist(){localStorage.setItem(KEY,JSON.stringify(workers))}
+ function val(id){return $(id)?.value.trim()||""}
+ function set(id,v){if($(id))$(id).value=v||""}
+ function readForm(){
+  let w={};
+  ["fechaActualizacion","legajo","nombre","dni","cuil","fechaNacimiento","domicilio","cp","localidad","provincia","telefono","correoPersonal","nivelEstudios","titulo",
+   "unidadNegocio","servicio","ingreso","cargo","obraSocial","convenio","encuadre","categoria","afiliacionSindical","mutual","deposito","correoCorporativo",
+   "licencia","categoriaLicencia","vencLicencia","flotaLiviana","flotaPesada","manejoDefensivo","vencManejo","cnrt","vencCnrt","cargasGenerales","vencCargas","psicofisico","vencPsicofisico",
+   "examenTipo","examenRealizacion","examenVencimiento","examenResultado","observaciones"].forEach(k=>w[k]=val(k));
+  trainings.forEach(([k])=>{w[k+"Real"]=val(k+"Real");w[k+"Venc"]=val(k+"Venc")});
+  w._id=val("editId")||("T"+Date.now());
+  return w;
+ }
+ function fill(w){
+  Object.keys(w).forEach(k=>set(k,w[k]));
+  set("edad",age(w.fechaNacimiento));set("antiguedad",seniority(w.ingreso));set("editId",w._id);
+  $("saveBtn").textContent="Guardar cambios";$("cancelEdit").style.display="";
+  if(!$("altaPanel").classList.contains("open"))$("toggleAlta").click();
+  $("altaPanel").scrollIntoView({behavior:"smooth",block:"start"});
+ }
+ function reset(){
+  $("workerForm").reset();set("editId","");set("edad","");set("antiguedad","");
+  $("saveBtn").textContent="Agregar trabajador";$("cancelEdit").style.display="none";
+ }
+ function message(t,ok=true){let m=$("formMsg");m.textContent=t;m.className="msg "+(ok?"okmsg":"errmsg");setTimeout(()=>m.className="msg",3000)}
+ $("fechaNacimiento").addEventListener("change",()=>set("edad",age(val("fechaNacimiento"))));
+ $("ingreso").addEventListener("change",()=>set("antiguedad",seniority(val("ingreso"))));
+ $("toggleAlta").onclick=()=>{let p=$("altaPanel"),o=p.classList.toggle("open");$("toggleIcon").textContent=o?"−":"+"};
+ $("clearBtn").onclick=reset;$("cancelEdit").onclick=reset;
+ $("workerForm").onsubmit=e=>{
+  e.preventDefault();let w=readForm();
+  if(!w.legajo||!w.nombre){message("Legajo y Apellido y Nombre son obligatorios.",false);return}
+  let duplicate=workers.find(x=>x.legajo.toLowerCase()===w.legajo.toLowerCase()&&x._id!==w._id);
+  if(duplicate){message("Ya existe un trabajador con ese número de legajo.",false);return}
+  let i=workers.findIndex(x=>x._id===w._id);
+  if(i>=0)workers[i]=w;else workers.push(w);
+  persist();reset();rebuild();message(i>=0?"Trabajador actualizado correctamente.":"Trabajador agregado correctamente.");
+ };
+
+ function unique(k){return[...new Set(workers.map(w=>w[k]).filter(Boolean))].sort((a,b)=>a.localeCompare(b))}
+ function options(id,k,label){let cur=$(id).value;$(id).innerHTML=`<option value="">${label}</option>`+unique(k).map(v=>`<option>${esc(v)}</option>`).join("");$(id).value=cur}
+ function rebuildSelects(){options("fUnidad","unidadNegocio","Todas las unidades");options("fServicio","servicio","Todos los servicios");options("fCargo","cargo","Todos los cargos")}
+ function stats(){
+  $("stTotal").textContent=workers.length;$("stVigentes").textContent=workers.filter(w=>state(w).key==="vigente").length;
+  $("stProximos").textContent=workers.filter(w=>state(w).key==="proximo").length;$("stVencidos").textContent=workers.filter(w=>state(w).key==="vencido").length;
+  $("stUnidades").textContent=new Set(workers.map(w=>w.unidadNegocio||w.servicio).filter(Boolean)).size;
+ }
+ function filtered(){
+  let q=val("buscar").toLowerCase(),u=val("fUnidad"),s=val("fServicio"),c=val("fCargo"),e=val("fEstado");
+  return workers.filter(w=>{
+   let hay=[w.legajo,w.nombre,w.dni,w.cuil,w.cargo,w.telefono,w.servicio,w.unidadNegocio].join(" ").toLowerCase();
+   return(!q||hay.includes(q))&&(!u||w.unidadNegocio===u)&&(!s||w.servicio===s)&&(!c||w.cargo===c)&&(!e||state(w).key===e);
+  });
+ }
+ function render(){
+  let a=filtered();$("resultado").textContent=`${a.length} trabajador${a.length!==1?"es":""} encontrado${a.length!==1?"s":""}`;
+  $("workerBody").innerHTML=a.length?a.map(w=>{let st=state(w);return`<tr>
+   <td><b>${esc(w.legajo)}</b></td><td>${esc(w.nombre)}</td><td>${esc(w.dni||"—")}</td><td>${esc(w.cuil||"—")}</td>
+   <td>${esc(w.unidadNegocio||"—")}</td><td>${esc(w.servicio||"—")}</td><td>${dateAR(w.ingreso)}</td><td>${esc(w.cargo||"—")}</td>
+   <td>${esc(w.telefono||"—")}</td><td>${esc(w.licencia||"—")}</td><td>${esc(w.cnrt||"—")}</td><td><span class="badge ${st.cls}">${st.txt}</span></td>
+   <td style="white-space:nowrap"><button class="btn-light" data-view="${w._id}">Ver</button> <button class="btn-dark" data-edit="${w._id}">Editar</button> <button class="btn-delete" data-del="${w._id}">Eliminar</button></td>
+  </tr>`}).join(""):`<tr><td colspan="13" class="empty">No hay trabajadores que coincidan con los filtros seleccionados.</td></tr>`;
+ }
+ function rebuild(){rebuildSelects();stats();render()}
+ ["buscar","fUnidad","fServicio","fCargo","fEstado"].forEach(id=>$(id).addEventListener(id==="buscar"?"input":"change",render));
+ $("limpiarFiltros").onclick=()=>{["buscar","fUnidad","fServicio","fCargo","fEstado"].forEach(id=>set(id,""));render()};
+ document.querySelectorAll("#naser-trabajadores [data-fast]").forEach(b=>b.onclick=()=>{
+  ["buscar","fUnidad","fServicio","fCargo"].forEach(id=>set(id,""));
+  let x=b.dataset.fast;set("fEstado",x==="vigentes"?"vigente":x==="proximos"?"proximo":x==="vencidos"?"vencido":"");render();
+ });
+
+ function section(title,items){return`<div class="section-title">${title}</div><div class="detail-grid">${items.map(([a,b])=>`<div class="detail"><small>${a}</small>${esc(b||"—")}</div>`).join("")}</div>`}
+ function view(w){
+  $("detailName").textContent=w.nombre||"Trabajador";$("detailSub").textContent=`Legajo ${w.legajo||"—"} · ${w.cargo||"Sin cargo informado"}`;
+  let tr=trainings.map(([k,n])=>[n,`${dateAR(w[k+"Real"])} · Vence: ${dateAR(w[k+"Venc"])}`]);
+  $("detailContent").innerHTML=
+   section("DATOS PERSONALES",[["DNI",w.dni],["CUIL",w.cuil],["Fecha nacimiento",dateAR(w.fechaNacimiento)],["Edad",age(w.fechaNacimiento)],["Domicilio",w.domicilio],["CP",w.cp],["Localidad",w.localidad],["Provincia",w.provincia],["Teléfono",w.telefono],["Correo personal",w.correoPersonal],["Nivel de estudios",w.nivelEstudios],["Especialidad / título",w.titulo]])+
+   section("DATOS LABORALES",[["Unidad de negocio",w.unidadNegocio],["Servicio",w.servicio],["Ingreso",dateAR(w.ingreso)],["Antigüedad",seniority(w.ingreso)],["Cargo / función",w.cargo],["Obra social",w.obraSocial],["Convenio",w.convenio],["Encuadre",w.encuadre],["Categoría",w.categoria],["Afiliación sindical",w.afiliacionSindical],["Mutual",w.mutual],["Depósito",w.deposito],["Correo corporativo",w.correoCorporativo]])+
+   section("LICENCIAS Y FLOTA",[["Licencia",w.licencia],["Categoría",w.categoriaLicencia],["Venc. licencia",dateAR(w.vencLicencia)],["Flota liviana",w.flotaLiviana],["Flota pesada",w.flotaPesada],["Manejo defensivo",w.manejoDefensivo],["Venc. manejo",dateAR(w.vencManejo)],["CNRT",w.cnrt],["Venc. CNRT",dateAR(w.vencCnrt)],["Cargas generales",w.cargasGenerales],["Venc. cargas",dateAR(w.vencCargas)],["Psicofísico",w.psicofisico],["Venc. psicofísico",dateAR(w.vencPsicofisico)]])+
+   section("CAPACITACIONES",tr)+section("EXÁMENES / EVALUACIONES",[["Tipo",w.examenTipo],["Realización",dateAR(w.examenRealizacion)],["Vencimiento",dateAR(w.examenVencimiento)],["Resultado",w.examenResultado],["Observaciones",w.observaciones]]);
+  $("detailModal").classList.add("open");
+ }
+ $("workerBody").onclick=e=>{
+  let b=e.target.closest("button");if(!b)return;
+  let id=b.dataset.view||b.dataset.edit||b.dataset.del,w=workers.find(x=>x._id===id);if(!w)return;
+  if(b.dataset.view)view(w);
+  if(b.dataset.edit)fill(w);
+  if(b.dataset.del&&confirm(`¿Eliminar a "${w.nombre}" del listado?`)){workers=workers.filter(x=>x._id!==id);persist();rebuild()}
+ };
+ $("closeModal").onclick=()=>$("detailModal").classList.remove("open");
+ $("detailModal").onclick=e=>{if(e.target===$("detailModal"))$("detailModal").classList.remove("open")};
+
+ $("exportCsv").onclick=()=>{
+  let head=["FECHA ACTUALIZACION","LEGAJO","APELLIDO Y NOMBRE","DNI","CUIL","UNIDAD DE NEGOCIO","SERVICIO","INGRESO","CARGO/FUNCION","DOMICILIO","CORREO PERSONAL","CORREO CORPORATIVO","CP","LOCALIDAD","PROVINCIA","FECHA NACIMIENTO","EDAD","OBRA SOCIAL","ANTIGUEDAD","CONVENIO","ENCUADRE","CATEGORIA","AFILIACION SINDICAL","MUTUAL","DEPOSITO","LICENCIA","CATEGORIA LICENCIA","VENCIMIENTO LICENCIA","FLOTA LIVIANA","FLOTA PESADA","MANEJO DEFENSIVO","VENCIMIENTO MANEJO","CNRT","VENCIMIENTO CNRT","CARGAS GENERALES","VENCIMIENTO CARGAS","PSICOFISICO","VENCIMIENTO PSICOFISICO","TELEFONO","NIVEL ESTUDIOS","ESPECIALIDAD/TITULO"];
+  trainings.forEach(([k,n])=>{head.push(n+" REALIZACION",n+" VENCIMIENTO")});head.push("EXAMEN MEDICO TIPO","EXAMEN REALIZACION","EXAMEN VENCIMIENTO","RESULTADO","OBSERVACIONES","ESTADO DOCUMENTACION");
+  let rows=filtered().map(w=>{
+   let r=[w.fechaActualizacion,w.legajo,w.nombre,w.dni,w.cuil,w.unidadNegocio,w.servicio,w.ingreso,w.cargo,w.domicilio,w.correoPersonal,w.correoCorporativo,w.cp,w.localidad,w.provincia,w.fechaNacimiento,age(w.fechaNacimiento),w.obraSocial,seniority(w.ingreso),w.convenio,w.encuadre,w.categoria,w.afiliacionSindical,w.mutual,w.deposito,w.licencia,w.categoriaLicencia,w.vencLicencia,w.flotaLiviana,w.flotaPesada,w.manejoDefensivo,w.vencManejo,w.cnrt,w.vencCnrt,w.cargasGenerales,w.vencCargas,w.psicofisico,w.vencPsicofisico,w.telefono,w.nivelEstudios,w.titulo];
+   trainings.forEach(([k])=>r.push(w[k+"Real"],w[k+"Venc"]));r.push(w.examenTipo,w.examenRealizacion,w.examenVencimiento,w.examenResultado,w.observaciones,state(w).txt);return r;
+  });
+  let csv=[head,...rows].map(r=>r.map(v=>`"${String(v??"").replace(/"/g,'""')}"`).join(";")).join("\n");
+  let blob=new Blob(["\ufeff"+csv],{type:"text/csv;charset=utf-8;"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="PGSN02-F4_Listado_Trabajadores.csv";a.click();URL.revokeObjectURL(a.href);
+ };
+ rebuild();
+})();
+</script>
+</section>

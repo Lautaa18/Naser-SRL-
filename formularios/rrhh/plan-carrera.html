@@ -1,0 +1,2397 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>PGSN02-F11 | Plan de Carrera | NASER</title>
+
+<style>
+:root{
+  --naser:#009b49;
+  --naser-dark:#007a3a;
+  --black:#111;
+  --white:#fff;
+  --bg:#f1f3f4;
+  --border:#d7dce0;
+  --text:#202124;
+  --muted:#6b7280;
+  --danger:#b91c1c;
+  --shadow:0 4px 18px rgba(0,0,0,.08);
+}
+
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+body{
+  font-family:Arial, Helvetica, sans-serif;
+  background:var(--bg);
+  color:var(--text);
+}
+
+button,
+input,
+select,
+textarea{
+  font-family:inherit;
+}
+
+/* ======================================================
+   SIDEBAR
+====================================================== */
+
+.sidebar{
+  position:fixed;
+  top:0;
+  left:0;
+  width:250px;
+  height:100vh;
+  background:#0d0d0d;
+  color:#fff;
+  z-index:1000;
+  display:flex;
+  flex-direction:column;
+  box-shadow:3px 0 15px rgba(0,0,0,.15);
+}
+
+.brand{
+  padding:26px 22px;
+  border-bottom:1px solid #292929;
+}
+
+.brand-logo{
+  font-size:31px;
+  font-weight:900;
+  letter-spacing:2px;
+}
+
+.brand-logo span{
+  color:var(--naser);
+}
+
+.brand small{
+  display:block;
+  margin-top:7px;
+  color:#999;
+  font-size:11px;
+  letter-spacing:1px;
+}
+
+.sidebar nav{
+  padding:18px 12px;
+  flex:1;
+}
+
+.nav-title{
+  color:#676767;
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:1.3px;
+  margin:16px 12px 8px;
+}
+
+.nav-link{
+  display:block;
+  color:#ccc;
+  text-decoration:none;
+  padding:13px 15px;
+  border-radius:7px;
+  margin-bottom:5px;
+  font-size:14px;
+}
+
+.nav-link:hover{
+  background:#202020;
+  color:#fff;
+}
+
+.nav-link.active{
+  background:var(--naser);
+  color:#fff;
+  font-weight:700;
+}
+
+.sidebar-footer{
+  padding:17px;
+  border-top:1px solid #292929;
+  color:#777;
+  font-size:11px;
+}
+
+/* ======================================================
+   MAIN
+====================================================== */
+
+.main{
+  margin-left:250px;
+  min-height:100vh;
+}
+
+.topbar{
+  height:72px;
+  background:#fff;
+  border-bottom:1px solid var(--border);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 34px;
+  position:sticky;
+  top:0;
+  z-index:100;
+}
+
+.topbar h2{
+  font-size:17px;
+}
+
+.topbar p{
+  font-size:12px;
+  color:var(--muted);
+  margin-top:4px;
+}
+
+.document-code{
+  text-align:right;
+}
+
+.document-code strong{
+  display:block;
+  color:var(--naser);
+  font-size:15px;
+}
+
+.document-code span{
+  color:#777;
+  font-size:11px;
+}
+
+.container{
+  max-width:1400px;
+  margin:auto;
+  padding:28px;
+}
+
+/* ======================================================
+   HERO
+====================================================== */
+
+.hero{
+  background:#111;
+  color:#fff;
+  border-left:6px solid var(--naser);
+  border-radius:12px;
+  padding:30px;
+  margin-bottom:20px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:25px;
+  box-shadow:var(--shadow);
+}
+
+.hero-tag{
+  display:inline-block;
+  background:var(--naser);
+  padding:6px 10px;
+  border-radius:4px;
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:.8px;
+  margin-bottom:12px;
+}
+
+.hero h1{
+  font-size:27px;
+  margin-bottom:8px;
+}
+
+.hero p{
+  color:#bbb;
+  font-size:13px;
+  line-height:1.5;
+}
+
+.hero-code{
+  min-width:170px;
+  padding:15px;
+  background:#1d1d1d;
+  border:1px solid #333;
+  border-radius:8px;
+  text-align:center;
+}
+
+.hero-code strong{
+  display:block;
+  font-size:18px;
+  margin-bottom:5px;
+}
+
+.hero-code span{
+  color:#aaa;
+  font-size:11px;
+}
+
+/* ======================================================
+   PROGRESO
+====================================================== */
+
+.progress-card{
+  background:#fff;
+  padding:18px 20px;
+  border-radius:10px;
+  margin-bottom:20px;
+  box-shadow:var(--shadow);
+}
+
+.progress-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  font-size:13px;
+  font-weight:bold;
+  margin-bottom:10px;
+}
+
+#progressPercent{
+  color:var(--naser);
+  font-size:16px;
+}
+
+.progress{
+  width:100%;
+  height:10px;
+  background:#e5e7eb;
+  border-radius:20px;
+  overflow:hidden;
+}
+
+.progress-bar{
+  width:0;
+  height:100%;
+  background:var(--naser);
+  transition:.3s;
+}
+
+/* ======================================================
+   CARD
+====================================================== */
+
+.card{
+  background:#fff;
+  border:1px solid #e3e5e7;
+  border-radius:10px;
+  margin-bottom:20px;
+  overflow:hidden;
+  box-shadow:var(--shadow);
+}
+
+.card-header{
+  background:#111;
+  color:#fff;
+  padding:16px 20px;
+  display:flex;
+  align-items:center;
+  gap:13px;
+}
+
+.section-number{
+  width:31px;
+  height:31px;
+  flex-shrink:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:50%;
+  background:var(--naser);
+  font-weight:bold;
+}
+
+.card-header h3{
+  font-size:15px;
+}
+
+.card-body{
+  padding:23px;
+}
+
+/* ======================================================
+   FORM
+====================================================== */
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:18px;
+}
+
+.grid-3{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:18px;
+}
+
+.field{
+  display:flex;
+  flex-direction:column;
+  gap:7px;
+}
+
+.field.full{
+  grid-column:1/-1;
+}
+
+label{
+  font-size:11px;
+  font-weight:700;
+  text-transform:uppercase;
+  color:#555;
+  letter-spacing:.4px;
+}
+
+.required::after{
+  content:" *";
+  color:#c62828;
+}
+
+input,
+select,
+textarea{
+  width:100%;
+  padding:11px 12px;
+  border:1px solid #ccd2d7;
+  border-radius:6px;
+  font-size:14px;
+  background:#fff;
+  color:#222;
+  outline:none;
+}
+
+input:focus,
+select:focus,
+textarea:focus{
+  border-color:var(--naser);
+  box-shadow:0 0 0 3px rgba(0,155,73,.10);
+}
+
+textarea{
+  resize:vertical;
+  min-height:90px;
+}
+
+.invalid{
+  border-color:#c62828 !important;
+  background:#fff7f7 !important;
+}
+
+/* ======================================================
+   TABLA
+====================================================== */
+
+.table-wrapper{
+  overflow-x:auto;
+}
+
+.career-table{
+  width:100%;
+  border-collapse:collapse;
+  min-width:1250px;
+}
+
+.career-table th{
+  background:#161616;
+  color:#fff;
+  border:1px solid #333;
+  padding:11px 8px;
+  font-size:11px;
+  text-align:center;
+  text-transform:uppercase;
+}
+
+.career-table th.green{
+  background:var(--naser);
+}
+
+.career-table td{
+  border:1px solid #d9dde0;
+  padding:6px;
+  vertical-align:middle;
+}
+
+.career-table tbody tr:nth-child(even){
+  background:#fafafa;
+}
+
+.career-table input,
+.career-table select{
+  min-width:110px;
+  padding:9px 8px;
+  font-size:12px;
+}
+
+.career-table .large-input{
+  min-width:180px;
+}
+
+.career-table .experience{
+  text-align:center;
+  min-width:90px;
+}
+
+.career-table .total{
+  background:#edf8f2;
+  font-weight:bold;
+  color:#006b33;
+  text-align:center;
+}
+
+.row-number{
+  width:40px;
+  text-align:center;
+  font-weight:bold;
+  color:#555;
+}
+
+.actions-cell{
+  text-align:center;
+  width:55px;
+}
+
+/* ======================================================
+   RESUMEN
+====================================================== */
+
+.summary-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:15px;
+}
+
+.summary-card{
+  border:1px solid #dde1e4;
+  border-radius:8px;
+  padding:17px;
+  background:#fafafa;
+}
+
+.summary-card small{
+  display:block;
+  color:#777;
+  font-size:10px;
+  text-transform:uppercase;
+  font-weight:bold;
+  margin-bottom:7px;
+}
+
+.summary-card strong{
+  color:#111;
+  font-size:22px;
+}
+
+.summary-card.green strong{
+  color:var(--naser);
+}
+
+/* ======================================================
+   BOTONES
+====================================================== */
+
+.table-actions{
+  display:flex;
+  justify-content:flex-end;
+  gap:10px;
+  margin-top:15px;
+}
+
+.actions{
+  background:#fff;
+  padding:18px;
+  border-radius:10px;
+  box-shadow:var(--shadow);
+  display:flex;
+  justify-content:flex-end;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-bottom:35px;
+}
+
+.btn{
+  border:0;
+  padding:11px 18px;
+  border-radius:6px;
+  font-size:13px;
+  font-weight:bold;
+  cursor:pointer;
+  transition:.2s;
+}
+
+.btn:hover{
+  transform:translateY(-1px);
+}
+
+.btn-primary{
+  background:var(--naser);
+  color:#fff;
+}
+
+.btn-primary:hover{
+  background:var(--naser-dark);
+}
+
+.btn-dark{
+  background:#171717;
+  color:#fff;
+}
+
+.btn-gray{
+  background:#e5e7eb;
+  color:#333;
+}
+
+.btn-danger{
+  background:#b91c1c;
+  color:#fff;
+}
+
+.btn-small{
+  padding:7px 10px;
+  font-size:11px;
+}
+
+/* ======================================================
+   STATUS
+====================================================== */
+
+.status{
+  display:none;
+  padding:13px 16px;
+  border-radius:7px;
+  margin-bottom:18px;
+  font-size:13px;
+  font-weight:600;
+}
+
+.status.success{
+  display:block;
+  background:#e9f8ef;
+  border:1px solid #b8e6ca;
+  color:#086b36;
+}
+
+.status.error{
+  display:block;
+  background:#fff0f0;
+  border:1px solid #efc3c3;
+  color:#9d1c1c;
+}
+
+.finished-badge{
+  display:none;
+  background:#e8f7ef;
+  color:#05723a;
+  border:1px solid #a9ddc1;
+  padding:8px 13px;
+  border-radius:6px;
+  font-size:12px;
+  font-weight:bold;
+}
+
+body.finished .finished-badge{
+  display:inline-block;
+}
+
+body.finished input,
+body.finished select,
+body.finished textarea{
+  pointer-events:none;
+  background:#f4f4f4;
+}
+
+body.finished .delete-row,
+body.finished #addRowBtn{
+  display:none;
+}
+
+.footer{
+  text-align:center;
+  color:#888;
+  font-size:11px;
+  padding:15px;
+}
+
+/* ======================================================
+   RESPONSIVE
+====================================================== */
+
+@media(max-width:1000px){
+
+  .sidebar{
+    width:210px;
+  }
+
+  .main{
+    margin-left:210px;
+  }
+
+  .summary-grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+}
+
+@media(max-width:760px){
+
+  .sidebar{
+    position:relative;
+    width:100%;
+    height:auto;
+  }
+
+  .sidebar nav{
+    display:none;
+  }
+
+  .main{
+    margin-left:0;
+  }
+
+  .topbar{
+    position:relative;
+    height:auto;
+    padding:15px;
+  }
+
+  .container{
+    padding:14px;
+  }
+
+  .hero{
+    flex-direction:column;
+    align-items:flex-start;
+  }
+
+  .grid,
+  .grid-3,
+  .summary-grid{
+    grid-template-columns:1fr;
+  }
+}
+
+/* ======================================================
+   IMPRESIÓN
+====================================================== */
+
+@media print{
+
+  @page{
+    size:A4 landscape;
+    margin:8mm;
+  }
+
+  body{
+    background:#fff;
+  }
+
+  .sidebar,
+  .topbar,
+  .progress-card,
+  .actions,
+  .table-actions,
+  .status,
+  .footer,
+  .delete-column{
+    display:none !important;
+  }
+
+  .main{
+    margin:0;
+  }
+
+  .container{
+    padding:0;
+    max-width:none;
+  }
+
+  .hero{
+    background:#fff !important;
+    color:#000 !important;
+    border:2px solid #000;
+    border-left:6px solid #009b49;
+    border-radius:0;
+    box-shadow:none;
+    padding:15px;
+  }
+
+  .hero p{
+    color:#333;
+  }
+
+  .hero-code{
+    background:#fff;
+    color:#000;
+  }
+
+  .hero-code span{
+    color:#333;
+  }
+
+  .card{
+    box-shadow:none;
+    border:1px solid #555;
+    border-radius:0;
+    break-inside:avoid;
+  }
+
+  .card-header{
+    background:#111 !important;
+    color:#fff !important;
+    -webkit-print-color-adjust:exact;
+    print-color-adjust:exact;
+  }
+
+  .career-table{
+    min-width:0;
+  }
+
+  .career-table th{
+    background:#111 !important;
+    color:#fff !important;
+    -webkit-print-color-adjust:exact;
+    print-color-adjust:exact;
+    font-size:8px;
+    padding:6px 3px;
+  }
+
+  .career-table th.green{
+    background:#009b49 !important;
+  }
+
+  .career-table td{
+    padding:3px;
+  }
+
+  .career-table input,
+  .career-table select{
+    border:0;
+    padding:3px;
+    font-size:8px;
+    min-width:0;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<!-- =====================================================
+     SIDEBAR
+===================================================== -->
+
+<aside class="sidebar">
+
+  <div class="brand">
+    <div class="brand-logo">
+      NASER<span>.</span>
+    </div>
+
+    <small>
+      SISTEMA DE GESTIÓN INTEGRADO
+    </small>
+  </div>
+
+  <nav>
+
+    <div class="nav-title">
+      GESTIÓN
+    </div>
+
+    <a href="#" class="nav-link">
+      Inicio
+    </a>
+
+    <a href="#" class="nav-link">
+      Personal
+    </a>
+
+    <a href="#" class="nav-link active">
+      Plan de Carrera
+    </a>
+
+    <div class="nav-title">
+      DOCUMENTO
+    </div>
+
+    <a href="#datos" class="nav-link">
+      1. Datos generales
+    </a>
+
+    <a href="#plan" class="nav-link">
+      2. Plan de carrera
+    </a>
+
+    <a href="#resumen" class="nav-link">
+      3. Resumen
+    </a>
+
+  </nav>
+
+  <div class="sidebar-footer">
+    NASER SRL<br>
+    Gestión de Recursos Humanos
+  </div>
+
+</aside>
+
+
+<!-- =====================================================
+     MAIN
+===================================================== -->
+
+<main class="main">
+
+<header class="topbar">
+
+  <div>
+    <h2>Gestión de Personal</h2>
+    <p>
+      Desarrollo y evolución profesional
+    </p>
+  </div>
+
+  <div style="display:flex;gap:15px;align-items:center">
+
+    <span class="finished-badge">
+      ✓ DOCUMENTO FINALIZADO
+    </span>
+
+    <div class="document-code">
+      <strong>PGSN02-F11</strong>
+      <span>Rev.01 · Jul.2025</span>
+    </div>
+
+  </div>
+
+</header>
+
+
+<div class="container">
+
+<!-- =====================================================
+     HERO
+===================================================== -->
+
+<section class="hero">
+
+  <div>
+
+    <div class="hero-tag">
+      RECURSOS HUMANOS
+    </div>
+
+    <h1>
+      Plan de Carrera
+    </h1>
+
+    <p>
+      Registro de conocimientos, experiencia y requisitos
+      necesarios para el desarrollo profesional del personal.
+    </p>
+
+  </div>
+
+  <div class="hero-code">
+
+    <strong>
+      PGSN02-F11
+    </strong>
+
+    <span>
+      Rev.01 · Julio 2025
+    </span>
+
+  </div>
+
+</section>
+
+
+<!-- =====================================================
+     PROGRESO
+===================================================== -->
+
+<section class="progress-card">
+
+  <div class="progress-header">
+
+    <span>
+      Completado del formulario
+    </span>
+
+    <span id="progressPercent">
+      0%
+    </span>
+
+  </div>
+
+  <div class="progress">
+
+    <div
+      class="progress-bar"
+      id="progressBar">
+    </div>
+
+  </div>
+
+</section>
+
+
+<div id="statusMessage" class="status"></div>
+
+
+<form id="careerForm">
+
+<!-- =====================================================
+     1. DATOS
+===================================================== -->
+
+<section class="card" id="datos">
+
+  <div class="card-header">
+
+    <div class="section-number">
+      1
+    </div>
+
+    <h3>
+      DATOS GENERALES
+    </h3>
+
+  </div>
+
+  <div class="card-body">
+
+    <div class="grid-3">
+
+      <div class="field">
+
+        <label class="required">
+          Fecha de actualización
+        </label>
+
+        <input
+          type="date"
+          id="fechaActualizacion"
+          data-required>
+
+      </div>
+
+
+      <div class="field">
+
+        <label class="required">
+          Puesto
+        </label>
+
+        <input
+          type="text"
+          id="puesto"
+          data-required
+          placeholder="Puesto actual">
+
+      </div>
+
+
+      <div class="field">
+
+        <label>
+          Legajo
+        </label>
+
+        <input
+          type="text"
+          id="legajo"
+          placeholder="N° de legajo">
+
+      </div>
+
+    </div>
+
+
+    <div class="grid"
+         style="margin-top:18px">
+
+      <div class="field">
+
+        <label>
+          Apellido y nombre
+        </label>
+
+        <input
+          type="text"
+          id="nombre"
+          placeholder="Apellido y nombre">
+
+      </div>
+
+
+      <div class="field">
+
+        <label>
+          Sector / Área
+        </label>
+
+        <select id="sector">
+
+          <option value="">
+            Seleccionar
+          </option>
+
+          <option value="Slickline">
+            Slickline
+          </option>
+
+          <option value="Well Testing">
+            Well Testing
+          </option>
+
+          <option value="Eventos">
+            Eventos
+          </option>
+
+          <option value="Administración">
+            Administración
+          </option>
+
+          <option value="HSE">
+            HSE
+          </option>
+
+          <option value="Mantenimiento">
+            Mantenimiento
+          </option>
+
+          <option value="Otro">
+            Otro
+          </option>
+
+        </select>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =====================================================
+     2. PLAN DE CARRERA
+===================================================== -->
+
+<section class="card" id="plan">
+
+  <div class="card-header">
+
+    <div class="section-number">
+      2
+    </div>
+
+    <h3>
+      PLAN DE CARRERA
+    </h3>
+
+  </div>
+
+  <div class="card-body">
+
+    <div class="table-wrapper">
+
+      <table class="career-table">
+
+        <thead>
+
+          <tr>
+
+            <th>
+              #
+            </th>
+
+            <th class="green">
+              Categoría
+            </th>
+
+            <th>
+              Conocimientos
+            </th>
+
+            <th>
+              Requisitos
+            </th>
+
+            <th>
+              Experiencia<br>
+              (años)
+            </th>
+
+            <th>
+              Puesto 1
+            </th>
+
+            <th>
+              Puesto 2
+            </th>
+
+            <th>
+              Puesto 3
+            </th>
+
+            <th class="green">
+              Experiencia<br>
+              acumulada
+            </th>
+
+            <th class="delete-column">
+              Acción
+            </th>
+
+          </tr>
+
+        </thead>
+
+
+        <tbody id="careerBody">
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+
+    <div class="table-actions">
+
+      <button
+        type="button"
+        id="addRowBtn"
+        class="btn btn-primary btn-small"
+        onclick="addRow()">
+
+        + Agregar categoría
+
+      </button>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =====================================================
+     3. RESUMEN
+===================================================== -->
+
+<section class="card" id="resumen">
+
+  <div class="card-header">
+
+    <div class="section-number">
+      3
+    </div>
+
+    <h3>
+      RESUMEN DEL PLAN DE CARRERA
+    </h3>
+
+  </div>
+
+  <div class="card-body">
+
+    <div class="summary-grid">
+
+      <div class="summary-card">
+
+        <small>
+          Categorías
+        </small>
+
+        <strong id="totalCategorias">
+          0
+        </strong>
+
+      </div>
+
+
+      <div class="summary-card">
+
+        <small>
+          Experiencia registrada
+        </small>
+
+        <strong id="totalExperiencia">
+          0
+        </strong>
+
+        <span>
+          años
+        </span>
+
+      </div>
+
+
+      <div class="summary-card">
+
+        <small>
+          Puestos registrados
+        </small>
+
+        <strong id="totalPuestos">
+          0
+        </strong>
+
+      </div>
+
+
+      <div class="summary-card green">
+
+        <small>
+          Experiencia acumulada
+        </small>
+
+        <strong id="experienciaAcumuladaGeneral">
+          0
+        </strong>
+
+        <span>
+          años
+        </span>
+
+      </div>
+
+    </div>
+
+
+    <div class="field"
+         style="margin-top:22px">
+
+      <label>
+        Observaciones
+      </label>
+
+      <textarea
+        id="observaciones"
+        placeholder="Observaciones relacionadas con el desarrollo, formación, experiencia o próximos puestos previstos."></textarea>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =====================================================
+     BOTONES
+===================================================== -->
+
+<section class="actions">
+
+  <button
+    type="button"
+    class="btn btn-gray"
+    onclick="clearForm()">
+
+    Limpiar
+
+  </button>
+
+
+  <button
+    type="button"
+    class="btn btn-dark"
+    onclick="saveForm()">
+
+    Guardar
+
+  </button>
+
+
+  <button
+    type="button"
+    class="btn btn-gray"
+    onclick="window.print()">
+
+    Imprimir / PDF
+
+  </button>
+
+
+  <button
+    type="button"
+    class="btn btn-primary"
+    onclick="finalizeForm()">
+
+    Finalizar formulario
+
+  </button>
+
+</section>
+
+</form>
+
+
+<footer class="footer">
+
+  NASER SRL · Sistema de Gestión Integrado ·
+  PGSN02-F11 · Rev.01 · Jul.2025
+
+</footer>
+
+</div>
+</main>
+
+
+<script>
+
+/* =====================================================
+   CONFIGURACIÓN
+===================================================== */
+
+const STORAGE_KEY =
+  "NASER_PGSN02_F11";
+
+const careerBody =
+  document.getElementById("careerBody");
+
+let rowCounter = 0;
+
+
+/* =====================================================
+   CREAR FILA
+===================================================== */
+
+function addRow(data = {}){
+
+  rowCounter++;
+
+  const tr =
+    document.createElement("tr");
+
+  tr.innerHTML = `
+
+    <td class="row-number">
+      ${rowCounter}
+    </td>
+
+    <td>
+
+      <input
+        type="text"
+        class="categoria large-input"
+        placeholder="Categoría"
+        value="${escapeHTML(data.categoria || "")}">
+
+    </td>
+
+    <td>
+
+      <input
+        type="text"
+        class="conocimientos large-input"
+        placeholder="Conocimientos necesarios"
+        value="${escapeHTML(data.conocimientos || "")}">
+
+    </td>
+
+    <td>
+
+      <input
+        type="text"
+        class="requisitos large-input"
+        placeholder="Requisitos"
+        value="${escapeHTML(data.requisitos || "")}">
+
+    </td>
+
+    <td>
+
+      <input
+        type="number"
+        class="experience experiencia"
+        min="0"
+        step="0.5"
+        value="${data.experiencia ?? 0}"
+        oninput="calculateAll()">
+
+    </td>
+
+    <td>
+
+      <input
+        type="number"
+        class="puesto1 experience"
+        min="0"
+        step="0.5"
+        value="${data.puesto1 ?? 0}"
+        oninput="calculateAll()">
+
+    </td>
+
+    <td>
+
+      <input
+        type="number"
+        class="puesto2 experience"
+        min="0"
+        step="0.5"
+        value="${data.puesto2 ?? 0}"
+        oninput="calculateAll()">
+
+    </td>
+
+    <td>
+
+      <input
+        type="number"
+        class="puesto3 experience"
+        min="0"
+        step="0.5"
+        value="${data.puesto3 ?? 0}"
+        oninput="calculateAll()">
+
+    </td>
+
+    <td>
+
+      <input
+        type="number"
+        class="total"
+        readonly
+        value="0">
+
+    </td>
+
+    <td class="actions-cell delete-column">
+
+      <button
+        type="button"
+        class="btn btn-danger btn-small delete-row"
+        onclick="deleteRow(this)">
+
+        ×
+
+      </button>
+
+    </td>
+
+  `;
+
+  careerBody.appendChild(tr);
+
+  attachInputEvents(tr);
+
+  calculateAll();
+
+}
+
+
+/* =====================================================
+   ELIMINAR FILA
+===================================================== */
+
+function deleteRow(button){
+
+  if(
+    careerBody.children.length <= 1
+  ){
+
+    alert(
+      "El plan de carrera debe contener al menos una fila."
+    );
+
+    return;
+  }
+
+  button
+    .closest("tr")
+    .remove();
+
+  renumberRows();
+
+  calculateAll();
+
+}
+
+
+/* =====================================================
+   RENUMERAR
+===================================================== */
+
+function renumberRows(){
+
+  const rows =
+    [...careerBody.querySelectorAll("tr")];
+
+  rows.forEach((row,index)=>{
+
+    row.querySelector(
+      ".row-number"
+    ).textContent =
+      index + 1;
+
+  });
+
+  rowCounter =
+    rows.length;
+
+}
+
+
+/* =====================================================
+   CÁLCULOS
+===================================================== */
+
+function getNumber(input){
+
+  const number =
+    parseFloat(input.value);
+
+  return isNaN(number)
+    ? 0
+    : number;
+
+}
+
+
+function calculateAll(){
+
+  const rows =
+    [...careerBody.querySelectorAll("tr")];
+
+  let totalExp = 0;
+  let totalPuestos = 0;
+  let accumulatedGeneral = 0;
+  let categorias = 0;
+
+
+  rows.forEach(row => {
+
+    const experiencia =
+      getNumber(
+        row.querySelector(".experiencia")
+      );
+
+    const puesto1 =
+      getNumber(
+        row.querySelector(".puesto1")
+      );
+
+    const puesto2 =
+      getNumber(
+        row.querySelector(".puesto2")
+      );
+
+    const puesto3 =
+      getNumber(
+        row.querySelector(".puesto3")
+      );
+
+
+    const total =
+      experiencia
+      + puesto1
+      + puesto2
+      + puesto3;
+
+
+    row.querySelector(
+      ".total"
+    ).value =
+      formatNumber(total);
+
+
+    totalExp += experiencia;
+
+    accumulatedGeneral += total;
+
+
+    if(puesto1 > 0){
+      totalPuestos++;
+    }
+
+    if(puesto2 > 0){
+      totalPuestos++;
+    }
+
+    if(puesto3 > 0){
+      totalPuestos++;
+    }
+
+
+    const categoria =
+      row.querySelector(
+        ".categoria"
+      ).value.trim();
+
+    if(categoria){
+      categorias++;
+    }
+
+  });
+
+
+  document.getElementById(
+    "totalCategorias"
+  ).textContent =
+    categorias;
+
+
+  document.getElementById(
+    "totalExperiencia"
+  ).textContent =
+    formatNumber(totalExp);
+
+
+  document.getElementById(
+    "totalPuestos"
+  ).textContent =
+    totalPuestos;
+
+
+  document.getElementById(
+    "experienciaAcumuladaGeneral"
+  ).textContent =
+    formatNumber(
+      accumulatedGeneral
+    );
+
+
+  updateProgress();
+
+}
+
+
+function formatNumber(value){
+
+  if(
+    Number.isInteger(value)
+  ){
+
+    return value;
+
+  }
+
+  return value.toFixed(1);
+
+}
+
+
+/* =====================================================
+   PROGRESO
+===================================================== */
+
+function updateProgress(){
+
+  const fecha =
+    document.getElementById(
+      "fechaActualizacion"
+    ).value;
+
+  const puesto =
+    document.getElementById(
+      "puesto"
+    ).value.trim();
+
+  const rows =
+    [...careerBody.querySelectorAll("tr")];
+
+
+  let completed =
+    0;
+
+  let total =
+    2;
+
+
+  if(fecha){
+    completed++;
+  }
+
+  if(puesto){
+    completed++;
+  }
+
+
+  rows.forEach(row => {
+
+    const fields = [
+      row.querySelector(".categoria"),
+      row.querySelector(".conocimientos"),
+      row.querySelector(".requisitos")
+    ];
+
+    fields.forEach(field => {
+
+      total++;
+
+      if(field.value.trim()){
+        completed++;
+      }
+
+    });
+
+  });
+
+
+  const percent =
+    total
+      ? Math.round(
+          completed / total * 100
+        )
+      : 0;
+
+
+  document.getElementById(
+    "progressBar"
+  ).style.width =
+    percent + "%";
+
+
+  document.getElementById(
+    "progressPercent"
+  ).textContent =
+    percent + "%";
+
+}
+
+
+/* =====================================================
+   GUARDAR
+===================================================== */
+
+function collectRows(){
+
+  return [
+    ...careerBody.querySelectorAll("tr")
+  ].map(row => ({
+
+    categoria:
+      row.querySelector(
+        ".categoria"
+      ).value,
+
+    conocimientos:
+      row.querySelector(
+        ".conocimientos"
+      ).value,
+
+    requisitos:
+      row.querySelector(
+        ".requisitos"
+      ).value,
+
+    experiencia:
+      row.querySelector(
+        ".experiencia"
+      ).value,
+
+    puesto1:
+      row.querySelector(
+        ".puesto1"
+      ).value,
+
+    puesto2:
+      row.querySelector(
+        ".puesto2"
+      ).value,
+
+    puesto3:
+      row.querySelector(
+        ".puesto3"
+      ).value
+
+  }));
+
+}
+
+
+function collectData(){
+
+  return {
+
+    fechaActualizacion:
+      document.getElementById(
+        "fechaActualizacion"
+      ).value,
+
+    puesto:
+      document.getElementById(
+        "puesto"
+      ).value,
+
+    legajo:
+      document.getElementById(
+        "legajo"
+      ).value,
+
+    nombre:
+      document.getElementById(
+        "nombre"
+      ).value,
+
+    sector:
+      document.getElementById(
+        "sector"
+      ).value,
+
+    observaciones:
+      document.getElementById(
+        "observaciones"
+      ).value,
+
+    filas:
+      collectRows(),
+
+    finalizado:
+      document.body.classList.contains(
+        "finished"
+      ),
+
+    ultimaModificacion:
+      new Date().toISOString()
+
+  };
+
+}
+
+
+function saveForm(){
+
+  const data =
+    collectData();
+
+  localStorage.setItem(
+    STORAGE_KEY,
+    JSON.stringify(data)
+  );
+
+  showStatus(
+    "Plan de carrera guardado correctamente.",
+    "success"
+  );
+
+}
+
+
+/* =====================================================
+   CARGAR
+===================================================== */
+
+function loadForm(){
+
+  const stored =
+    localStorage.getItem(
+      STORAGE_KEY
+    );
+
+
+  if(!stored){
+
+    createInitialRows();
+    setToday();
+
+    return;
+  }
+
+
+  try{
+
+    const data =
+      JSON.parse(stored);
+
+
+    document.getElementById(
+      "fechaActualizacion"
+    ).value =
+      data.fechaActualizacion || "";
+
+
+    document.getElementById(
+      "puesto"
+    ).value =
+      data.puesto || "";
+
+
+    document.getElementById(
+      "legajo"
+    ).value =
+      data.legajo || "";
+
+
+    document.getElementById(
+      "nombre"
+    ).value =
+      data.nombre || "";
+
+
+    document.getElementById(
+      "sector"
+    ).value =
+      data.sector || "";
+
+
+    document.getElementById(
+      "observaciones"
+    ).value =
+      data.observaciones || "";
+
+
+    careerBody.innerHTML = "";
+
+    rowCounter = 0;
+
+
+    if(
+      data.filas
+      &&
+      data.filas.length
+    ){
+
+      data.filas.forEach(
+        fila => addRow(fila)
+      );
+
+    }
+    else{
+
+      createInitialRows();
+
+    }
+
+
+    if(data.finalizado){
+
+      document.body.classList.add(
+        "finished"
+      );
+
+    }
+
+
+    calculateAll();
+
+  }
+  catch(error){
+
+    console.error(error);
+
+    createInitialRows();
+
+    setToday();
+
+  }
+
+}
+
+
+/* =====================================================
+   FILAS INICIALES
+===================================================== */
+
+function createInitialRows(){
+
+  careerBody.innerHTML = "";
+
+  rowCounter = 0;
+
+  /*
+    El documento original entregado contiene
+    valores iniciales en 0.
+
+    Se generan cinco líneas editables para
+    comenzar el plan de carrera.
+  */
+
+  for(let i = 0; i < 5; i++){
+
+    addRow({
+      experiencia:0,
+      puesto1:0,
+      puesto2:0,
+      puesto3:0
+    });
+
+  }
+
+}
+
+
+/* =====================================================
+   FECHA ACTUAL
+===================================================== */
+
+function setToday(){
+
+  const field =
+    document.getElementById(
+      "fechaActualizacion"
+    );
+
+  if(!field.value){
+
+    const today =
+      new Date();
+
+    const year =
+      today.getFullYear();
+
+    const month =
+      String(
+        today.getMonth() + 1
+      ).padStart(2,"0");
+
+    const day =
+      String(
+        today.getDate()
+      ).padStart(2,"0");
+
+    field.value =
+      `${year}-${month}-${day}`;
+
+  }
+
+}
+
+
+/* =====================================================
+   VALIDACIÓN
+===================================================== */
+
+function validateForm(){
+
+  let valid = true;
+
+  let firstInvalid = null;
+
+
+  const requiredFields = [
+    document.getElementById(
+      "fechaActualizacion"
+    ),
+
+    document.getElementById(
+      "puesto"
+    )
+  ];
+
+
+  requiredFields.forEach(field => {
+
+    field.classList.remove(
+      "invalid"
+    );
+
+    if(!field.value.trim()){
+
+      field.classList.add(
+        "invalid"
+      );
+
+      valid = false;
+
+      if(!firstInvalid){
+
+        firstInvalid =
+          field;
+
+      }
+
+    }
+
+  });
+
+
+  const rows =
+    [...careerBody.querySelectorAll("tr")];
+
+
+  const hasCareerData =
+    rows.some(row =>
+
+      row.querySelector(
+        ".categoria"
+      ).value.trim()
+
+      ||
+
+      row.querySelector(
+        ".conocimientos"
+      ).value.trim()
+
+      ||
+
+      row.querySelector(
+        ".requisitos"
+      ).value.trim()
+
+    );
+
+
+  if(!hasCareerData){
+
+    valid = false;
+
+  }
+
+
+  if(firstInvalid){
+
+    firstInvalid
+      .scrollIntoView({
+        behavior:"smooth",
+        block:"center"
+      });
+
+  }
+
+
+  return valid;
+
+}
+
+
+/* =====================================================
+   FINALIZAR
+===================================================== */
+
+function finalizeForm(){
+
+  if(!validateForm()){
+
+    showStatus(
+      "Complete los campos obligatorios y al menos una categoría del plan de carrera.",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  if(
+    !confirm(
+      "¿Desea finalizar el Plan de Carrera? El formulario quedará bloqueado."
+    )
+  ){
+
+    return;
+
+  }
+
+
+  document.body.classList.add(
+    "finished"
+  );
+
+  saveForm();
+
+  showStatus(
+    "Plan de carrera finalizado correctamente.",
+    "success"
+  );
+
+}
+
+
+/* =====================================================
+   LIMPIAR
+===================================================== */
+
+function clearForm(){
+
+  if(
+    !confirm(
+      "¿Desea eliminar todos los datos cargados?"
+    )
+  ){
+
+    return;
+
+  }
+
+
+  localStorage.removeItem(
+    STORAGE_KEY
+  );
+
+
+  document.getElementById(
+    "careerForm"
+  ).reset();
+
+
+  document.body.classList.remove(
+    "finished"
+  );
+
+
+  createInitialRows();
+
+  setToday();
+
+  calculateAll();
+
+
+  showStatus(
+    "Formulario limpiado correctamente.",
+    "success"
+  );
+
+}
+
+
+/* =====================================================
+   MENSAJES
+===================================================== */
+
+function showStatus(message,type){
+
+  const element =
+    document.getElementById(
+      "statusMessage"
+    );
+
+  element.className =
+    "status " + type;
+
+  element.textContent =
+    message;
+
+
+  setTimeout(()=>{
+
+    element.className =
+      "status";
+
+  },4500);
+
+}
+
+
+/* =====================================================
+   EVENTOS FILA
+===================================================== */
+
+function attachInputEvents(row){
+
+  row.querySelectorAll(
+    "input, select"
+  ).forEach(field => {
+
+    field.addEventListener(
+      "input",
+      calculateAll
+    );
+
+    field.addEventListener(
+      "change",
+      calculateAll
+    );
+
+  });
+
+}
+
+
+/* =====================================================
+   ESCAPAR HTML
+===================================================== */
+
+function escapeHTML(value){
+
+  return String(value)
+
+    .replaceAll(
+      "&",
+      "&amp;"
+    )
+
+    .replaceAll(
+      "<",
+      "&lt;"
+    )
+
+    .replaceAll(
+      ">",
+      "&gt;"
+    )
+
+    .replaceAll(
+      '"',
+      "&quot;"
+    )
+
+    .replaceAll(
+      "'",
+      "&#039;"
+    );
+
+}
+
+
+/* =====================================================
+   EVENTOS GENERALES
+===================================================== */
+
+document.querySelectorAll(
+  "#fechaActualizacion, #puesto, #legajo, #nombre, #sector, #observaciones"
+).forEach(field => {
+
+  field.addEventListener(
+    "input",
+    updateProgress
+  );
+
+  field.addEventListener(
+    "change",
+    updateProgress
+  );
+
+});
+
+
+/* CTRL + S */
+
+document.addEventListener(
+  "keydown",
+  event => {
+
+    if(
+      (event.ctrlKey || event.metaKey)
+      &&
+      event.key.toLowerCase() === "s"
+    ){
+
+      event.preventDefault();
+
+      saveForm();
+
+    }
+
+  }
+);
+
+
+/* =====================================================
+   INICIO
+===================================================== */
+
+document.addEventListener(
+  "DOMContentLoaded",
+  loadForm
+);
+
+</script>
+
+</body>
+</html>

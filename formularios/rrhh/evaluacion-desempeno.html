@@ -1,0 +1,2824 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>PGSN02-F12 | Evaluación de Desempeño | NASER</title>
+
+<style>
+
+/* =========================================================
+   NASER SRL
+   PGSN02-F12
+   EVALUACIÓN DE DESEMPEÑO DEL PERSONAL
+========================================================= */
+
+:root{
+    --naser:#009b49;
+    --naser-dark:#007a3a;
+    --black:#111111;
+    --black2:#1b1b1b;
+    --white:#ffffff;
+    --bg:#f1f3f4;
+    --border:#d8dde1;
+    --text:#202124;
+    --muted:#6b7280;
+    --danger:#b91c1c;
+    --warning:#d97706;
+    --success:#009b49;
+    --shadow:0 4px 18px rgba(0,0,0,.08);
+}
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    font-family:Arial, Helvetica, sans-serif;
+    background:var(--bg);
+    color:var(--text);
+}
+
+input,
+textarea,
+select,
+button{
+    font-family:inherit;
+}
+
+/* =========================================================
+   SIDEBAR
+========================================================= */
+
+.sidebar{
+    position:fixed;
+    top:0;
+    left:0;
+    width:250px;
+    height:100vh;
+    background:#0d0d0d;
+    color:#fff;
+    z-index:1000;
+    display:flex;
+    flex-direction:column;
+    box-shadow:3px 0 15px rgba(0,0,0,.15);
+}
+
+.brand{
+    padding:26px 22px;
+    border-bottom:1px solid #292929;
+}
+
+.brand-logo{
+    font-size:31px;
+    font-weight:900;
+    letter-spacing:2px;
+}
+
+.brand-logo span{
+    color:var(--naser);
+}
+
+.brand small{
+    display:block;
+    margin-top:7px;
+    color:#999;
+    font-size:11px;
+    letter-spacing:1px;
+}
+
+.sidebar nav{
+    padding:18px 12px;
+    flex:1;
+}
+
+.nav-title{
+    color:#686868;
+    font-size:10px;
+    font-weight:700;
+    letter-spacing:1.3px;
+    margin:16px 12px 8px;
+}
+
+.nav-link{
+    display:block;
+    color:#ccc;
+    text-decoration:none;
+    padding:13px 15px;
+    border-radius:7px;
+    margin-bottom:5px;
+    font-size:14px;
+    transition:.2s;
+}
+
+.nav-link:hover{
+    background:#202020;
+    color:#fff;
+}
+
+.nav-link.active{
+    background:var(--naser);
+    color:#fff;
+    font-weight:700;
+}
+
+.sidebar-footer{
+    padding:17px;
+    border-top:1px solid #292929;
+    color:#777;
+    font-size:11px;
+}
+
+/* =========================================================
+   MAIN
+========================================================= */
+
+.main{
+    margin-left:250px;
+    min-height:100vh;
+}
+
+.topbar{
+    height:72px;
+    background:#fff;
+    border-bottom:1px solid var(--border);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 34px;
+    position:sticky;
+    top:0;
+    z-index:100;
+}
+
+.topbar h2{
+    font-size:17px;
+}
+
+.topbar p{
+    font-size:12px;
+    color:var(--muted);
+    margin-top:4px;
+}
+
+.document-code{
+    text-align:right;
+}
+
+.document-code strong{
+    display:block;
+    color:var(--naser);
+    font-size:15px;
+}
+
+.document-code span{
+    font-size:11px;
+    color:#777;
+}
+
+.container{
+    width:100%;
+    max-width:1450px;
+    margin:auto;
+    padding:28px;
+}
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.hero{
+    background:#111;
+    color:#fff;
+    border-left:6px solid var(--naser);
+    border-radius:12px;
+    padding:30px;
+    margin-bottom:20px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:25px;
+    box-shadow:var(--shadow);
+}
+
+.hero-tag{
+    display:inline-block;
+    background:var(--naser);
+    padding:6px 10px;
+    border-radius:4px;
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:.8px;
+    margin-bottom:12px;
+}
+
+.hero h1{
+    font-size:27px;
+    margin-bottom:8px;
+}
+
+.hero p{
+    color:#bbb;
+    font-size:13px;
+    line-height:1.5;
+}
+
+.hero-code{
+    min-width:175px;
+    padding:15px;
+    background:#1d1d1d;
+    border:1px solid #333;
+    border-radius:8px;
+    text-align:center;
+}
+
+.hero-code strong{
+    display:block;
+    font-size:18px;
+    margin-bottom:5px;
+}
+
+.hero-code span{
+    color:#aaa;
+    font-size:11px;
+}
+
+/* =========================================================
+   PROGRESO
+========================================================= */
+
+.progress-card{
+    background:#fff;
+    padding:18px 20px;
+    border-radius:10px;
+    margin-bottom:20px;
+    box-shadow:var(--shadow);
+}
+
+.progress-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    font-size:13px;
+    font-weight:bold;
+    margin-bottom:10px;
+}
+
+#progressPercent{
+    color:var(--naser);
+    font-size:16px;
+}
+
+.progress{
+    height:10px;
+    background:#e5e7eb;
+    border-radius:20px;
+    overflow:hidden;
+}
+
+.progress-bar{
+    width:0%;
+    height:100%;
+    background:var(--naser);
+    transition:.3s;
+}
+
+/* =========================================================
+   CARDS
+========================================================= */
+
+.card{
+    background:#fff;
+    border:1px solid #e3e5e7;
+    border-radius:10px;
+    margin-bottom:20px;
+    overflow:hidden;
+    box-shadow:var(--shadow);
+}
+
+.card-header{
+    background:#111;
+    color:#fff;
+    padding:16px 20px;
+    display:flex;
+    align-items:center;
+    gap:13px;
+}
+
+.section-number{
+    width:31px;
+    height:31px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:var(--naser);
+    font-weight:bold;
+    flex-shrink:0;
+}
+
+.card-header h3{
+    font-size:15px;
+    letter-spacing:.4px;
+}
+
+.card-body{
+    padding:23px;
+}
+
+/* =========================================================
+   FORMULARIO
+========================================================= */
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:18px;
+}
+
+.grid-3{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:18px;
+}
+
+.grid-4{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:18px;
+}
+
+.field{
+    display:flex;
+    flex-direction:column;
+    gap:7px;
+}
+
+.field.full{
+    grid-column:1/-1;
+}
+
+label{
+    font-size:11px;
+    font-weight:700;
+    text-transform:uppercase;
+    color:#555;
+    letter-spacing:.4px;
+}
+
+.required::after{
+    content:" *";
+    color:#c62828;
+}
+
+input,
+select,
+textarea{
+    width:100%;
+    padding:11px 12px;
+    border:1px solid #ccd2d7;
+    border-radius:6px;
+    font-size:14px;
+    background:#fff;
+    outline:none;
+}
+
+input:focus,
+select:focus,
+textarea:focus{
+    border-color:var(--naser);
+    box-shadow:0 0 0 3px rgba(0,155,73,.10);
+}
+
+.invalid{
+    border-color:#c62828 !important;
+    background:#fff7f7 !important;
+}
+
+textarea{
+    resize:vertical;
+    min-height:130px;
+    line-height:1.5;
+}
+
+/* =========================================================
+   TABLA EVALUACIÓN
+========================================================= */
+
+.table-wrapper{
+    overflow-x:auto;
+}
+
+.evaluation-table{
+    width:100%;
+    border-collapse:collapse;
+    min-width:1000px;
+}
+
+.evaluation-table th{
+    background:#151515;
+    color:#fff;
+    border:1px solid #333;
+    padding:11px 7px;
+    font-size:11px;
+    text-transform:uppercase;
+    text-align:center;
+}
+
+.evaluation-table th.factor-header{
+    text-align:left;
+}
+
+.evaluation-table td{
+    border:1px solid #d9dde0;
+    padding:8px;
+    font-size:12px;
+    vertical-align:middle;
+}
+
+.evaluation-table tbody tr:hover:not(.category-row){
+    background:#f8fbf9;
+}
+
+.number-cell{
+    width:48px;
+    text-align:center;
+    font-weight:bold;
+    color:#555;
+}
+
+.factor-cell{
+    min-width:500px;
+    line-height:1.4;
+}
+
+.eval-cell{
+    width:62px;
+    text-align:center;
+}
+
+.category-row td{
+    background:#eef8f2 !important;
+    color:#006b33;
+    font-weight:bold;
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:.5px;
+    padding:10px 12px;
+    border-left:5px solid var(--naser);
+}
+
+/* RADIO */
+
+.eval-radio{
+    display:none;
+}
+
+.radio-label{
+    width:36px;
+    height:36px;
+    margin:auto;
+    border:2px solid #cdd2d6;
+    border-radius:6px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    font-weight:bold;
+    font-size:12px;
+    color:#666;
+    transition:.2s;
+}
+
+.radio-label:hover{
+    border-color:var(--naser);
+}
+
+.eval-radio:checked + .radio-label{
+    background:var(--naser);
+    border-color:var(--naser);
+    color:#fff;
+    box-shadow:0 2px 8px rgba(0,155,73,.25);
+}
+
+.eval-radio[value="B"]:checked + .radio-label{
+    background:#e2a100;
+    border-color:#e2a100;
+}
+
+.eval-radio[value="C"]:checked + .radio-label{
+    background:#b91c1c;
+    border-color:#b91c1c;
+}
+
+.eval-radio[value="NA"]:checked + .radio-label{
+    background:#6b7280;
+    border-color:#6b7280;
+}
+
+/* =========================================================
+   RESUMEN
+========================================================= */
+
+.summary-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:15px;
+}
+
+.summary-box{
+    border:1px solid #ddd;
+    border-radius:9px;
+    background:#fafafa;
+    padding:20px;
+    text-align:center;
+}
+
+.summary-box .letter{
+    width:38px;
+    height:38px;
+    margin:0 auto 10px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:50%;
+    background:#111;
+    color:#fff;
+    font-weight:bold;
+    font-size:16px;
+}
+
+.summary-box.a .letter{
+    background:var(--naser);
+}
+
+.summary-box.b .letter{
+    background:#d99b00;
+}
+
+.summary-box.c .letter{
+    background:#b91c1c;
+}
+
+.summary-box.na .letter{
+    background:#6b7280;
+}
+
+.summary-box strong{
+    display:block;
+    font-size:28px;
+    margin-bottom:5px;
+}
+
+.summary-box small{
+    font-size:11px;
+    color:#777;
+}
+
+/* =========================================================
+   RESULTADO
+========================================================= */
+
+.result-container{
+    margin-top:22px;
+    border:2px solid #d8dde1;
+    border-radius:10px;
+    padding:22px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:20px;
+}
+
+.result-info h4{
+    font-size:12px;
+    color:#666;
+    text-transform:uppercase;
+    margin-bottom:7px;
+}
+
+.result-info strong{
+    font-size:23px;
+}
+
+.result-badge{
+    padding:11px 18px;
+    border-radius:8px;
+    font-size:13px;
+    font-weight:bold;
+    background:#e5e7eb;
+    color:#333;
+}
+
+.result-container.approved{
+    border-color:#8fd0ad;
+    background:#f0faf5;
+}
+
+.result-container.approved .result-badge{
+    background:var(--naser);
+    color:#fff;
+}
+
+.result-container.observed{
+    border-color:#e7c46a;
+    background:#fffaf0;
+}
+
+.result-container.observed .result-badge{
+    background:#d99b00;
+    color:#fff;
+}
+
+.result-container.failed{
+    border-color:#e3a5a5;
+    background:#fff5f5;
+}
+
+.result-container.failed .result-badge{
+    background:#b91c1c;
+    color:#fff;
+}
+
+/* =========================================================
+   CRITERIOS
+========================================================= */
+
+.criteria{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:12px;
+    margin-top:20px;
+}
+
+.criteria-item{
+    border:1px solid #ddd;
+    padding:14px;
+    border-radius:7px;
+    font-size:12px;
+}
+
+.criteria-item strong{
+    display:block;
+    margin-bottom:5px;
+}
+
+/* =========================================================
+   FIRMAS
+========================================================= */
+
+.signature-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:25px;
+}
+
+.signature-box{
+    border:1px solid #ddd;
+    border-radius:8px;
+    padding:20px;
+}
+
+.signature-box h4{
+    font-size:12px;
+    text-transform:uppercase;
+    margin-bottom:15px;
+}
+
+.signature-line{
+    height:85px;
+    border-bottom:1px solid #333;
+    margin-bottom:10px;
+}
+
+.signature-text{
+    text-align:center;
+    font-size:10px;
+    color:#777;
+}
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+.status{
+    display:none;
+    padding:13px 16px;
+    margin-bottom:18px;
+    border-radius:7px;
+    font-size:13px;
+    font-weight:600;
+}
+
+.status.success{
+    display:block;
+    background:#e9f8ef;
+    border:1px solid #b8e6ca;
+    color:#086b36;
+}
+
+.status.error{
+    display:block;
+    background:#fff0f0;
+    border:1px solid #efc3c3;
+    color:#9d1c1c;
+}
+
+/* =========================================================
+   BOTONES
+========================================================= */
+
+.actions{
+    background:#fff;
+    border-radius:10px;
+    padding:18px;
+    box-shadow:var(--shadow);
+    display:flex;
+    justify-content:flex-end;
+    flex-wrap:wrap;
+    gap:10px;
+    margin-bottom:35px;
+}
+
+.btn{
+    border:0;
+    border-radius:6px;
+    padding:11px 18px;
+    font-size:13px;
+    font-weight:bold;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.btn:hover{
+    transform:translateY(-1px);
+}
+
+.btn-primary{
+    background:var(--naser);
+    color:#fff;
+}
+
+.btn-primary:hover{
+    background:var(--naser-dark);
+}
+
+.btn-dark{
+    background:#171717;
+    color:#fff;
+}
+
+.btn-gray{
+    background:#e5e7eb;
+    color:#333;
+}
+
+.finished-badge{
+    display:none;
+    padding:8px 13px;
+    border-radius:6px;
+    font-size:12px;
+    font-weight:bold;
+    background:#e8f7ef;
+    color:#05723a;
+    border:1px solid #a9ddc1;
+}
+
+body.finished .finished-badge{
+    display:inline-block;
+}
+
+body.finished input,
+body.finished textarea,
+body.finished select,
+body.finished .radio-label{
+    pointer-events:none;
+}
+
+body.finished input,
+body.finished textarea,
+body.finished select{
+    background:#f4f4f4;
+}
+
+.footer{
+    text-align:center;
+    color:#888;
+    font-size:11px;
+    padding:15px;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media(max-width:1000px){
+
+    .sidebar{
+        width:210px;
+    }
+
+    .main{
+        margin-left:210px;
+    }
+
+    .grid-4{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .summary-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .signature-grid{
+        grid-template-columns:1fr;
+    }
+
+}
+
+@media(max-width:760px){
+
+    .sidebar{
+        position:relative;
+        width:100%;
+        height:auto;
+    }
+
+    .sidebar nav{
+        display:none;
+    }
+
+    .main{
+        margin-left:0;
+    }
+
+    .topbar{
+        position:relative;
+        height:auto;
+        padding:15px;
+    }
+
+    .container{
+        padding:14px;
+    }
+
+    .hero{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    .grid,
+    .grid-3,
+    .grid-4,
+    .summary-grid,
+    .criteria{
+        grid-template-columns:1fr;
+    }
+
+    .result-container{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+}
+
+/* =========================================================
+   IMPRESIÓN
+========================================================= */
+
+@media print{
+
+    @page{
+        size:A4 landscape;
+        margin:7mm;
+    }
+
+    body{
+        background:#fff;
+    }
+
+    .sidebar,
+    .topbar,
+    .progress-card,
+    .actions,
+    .status,
+    .footer{
+        display:none !important;
+    }
+
+    .main{
+        margin:0;
+    }
+
+    .container{
+        padding:0;
+        max-width:none;
+    }
+
+    .hero{
+        background:#fff !important;
+        color:#000 !important;
+        box-shadow:none;
+        border:2px solid #000;
+        border-left:6px solid #009b49;
+        border-radius:0;
+        padding:12px;
+    }
+
+    .hero p,
+    .hero-code span{
+        color:#333;
+    }
+
+    .hero-code{
+        background:#fff;
+        color:#000;
+    }
+
+    .card{
+        box-shadow:none;
+        border:1px solid #555;
+        border-radius:0;
+        break-inside:avoid;
+    }
+
+    .card-header{
+        background:#111 !important;
+        color:#fff !important;
+        -webkit-print-color-adjust:exact;
+        print-color-adjust:exact;
+        padding:8px 12px;
+    }
+
+    .card-body{
+        padding:10px;
+    }
+
+    .evaluation-table{
+        min-width:0;
+    }
+
+    .evaluation-table th{
+        font-size:7px;
+        padding:5px 3px;
+        background:#111 !important;
+        color:#fff !important;
+        -webkit-print-color-adjust:exact;
+        print-color-adjust:exact;
+    }
+
+    .evaluation-table td{
+        font-size:7px;
+        padding:3px;
+    }
+
+    .category-row td{
+        background:#eef8f2 !important;
+        -webkit-print-color-adjust:exact;
+        print-color-adjust:exact;
+    }
+
+    .radio-label{
+        width:20px;
+        height:20px;
+        font-size:7px;
+    }
+
+    .factor-cell{
+        min-width:0;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- =========================================================
+     SIDEBAR
+========================================================= -->
+
+<aside class="sidebar">
+
+    <div class="brand">
+
+        <div class="brand-logo">
+            NASER<span>.</span>
+        </div>
+
+        <small>
+            SISTEMA DE GESTIÓN INTEGRADO
+        </small>
+
+    </div>
+
+    <nav>
+
+        <div class="nav-title">
+            GESTIÓN
+        </div>
+
+        <a href="#" class="nav-link">
+            Inicio
+        </a>
+
+        <a href="#" class="nav-link">
+            Personal
+        </a>
+
+        <a href="#" class="nav-link active">
+            Evaluación de desempeño
+        </a>
+
+        <div class="nav-title">
+            FORMULARIO
+        </div>
+
+        <a href="#datos" class="nav-link">
+            1. Datos de evaluación
+        </a>
+
+        <a href="#evaluacion" class="nav-link">
+            2. Factores a evaluar
+        </a>
+
+        <a href="#resultado" class="nav-link">
+            3. Resultado general
+        </a>
+
+        <a href="#comentarios" class="nav-link">
+            4. Comentarios
+        </a>
+
+        <a href="#firmas" class="nav-link">
+            5. Firmas
+        </a>
+
+    </nav>
+
+    <div class="sidebar-footer">
+        NASER SRL<br>
+        Gestión de Recursos Humanos
+    </div>
+
+</aside>
+
+
+<!-- =========================================================
+     MAIN
+========================================================= -->
+
+<main class="main">
+
+<header class="topbar">
+
+    <div>
+        <h2>Gestión de Personal</h2>
+
+        <p>
+            Evaluación de desempeño
+        </p>
+    </div>
+
+    <div style="display:flex;align-items:center;gap:15px;">
+
+        <span class="finished-badge">
+            ✓ EVALUACIÓN FINALIZADA
+        </span>
+
+        <div class="document-code">
+
+            <strong>
+                PGSN02-F12
+            </strong>
+
+            <span>
+                Rev.04 · Jul.25
+            </span>
+
+        </div>
+
+    </div>
+
+</header>
+
+
+<div class="container">
+
+<!-- =========================================================
+     HERO
+========================================================= -->
+
+<section class="hero">
+
+    <div>
+
+        <div class="hero-tag">
+            RECURSOS HUMANOS
+        </div>
+
+        <h1>
+            Evaluación de Desempeño del Personal
+        </h1>
+
+        <p>
+            Evaluación del desempeño, conocimientos,
+            comportamiento y competencias del personal.
+        </p>
+
+    </div>
+
+    <div class="hero-code">
+
+        <strong>
+            PGSN02-F12
+        </strong>
+
+        <span>
+            Rev.04 · Julio 2025
+        </span>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     PROGRESO
+========================================================= -->
+
+<section class="progress-card">
+
+    <div class="progress-header">
+
+        <span>
+            Completado de la evaluación
+        </span>
+
+        <span id="progressPercent">
+            0%
+        </span>
+
+    </div>
+
+    <div class="progress">
+
+        <div
+            id="progressBar"
+            class="progress-bar">
+        </div>
+
+    </div>
+
+</section>
+
+
+<div
+    id="statusMessage"
+    class="status">
+</div>
+
+
+<form id="evaluationForm">
+
+<!-- =========================================================
+     1 DATOS
+========================================================= -->
+
+<section class="card" id="datos">
+
+    <div class="card-header">
+
+        <div class="section-number">
+            1
+        </div>
+
+        <h3>
+            DATOS DE LA EVALUACIÓN
+        </h3>
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="grid">
+
+            <div class="field">
+
+                <label class="required">
+                    Nombre y apellido
+                </label>
+
+                <input
+                    id="nombre"
+                    type="text"
+                    placeholder="Nombre completo del personal evaluado">
+
+            </div>
+
+            <div class="field">
+
+                <label class="required">
+                    Puesto
+                </label>
+
+                <input
+                    id="puesto"
+                    type="text"
+                    placeholder="Puesto actual">
+
+            </div>
+
+        </div>
+
+        <div
+            class="grid"
+            style="margin-top:18px;">
+
+            <div class="field">
+
+                <label class="required">
+                    Período a evaluar
+                </label>
+
+                <input
+                    id="periodo"
+                    type="text"
+                    placeholder="Ej.: Enero - Junio 2025">
+
+            </div>
+
+            <div class="field">
+
+                <label class="required">
+                    Fecha
+                </label>
+
+                <input
+                    id="fecha"
+                    type="date"
+                    value="2025-10-13">
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     2 EVALUACIÓN
+========================================================= -->
+
+<section class="card" id="evaluacion">
+
+    <div class="card-header">
+
+        <div class="section-number">
+            2
+        </div>
+
+        <h3>
+            FACTORES A EVALUAR
+        </h3>
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="table-wrapper">
+
+            <table class="evaluation-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            N°
+                        </th>
+
+                        <th class="factor-header">
+                            Concepto
+                        </th>
+
+                        <th>
+                            A
+                        </th>
+
+                        <th>
+                            B
+                        </th>
+
+                        <th>
+                            C
+                        </th>
+
+                        <th>
+                            N/A
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody id="evaluationBody">
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     3 RESULTADO
+========================================================= -->
+
+<section class="card" id="resultado">
+
+    <div class="card-header">
+
+        <div class="section-number">
+            3
+        </div>
+
+        <h3>
+            RESULTADO GENERAL
+        </h3>
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="summary-grid">
+
+            <div class="summary-box a">
+
+                <div class="letter">
+                    A
+                </div>
+
+                <strong id="countA">
+                    0
+                </strong>
+
+                <small>
+                    Evaluaciones A
+                </small>
+
+            </div>
+
+
+            <div class="summary-box b">
+
+                <div class="letter">
+                    B
+                </div>
+
+                <strong id="countB">
+                    0
+                </strong>
+
+                <small>
+                    Evaluaciones B
+                </small>
+
+            </div>
+
+
+            <div class="summary-box c">
+
+                <div class="letter">
+                    C
+                </div>
+
+                <strong id="countC">
+                    0
+                </strong>
+
+                <small>
+                    Evaluaciones C
+                </small>
+
+            </div>
+
+
+            <div class="summary-box na">
+
+                <div class="letter">
+                    N/A
+                </div>
+
+                <strong id="countNA">
+                    0
+                </strong>
+
+                <small>
+                    No aplica
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <div
+            id="resultContainer"
+            class="result-container">
+
+            <div class="result-info">
+
+                <h4>
+                    Resultado de la evaluación
+                </h4>
+
+                <strong id="resultText">
+                    Evaluación incompleta
+                </strong>
+
+            </div>
+
+            <div
+                id="resultBadge"
+                class="result-badge">
+
+                PENDIENTE
+
+            </div>
+
+        </div>
+
+
+        <div class="criteria">
+
+            <div class="criteria-item">
+
+                <strong style="color:#009b49;">
+                    A ≥ 22
+                </strong>
+
+                Aprobado
+
+            </div>
+
+
+            <div class="criteria-item">
+
+                <strong style="color:#c58e00;">
+                    B ≥ 18
+                </strong>
+
+                Aprobado con observaciones
+
+            </div>
+
+
+            <div class="criteria-item">
+
+                <strong style="color:#b91c1c;">
+                    C ≥ 15
+                </strong>
+
+                Desaprobado
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     4 COMENTARIOS
+========================================================= -->
+
+<section class="card" id="comentarios">
+
+    <div class="card-header">
+
+        <div class="section-number">
+            4
+        </div>
+
+        <h3>
+            COMENTARIOS
+        </h3>
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="field">
+
+            <label>
+                Comentarios / observaciones
+            </label>
+
+            <textarea
+                id="comentario"
+                placeholder="Ingrese comentarios, observaciones, fortalezas, oportunidades de mejora o acciones requeridas."></textarea>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     5 FIRMAS
+========================================================= -->
+
+<section class="card" id="firmas">
+
+    <div class="card-header">
+
+        <div class="section-number">
+            5
+        </div>
+
+        <h3>
+            FIRMAS
+        </h3>
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="signature-grid">
+
+            <div class="signature-box">
+
+                <h4>
+                    Personal evaluado
+                </h4>
+
+                <div class="field">
+
+                    <label>
+                        Aclaración
+                    </label>
+
+                    <input
+                        type="text"
+                        id="firmaEvaluado"
+                        placeholder="Nombre y apellido">
+
+                </div>
+
+                <div class="signature-line">
+                </div>
+
+                <div class="signature-text">
+                    FIRMA PERSONAL EVALUADO
+                </div>
+
+            </div>
+
+
+            <div class="signature-box">
+
+                <h4>
+                    Evaluador
+                </h4>
+
+                <div class="field">
+
+                    <label>
+                        Aclaración
+                    </label>
+
+                    <input
+                        type="text"
+                        id="firmaEvaluador"
+                        placeholder="Nombre y apellido">
+
+                </div>
+
+                <div class="signature-line">
+                </div>
+
+                <div class="signature-text">
+                    FIRMA EVALUADOR
+                </div>
+
+            </div>
+
+
+            <div class="signature-box">
+
+                <h4>
+                    Gerente General
+                </h4>
+
+                <div class="field">
+
+                    <label>
+                        Aclaración
+                    </label>
+
+                    <input
+                        type="text"
+                        id="firmaGerente"
+                        placeholder="Nombre y apellido">
+
+                </div>
+
+                <div class="signature-line">
+                </div>
+
+                <div class="signature-text">
+                    FIRMA GERENTE GENERAL
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     ACCIONES
+========================================================= -->
+
+<section class="actions">
+
+    <button
+        type="button"
+        class="btn btn-gray"
+        onclick="clearForm()">
+
+        Limpiar
+
+    </button>
+
+    <button
+        type="button"
+        class="btn btn-dark"
+        onclick="saveForm()">
+
+        Guardar
+
+    </button>
+
+    <button
+        type="button"
+        class="btn btn-gray"
+        onclick="printForm()">
+
+        Imprimir / PDF
+
+    </button>
+
+    <button
+        type="button"
+        class="btn btn-primary"
+        onclick="finalizeForm()">
+
+        Finalizar evaluación
+
+    </button>
+
+</section>
+
+</form>
+
+
+<footer class="footer">
+
+    NASER SRL · Sistema de Gestión Integrado ·
+    PGSN02-F12 · Rev.04 · Jul.25
+
+</footer>
+
+</div>
+
+</main>
+
+
+<script>
+
+/* =========================================================
+   CONFIGURACIÓN
+========================================================= */
+
+const STORAGE_KEY =
+    "NASER_PGSN02_F12";
+
+
+/* =========================================================
+   FACTORES DE EVALUACIÓN
+========================================================= */
+
+const factores = [
+
+    {
+        categoria:"CUMPLIMIENTO DE TAREAS",
+        items:[
+
+            "Cumple con las tareas asignadas",
+
+            "Utiliza el tiempo de forma eficiente",
+
+            "Establece prioridades en función del riesgo",
+
+            "Aplica los procedimientos y registros a su cargo",
+
+            "Cuida su imagen y la del equipo ante clientes y otras personas",
+
+            "Mantiene el orden y limpieza de su lugar de trabajo",
+
+            "Cuida y utiliza correctamente los recursos asignados",
+
+            "Conoce y cumple los requisitos del cliente",
+
+            "Conoce y cumple los objetivos de la organización",
+
+            "Muestra proactividad y predisposición para las tareas",
+
+            "Realiza sus trabajos de forma ordenada y completa"
+
+        ]
+    },
+
+
+    {
+        categoria:"EXCELENCIA OPERATIVA",
+        items:[
+
+            "Utiliza los EPP en forma correcta",
+
+            "Cuida el ambiente y evita su contaminación",
+
+            "Demuestra tomar acciones para evitar incidentes o reclamos",
+
+            "Se adapta al cambio evaluando los riesgos",
+
+            "Propone acciones para mejorar los trabajos o equipos"
+
+        ]
+    },
+
+
+    {
+        categoria:"CONOCIMIENTOS Y APRENDIZAJE",
+        items:[
+
+            "Realiza preguntas cuando no conoce",
+
+            "Muestra disposición al aprendizaje",
+
+            "Sigue las recomendaciones de sus superiores",
+
+            "Realiza la totalidad de capacitaciones asignadas",
+
+            "Aplica sus conocimientos a las tareas",
+
+            "Su conocimiento técnico es acorde al plan de carrera",
+
+            "Transmite conocimiento a sus compañeros"
+
+        ]
+    },
+
+
+    {
+        categoria:"LIDERAZGO",
+        items:[
+
+            "Influye para el cumplimiento de los objetivos",
+
+            "Se dirige con respeto a todas las personas",
+
+            "Destaca el potencial de sus compañeros"
+
+        ]
+    },
+
+
+    {
+        categoria:"COMUNICACIÓN",
+        items:[
+
+            "Se comunica eficazmente de forma oral y escrita",
+
+            "Mantiene comunicación de trabajo con compañeros y clientes",
+
+            "Utiliza los medios adecuados para comunicar",
+
+            "Se asegura de haber comunicado la información deseada"
+
+        ]
+    }
+
+];
+
+
+/* =========================================================
+   CREAR TABLA
+========================================================= */
+
+function createEvaluationTable(){
+
+    const tbody =
+        document.getElementById("evaluationBody");
+
+    tbody.innerHTML = "";
+
+    let numero = 1;
+
+
+    factores.forEach(grupo => {
+
+        const categoryRow =
+            document.createElement("tr");
+
+        categoryRow.className =
+            "category-row";
+
+        categoryRow.innerHTML = `
+
+            <td colspan="6">
+                ${grupo.categoria}
+            </td>
+
+        `;
+
+        tbody.appendChild(
+            categoryRow
+        );
+
+
+        grupo.items.forEach(item => {
+
+            const tr =
+                document.createElement("tr");
+
+            tr.dataset.item =
+                numero;
+
+            tr.innerHTML = `
+
+                <td class="number-cell">
+                    ${numero}
+                </td>
+
+                <td class="factor-cell">
+                    ${item}
+                </td>
+
+                ${createOption(numero,"A","A")}
+
+                ${createOption(numero,"B","B")}
+
+                ${createOption(numero,"C","C")}
+
+                ${createOption(numero,"NA","N/A")}
+
+            `;
+
+            tbody.appendChild(tr);
+
+            numero++;
+
+        });
+
+    });
+
+
+    document.querySelectorAll(
+        ".eval-radio"
+    ).forEach(radio => {
+
+        radio.addEventListener(
+            "change",
+            calculateResults
+        );
+
+    });
+
+}
+
+
+/* =========================================================
+   RADIO
+========================================================= */
+
+function createOption(
+    numero,
+    value,
+    text
+){
+
+    const id =
+        `item_${numero}_${value}`;
+
+    return `
+
+        <td class="eval-cell">
+
+            <input
+                type="radio"
+                class="eval-radio"
+                name="item_${numero}"
+                id="${id}"
+                value="${value}">
+
+            <label
+                class="radio-label"
+                for="${id}">
+
+                ${text}
+
+            </label>
+
+        </td>
+
+    `;
+
+}
+
+
+/* =========================================================
+   CONTAR ITEMS
+========================================================= */
+
+function getTotalItems(){
+
+    return factores.reduce(
+        (total,grupo) =>
+            total + grupo.items.length,
+        0
+    );
+
+}
+
+
+/* =========================================================
+   RESULTADOS
+========================================================= */
+
+function calculateResults(){
+
+    let A = 0;
+    let B = 0;
+    let C = 0;
+    let NA = 0;
+
+    const totalItems =
+        getTotalItems();
+
+
+    for(
+        let i = 1;
+        i <= totalItems;
+        i++
+    ){
+
+        const selected =
+            document.querySelector(
+                `input[name="item_${i}"]:checked`
+            );
+
+        if(!selected){
+            continue;
+        }
+
+        switch(selected.value){
+
+            case "A":
+                A++;
+                break;
+
+            case "B":
+                B++;
+                break;
+
+            case "C":
+                C++;
+                break;
+
+            case "NA":
+                NA++;
+                break;
+
+        }
+
+    }
+
+
+    document.getElementById(
+        "countA"
+    ).textContent = A;
+
+    document.getElementById(
+        "countB"
+    ).textContent = B;
+
+    document.getElementById(
+        "countC"
+    ).textContent = C;
+
+    document.getElementById(
+        "countNA"
+    ).textContent = NA;
+
+
+    calculateGeneralResult(
+        A,
+        B,
+        C,
+        NA
+    );
+
+    updateProgress();
+
+}
+
+
+/* =========================================================
+   RESULTADO GENERAL
+========================================================= */
+
+function calculateGeneralResult(
+    A,
+    B,
+    C,
+    NA
+){
+
+    const resultContainer =
+        document.getElementById(
+            "resultContainer"
+        );
+
+    const resultText =
+        document.getElementById(
+            "resultText"
+        );
+
+    const resultBadge =
+        document.getElementById(
+            "resultBadge"
+        );
+
+
+    resultContainer.className =
+        "result-container";
+
+
+    /*
+       PRIORIDAD:
+
+       C >= 15 → DESAPROBADO
+
+       A >= 22 → APROBADO
+
+       B >= 18 → APROBADO CON OBSERVACIONES
+    */
+
+
+    if(C >= 15){
+
+        resultContainer.classList.add(
+            "failed"
+        );
+
+        resultText.textContent =
+            "Desaprobado";
+
+        resultBadge.textContent =
+            "DESAPROBADO";
+
+        return;
+
+    }
+
+
+    if(A >= 22){
+
+        resultContainer.classList.add(
+            "approved"
+        );
+
+        resultText.textContent =
+            "Aprobado";
+
+        resultBadge.textContent =
+            "APROBADO";
+
+        return;
+
+    }
+
+
+    if(B >= 18){
+
+        resultContainer.classList.add(
+            "observed"
+        );
+
+        resultText.textContent =
+            "Aprobado con observaciones";
+
+        resultBadge.textContent =
+            "CON OBSERVACIONES";
+
+        return;
+
+    }
+
+
+    const completed =
+        A + B + C + NA;
+
+
+    if(completed < getTotalItems()){
+
+        resultText.textContent =
+            `Evaluación incompleta (${completed}/${getTotalItems()})`;
+
+        resultBadge.textContent =
+            "PENDIENTE";
+
+        return;
+
+    }
+
+
+    resultText.textContent =
+        "Sin criterio definido";
+
+    resultBadge.textContent =
+        "REVISAR";
+
+}
+
+
+/* =========================================================
+   PROGRESO
+========================================================= */
+
+function updateProgress(){
+
+    let completed = 0;
+
+    let total =
+        getTotalItems() + 4;
+
+
+    const requiredFields = [
+
+        document.getElementById(
+            "nombre"
+        ),
+
+        document.getElementById(
+            "puesto"
+        ),
+
+        document.getElementById(
+            "periodo"
+        ),
+
+        document.getElementById(
+            "fecha"
+        )
+
+    ];
+
+
+    requiredFields.forEach(field => {
+
+        if(field.value.trim()){
+            completed++;
+        }
+
+    });
+
+
+    for(
+        let i = 1;
+        i <= getTotalItems();
+        i++
+    ){
+
+        const selected =
+            document.querySelector(
+                `input[name="item_${i}"]:checked`
+            );
+
+        if(selected){
+            completed++;
+        }
+
+    }
+
+
+    const percent =
+        Math.round(
+            completed /
+            total *
+            100
+        );
+
+
+    document.getElementById(
+        "progressBar"
+    ).style.width =
+        percent + "%";
+
+
+    document.getElementById(
+        "progressPercent"
+    ).textContent =
+        percent + "%";
+
+}
+
+
+/* =========================================================
+   OBTENER EVALUACIONES
+========================================================= */
+
+function collectEvaluations(){
+
+    const evaluations = {};
+
+    for(
+        let i = 1;
+        i <= getTotalItems();
+        i++
+    ){
+
+        const selected =
+            document.querySelector(
+                `input[name="item_${i}"]:checked`
+            );
+
+        evaluations[i] =
+            selected
+                ? selected.value
+                : null;
+
+    }
+
+    return evaluations;
+
+}
+
+
+/* =========================================================
+   GUARDAR
+========================================================= */
+
+function saveForm(){
+
+    const data = {
+
+        nombre:
+            document.getElementById(
+                "nombre"
+            ).value,
+
+        puesto:
+            document.getElementById(
+                "puesto"
+            ).value,
+
+        periodo:
+            document.getElementById(
+                "periodo"
+            ).value,
+
+        fecha:
+            document.getElementById(
+                "fecha"
+            ).value,
+
+        comentario:
+            document.getElementById(
+                "comentario"
+            ).value,
+
+        firmaEvaluado:
+            document.getElementById(
+                "firmaEvaluado"
+            ).value,
+
+        firmaEvaluador:
+            document.getElementById(
+                "firmaEvaluador"
+            ).value,
+
+        firmaGerente:
+            document.getElementById(
+                "firmaGerente"
+            ).value,
+
+        evaluaciones:
+            collectEvaluations(),
+
+        finalizado:
+            document.body.classList.contains(
+                "finished"
+            ),
+
+        ultimaModificacion:
+            new Date().toISOString()
+
+    };
+
+
+    localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify(data)
+    );
+
+
+    showStatus(
+        "Evaluación guardada correctamente.",
+        "success"
+    );
+
+}
+
+
+/* =========================================================
+   CARGAR
+========================================================= */
+
+function loadForm(){
+
+    const stored =
+        localStorage.getItem(
+            STORAGE_KEY
+        );
+
+
+    if(!stored){
+
+        calculateResults();
+
+        return;
+
+    }
+
+
+    try{
+
+        const data =
+            JSON.parse(stored);
+
+
+        document.getElementById(
+            "nombre"
+        ).value =
+            data.nombre || "";
+
+
+        document.getElementById(
+            "puesto"
+        ).value =
+            data.puesto || "";
+
+
+        document.getElementById(
+            "periodo"
+        ).value =
+            data.periodo || "";
+
+
+        document.getElementById(
+            "fecha"
+        ).value =
+            data.fecha || "2025-10-13";
+
+
+        document.getElementById(
+            "comentario"
+        ).value =
+            data.comentario || "";
+
+
+        document.getElementById(
+            "firmaEvaluado"
+        ).value =
+            data.firmaEvaluado || "";
+
+
+        document.getElementById(
+            "firmaEvaluador"
+        ).value =
+            data.firmaEvaluador || "";
+
+
+        document.getElementById(
+            "firmaGerente"
+        ).value =
+            data.firmaGerente || "";
+
+
+        if(data.evaluaciones){
+
+            Object.entries(
+                data.evaluaciones
+            ).forEach(
+                ([item,value]) => {
+
+                    if(!value){
+                        return;
+                    }
+
+                    const radio =
+                        document.querySelector(
+                            `input[name="item_${item}"][value="${value}"]`
+                        );
+
+                    if(radio){
+                        radio.checked = true;
+                    }
+
+                }
+            );
+
+        }
+
+
+        if(data.finalizado){
+
+            document.body.classList.add(
+                "finished"
+            );
+
+        }
+
+
+        calculateResults();
+
+    }
+    catch(error){
+
+        console.error(
+            "Error cargando evaluación:",
+            error
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   VALIDAR
+========================================================= */
+
+function validateForm(){
+
+    let valid = true;
+
+    let firstInvalid = null;
+
+
+    const requiredFields = [
+
+        document.getElementById(
+            "nombre"
+        ),
+
+        document.getElementById(
+            "puesto"
+        ),
+
+        document.getElementById(
+            "periodo"
+        ),
+
+        document.getElementById(
+            "fecha"
+        )
+
+    ];
+
+
+    requiredFields.forEach(field => {
+
+        field.classList.remove(
+            "invalid"
+        );
+
+        if(!field.value.trim()){
+
+            field.classList.add(
+                "invalid"
+            );
+
+            valid = false;
+
+            if(!firstInvalid){
+                firstInvalid = field;
+            }
+
+        }
+
+    });
+
+
+    if(firstInvalid){
+
+        firstInvalid.scrollIntoView({
+            behavior:"smooth",
+            block:"center"
+        });
+
+        return false;
+
+    }
+
+
+    let missingEvaluation =
+        null;
+
+
+    for(
+        let i = 1;
+        i <= getTotalItems();
+        i++
+    ){
+
+        const selected =
+            document.querySelector(
+                `input[name="item_${i}"]:checked`
+            );
+
+        if(!selected){
+
+            valid = false;
+
+            missingEvaluation =
+                document.querySelector(
+                    `tr[data-item="${i}"]`
+                );
+
+            break;
+
+        }
+
+    }
+
+
+    if(missingEvaluation){
+
+        missingEvaluation.scrollIntoView({
+            behavior:"smooth",
+            block:"center"
+        });
+
+    }
+
+
+    return valid;
+
+}
+
+
+/* =========================================================
+   FINALIZAR
+========================================================= */
+
+function finalizeForm(){
+
+    if(!validateForm()){
+
+        showStatus(
+            "Debe completar los datos obligatorios y evaluar los 30 factores antes de finalizar.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    const nombre =
+        document.getElementById(
+            "nombre"
+        ).value.trim();
+
+
+    if(
+        !confirm(
+            `¿Confirma finalizar la evaluación de ${nombre}? Una vez finalizada quedará bloqueada.`
+        )
+    ){
+
+        return;
+
+    }
+
+
+    document.body.classList.add(
+        "finished"
+    );
+
+
+    saveForm();
+
+
+    showStatus(
+        "Evaluación finalizada correctamente.",
+        "success"
+    );
+
+}
+
+
+/* =========================================================
+   LIMPIAR
+========================================================= */
+
+function clearForm(){
+
+    if(
+        !confirm(
+            "¿Desea eliminar todos los datos de esta evaluación?"
+        )
+    ){
+
+        return;
+
+    }
+
+
+    localStorage.removeItem(
+        STORAGE_KEY
+    );
+
+
+    document.getElementById(
+        "evaluationForm"
+    ).reset();
+
+
+    document.getElementById(
+        "fecha"
+    ).value =
+        "2025-10-13";
+
+
+    document.body.classList.remove(
+        "finished"
+    );
+
+
+    calculateResults();
+
+
+    document.querySelectorAll(
+        ".invalid"
+    ).forEach(element => {
+
+        element.classList.remove(
+            "invalid"
+        );
+
+    });
+
+
+    showStatus(
+        "Evaluación limpiada correctamente.",
+        "success"
+    );
+
+}
+
+
+/* =========================================================
+   IMPRIMIR
+========================================================= */
+
+function printForm(){
+
+    calculateResults();
+
+    window.print();
+
+}
+
+
+/* =========================================================
+   MENSAJES
+========================================================= */
+
+function showStatus(
+    message,
+    type
+){
+
+    const status =
+        document.getElementById(
+            "statusMessage"
+        );
+
+
+    status.className =
+        "status " + type;
+
+
+    status.textContent =
+        message;
+
+
+    setTimeout(()=>{
+
+        status.className =
+            "status";
+
+    },4500);
+
+}
+
+
+/* =========================================================
+   CAMPOS GENERALES
+========================================================= */
+
+document.querySelectorAll(
+    "#nombre, #puesto, #periodo, #fecha, #comentario, #firmaEvaluado, #firmaEvaluador, #firmaGerente"
+).forEach(field => {
+
+    field.addEventListener(
+        "input",
+        updateProgress
+    );
+
+    field.addEventListener(
+        "change",
+        updateProgress
+    );
+
+});
+
+
+/* =========================================================
+   CTRL + S
+========================================================= */
+
+document.addEventListener(
+    "keydown",
+    event => {
+
+        if(
+            (event.ctrlKey || event.metaKey)
+            &&
+            event.key.toLowerCase() === "s"
+        ){
+
+            event.preventDefault();
+
+            saveForm();
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   INICIO
+========================================================= */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    () => {
+
+        createEvaluationTable();
+
+        loadForm();
+
+    }
+);
+
+</script>
+
+</body>
+</html>

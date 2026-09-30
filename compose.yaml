@@ -29,6 +29,16 @@ services:
       DB_PASS: ${DB_PASS:-naser2026}
       APP_BASE: ${APP_BASE:-}
       APP_ENV: ${APP_ENV:-dev}
+      APP_URL: ${APP_URL:-http://localhost:8080}
+      # Mails: en desarrollo van a Mailpit (http://localhost:8025). En produccion poner el SMTP real en .env
+      MAIL_TRANSPORT: ${MAIL_TRANSPORT:-smtp}
+      SMTP_HOST: ${SMTP_HOST:-mailpit}
+      SMTP_PORT: ${SMTP_PORT:-1025}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASS: ${SMTP_PASS:-}
+      SMTP_SECURE: ${SMTP_SECURE:-}
+      MAIL_FROM: ${MAIL_FROM:-sgi@gruponaser.com.ar}
+      MAIL_FROM_NAME: ${MAIL_FROM_NAME:-NASER SGI}
     volumes:
       - ./:/var/www/html
       - ./naser.ini:/usr/local/etc/php/conf.d/zz-naser.ini:ro
@@ -46,6 +56,35 @@ services:
       PMA_HOST: db
       PMA_USER: root
       PMA_PASSWORD: ${DB_ROOT_PASS:-root2026}
+    depends_on:
+      db:
+        condition: service_healthy
+
+  # Bandeja de mails de prueba: todos los mails que manda el sistema se ven en http://localhost:8025
+  mailpit:
+    image: axllent/mailpit:latest
+    container_name: naser_mailpit
+    restart: unless-stopped
+    ports:
+      - "8025:8025"
+
+  # Copias de seguridad automaticas: base de datos todos los dias y uploads los domingos (en ./backups)
+  backup:
+    image: mariadb:11
+    container_name: naser_backup
+    restart: unless-stopped
+    entrypoint: ["bash", "/backup.sh"]
+    environment:
+      DB_HOST: db
+      DB_NAME: ${DB_NAME:-naser_sgi_prueba}
+      DB_ROOT_PASS: ${DB_ROOT_PASS:-root2026}
+      BACKUP_HORA: ${BACKUP_HORA:-2}
+      BACKUP_DIAS: ${BACKUP_DIAS:-7}
+      TZ: America/Argentina/Buenos_Aires
+    volumes:
+      - ./backups:/backups
+      - ./uploads:/uploads:ro
+      - ./docker/backup.sh:/backup.sh:ro
     depends_on:
       db:
         condition: service_healthy

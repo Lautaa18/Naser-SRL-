@@ -1,0 +1,414 @@
+<!-- =========================================================
+     NASER SRL · REGISTRO DE ENTREGA DE EPP
+     PGSN02-F6 · Rev.03 · Jul.2025
+     HTML + CSS + JAVASCRIPT EN UN SOLO BLOQUE
+========================================================= -->
+<section id="naser-epp-form" class="naser-epp">
+<style>
+#naser-epp-form{
+  --negro:#0b0b0b;--negro2:#171717;--blanco:#fff;--gris:#f3f4f6;
+  --borde:#d8dadd;--texto:#171717;--verde:#16843d;--amarillo:#e4aa00;
+  --rojo:#c62828;--azul:#1f5f8b;
+  font-family:Arial,Helvetica,sans-serif;color:var(--texto);background:var(--gris);
+  border:1px solid #ddd;border-radius:18px;overflow:hidden
+}
+#naser-epp-form *{box-sizing:border-box}
+#naser-epp-form .hero{
+  background:var(--negro);color:#fff;padding:26px 28px;
+  display:flex;justify-content:space-between;gap:20px;align-items:center;flex-wrap:wrap
+}
+#naser-epp-form .hero h2{margin:0;font-size:26px;letter-spacing:.3px}
+#naser-epp-form .hero p{margin:6px 0 0;color:#cfcfcf}
+#naser-epp-form .rev{border:1px solid #555;border-radius:10px;padding:9px 13px;font-weight:700}
+#naser-epp-form .body{padding:22px}
+#naser-epp-form .panel{
+  background:#fff;border:1px solid var(--borde);border-radius:14px;
+  padding:16px;margin-bottom:16px
+}
+#naser-epp-form .section-title{
+  margin:0 0 12px;background:#111;color:#fff;padding:10px 12px;
+  border-radius:9px;font-size:13px;letter-spacing:.2px
+}
+#naser-epp-form .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+#naser-epp-form .grid.two{grid-template-columns:repeat(2,1fr)}
+#naser-epp-form .span2{grid-column:span 2}
+#naser-epp-form .span4{grid-column:1/-1}
+#naser-epp-form label{
+  display:block;font-size:11px;font-weight:800;color:#555;margin:0 0 5px
+}
+#naser-epp-form input,
+#naser-epp-form select,
+#naser-epp-form textarea,
+#naser-epp-form button{font:inherit}
+#naser-epp-form input,
+#naser-epp-form select,
+#naser-epp-form textarea{
+  width:100%;border:1px solid #c9cbd0;border-radius:9px;
+  padding:10px 11px;background:#fff;color:#111
+}
+#naser-epp-form input,#naser-epp-form select{height:42px}
+#naser-epp-form textarea{min-height:80px;resize:vertical}
+#naser-epp-form input[readonly]{background:#f3f4f6;color:#444}
+#naser-epp-form button{border:0;border-radius:9px;padding:10px 14px;font-weight:700;cursor:pointer}
+#naser-epp-form .btn-dark{background:#111;color:#fff}
+#naser-epp-form .btn-light{background:#eceef0;color:#111}
+#naser-epp-form .btn-green{background:var(--verde);color:#fff}
+
+#naser-epp-form .company-box{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:10px
+}
+#naser-epp-form .company-item{
+  background:#f8f8f8;border:1px solid #e1e1e1;border-radius:10px;padding:11px
+}
+#naser-epp-form .company-item small{display:block;color:#666;font-size:10px;font-weight:800;margin-bottom:4px}
+#naser-epp-form .company-item b{font-size:13px}
+
+#naser-epp-form .progress-wrap{
+  display:grid;grid-template-columns:180px 1fr;gap:14px;align-items:center
+}
+#naser-epp-form .progress-box{
+  background:#111;color:#fff;border-radius:12px;padding:16px;text-align:center
+}
+#naser-epp-form .progress-box b{font-size:30px;display:block}
+#naser-epp-form .progress-track{height:16px;background:#e5e7eb;border-radius:999px;overflow:hidden}
+#naser-epp-form .progress-bar{height:100%;width:0%;background:var(--verde);transition:.2s}
+#naser-epp-form .progress-text{font-size:12px;color:#666;margin-top:7px}
+
+#naser-epp-form .table-wrap{
+  overflow:auto;border:1px solid var(--borde);border-radius:12px
+}
+#naser-epp-form table{
+  width:100%;border-collapse:separate;border-spacing:0;min-width:1450px;background:#fff
+}
+#naser-epp-form th{
+  position:sticky;top:0;z-index:2;background:#111;color:#fff;
+  text-align:left;padding:11px 9px;font-size:11px
+}
+#naser-epp-form td{padding:8px;border-bottom:1px solid #e7e7e7;vertical-align:middle}
+#naser-epp-form tbody tr:hover{background:#f8f8f8}
+#naser-epp-form td.numero{
+  width:50px;text-align:center;font-weight:900;background:#f2f2f2
+}
+#naser-epp-form table input,#naser-epp-form table select{
+  min-width:120px;height:38px;font-size:12px;padding:7px 8px
+}
+#naser-epp-form table .wide{min-width:190px}
+#naser-epp-form table .firma{min-width:220px}
+
+#naser-epp-form .summary{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:10px
+}
+#naser-epp-form .sum-card{
+  background:#fff;border:1px solid var(--borde);border-radius:12px;padding:14px
+}
+#naser-epp-form .sum-card b{display:block;font-size:24px;margin-top:4px}
+#naser-epp-form .sum-card small{font-weight:800;color:#666}
+#naser-epp-form .sum-card.green{border-left:5px solid var(--verde)}
+#naser-epp-form .sum-card.blue{border-left:5px solid var(--azul)}
+#naser-epp-form .sum-card.yellow{border-left:5px solid var(--amarillo)}
+#naser-epp-form .sum-card.red{border-left:5px solid var(--rojo)}
+
+#naser-epp-form .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+#naser-epp-form .msg{
+  display:none;margin-top:10px;padding:10px 12px;border-radius:9px;
+  font-size:12px;font-weight:700
+}
+#naser-epp-form .msg.ok{display:block;background:#e4f5e9;color:#12632e}
+#naser-epp-form .msg.err{display:block;background:#ffe5e5;color:#9b1717}
+#naser-epp-form .note{
+  font-size:12px;line-height:1.5;color:#555;background:#fafafa;
+  border-left:4px solid #111;padding:10px 12px;border-radius:8px
+}
+
+@media(max-width:1000px){
+  #naser-epp-form .grid,#naser-epp-form .company-box,#naser-epp-form .summary{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:650px){
+  #naser-epp-form .body{padding:12px}
+  #naser-epp-form .grid,#naser-epp-form .grid.two,#naser-epp-form .company-box,
+  #naser-epp-form .summary,#naser-epp-form .progress-wrap{grid-template-columns:1fr}
+  #naser-epp-form .span2,#naser-epp-form .span4{grid-column:auto}
+}
+</style>
+
+<div class="hero">
+  <div>
+    <h2>REGISTRO DE ENTREGA DE ELEMENTOS DE PROTECCIÓN PERSONAL (EPP)</h2>
+    <p>Entrega de ropa de trabajo y elementos de protección personal</p>
+  </div>
+  <div class="rev">PGSN02-F6 · Rev.03 · Jul.2025</div>
+</div>
+
+<div class="body">
+
+  <div class="panel">
+    <div class="section-title">DATOS DE LA EMPRESA</div>
+    <div class="company-box">
+      <div class="company-item"><small>RAZÓN SOCIAL</small><b>Servicios NASER SRL</b></div>
+      <div class="company-item"><small>C.U.I.T.</small><b>30-70942312-2</b></div>
+      <div class="company-item"><small>DIRECCIÓN</small><b>San Martín 8500</b></div>
+      <div class="company-item"><small>C.P.</small><b>8300</b></div>
+      <div class="company-item"><small>LOCALIDAD</small><b>Neuquén</b></div>
+      <div class="company-item"><small>PROVINCIA</small><b>Neuquén</b></div>
+      <div class="company-item span2"><small>NORMATIVA</small><b>Resolución 299/11 · Anexo I</b></div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="section-title">DATOS DEL TRABAJADOR</div>
+    <div class="grid">
+      <div class="span2">
+        <label>NOMBRE Y APELLIDO DEL TRABAJADOR</label>
+        <input id="trabajador" placeholder="Apellido y nombre">
+      </div>
+      <div>
+        <label>D.N.I.</label>
+        <input id="dni" placeholder="DNI">
+      </div>
+      <div>
+        <label>FECHA DE ACTUALIZACIÓN</label>
+        <input id="fechaActualizacion" type="date">
+      </div>
+      <div class="span4">
+        <label>DESCRIPCIÓN BREVE DEL PUESTO/S DE TRABAJO EN EL/LOS CUALES SE DESEMPEÑA EL TRABAJADOR</label>
+        <textarea id="puesto" placeholder="Describir el puesto o los puestos de trabajo"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="note">
+      <strong>Elementos de protección personal necesarios para el trabajador, según el puesto de trabajo.</strong>
+      Registrar cada entrega indicando fecha, producto, cantidad, tipo/modelo, marca, certificación e información adicional.
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="progress-wrap">
+      <div class="progress-box">
+        <span>FORMULARIO</span>
+        <b id="progressPct">0%</b>
+      </div>
+      <div>
+        <div class="progress-track"><div class="progress-bar" id="progressBar"></div></div>
+        <div class="progress-text" id="progressText">0 de 15 entregas registradas</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="section-title">REGISTRO DE ENTREGAS</div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>N°</th>
+            <th>FECHA DE ENTREGA</th>
+            <th>PRODUCTO</th>
+            <th>CANTIDAD</th>
+            <th>TIPO / MODELO</th>
+            <th>MARCA</th>
+            <th>POSEE CERTIFICACIÓN</th>
+            <th>INFORMACIÓN ADICIONAL</th>
+            <th>FIRMA DEL TRABAJADOR</th>
+          </tr>
+        </thead>
+        <tbody id="eppBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="section-title">RESUMEN DEL FORMULARIO</div>
+    <div class="summary">
+      <div class="sum-card green"><small>ENTREGAS REGISTRADAS</small><b id="stRegistradas">0</b></div>
+      <div class="sum-card blue"><small>ELEMENTOS ENTREGADOS</small><b id="stCantidad">0</b></div>
+      <div class="sum-card yellow"><small>CON CERTIFICACIÓN</small><b id="stCertSi">0</b></div>
+      <div class="sum-card red"><small>SIN CERTIFICACIÓN</small><b id="stCertNo">0</b></div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="section-title">INFORMACIÓN ADICIONAL GENERAL</div>
+    <textarea id="infoGeneral" placeholder="Observaciones o información adicional del registro"></textarea>
+
+    <div class="actions">
+      <button type="button" class="btn-green" id="btnGuardar">Guardar progreso</button>
+      <button type="button" class="btn-light" id="btnLimpiar">Limpiar formulario</button>
+      <button type="button" class="btn-dark" id="btnFinalizar">Finalizar formulario</button>
+    </div>
+    <div class="msg" id="mensaje"></div>
+  </div>
+
+</div>
+
+<script>
+(function(){
+  const root=document.getElementById("naser-epp-form");
+  const $=id=>document.getElementById(id);
+  const KEY="naser_pgsn02_f6_epp_rev03";
+
+  const filas=15;
+
+  function rowHTML(i){
+    return `
+      <tr data-row="${i}">
+        <td class="numero">${i}</td>
+        <td><input type="date" id="fecha_${i}"></td>
+        <td><input class="wide" id="producto_${i}" placeholder="Ej. Casco, guantes, botines..."></td>
+        <td><input type="number" id="cantidad_${i}" min="0" step="1" placeholder="0"></td>
+        <td><input class="wide" id="tipo_${i}" placeholder="Tipo / modelo"></td>
+        <td><input id="marca_${i}" placeholder="Marca"></td>
+        <td>
+          <select id="cert_${i}">
+            <option value="">Seleccionar</option>
+            <option value="SI">SI</option>
+            <option value="NO">NO</option>
+          </select>
+        </td>
+        <td><input class="wide" id="info_${i}" placeholder="Información adicional"></td>
+        <td><input class="firma" id="firma_${i}" placeholder="Firma / aclaración"></td>
+      </tr>`;
+  }
+
+  $("eppBody").innerHTML=Array.from({length:filas},(_,i)=>rowHTML(i+1)).join("");
+
+  function rowData(i){
+    return {
+      fecha:$("fecha_"+i).value,
+      producto:$("producto_"+i).value.trim(),
+      cantidad:$("cantidad_"+i).value,
+      tipo:$("tipo_"+i).value.trim(),
+      marca:$("marca_"+i).value.trim(),
+      certificacion:$("cert_"+i).value,
+      informacion:$("info_"+i).value.trim(),
+      firma:$("firma_"+i).value.trim()
+    };
+  }
+
+  function isRegistered(r){
+    return !!(r.fecha || r.producto || r.cantidad || r.tipo || r.marca || r.certificacion || r.informacion || r.firma);
+  }
+
+  function update(){
+    let registradas=0,cantidad=0,certSi=0,certNo=0;
+
+    for(let i=1;i<=filas;i++){
+      const r=rowData(i);
+      if(isRegistered(r)) registradas++;
+      const q=parseInt(r.cantidad,10);
+      if(!isNaN(q)) cantidad+=q;
+      if(r.certificacion==="SI") certSi++;
+      if(r.certificacion==="NO") certNo++;
+    }
+
+    const pct=Math.round((registradas/filas)*100);
+    $("progressPct").textContent=pct+"%";
+    $("progressBar").style.width=pct+"%";
+    $("progressText").textContent=`${registradas} de ${filas} entregas registradas`;
+    $("stRegistradas").textContent=registradas;
+    $("stCantidad").textContent=cantidad;
+    $("stCertSi").textContent=certSi;
+    $("stCertNo").textContent=certNo;
+  }
+
+  function collect(){
+    const entregas=[];
+    for(let i=1;i<=filas;i++) entregas.push(rowData(i));
+    return {
+      trabajador:$("trabajador").value.trim(),
+      dni:$("dni").value.trim(),
+      fechaActualizacion:$("fechaActualizacion").value,
+      puesto:$("puesto").value.trim(),
+      infoGeneral:$("infoGeneral").value.trim(),
+      entregas
+    };
+  }
+
+  function restore(data){
+    if(!data)return;
+    $("trabajador").value=data.trabajador||"";
+    $("dni").value=data.dni||"";
+    $("fechaActualizacion").value=data.fechaActualizacion||"";
+    $("puesto").value=data.puesto||"";
+    $("infoGeneral").value=data.infoGeneral||"";
+
+    (data.entregas||[]).slice(0,filas).forEach((r,idx)=>{
+      const i=idx+1;
+      $("fecha_"+i).value=r.fecha||"";
+      $("producto_"+i).value=r.producto||"";
+      $("cantidad_"+i).value=r.cantidad||"";
+      $("tipo_"+i).value=r.tipo||"";
+      $("marca_"+i).value=r.marca||"";
+      $("cert_"+i).value=r.certificacion||"";
+      $("info_"+i).value=r.informacion||"";
+      $("firma_"+i).value=r.firma||"";
+    });
+    update();
+  }
+
+  function message(text,ok=true){
+    const m=$("mensaje");
+    m.textContent=text;
+    m.className="msg "+(ok?"ok":"err");
+    setTimeout(()=>m.className="msg",3500);
+  }
+
+  root.addEventListener("input",e=>{
+    if(e.target.matches("input,textarea")) update();
+  });
+  root.addEventListener("change",e=>{
+    if(e.target.matches("select,input")) update();
+  });
+
+  $("btnGuardar").addEventListener("click",()=>{
+    localStorage.setItem(KEY,JSON.stringify(collect()));
+    message("Progreso guardado correctamente.");
+  });
+
+  $("btnLimpiar").addEventListener("click",()=>{
+    if(!confirm("¿Limpiar todo el formulario?")) return;
+    localStorage.removeItem(KEY);
+    root.querySelectorAll("input,textarea").forEach(el=>el.value="");
+    root.querySelectorAll("select").forEach(el=>el.selectedIndex=0);
+    update();
+    message("Formulario limpiado correctamente.");
+  });
+
+  $("btnFinalizar").addEventListener("click",()=>{
+    const data=collect();
+
+    if(!data.trabajador || !data.dni || !data.puesto){
+      message("Completá Nombre y Apellido, DNI y descripción del puesto antes de finalizar.",false);
+      return;
+    }
+
+    const entregas=data.entregas.filter(isRegistered);
+
+    if(!entregas.length){
+      message("Debe existir al menos una entrega de EPP registrada.",false);
+      return;
+    }
+
+    const incompletas=entregas.filter(r=>
+      !r.fecha || !r.producto || !r.cantidad || !r.tipo || !r.marca || !r.certificacion
+    );
+
+    if(incompletas.length){
+      message(`Hay ${incompletas.length} entrega(s) con datos obligatorios incompletos.`,false);
+      return;
+    }
+
+    localStorage.setItem(KEY,JSON.stringify(data));
+    message("Formulario finalizado correctamente.");
+  });
+
+  try{
+    const saved=JSON.parse(localStorage.getItem(KEY)||"null");
+    if(saved) restore(saved);
+  }catch(e){}
+
+  update();
+})();
+</script>
+</section>

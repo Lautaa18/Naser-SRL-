@@ -1,0 +1,1800 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>NASER | Identificación de Peligros y Control de Riesgos</title>
+
+<style>
+:root{
+    --green:#009b49;
+    --green-dark:#007a3a;
+    --green-light:#e8f6ee;
+
+    --black:#101010;
+    --black-2:#181818;
+
+    --bg:#f2f3f5;
+    --white:#ffffff;
+
+    --border:#d9dde3;
+
+    --text:#15191e;
+    --muted:#69717c;
+
+    --warning:#b54708;
+    --danger:#b42318;
+
+    --shadow:0 8px 28px rgba(16,24,40,.06);
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    font-family:Arial, Helvetica, sans-serif;
+    background:var(--bg);
+    color:var(--text);
+}
+
+.app{
+    display:flex;
+    min-height:100vh;
+}
+
+/* =========================
+   SIDEBAR
+========================= */
+.sidebar{
+    position:fixed;
+    top:0;
+    left:0;
+    bottom:0;
+    width:320px;
+    background:#0d0d0d;
+    color:#fff;
+    border-right:1px solid #252525;
+    z-index:1000;
+}
+
+.brand{
+    height:120px;
+    display:flex;
+    align-items:center;
+    padding:0 34px;
+    border-bottom:1px solid #292929;
+    font-size:34px;
+    font-weight:900;
+    letter-spacing:4px;
+}
+
+.sidebar-section{
+    padding:28px 0;
+}
+
+.sidebar-label{
+    padding:0 34px 14px;
+    color:#7d8793;
+    font-size:12px;
+    letter-spacing:1.2px;
+    text-transform:uppercase;
+}
+
+.nav-link{
+    min-height:58px;
+    display:flex;
+    align-items:center;
+    gap:15px;
+    padding:0 30px;
+    color:#e6e6e6;
+    text-decoration:none;
+    border-left:4px solid transparent;
+    transition:.2s;
+}
+
+.nav-link:hover{
+    background:#151515;
+}
+
+.nav-link.active{
+    background:#191919;
+    border-left-color:var(--green);
+}
+
+.nav-number{
+    width:28px;
+    color:#00bd5a;
+    font-size:18px;
+    font-weight:800;
+}
+
+.nav-name{
+    font-size:17px;
+}
+
+/* =========================
+   MAIN
+========================= */
+.main{
+    width:calc(100% - 320px);
+    margin-left:320px;
+}
+
+/* =========================
+   TOPBAR
+========================= */
+.topbar{
+    min-height:82px;
+    padding:0 40px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:20px;
+    background:#fff;
+    border-bottom:1px solid var(--border);
+}
+
+.breadcrumb{
+    color:#59616c;
+    font-size:14px;
+}
+
+.top-actions{
+    display:flex;
+    gap:10px;
+}
+
+.badge{
+    padding:10px 15px;
+    border-radius:9px;
+    font-size:12px;
+    font-weight:800;
+    white-space:nowrap;
+}
+
+.badge-edit{
+    background:#f0f1f2;
+    color:#59616c;
+}
+
+.badge-document{
+    background:var(--green-light);
+    color:#007a3a;
+}
+
+/* =========================
+   PAGE
+========================= */
+.page{
+    padding:35px;
+}
+
+/* =========================
+   HERO
+========================= */
+.hero{
+    position:relative;
+    min-height:190px;
+    display:flex;
+    align-items:center;
+    overflow:hidden;
+    padding:40px 42px;
+    background:linear-gradient(110deg,#101010 0%,#191919 100%);
+    color:#fff;
+    border-radius:15px;
+}
+
+.hero::after{
+    content:"";
+    position:absolute;
+    width:310px;
+    height:310px;
+    right:-80px;
+    top:-120px;
+    border-radius:50%;
+    background:rgba(0,155,73,.20);
+}
+
+.hero-content{
+    position:relative;
+    z-index:2;
+}
+
+.hero-kicker{
+    margin-bottom:14px;
+    color:#00c65e;
+    font-size:13px;
+    font-weight:800;
+    letter-spacing:3px;
+}
+
+.hero h1{
+    max-width:1000px;
+    margin-bottom:14px;
+    font-size:35px;
+    line-height:1.15;
+}
+
+.hero p{
+    max-width:1100px;
+    color:#e6e8eb;
+    font-size:15px;
+    line-height:1.6;
+}
+
+/* =========================
+   STATS
+========================= */
+.stats{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:14px;
+    margin:20px 0 25px;
+}
+
+.stat{
+    min-height:105px;
+    padding:20px;
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:11px;
+}
+
+.stat-label{
+    display:block;
+    margin-bottom:8px;
+    color:#68717c;
+    font-size:11px;
+    font-weight:700;
+    text-transform:uppercase;
+}
+
+.stat-value{
+    display:block;
+    font-size:32px;
+    font-weight:900;
+}
+
+.green{
+    color:var(--green);
+}
+
+.warning{
+    color:var(--warning);
+}
+
+/* =========================
+   DOCUMENT
+========================= */
+.document-card{
+    overflow:hidden;
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:15px;
+    box-shadow:var(--shadow);
+}
+
+.document-header{
+    min-height:98px;
+    display:flex;
+    align-items:center;
+    gap:17px;
+    padding:22px 27px;
+    border-bottom:1px solid var(--border);
+}
+
+.document-number{
+    width:50px;
+    height:50px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-shrink:0;
+    border-radius:9px;
+    background:#111;
+    color:#00c45e;
+    font-size:18px;
+    font-weight:900;
+}
+
+.document-title h2{
+    margin-bottom:5px;
+    font-size:20px;
+}
+
+.document-title p{
+    color:#6c7480;
+    font-size:13px;
+}
+
+.document-body{
+    padding:27px;
+}
+
+/* =========================
+   INFO
+========================= */
+.info{
+    margin-bottom:23px;
+    padding:18px 20px;
+    background:#fbfcfc;
+    border:1px solid #d9e7df;
+    border-left:4px solid var(--green);
+    border-radius:9px;
+    color:#4c5560;
+    font-size:13px;
+    line-height:1.65;
+}
+
+.info strong{
+    color:#007a39;
+}
+
+/* =========================
+   SECTION
+========================= */
+.section{
+    margin-bottom:23px;
+    overflow:hidden;
+    border:1px solid var(--border);
+    border-radius:12px;
+}
+
+.section-header{
+    min-height:65px;
+    display:flex;
+    align-items:center;
+    gap:13px;
+    padding:14px 18px;
+    background:#f8f9fa;
+    border-bottom:1px solid var(--border);
+}
+
+.section-number{
+    width:36px;
+    height:36px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-shrink:0;
+    border-radius:8px;
+    background:var(--green-light);
+    color:var(--green);
+    font-size:12px;
+    font-weight:900;
+}
+
+.section-header h3{
+    margin-bottom:3px;
+    font-size:15px;
+}
+
+.section-header p{
+    color:#707884;
+    font-size:12px;
+}
+
+.section-body{
+    padding:19px;
+}
+
+/* =========================
+   GENERAL FORM
+========================= */
+.form-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:16px;
+}
+
+.field{
+    display:flex;
+    flex-direction:column;
+    gap:7px;
+}
+
+.field.full{
+    grid-column:1 / -1;
+}
+
+.field.two{
+    grid-column:span 2;
+}
+
+.field label{
+    color:#4e5661;
+    font-size:10px;
+    font-weight:800;
+    text-transform:uppercase;
+    letter-spacing:.5px;
+}
+
+.field input,
+.field textarea,
+.field select{
+    width:100%;
+    border:1px solid #d4d9df;
+    border-radius:8px;
+    padding:11px 12px;
+    background:#fff;
+    font-size:13px;
+    outline:none;
+}
+
+.field textarea{
+    min-height:95px;
+    resize:vertical;
+}
+
+.field input:focus,
+.field textarea:focus,
+.field select:focus{
+    border-color:var(--green);
+    box-shadow:0 0 0 3px rgba(0,155,73,.08);
+}
+
+/* =========================
+   TOOLBAR
+========================= */
+.toolbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:15px;
+    margin-bottom:16px;
+}
+
+.filters{
+    display:flex;
+    gap:9px;
+    flex:1;
+    flex-wrap:wrap;
+}
+
+.search,
+.filter{
+    height:42px;
+    border:1px solid #d4d9df;
+    border-radius:8px;
+    padding:0 12px;
+    background:#fff;
+    outline:none;
+    font-size:12px;
+}
+
+.search{
+    min-width:330px;
+    flex:1;
+}
+
+.filter{
+    min-width:180px;
+}
+
+.search:focus,
+.filter:focus{
+    border-color:var(--green);
+    box-shadow:0 0 0 3px rgba(0,155,73,.08);
+}
+
+/* =========================
+   BUTTONS
+========================= */
+.btn{
+    min-height:41px;
+    padding:0 16px;
+    border:none;
+    border-radius:8px;
+    font-size:12px;
+    font-weight:800;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.btn:hover{
+    transform:translateY(-1px);
+}
+
+.btn-green{
+    background:var(--green);
+    color:#fff;
+}
+
+.btn-green:hover{
+    background:var(--green-dark);
+}
+
+.btn-dark{
+    background:#181818;
+    color:#fff;
+}
+
+.btn-light{
+    background:#eef0f2;
+    color:#4a525d;
+}
+
+/* =========================
+   MATRIX
+========================= */
+.table-container{
+    position:relative;
+    width:100%;
+    max-height:680px;
+    overflow:auto;
+    border:1px solid var(--border);
+    border-radius:10px;
+}
+
+.matrix{
+    width:100%;
+    min-width:2550px;
+    border-collapse:separate;
+    border-spacing:0;
+    background:#fff;
+}
+
+.matrix thead th{
+    position:sticky;
+    top:0;
+    z-index:10;
+    padding:10px 8px;
+    background:#121212;
+    color:#fff;
+    border-right:1px solid #303030;
+    border-bottom:1px solid #303030;
+    font-size:10px;
+    text-align:center;
+    text-transform:uppercase;
+    white-space:normal;
+}
+
+.matrix tbody td{
+    padding:8px;
+    background:#fff;
+    border-right:1px solid #e2e5e9;
+    border-bottom:1px solid #e2e5e9;
+    vertical-align:top;
+}
+
+.matrix tbody tr:hover td{
+    background:#fafcfb;
+}
+
+.matrix th:nth-child(1),
+.matrix td:nth-child(1){
+    position:sticky;
+    left:0;
+    min-width:55px;
+    width:55px;
+    z-index:7;
+}
+
+.matrix th:nth-child(2),
+.matrix td:nth-child(2){
+    position:sticky;
+    left:55px;
+    min-width:220px;
+    z-index:7;
+}
+
+.matrix tbody td:nth-child(1),
+.matrix tbody td:nth-child(2){
+    background:#fbfbfc;
+}
+
+.matrix thead th:nth-child(1),
+.matrix thead th:nth-child(2){
+    z-index:15;
+    background:#0d0d0d;
+}
+
+.row-id{
+    min-height:40px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:var(--green);
+    font-size:14px;
+    font-weight:900;
+}
+
+.table-input,
+.table-select,
+.table-area{
+    width:100%;
+    border:1px solid #d7dbe1;
+    border-radius:6px;
+    padding:8px 9px;
+    background:#fff;
+    color:#222;
+    font-family:inherit;
+    font-size:11px;
+    outline:none;
+}
+
+.table-input,
+.table-select{
+    min-height:38px;
+}
+
+.table-area{
+    min-height:72px;
+    resize:vertical;
+    line-height:1.4;
+}
+
+.table-input:focus,
+.table-select:focus,
+.table-area:focus{
+    border-color:var(--green);
+    box-shadow:0 0 0 2px rgba(0,155,73,.08);
+}
+
+.readonly-level{
+    background:#f7f8fa;
+    font-weight:800;
+    text-align:center;
+}
+
+/* widths */
+.c-tarea{min-width:220px;}
+.c-sim{min-width:170px;}
+.c-peligros{min-width:260px;}
+.c-prob{min-width:110px;}
+.c-sev{min-width:110px;}
+.c-nivel{min-width:120px;}
+.c-prev{min-width:280px;}
+.c-check{min-width:90px;}
+.c-mitig{min-width:280px;}
+.c-action{min-width:75px;}
+
+/* =========================
+   EPP
+========================= */
+.epp-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:14px;
+}
+
+.epp-group{
+    border:1px solid #e1e4e8;
+    border-radius:10px;
+    padding:14px;
+    background:#fcfcfd;
+}
+
+.epp-group h4{
+    margin-bottom:12px;
+    font-size:13px;
+    color:#222;
+}
+
+.epp-item{
+    display:flex;
+    align-items:flex-start;
+    gap:8px;
+    margin-bottom:9px;
+    font-size:12px;
+    color:#404751;
+}
+
+.epp-item input{
+    margin-top:2px;
+    accent-color:var(--green);
+}
+
+/* =========================
+   APPROVAL GRID
+========================= */
+.approval-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:16px;
+}
+
+.approval-card{
+    border:1px solid var(--border);
+    border-radius:12px;
+    overflow:hidden;
+}
+
+.approval-card-header{
+    padding:14px 16px;
+    background:#f8f9fa;
+    border-bottom:1px solid var(--border);
+    font-weight:800;
+    font-size:14px;
+}
+
+.approval-card-body{
+    padding:16px;
+    display:grid;
+    grid-template-columns:1fr;
+    gap:12px;
+}
+
+/* =========================
+   FOOTER
+========================= */
+.form-footer{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:15px;
+}
+
+.status{
+    color:#68717b;
+    font-size:12px;
+}
+
+.status strong{
+    color:#16191d;
+}
+
+.footer-buttons{
+    display:flex;
+    gap:9px;
+}
+
+.delete-btn{
+    width:35px;
+    height:35px;
+    display:block;
+    margin:auto;
+    border:none;
+    border-radius:7px;
+    background:#f0f1f2;
+    color:#606872;
+    cursor:pointer;
+    font-size:18px;
+}
+
+.delete-btn:hover{
+    background:#fee4e2;
+    color:#b42318;
+}
+
+.empty{
+    padding:32px !important;
+    text-align:center;
+    color:#777f89;
+    font-size:13px;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+@media(max-width:1200px){
+    .sidebar{
+        width:270px;
+    }
+
+    .main{
+        width:calc(100% - 270px);
+        margin-left:270px;
+    }
+
+    .stats{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .form-grid,
+    .epp-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+}
+
+@media(max-width:760px){
+    .app{
+        display:block;
+    }
+
+    .sidebar{
+        position:relative;
+        width:100%;
+        min-height:auto;
+    }
+
+    .main{
+        width:100%;
+        margin-left:0;
+    }
+
+    .brand{
+        height:85px;
+    }
+
+    .topbar{
+        padding:18px 20px;
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    .page{
+        padding:18px;
+    }
+
+    .hero{
+        padding:28px 23px;
+    }
+
+    .hero h1{
+        font-size:28px;
+    }
+
+    .stats,
+    .form-grid,
+    .epp-grid,
+    .approval-grid{
+        grid-template-columns:1fr;
+    }
+
+    .toolbar{
+        flex-direction:column;
+        align-items:stretch;
+    }
+
+    .filters{
+        flex-direction:column;
+    }
+
+    .search,
+    .filter{
+        min-width:0;
+        width:100%;
+    }
+
+    .form-footer{
+        flex-direction:column;
+        align-items:stretch;
+    }
+
+    .footer-buttons{
+        flex-direction:column;
+    }
+}
+</style>
+</head>
+<body>
+
+<div class="app">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="brand">NASER</div>
+
+        <div class="sidebar-section">
+            <div class="sidebar-label">Documento</div>
+
+            <a href="#datos" class="nav-link active">
+                <span class="nav-number">01</span>
+                <span class="nav-name">Datos Generales</span>
+            </a>
+
+            <a href="#matriz" class="nav-link">
+                <span class="nav-number">02</span>
+                <span class="nav-name">Riesgos</span>
+            </a>
+
+            <a href="#epp" class="nav-link">
+                <span class="nav-number">03</span>
+                <span class="nav-name">EPP</span>
+            </a>
+
+            <a href="#cierre" class="nav-link">
+                <span class="nav-number">04</span>
+                <span class="nav-name">Cierre</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main">
+
+        <header class="topbar">
+            <div class="breadcrumb">
+                NASER / Gestión / Identificación de Peligros y Control de Riesgos
+            </div>
+
+            <div class="top-actions">
+                <span class="badge badge-edit" id="badgeEstado">EN EDICIÓN</span>
+                <span class="badge badge-document">PGSN07-F1 · Rev.01 Jun25</span>
+            </div>
+        </header>
+
+        <div class="page">
+
+            <!-- HERO -->
+            <section class="hero">
+                <div class="hero-content">
+                    <div class="hero-kicker">SEGURIDAD Y SALUD</div>
+                    <h1>Identificación de Peligros y Control de Riesgos</h1>
+                    <p>
+                        Registro de tareas, simultaneidad, peligros y riesgos, evaluación inicial,
+                        medidas de control, riesgo residual, elementos de protección personal,
+                        maquinaria a utilizar y validaciones internas.
+                    </p>
+                </div>
+            </section>
+
+            <!-- STATS -->
+            <section class="stats">
+                <div class="stat">
+                    <span class="stat-label">Total de tareas</span>
+                    <span class="stat-value" id="totalTareas">0</span>
+                </div>
+
+                <div class="stat">
+                    <span class="stat-label">Riesgo inicial alto</span>
+                    <span class="stat-value warning" id="riesgosAltos">0</span>
+                </div>
+
+                <div class="stat">
+                    <span class="stat-label">Riesgo residual alto</span>
+                    <span class="stat-value warning" id="riesgosResidualesAltos">0</span>
+                </div>
+
+                <div class="stat">
+                    <span class="stat-label">EPP seleccionados</span>
+                    <span class="stat-value green" id="totalEPP">0</span>
+                </div>
+            </section>
+
+            <!-- DOCUMENT -->
+            <section class="document-card" id="datos">
+                <div class="document-header">
+                    <div class="document-number">01</div>
+                    <div class="document-title">
+                        <h2>Identificación de Peligros y Control de Riesgos</h2>
+                        <p>PGSN07-F1 · Rev.01 Jun25</p>
+                    </div>
+                </div>
+
+                <div class="document-body">
+
+                    <div class="info">
+                        Complete los <strong>datos generales</strong>, luego registre cada
+                        <strong>tarea</strong> con su riesgo inicial, medidas de control y riesgo residual.
+                        Finalmente seleccione los <strong>EPP</strong>, cargue maquinaria, validación interna y aprobación.
+                    </div>
+
+                    <!-- DATOS GENERALES -->
+                    <section class="section">
+                        <div class="section-header">
+                            <div class="section-number">01</div>
+                            <div>
+                                <h3>Datos generales</h3>
+                                <p>Información principal del análisis</p>
+                            </div>
+                        </div>
+
+                        <div class="section-body">
+                            <div class="form-grid">
+                                <div class="field two">
+                                    <label>Proceso</label>
+                                    <input type="text" id="proceso" placeholder="Ingrese proceso">
+                                </div>
+
+                                <div class="field">
+                                    <label>Equipo Evaluador</label>
+                                    <input type="text" id="equipoEvaluador" placeholder="Ingrese equipo evaluador">
+                                </div>
+
+                                <div class="field">
+                                    <label>N° Análisis</label>
+                                    <input type="text" id="numeroAnalisis" placeholder="Ingrese número">
+                                </div>
+
+                                <div class="field full">
+                                    <label>Actividad</label>
+                                    <input type="text" id="actividadGeneral" placeholder="Ingrese actividad">
+                                </div>
+
+                                <div class="field two">
+                                    <label>Lugar de ejecución</label>
+                                    <input type="text" id="lugarEjecucion" placeholder="Ingrese lugar de ejecución">
+                                </div>
+
+                                <div class="field">
+                                    <label>Sector</label>
+                                    <input type="text" id="sector" placeholder="Ingrese sector">
+                                </div>
+
+                                <div class="field">
+                                    <label>ART y fecha presentación</label>
+                                    <input type="text" id="artFecha" placeholder="Ingrese ART y fecha">
+                                </div>
+
+                                <div class="field">
+                                    <label>¿Debe cumplir c/ Res. 51/97?</label>
+                                    <select id="res5197">
+                                        <option value="">Seleccionar</option>
+                                        <option value="Sí">Sí</option>
+                                        <option value="No">No</option>
+                                    </select>
+                                </div>
+
+                                <div class="field">
+                                    <label>Adjuntar Plan / Referencia</label>
+                                    <input type="text" id="adjuntarPlan" placeholder="Detalle / referencia">
+                                </div>
+
+                                <div class="field">
+                                    <label>Fecha confección</label>
+                                    <input type="date" id="fechaConfeccion">
+                                </div>
+
+                                <div class="field">
+                                    <label>Fecha de ejecución</label>
+                                    <input type="date" id="fechaEjecucion">
+                                </div>
+
+                                <div class="field">
+                                    <label>Responsable Servicio de Seguridad</label>
+                                    <input type="text" id="responsableSeguridad" placeholder="Apellido y nombre">
+                                </div>
+
+                                <div class="field">
+                                    <label>Revisión</label>
+                                    <input type="text" id="revision" value="Rev.01 Jun25">
+                                </div>
+
+                                <div class="field">
+                                    <label>Cantidad de hojas</label>
+                                    <input type="number" min="1" id="cantidadHojas" placeholder="0">
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- MATRIZ -->
+                    <section class="section" id="matriz">
+                        <div class="section-header">
+                            <div class="section-number">02</div>
+                            <div>
+                                <h3>Matriz de peligros y controles</h3>
+                                <p>Evaluación inicial, medidas de control y riesgo residual</p>
+                            </div>
+                        </div>
+
+                        <div class="section-body">
+
+                            <div class="toolbar">
+                                <div class="filters">
+                                    <input
+                                        type="search"
+                                        class="search"
+                                        id="buscar"
+                                        placeholder="Buscar tarea, simultaneidad o peligro..."
+                                        oninput="renderTabla()"
+                                    >
+
+                                    <select class="filter" id="filtroInicial" onchange="renderTabla()">
+                                        <option value="">Riesgo inicial · Todos</option>
+                                        <option value="alto">Alto</option>
+                                        <option value="medio">Medio</option>
+                                        <option value="bajo">Bajo</option>
+                                    </select>
+
+                                    <select class="filter" id="filtroResidual" onchange="renderTabla()">
+                                        <option value="">Riesgo residual · Todos</option>
+                                        <option value="alto">Alto</option>
+                                        <option value="medio">Medio</option>
+                                        <option value="bajo">Bajo</option>
+                                    </select>
+                                </div>
+
+                                <button type="button" class="btn btn-green" onclick="agregarRegistro()">
+                                    + AGREGAR TAREA
+                                </button>
+                            </div>
+
+                            <div class="table-container">
+                                <table class="matrix">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Tarea</th>
+                                            <th>Simultaneidad</th>
+                                            <th>Peligros y riesgos</th>
+                                            <th>Probabilidad Inicial</th>
+                                            <th>Severidad Inicial</th>
+                                            <th>Nivel de Riesgo Inicial</th>
+                                            <th>Medidas de prevención / probabilidad</th>
+                                            <th>Check</th>
+                                            <th>Medidas de mitigación / severidad</th>
+                                            <th>Check</th>
+                                            <th>Probabilidad Residual</th>
+                                            <th>Severidad Residual</th>
+                                            <th>Nivel de Riesgo Residual</th>
+                                            <th>Acción</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tbodyRiesgos"></tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                    </section>
+
+                    <!-- EPP -->
+                    <section class="section" id="epp">
+                        <div class="section-header">
+                            <div class="section-number">03</div>
+                            <div>
+                                <h3>Equipo de Protección Personal / Colectiva</h3>
+                                <p>Seleccione los elementos requeridos para la actividad</p>
+                            </div>
+                        </div>
+
+                        <div class="section-body">
+                            <div class="epp-grid" id="eppGrid"></div>
+
+                            <div class="form-grid" style="margin-top:18px;">
+                                <div class="field full">
+                                    <label>Otros (aclarar)</label>
+                                    <input type="text" id="otrosEPP" placeholder="Detalle otros elementos de protección">
+                                </div>
+
+                                <div class="field full">
+                                    <label>Maquinaria, equipos y/o herramientas a utilizar</label>
+                                    <textarea id="maquinaria" placeholder="Detalle maquinaria, equipos y/o herramientas..."></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- VALIDACIÓN / APROBACIÓN -->
+                    <section class="section" id="cierre">
+                        <div class="section-header">
+                            <div class="section-number">04</div>
+                            <div>
+                                <h3>Validación y aprobación</h3>
+                                <p>Datos de recepción interna y aprobación final</p>
+                            </div>
+                        </div>
+
+                        <div class="section-body">
+                            <div class="approval-grid">
+
+                                <div class="approval-card">
+                                    <div class="approval-card-header">Validación Interna</div>
+                                    <div class="approval-card-body">
+                                        <div class="field">
+                                            <label>Apellido y Nombre</label>
+                                            <input type="text" id="valNombre" placeholder="Apellido y nombre">
+                                        </div>
+                                        <div class="field">
+                                            <label>Legajo ó DNI</label>
+                                            <input type="text" id="valDni" placeholder="Legajo o DNI">
+                                        </div>
+                                        <div class="field">
+                                            <label>Firma y Fecha de Recepción</label>
+                                            <input type="text" id="valFirmaFecha" placeholder="Firma y fecha">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="approval-card">
+                                    <div class="approval-card-header">Aprobación</div>
+                                    <div class="approval-card-body">
+                                        <div class="field">
+                                            <label>Apellido y Nombre</label>
+                                            <input type="text" id="aprNombre" placeholder="Apellido y nombre">
+                                        </div>
+                                        <div class="field">
+                                            <label>DNI</label>
+                                            <input type="text" id="aprDni" placeholder="DNI">
+                                        </div>
+                                        <div class="field">
+                                            <label>Firma y Fecha</label>
+                                            <input type="text" id="aprFirmaFecha" placeholder="Firma y fecha">
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- FOOTER -->
+                    <div class="form-footer">
+                        <div class="status">
+                            Estado: <strong id="estadoFormulario">Documento en edición</strong>
+                        </div>
+
+                        <div class="footer-buttons">
+                            <button type="button" class="btn btn-light" onclick="limpiarFormulario()">
+                                LIMPIAR
+                            </button>
+
+                            <button type="button" class="btn btn-dark" onclick="guardarFormulario()">
+                                GUARDAR
+                            </button>
+
+                            <button type="button" class="btn btn-green" onclick="finalizarFormulario()">
+                                FINALIZAR FORMULARIO
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+        </div>
+    </main>
+</div>
+
+<script>
+/* =========================================================
+   DATOS EPP
+========================================================= */
+const eppGroups = [
+    {
+        titulo:"Grupo 1",
+        items:[
+            "Casco / tareas en altura",
+            "Silletta de suspensión",
+            "Arnés seg. completo",
+            "Escafandra para arena",
+            "Ropa abrigo completa"
+        ]
+    },
+    {
+        titulo:"Grupo 2",
+        items:[
+            "Casco",
+            "Cuerda",
+            "Línea de Vida",
+            "Polarina",
+            "Rodillera"
+        ]
+    },
+    {
+        titulo:"Grupo 3",
+        items:[
+            "Antiparras",
+            "Ropa",
+            "Doble cabo",
+            "Cabo de Vida",
+            "Otros"
+        ]
+    },
+    {
+        titulo:"Grupo 4",
+        items:[
+            "Anteojos",
+            "Ropa p/agua",
+            "Descensor 8",
+            "Ropa Trabajo",
+            "Traje Bombero"
+        ]
+    },
+    {
+        titulo:"Grupo 5",
+        items:[
+            "Careta esmerilador",
+            "Ropa ignífuga",
+            "Equipo autónomo",
+            "Ropa de Soldador",
+            "Calzado / cocina"
+        ]
+    },
+    {
+        titulo:"Grupo 6",
+        items:[
+            "Protector auditivo",
+            "Calzado dieléctrico",
+            "Máscara facial",
+            "Guante dieléctrico",
+            "Otros 1"
+        ]
+    },
+    {
+        titulo:"Grupo 7",
+        items:[
+            "Guantes cuero",
+            "Botas de goma",
+            "Barbijo",
+            "Guante cirugía",
+            "Otros 2"
+        ]
+    },
+    {
+        titulo:"Grupo 8",
+        items:[
+            "Guantes dieléctricos",
+            "Guantes p/químicos",
+            "Equipo aire cascada",
+            "Guante de carnicero",
+            "Otros 3"
+        ]
+    }
+];
+
+/* =========================================================
+   ESTADO
+========================================================= */
+let registros = [];
+
+/* =========================================================
+   REGISTRO NUEVO
+========================================================= */
+function nuevoRegistro(){
+    return{
+        uid: Date.now().toString() + Math.random().toString(16).slice(2),
+        tarea:"",
+        simultaneidad:"",
+        peligros:"",
+        probInicial:"",
+        sevInicial:"",
+        prevencion:"",
+        prevCheck:"No",
+        mitigacion:"",
+        mitigCheck:"No",
+        probResidual:"",
+        sevResidual:""
+    };
+}
+
+/* =========================================================
+   HELPERS
+========================================================= */
+function escapeHTML(valor){
+    return String(valor ?? "")
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;");
+}
+
+function options(lista, seleccionado){
+    return lista.map(item=>{
+        const texto = item === "" ? "Seleccionar" : item;
+        return `
+            <option value="${escapeHTML(item)}" ${item===seleccionado ? "selected" : ""}>
+                ${escapeHTML(texto)}
+            </option>
+        `;
+    }).join("");
+}
+
+function num(v){
+    const n = parseInt(v,10);
+    return isNaN(n) ? 0 : n;
+}
+
+function nivelRiesgo(prob,sever){
+    if(!prob || !sever) return "";
+    return num(prob) * num(sever);
+}
+
+function categoriaRiesgo(nivel){
+    if(!nivel) return "";
+    if(nivel >= 12) return "alto";
+    if(nivel >= 6) return "medio";
+    return "bajo";
+}
+
+/* =========================================================
+   RENDER EPP
+========================================================= */
+function renderEPP(){
+    const cont = document.getElementById("eppGrid");
+    cont.innerHTML = "";
+
+    eppGroups.forEach((grupo, gi)=>{
+        const div = document.createElement("div");
+        div.className = "epp-group";
+
+        div.innerHTML = `
+            <h4>${grupo.titulo}</h4>
+            ${grupo.items.map((item,ii)=>`
+                <label class="epp-item">
+                    <input
+                        type="checkbox"
+                        class="epp-check"
+                        data-key="g${gi}_i${ii}"
+                        onchange="actualizarIndicadores()"
+                    >
+                    <span>${item}</span>
+                </label>
+            `).join("")}
+        `;
+
+        cont.appendChild(div);
+    });
+}
+
+/* =========================================================
+   FILTRADO
+========================================================= */
+function obtenerFiltrados(){
+    const buscar = document.getElementById("buscar").value.toLowerCase().trim();
+    const filtroInicial = document.getElementById("filtroInicial").value;
+    const filtroResidual = document.getElementById("filtroResidual").value;
+
+    return registros.filter(registro=>{
+        const texto = (
+            registro.tarea + " " +
+            registro.simultaneidad + " " +
+            registro.peligros
+        ).toLowerCase();
+
+        const nivelIni = categoriaRiesgo(nivelRiesgo(registro.probInicial, registro.sevInicial));
+        const nivelRes = categoriaRiesgo(nivelRiesgo(registro.probResidual, registro.sevResidual));
+
+        return (
+            (!buscar || texto.includes(buscar)) &&
+            (!filtroInicial || nivelIni === filtroInicial) &&
+            (!filtroResidual || nivelRes === filtroResidual)
+        );
+    });
+}
+
+/* =========================================================
+   RENDER TABLA
+========================================================= */
+function renderTabla(){
+    const tbody = document.getElementById("tbodyRiesgos");
+    tbody.innerHTML = "";
+
+    const filtrados = obtenerFiltrados();
+
+    if(filtrados.length === 0){
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="15" class="empty">
+                    No hay registros que coincidan con los filtros seleccionados.
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    filtrados.forEach(registro=>{
+        const numero = registros.findIndex(r=>r.uid===registro.uid) + 1;
+        const nivelIni = nivelRiesgo(registro.probInicial, registro.sevInicial);
+        const nivelRes = nivelRiesgo(registro.probResidual, registro.sevResidual);
+
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+            <td><div class="row-id">${numero}</div></td>
+
+            <td class="c-tarea">
+                <textarea class="table-area" placeholder="Tarea..." oninput="actualizar('${registro.uid}','tarea',this.value)">${escapeHTML(registro.tarea)}</textarea>
+            </td>
+
+            <td class="c-sim">
+                <textarea class="table-area" placeholder="Simultaneidad..." oninput="actualizar('${registro.uid}','simultaneidad',this.value)">${escapeHTML(registro.simultaneidad)}</textarea>
+            </td>
+
+            <td class="c-peligros">
+                <textarea class="table-area" placeholder="Peligros y riesgos..." oninput="actualizar('${registro.uid}','peligros',this.value)">${escapeHTML(registro.peligros)}</textarea>
+            </td>
+
+            <td class="c-prob">
+                <select class="table-select" onchange="actualizar('${registro.uid}','probInicial',this.value,true)">
+                    ${options(["","1","2","3","4","5"], registro.probInicial)}
+                </select>
+            </td>
+
+            <td class="c-sev">
+                <select class="table-select" onchange="actualizar('${registro.uid}','sevInicial',this.value,true)">
+                    ${options(["","1","2","3","4","5"], registro.sevInicial)}
+                </select>
+            </td>
+
+            <td class="c-nivel">
+                <input class="table-input readonly-level" type="text" readonly value="${nivelIni}">
+            </td>
+
+            <td class="c-prev">
+                <textarea class="table-area" placeholder="Medidas de prevención..." oninput="actualizar('${registro.uid}','prevencion',this.value)">${escapeHTML(registro.prevencion)}</textarea>
+            </td>
+
+            <td class="c-check">
+                <select class="table-select" onchange="actualizar('${registro.uid}','prevCheck',this.value)">
+                    ${options(["Sí","No"], registro.prevCheck)}
+                </select>
+            </td>
+
+            <td class="c-mitig">
+                <textarea class="table-area" placeholder="Medidas de mitigación..." oninput="actualizar('${registro.uid}','mitigacion',this.value)">${escapeHTML(registro.mitigacion)}</textarea>
+            </td>
+
+            <td class="c-check">
+                <select class="table-select" onchange="actualizar('${registro.uid}','mitigCheck',this.value)">
+                    ${options(["Sí","No"], registro.mitigCheck)}
+                </select>
+            </td>
+
+            <td class="c-prob">
+                <select class="table-select" onchange="actualizar('${registro.uid}','probResidual',this.value,true)">
+                    ${options(["","1","2","3","4","5"], registro.probResidual)}
+                </select>
+            </td>
+
+            <td class="c-sev">
+                <select class="table-select" onchange="actualizar('${registro.uid}','sevResidual',this.value,true)">
+                    ${options(["","1","2","3","4","5"], registro.sevResidual)}
+                </select>
+            </td>
+
+            <td class="c-nivel">
+                <input class="table-input readonly-level" type="text" readonly value="${nivelRes}">
+            </td>
+
+            <td class="c-action">
+                <button type="button" class="delete-btn" onclick="eliminarRegistro('${registro.uid}')">×</button>
+            </td>
+        `;
+
+        tbody.appendChild(tr);
+    });
+}
+
+/* =========================================================
+   CRUD TABLA
+========================================================= */
+function agregarRegistro(){
+    registros.push(nuevoRegistro());
+    renderTabla();
+    actualizarIndicadores();
+}
+
+function actualizar(uid,campo,valor,redibujar=false){
+    const registro = registros.find(r=>r.uid===uid);
+    if(!registro) return;
+
+    registro[campo] = valor;
+
+    if(redibujar){
+        renderTabla();
+    }
+
+    actualizarIndicadores();
+}
+
+function eliminarRegistro(uid){
+    if(!confirm("¿Desea eliminar esta tarea?")) return;
+
+    registros = registros.filter(r=>r.uid!==uid);
+    renderTabla();
+    actualizarIndicadores();
+}
+
+/* =========================================================
+   INDICADORES
+========================================================= */
+function actualizarIndicadores(){
+    const total = registros.length;
+
+    const inicialesAltos = registros.filter(r=>categoriaRiesgo(nivelRiesgo(r.probInicial, r.sevInicial))==="alto").length;
+    const residualesAltos = registros.filter(r=>categoriaRiesgo(nivelRiesgo(r.probResidual, r.sevResidual))==="alto").length;
+
+    const totalEPP = document.querySelectorAll(".epp-check:checked").length;
+
+    document.getElementById("totalTareas").textContent = total;
+    document.getElementById("riesgosAltos").textContent = inicialesAltos;
+    document.getElementById("riesgosResidualesAltos").textContent = residualesAltos;
+    document.getElementById("totalEPP").textContent = totalEPP;
+}
+
+/* =========================================================
+   GUARDAR / CARGAR EPP
+========================================================= */
+function obtenerEPPSeleccionado(){
+    const checks = document.querySelectorAll(".epp-check");
+    const data = {};
+
+    checks.forEach(ch=>{
+        data[ch.dataset.key] = ch.checked;
+    });
+
+    return data;
+}
+
+function aplicarEPPSeleccionado(data={}){
+    const checks = document.querySelectorAll(".epp-check");
+    checks.forEach(ch=>{
+        ch.checked = !!data[ch.dataset.key];
+    });
+}
+
+/* =========================================================
+   GUARDAR
+========================================================= */
+function guardarFormulario(){
+    const datos = {
+        codigo:"PGSN07-F1",
+        revision:"Rev.01",
+        fechaDocumento:"Jun25",
+
+        proceso:document.getElementById("proceso").value,
+        equipoEvaluador:document.getElementById("equipoEvaluador").value,
+        numeroAnalisis:document.getElementById("numeroAnalisis").value,
+        actividadGeneral:document.getElementById("actividadGeneral").value,
+        lugarEjecucion:document.getElementById("lugarEjecucion").value,
+        sector:document.getElementById("sector").value,
+        artFecha:document.getElementById("artFecha").value,
+        res5197:document.getElementById("res5197").value,
+        adjuntarPlan:document.getElementById("adjuntarPlan").value,
+        fechaConfeccion:document.getElementById("fechaConfeccion").value,
+        fechaEjecucion:document.getElementById("fechaEjecucion").value,
+        responsableSeguridad:document.getElementById("responsableSeguridad").value,
+        revisionCampo:document.getElementById("revision").value,
+        cantidadHojas:document.getElementById("cantidadHojas").value,
+
+        maquinaria:document.getElementById("maquinaria").value,
+        otrosEPP:document.getElementById("otrosEPP").value,
+        epp:obtenerEPPSeleccionado(),
+
+        valNombre:document.getElementById("valNombre").value,
+        valDni:document.getElementById("valDni").value,
+        valFirmaFecha:document.getElementById("valFirmaFecha").value,
+
+        aprNombre:document.getElementById("aprNombre").value,
+        aprDni:document.getElementById("aprDni").value,
+        aprFirmaFecha:document.getElementById("aprFirmaFecha").value,
+
+        registros:registros
+    };
+
+    localStorage.setItem("NASER_PGSN07_F1", JSON.stringify(datos));
+
+    document.getElementById("estadoFormulario").textContent = "Cambios guardados";
+    alert("Formulario guardado correctamente.");
+}
+
+/* =========================================================
+   FINALIZAR
+========================================================= */
+function finalizarFormulario(){
+    if(!document.getElementById("proceso").value.trim()){
+        alert("Debe completar Proceso.");
+        return;
+    }
+
+    if(!document.getElementById("actividadGeneral").value.trim()){
+        alert("Debe completar Actividad.");
+        return;
+    }
+
+    if(registros.length === 0){
+        alert("Debe existir al menos una tarea cargada.");
+        return;
+    }
+
+    const incompletos = registros.filter(r =>
+        !r.tarea.trim() ||
+        !r.peligros.trim()
+    );
+
+    if(incompletos.length > 0){
+        alert("Hay tareas sin completar en Tarea o Peligros y riesgos.");
+        return;
+    }
+
+    guardarFormulario();
+
+    document.getElementById("estadoFormulario").textContent = "Documento finalizado";
+    document.getElementById("badgeEstado").textContent = "FINALIZADO";
+
+    alert("PGSN07-F1 finalizado correctamente.");
+}
+
+/* =========================================================
+   LIMPIAR
+========================================================= */
+function limpiarFormulario(){
+    if(!confirm("¿Desea limpiar completamente el formulario?")) return;
+
+    registros = [nuevoRegistro()];
+
+    [
+        "proceso","equipoEvaluador","numeroAnalisis","actividadGeneral",
+        "lugarEjecucion","sector","artFecha","res5197","adjuntarPlan",
+        "fechaConfeccion","fechaEjecucion","responsableSeguridad",
+        "cantidadHojas","maquinaria","otrosEPP",
+        "valNombre","valDni","valFirmaFecha",
+        "aprNombre","aprDni","aprFirmaFecha"
+    ].forEach(id=>{
+        const el = document.getElementById(id);
+        if(el) el.value = "";
+    });
+
+    document.getElementById("revision").value = "Rev.01 Jun25";
+
+    document.querySelectorAll(".epp-check").forEach(ch=>ch.checked=false);
+
+    localStorage.removeItem("NASER_PGSN07_F1");
+
+    document.getElementById("estadoFormulario").textContent = "Documento en edición";
+    document.getElementById("badgeEstado").textContent = "EN EDICIÓN";
+
+    renderTabla();
+    actualizarIndicadores();
+}
+
+/* =========================================================
+   CARGAR
+========================================================= */
+function cargarFormulario(){
+    renderEPP();
+
+    const guardado = localStorage.getItem("NASER_PGSN07_F1");
+
+    if(!guardado){
+        registros = [nuevoRegistro()];
+        renderTabla();
+        actualizarIndicadores();
+        return;
+    }
+
+    try{
+        const datos = JSON.parse(guardado);
+
+        registros = Array.isArray(datos.registros) ? datos.registros : [];
+
+        document.getElementById("proceso").value = datos.proceso || "";
+        document.getElementById("equipoEvaluador").value = datos.equipoEvaluador || "";
+        document.getElementById("numeroAnalisis").value = datos.numeroAnalisis || "";
+        document.getElementById("actividadGeneral").value = datos.actividadGeneral || "";
+        document.getElementById("lugarEjecucion").value = datos.lugarEjecucion || "";
+        document.getElementById("sector").value = datos.sector || "";
+        document.getElementById("artFecha").value = datos.artFecha || "";
+        document.getElementById("res5197").value = datos.res5197 || "";
+        document.getElementById("adjuntarPlan").value = datos.adjuntarPlan || "";
+        document.getElementById("fechaConfeccion").value = datos.fechaConfeccion || "";
+        document.getElementById("fechaEjecucion").value = datos.fechaEjecucion || "";
+        document.getElementById("responsableSeguridad").value = datos.responsableSeguridad || "";
+        document.getElementById("revision").value = datos.revisionCampo || "Rev.01 Jun25";
+        document.getElementById("cantidadHojas").value = datos.cantidadHojas || "";
+
+        document.getElementById("maquinaria").value = datos.maquinaria || "";
+        document.getElementById("otrosEPP").value = datos.otrosEPP || "";
+
+        document.getElementById("valNombre").value = datos.valNombre || "";
+        document.getElementById("valDni").value = datos.valDni || "";
+        document.getElementById("valFirmaFecha").value = datos.valFirmaFecha || "";
+
+        document.getElementById("aprNombre").value = datos.aprNombre || "";
+        document.getElementById("aprDni").value = datos.aprDni || "";
+        document.getElementById("aprFirmaFecha").value = datos.aprFirmaFecha || "";
+
+        aplicarEPPSeleccionado(datos.epp || {});
+
+        if(registros.length === 0){
+            registros = [nuevoRegistro()];
+        }
+
+        renderTabla();
+        actualizarIndicadores();
+    }
+    catch(error){
+        console.error("Error cargando PGSN07-F1:", error);
+        registros = [nuevoRegistro()];
+        renderTabla();
+        actualizarIndicadores();
+    }
+}
+
+/* =========================================================
+   INIT
+========================================================= */
+document.addEventListener("DOMContentLoaded", cargarFormulario);
+</script>
+
+</body>
+</html>

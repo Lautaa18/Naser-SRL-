@@ -97,4 +97,141 @@ function naser_schema_modulos(PDO $pdo): void
         INDEX idx_email_fecha (email, creado_en),
         INDEX idx_ip_fecha (ip, creado_en)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+    // ---------- PERMISOS: burbujas, sectores restringidos y rol por sector ----------
+    $pdo->exec("CREATE TABLE IF NOT EXISTS burbujas (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        nombre VARCHAR(100) NOT NULL,
+        descripcion VARCHAR(255) NULL,
+        colaborativa TINYINT(1) NOT NULL DEFAULT 0 COMMENT '1 = los responsables de la burbuja pueden editar y completar en todos sus sectores'
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+    if (!hasColumn($pdo, 'sectores', 'burbuja_id')) {
+        $pdo->exec("ALTER TABLE sectores ADD COLUMN burbuja_id INT NULL");
+    }
+    if (!hasColumn($pdo, 'sectores', 'restringido')) {
+        // 1 = solo los usuarios asignados al sector pueden verlo (ej: Operaciones)
+        $pdo->exec("ALTER TABLE sectores ADD COLUMN restringido TINYINT(1) NOT NULL DEFAULT 0");
+    }
+    if (!hasColumn($pdo, 'usuario_sector', 'rol_sector')) {
+        $pdo->exec("ALTER TABLE usuario_sector ADD COLUMN rol_sector ENUM('responsable','operador','observador') NOT NULL DEFAULT 'operador'");
+        // Migracion: quien podia editar pasa a ser responsable
+        $pdo->exec("UPDATE usuario_sector SET rol_sector = IF(puede_editar = 1, 'responsable', 'operador')");
+        // SGI lo ven todos: quienes solo tenian lectura quedan como observadores
+        $pdo->exec("UPDATE usuario_sector us JOIN sectores s ON s.id = us.sector_id SET us.rol_sector = 'observador' WHERE s.slug = 'sgi' AND us.puede_editar = 0");
+    }
+    if (!hasColumn($pdo, 'usuarios', 'debe_cambiar_password')) {
+        $pdo->exec("ALTER TABLE usuarios ADD COLUMN debe_cambiar_password TINYINT(1) NOT NULL DEFAULT 0");
+    }
+    if (!hasColumn($pdo, 'usuarios', 'ultimo_acceso')) {
+        $pdo->exec("ALTER TABLE usuarios ADD COLUMN ultimo_acceso DATETIME NULL");
+    }
+    if (!hasColumn($pdo, 'usuarios', 'recibe_mails')) {
+        $pdo->exec("ALTER TABLE usuarios ADD COLUMN recibe_mails TINYINT(1) NOT NULL DEFAULT 1");
+    }
+
+    // ---------- FORMULARIOS DIGITALES (checklists) ----------
+    $pdo->exec("CREATE TABLE IF NOT EXISTS formularios_registros (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        formulario VARCHAR(80) NOT NULL COMMENT 'codigo del catalogo (formularios_catalogo.php)',
+        sector_id INT NOT NULL,
+        referencia VARCHAR(200) NULL COMMENT 'Ej: nombre del trabajador, proveedor, pozo',
+        estado ENUM('borrador','enviado','aprobado','rechazado') NOT NULL DEFAULT 'borrador',
+        datos_json LONGTEXT NULL COMMENT 'valores de los campos del formulario',
+        storage_json LONGTEXT NULL COMMENT 'estado interno del formulario (listas, filas agregadas)',
+        creado_por INT NULL,
+        actualizado_por INT NULL,
+        enviado_por INT NULL,
+        enviado_en DATETIME NULL,
+        revisado_por INT NULL,
+        revisado_en DATETIME NULL,
+        comentario_revision TEXT NULL,
+        creado_en DATETIME DEFAULT CURRENT_TIMESTAMP,
+        actualizado_en DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        INDEX idx_sector_estado (sector_id, estado),
+        INDEX idx_formulario (formulario),
+        INDEX idx_creado_por (creado_por)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+
+    $pdo->exec("CREATE TABLE IF NOT EXISTS formularios_historial (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        registro_id INT NOT NULL,
+        usuario_id INT NULL,
+        accion VARCHAR(40) NOT NULL,
+        comentario TEXT NULL,
+        creado_en DATETIME DEFAULT CURRENT_TIMESTAMP,
+        INDEX idx_registro (registro_id)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+
+    // ---------- NOTIFICACIONES ----------
+    $pdo->exec("CREATE TABLE IF NOT EXISTS notificaciones (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        usuario_id INT NOT NULL,
+        tipo VARCHAR(40) NOT NULL DEFAULT 'info',
+        titulo VARCHAR(200) NOT NULL,
+        mensaje TEXT NULL,
+        url VARCHAR(255) NULL,
+        clave VARCHAR(120) NULL COMMENT 'evita avisos duplicados (ej: vencimientos)',
+        leida TINYINT(1) NOT NULL DEFAULT 0,
+        mail_enviado TINYINT(1) NOT NULL DEFAULT 0,
+        creado_en DATETIME DEFAULT CURRENT_TIMESTAMP,
+        INDEX idx_usuario_leida (usuario_id, leida),
+        UNIQUE KEY uk_usuario_clave (usuario_id, clave)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+
+    // ---------- CONFIGURACION DEL SISTEMA (tareas diarias, etc.) ----------
+    $pdo->exec("CREATE TABLE IF NOT EXISTS sistema_config (
+        clave VARCHAR(80) PRIMARY KEY,
+        valor TEXT NULL,
+        actualizado_en DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+    // ---------- PERSONAL (legajos de empleados) ----------
+    $pdo->exec("CREATE TABLE IF NOT EXISTS empleados (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        legajo VARCHAR(20) NOT NULL,
+        apellido_nombre VARCHAR(160) NOT NULL,
+        dni VARCHAR(20) NULL,
+        cuil VARCHAR(20) NULL,
+        servicio VARCHAR(80) NULL,
+        sector_id INT NULL,
+        cargo VARCHAR(150) NULL,
+        fecha_ingreso DATE NULL,
+        fecha_nacimiento DATE NULL,
+        obra_social VARCHAR(30) NULL,
+        convenio VARCHAR(30) NULL,
+        encuadre VARCHAR(80) NULL,
+        categoria VARCHAR(40) NULL,
+        nueva_categoria VARCHAR(40) NULL,
+        domicilio VARCHAR(200) NULL,
+        cp VARCHAR(10) NULL,
+        localidad VARCHAR(80) NULL,
+        provincia VARCHAR(80) NULL,
+        telefono VARCHAR(60) NULL,
+        estudios VARCHAR(150) NULL,
+        sindicato VARCHAR(80) NULL,
+        mutual VARCHAR(80) NULL,
+        deposito VARCHAR(60) NULL,
+        email_corporativo VARCHAR(160) NULL,
+        email_personal VARCHAR(160) NULL,
+        usuario_id INT NULL,
+        activo TINYINT(1) NOT NULL DEFAULT 1,
+        fecha_baja DATE NULL,
+        observaciones TEXT NULL,
+        creado_en DATETIME DEFAULT CURRENT_TIMESTAMP,
+        actualizado_en DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        UNIQUE KEY uk_legajo (legajo),
+        INDEX idx_activo (activo)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
+
+    // Licencias, cursos, examenes medicos y certificaciones con vencimiento
+    $pdo->exec("CREATE TABLE IF NOT EXISTS empleados_habilitaciones (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        empleado_id INT NOT NULL,
+        tipo VARCHAR(40) NOT NULL,
+        detalle VARCHAR(120) NULL,
+        fecha_realizacion DATE NULL,
+        fecha_vencimiento DATE NULL,
+        actualizado_en DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        UNIQUE KEY uk_emp_tipo (empleado_id, tipo),
+        INDEX idx_venc (fecha_vencimiento),
+        CONSTRAINT fk_hab_emp FOREIGN KEY (empleado_id) REFERENCES empleados(id) ON DELETE CASCADE
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
 }

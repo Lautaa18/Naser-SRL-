@@ -3,6 +3,7 @@ require __DIR__ . '/config/auth.php';
 requireLogin();
 require __DIR__ . '/config/db.php';
 require __DIR__ . '/config/layout.php';
+require_once __DIR__ . '/config/formularios_catalogo.php';
 
 // Verificación de acceso al sector HSEQ
 $rolActual = $_SESSION['rol'] ?? '';
@@ -30,6 +31,8 @@ if ($sectorHseq) {
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>HSEQ | NASER SGI</title>
     <link rel="stylesheet" href="<?= asset('/style.css') ?>">
+    <link rel="stylesheet" href="<?= asset('/css/modules.css') ?>">
+    <link rel="stylesheet" href="<?= asset('/css/checklists.css') ?>">
 </head>
 <body>
 <div class="app">
@@ -109,6 +112,9 @@ if ($sectorHseq) {
             </article>
 
         </div>
+
+        <!-- FORMULARIOS DIGITALES HSEQ -->
+        <?php formulariosPanel($pdo, 'hseq'); ?>
 
         <!-- LISTA GENERAL DE ARCHIVOS DE HSEQ -->
         <div class="table-panel">

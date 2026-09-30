@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NASER | PGSN10-F2 - Listado de Incidentes</title>
+
+  <style>
+    :root{
+      --green:#009b49;
+      --green-dark:#007a3a;
+      --green-soft:#e8f6ee;
+      --bg:#f2f3f5;
+      --white:#ffffff;
+      --border:#d9dde3;
+      --text:#15191e;
+      --muted:#69717c;
+      --danger:#b42318;
+      --warning:#b54708;
+      --shadow:0 8px 28px rgba(16,24,40,.06);
+    }
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:Arial, Helvetica, sans-serif;
+    }
+
+    html{
+      scroll-behavior:smooth;
+    }
+
+    body{
+      background:var(--bg);
+      color:var(--text);
+    }
+
+    .app{
+      display:flex;
+      min-height:100vh;
+    }
+
+    /* =========================================================
+       SIDEBAR
+    ========================================================= */
+    .sidebar{
+      position:fixed;
+      left:0;
+      top:0;
+      bottom:0;
+      width:320px;
+      background:#0d0d0d;
+      color:#fff;
+      border-right:1px solid #252525;
+      z-index:1000;
+    }
+
+    .brand{
+      height:120px;
+      display:flex;
+      align-items:center;
+      padding:0 34px;
+      border-bottom:1px solid #292929;
+      font-size:34px;
+      font-weight:900;
+      letter-spacing:4px;
+    }
+
+    .sidebar-section{
+      padding:28px 0;
+    }
+
+    .sidebar-label{
+      padding:0 34px 14px;
+      color:#7d8793;
+      font-size:12px;
+      letter-spacing:1.2px;
+      text-transform:uppercase;
+    }
+
+    .nav-link{
+      min-height:56px;
+      display:flex;
+      align-items:center;
+      gap:15px;
+      padding:0 30px;
+      color:#e6e6e6;
+      text-decoration:none;
+      border-left:4px solid transparent;
+      transition:.2s;
+    }
+
+    .nav-link:hover{
+      background:#151515;
+    }
+
+    .nav-link.active{
+      background:#191919;
+      border-left-color:var(--green);
+    }
+
+    .nav-number{
+      width:28px;
+      color:#00bd5a;
+      font-size:18px;
+      font-weight:800;
+    }
+
+    .nav-name{
+      font-size:16px;
+    }
+
+    /* =========================================================
+       MAIN
+    ========================================================= */
+    .main{
+      width:calc(100% - 320px);
+      margin-left:320px;
+    }
+
+    .topbar{
+      min-height:82px;
+      padding:0 40px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:20px;
+      background:#fff;
+      border-bottom:1px solid var(--border);
+    }
+
+    .breadcrumb{
+      color:#59616c;
+      font-size:14px;
+    }
+
+    .top-actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .badge{
+      padding:10px 15px;
+      border-radius:9px;
+      font-size:12px;
+      font-weight:800;
+      white-space:nowrap;
+    }
+
+    .badge-edit{
+      background:#f0f1f2;
+      color:#59616c;
+    }
+
+    .badge-document{
+      background:var(--green-soft);
+      color:#007a3a;
+    }
+
+    .page{
+      padding:35px;
+    }
+
+    /* =========================================================
+       HERO
+    ========================================================= */
+    .hero{
+      position:relative;
+      min-height:190px;
+      display:flex;
+      align-items:center;
+      overflow:hidden;
+      padding:40px 42px;
+      background:linear-gradient(110deg,#101010 0%,#191919 100%);
+      color:#fff;
+      border-radius:15px;
+    }
+
+    .hero::after{
+      content:"";
+      position:absolute;
+      width:310px;
+      height:310px;
+      right:-80px;
+      top:-120px;
+      border-radius:50%;
+      background:rgba(0,155,73,.20);
+    }
+
+    .hero-content{
+      position:relative;
+      z-index:2;
+    }
+
+    .hero-kicker{
+      margin-bottom:14px;
+      color:#00c65e;
+      font-size:13px;
+      font-weight:800;
+      letter-spacing:3px;
+    }
+
+    .hero h1{
+      margin-bottom:14px;
+      font-size:35px;
+      line-height:1.15;
+    }
+
+    .hero p{
+      max-width:980px;
+      color:#e6e8eb;
+      font-size:15px;
+      line-height:1.6;
+    }
+
+    /* =========================================================
+       STATS
+    ========================================================= */
+    .stats{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:14px;
+      margin:22px 0 25px;
+    }
+
+    .stat{
+      min-height:105px;
+      padding:20px;
+      background:#fff;
+      border:1px solid var(--border);
+      border-radius:11px;
+    }
+
+    .stat-label{
+      display:block;
+      margin-bottom:8px;
+      color:#68717c;
+      font-size:11px;
+      font-weight:700;
+      text-transform:uppercase;
+    }
+
+    .stat-value{
+      display:block;
+      font-size:32px;
+      font-weight:900;
+    }
+
+    .green{
+      color:var(--green);
+    }
+
+    .warning{
+      color:var(--warning);
+    }
+
+    /* =========================================================
+       DOCUMENTO
+    ========================================================= */
+    .document-card{
+      overflow:hidden;
+      background:#fff;
+      border:1px solid var(--border);
+      border-radius:15px;
+      box-shadow:var(--shadow);
+    }
+
+    .document-header{
+      min-height:98px;
+      display:flex;
+      align-items:center;
+      gap:17px;
+      padding:22px 27px;
+      border-bottom:1px solid var(--border);
+    }
+
+    .document-number{
+      width:50px;
+      height:50px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex-shrink:0;
+      border-radius:9px;
+      background:#111;
+      color:#00c45e;
+      font-size:18px;
+      font-weight:900;
+    }
+
+    .document-title h2{
+      margin-bottom:5px;
+      font-size:20px;
+    }
+
+    .document-title p{
+      color:#6c7480;
+      font-size:13px;
+    }
+
+    .document-body{
+      padding:27px;
+    }
+
+    .info{
+      margin-bottom:23px;
+      padding:18px 20px;
+      background:#fbfcfc;
+      border:1px solid #d9e7df;
+      border-left:4px solid var(--green);
+      border-radius:9px;
+      color:#4c5560;
+      font-size:13px;
+      line-height:1.65;
+    }
+
+    .info strong{
+      color:#007a39;
+    }
+
+    /* =========================================================
+       SECCIONES
+    ========================================================= */
+    .section{
+      margin-bottom:23px;
+      overflow:hidden;
+      border:1px solid var(--border);
+      border-radius:12px;
+      background:#fff;
+    }
+
+    .section-header{
+      min-height:65px;
+      display:flex;
+      align-items:center;
+      gap:13px;
+      padding:14px 18px;
+      background:#f8f9fa;
+      border-bottom:1px solid var(--border);
+    }
+
+    .section-number{
+      width:44px;
+      height:36px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex-shrink:0;
+      border-radius:8px;
+      background:var(--green-soft);
+      color:var(--green);
+      font-size:12px;
+      font-weight:900;
+    }
+
+    .section-header h3{
+      margin-bottom:3px;
+      font-size:15px;
+    }
+
+    .section-header p{
+      color:#707884;
+      font-size:12px;
+    }
+
+    .section-body{
+      padding:20px;
+    }
+
+    /* =========================================================
+       TOOLBAR
+    ========================================================= */
+    .toolbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:15px;
+      margin-bottom:14px;
+      flex-wrap:wrap;
+    }
+
+    .toolbar-left{
+      color:#63707c;
+      font-size:13px;
+    }
+
+    /* =========================================================
+       TABLA
+    ========================================================= */
+    .table-wrap{
+      overflow-x:auto;
+      border:1px solid #e3e7eb;
+      border-radius:10px;
+    }
+
+    .data-table{
+      width:100%;
+      border-collapse:collapse;
+      min-width:1200px;
+    }
+
+    .data-table th{
+      padding:12px;
+      background:#111;
+      color:#fff;
+      border:1px solid #333;
+      font-size:11px;
+      text-transform:uppercase;
+      text-align:center;
+    }
+
+    .data-table td{
+      padding:8px;
+      border:1px solid #e0e3e7;
+      vertical-align:top;
+      background:#fff;
+    }
+
+    .data-table tbody tr:hover td{
+      background:#fafcfb;
+    }
+
+    .table-input,
+    .table-select,
+    .table-area{
+      width:100%;
+      border:1px solid #d4d9df;
+      border-radius:6px;
+      padding:8px 9px;
+      background:#fff;
+      font-size:12px;
+      outline:none;
+    }
+
+    .table-area{
+      min-height:70px;
+      resize:vertical;
+    }
+
+    .table-input:focus,
+    .table-select:focus,
+    .table-area:focus{
+      border-color:var(--green);
+      box-shadow:0 0 0 2px rgba(0,155,73,.08);
+    }
+
+    .delete-btn{
+      width:35px;
+      height:35px;
+      display:block;
+      margin:auto;
+      border:none;
+      border-radius:7px;
+      background:#f0f1f2;
+      color:#606872;
+      cursor:pointer;
+      font-size:18px;
+    }
+
+    .delete-btn:hover{
+      background:#fee4e2;
+      color:var(--danger);
+    }
+
+    /* =========================================================
+       BOTONES
+    ========================================================= */
+    .btn{
+      min-height:41px;
+      padding:0 16px;
+      border:none;
+      border-radius:8px;
+      font-size:12px;
+      font-weight:800;
+      cursor:pointer;
+      transition:.2s;
+    }
+
+    .btn:hover{
+      transform:translateY(-1px);
+    }
+
+    .btn-green{
+      background:var(--green);
+      color:#fff;
+    }
+
+    .btn-green:hover{
+      background:var(--green-dark);
+    }
+
+    .btn-dark{
+      background:#181818;
+      color:#fff;
+    }
+
+    .btn-light{
+      background:#eef0f2;
+      color:#4a525d;
+    }
+
+    /* =========================================================
+       FOOTER
+    ========================================================= */
+    .form-footer{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:15px;
+      flex-wrap:wrap;
+    }
+
+    .status{
+      color:#68717b;
+      font-size:12px;
+    }
+
+    .status strong{
+      color:#16191d;
+    }
+
+    .footer-buttons{
+      display:flex;
+      gap:9px;
+      flex-wrap:wrap;
+    }
+
+    /* =========================================================
+       RESPONSIVE
+    ========================================================= */
+    @media(max-width:1200px){
+      .sidebar{
+        width:270px;
+      }
+
+      .main{
+        width:calc(100% - 270px);
+        margin-left:270px;
+      }
+
+      .stats{
+        grid-template-columns:repeat(2,1fr);
+      }
+    }
+
+    @media(max-width:800px){
+      .app{
+        display:block;
+      }
+
+      .sidebar{
+        position:relative;
+        width:100%;
+        min-height:auto;
+      }
+
+      .main{
+        width:100%;
+        margin-left:0;
+      }
+
+      .brand{
+        height:85px;
+      }
+
+      .topbar{
+        padding:18px 20px;
+        flex-direction:column;
+        align-items:flex-start;
+      }
+
+      .page{
+        padding:18px;
+      }
+
+      .hero{
+        padding:28px 23px;
+      }
+
+      .hero h1{
+        font-size:28px;
+      }
+
+      .stats{
+        grid-template-columns:1fr;
+      }
+
+      .toolbar,
+      .form-footer{
+        flex-direction:column;
+        align-items:stretch;
+      }
+
+      .footer-buttons{
+        flex-direction:column;
+      }
+
+      .section-body{
+        overflow-x:auto;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="brand">NASER</div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Documento</div>
+
+      <a href="#incidentes" class="nav-link active">
+        <span class="nav-number">01</span>
+        <span class="nav-name">Listado de Incidentes</span>
+      </a>
+
+      <a href="#control" class="nav-link">
+        <span class="nav-number">02</span>
+        <span class="nav-name">Control</span>
+      </a>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <header class="topbar">
+      <div class="breadcrumb">
+        NASER / Gestión / Listado de Incidentes
+      </div>
+
+      <div class="top-actions">
+        <span class="badge badge-edit" id="badgeEstado">EN EDICIÓN</span>
+        <span class="badge badge-document">PGSN10-F2 · Rev.00 · Sep.25</span>
+      </div>
+    </header>
+
+    <div class="page">
+
+      <!-- HERO -->
+      <section class="hero">
+        <div class="hero-content">
+          <div class="hero-kicker">REGISTRO Y SEGUIMIENTO</div>
+          <h1>Listado de Incidentes</h1>
+          <p>
+            Registro de incidentes con fecha, tipo, personal afectado,
+            días de baja, parte del cuerpo afectada, costo económico estimado
+            y observaciones, siguiendo el diseño NASER que veníamos utilizando.
+          </p>
+        </div>
+      </section>
+
+      <!-- INDICADORES -->
+      <section class="stats">
+        <div class="stat">
+          <span class="stat-label">Total de incidentes</span>
+          <span class="stat-value green" id="statTotal">0</span>
+        </div>
+
+        <div class="stat">
+          <span class="stat-label">Con baja</span>
+          <span class="stat-value" id="statBaja">0</span>
+        </div>
+
+        <div class="stat">
+          <span class="stat-label">Costo total estimado</span>
+          <span class="stat-value warning" id="statCosto">$0</span>
+        </div>
+
+        <div class="stat">
+          <span class="stat-label">Último registro</span>
+          <span class="stat-value" id="statUltimo" style="font-size:20px;">-</span>
+        </div>
+      </section>
+
+      <!-- DOCUMENTO -->
+      <section class="document-card">
+
+        <div class="document-header">
+          <div class="document-number">01</div>
+          <div class="document-title">
+            <h2>Listado de Incidentes</h2>
+            <p>PGSN10-F2 · Rev.00 · Sep.25</p>
+          </div>
+        </div>
+
+        <div class="document-body">
+
+          <div class="info">
+            Complete cada registro de incidente en la tabla inferior.
+            Puede <strong>agregar</strong>, <strong>editar</strong> y <strong>eliminar</strong> filas.
+            El formulario mantiene el estilo visual NASER con encabezado, indicadores y acciones de guardado.
+          </div>
+
+          <!-- TABLA PRINCIPAL -->
+          <section class="section" id="incidentes">
+            <div class="section-header">
+              <div class="section-number">01</div>
+              <div>
+                <h3>Listado de Incidentes</h3>
+                <p>Registro detallado de incidentes ocurridos</p>
+              </div>
+            </div>
+
+            <div class="section-body">
+              <div class="toolbar">
+                <div class="toolbar-left">
+                  Utilice la tabla para registrar incidentes del período.
+                </div>
+
+                <button type="button" class="btn btn-green" onclick="agregarFila()">
+                  + AGREGAR INCIDENTE
+                </button>
+              </div>
+
+              <div class="table-wrap">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th style="width:130px;">Fecha</th>
+                      <th style="width:260px;">Incidente</th>
+                      <th style="width:140px;">Tipo</th>
+                      <th style="width:170px;">Personal Afectado</th>
+                      <th style="width:120px;">Días de baja</th>
+                      <th style="width:220px;">Parte del cuerpo afectada</th>
+                      <th style="width:170px;">Costo económico estimado</th>
+                      <th style="width:280px;">Observaciones</th>
+                      <th style="width:70px;">Acción</th>
+                    </tr>
+                  </thead>
+                  <tbody id="tablaIncidentes"></tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <!-- CONTROL -->
+          <section class="section" id="control">
+            <div class="section-header">
+              <div class="section-number">02</div>
+              <div>
+                <h3>Control del Documento</h3>
+                <p>Guardado y cierre del formulario</p>
+              </div>
+            </div>
+
+            <div class="section-body">
+              <div class="form-footer">
+                <div class="status">
+                  Estado: <strong id="estadoFormulario">Documento en edición</strong>
+                </div>
+
+                <div class="footer-buttons">
+                  <button type="button" class="btn btn-light" onclick="limpiarFormulario()">
+                    LIMPIAR
+                  </button>
+
+                  <button type="button" class="btn btn-dark" onclick="guardarFormulario()">
+                    GUARDAR
+                  </button>
+
+                  <button type="button" class="btn btn-green" onclick="finalizarFormulario()">
+                    FINALIZAR FORMULARIO
+                  </button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+        </div>
+      </section>
+    </div>
+  </main>
+</div>
+
+<script>
+  let incidentes = [
+    crearRegistroVacio(),
+    crearRegistroVacio(),
+    crearRegistroVacio(),
+    crearRegistroVacio(),
+    crearRegistroVacio()
+  ];
+
+  function uid(){
+    return Date.now().toString() + Math.random().toString(16).slice(2);
+  }
+
+  function crearRegistroVacio(){
+    return {
+      id: uid(),
+      fecha: "",
+      incidente: "",
+      tipo: "",
+      personal: "",
+      diasBaja: "",
+      parteCuerpo: "",
+      costo: "",
+      observaciones: ""
+    };
+  }
+
+  function escapeHTML(valor){
+    return String(valor ?? "")
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;");
+  }
+
+  function agregarFila(){
+    incidentes.push(crearRegistroVacio());
+    renderTabla();
+    actualizarIndicadores();
+  }
+
+  function eliminarFila(id){
+    if(!confirm("¿Desea eliminar este registro?")) return;
+    incidentes = incidentes.filter(item => item.id !== id);
+    renderTabla();
+    actualizarIndicadores();
+  }
+
+  function actualizarCampo(id, campo, valor){
+    const item = incidentes.find(reg => reg.id === id);
+    if(item){
+      item[campo] = valor;
+      actualizarIndicadores();
+    }
+  }
+
+  function renderTabla(){
+    const tbody = document.getElementById("tablaIncidentes");
+    tbody.innerHTML = "";
+
+    incidentes.forEach(item => {
+      const tr = document.createElement("tr");
+
+      tr.innerHTML = `
+        <td>
+          <input
+            class="table-input"
+            type="date"
+            value="${escapeHTML(item.fecha)}"
+            onchange="actualizarCampo('${item.id}','fecha',this.value)"
+          >
+        </td>
+
+        <td>
+          <textarea
+            class="table-area"
+            placeholder="Detalle del incidente"
+            oninput="actualizarCampo('${item.id}','incidente',this.value)"
+          >${escapeHTML(item.incidente)}</textarea>
+        </td>
+
+        <td>
+          <input
+            class="table-input"
+            type="text"
+            placeholder="Tipo"
+            value="${escapeHTML(item.tipo)}"
+            oninput="actualizarCampo('${item.id}','tipo',this.value)"
+          >
+        </td>
+
+        <td>
+          <input
+            class="table-input"
+            type="text"
+            placeholder="Personal afectado"
+            value="${escapeHTML(item.personal)}"
+            oninput="actualizarCampo('${item.id}','personal',this.value)"
+          >
+        </td>
+
+        <td>
+          <input
+            class="table-input"
+            type="number"
+            min="0"
+            placeholder="0"
+            value="${escapeHTML(item.diasBaja)}"
+            oninput="actualizarCampo('${item.id}','diasBaja',this.value)"
+          >
+        </td>
+
+        <td>
+          <input
+            class="table-input"
+            type="text"
+            placeholder="Parte del cuerpo"
+            value="${escapeHTML(item.parteCuerpo)}"
+            oninput="actualizarCampo('${item.id}','parteCuerpo',this.value)"
+          >
+        </td>
+
+        <td>
+          <input
+            class="table-input"
+            type="number"
+            min="0"
+            step="0.01"
+            placeholder="0"
+            value="${escapeHTML(item.costo)}"
+            oninput="actualizarCampo('${item.id}','costo',this.value)"
+          >
+        </td>
+
+        <td>
+          <textarea
+            class="table-area"
+            placeholder="Observaciones"
+            oninput="actualizarCampo('${item.id}','observaciones',this.value)"
+          >${escapeHTML(item.observaciones)}</textarea>
+        </td>
+
+        <td>
+          <button
+            class="delete-btn"
+            type="button"
+            onclick="eliminarFila('${item.id}')"
+          >×</button>
+        </td>
+      `;
+
+      tbody.appendChild(tr);
+    });
+  }
+
+  function actualizarIndicadores(){
+    const total = incidentes.filter(item =>
+      item.fecha || item.incidente || item.tipo || item.personal ||
+      item.diasBaja || item.parteCuerpo || item.costo || item.observaciones
+    ).length;
+
+    const conBaja = incidentes.filter(item => Number(item.diasBaja) > 0).length;
+
+    const costoTotal = incidentes.reduce((acc, item) => {
+      return acc + (parseFloat(item.costo) || 0);
+    }, 0);
+
+    let ultimaFecha = "-";
+    const fechasValidas = incidentes
+      .map(item => item.fecha)
+      .filter(Boolean)
+      .sort();
+
+    if(fechasValidas.length > 0){
+      ultimaFecha = fechasValidas[fechasValidas.length - 1];
+    }
+
+    document.getElementById("statTotal").textContent = total;
+    document.getElementById("statBaja").textContent = conBaja;
+    document.getElementById("statCosto").textContent = "$" + costoTotal.toLocaleString("es-AR");
+    document.getElementById("statUltimo").textContent = ultimaFecha;
+  }
+
+  function obtenerDatos(){
+    return {
+      codigo: "PGSN10-F2",
+      revision: "Rev.00",
+      fechaDocumento: "Sep.25",
+      incidentes: incidentes
+    };
+  }
+
+  function guardarFormulario(){
+    const datos = obtenerDatos();
+
+    localStorage.setItem("NASER_PGSN10_F2", JSON.stringify(datos));
+
+    document.getElementById("estadoFormulario").textContent = "Cambios guardados";
+
+    alert("Formulario guardado correctamente.");
+  }
+
+  function finalizarFormulario(){
+    const completos = incidentes.filter(item => item.fecha || item.incidente || item.tipo || item.personal);
+
+    if(completos.length === 0){
+      alert("Debe completar al menos un incidente antes de finalizar.");
+      return;
+    }
+
+    guardarFormulario();
+
+    document.getElementById("estadoFormulario").textContent = "Documento finalizado";
+    document.getElementById("badgeEstado").textContent = "FINALIZADO";
+
+    alert("PGSN10-F2 finalizado correctamente.");
+  }
+
+  function limpiarFormulario(){
+    if(!confirm("¿Desea limpiar completamente el formulario?")) return;
+
+    localStorage.removeItem("NASER_PGSN10_F2");
+    location.reload();
+  }
+
+  function cargarFormulario(){
+    const guardado = localStorage.getItem("NASER_PGSN10_F2");
+
+    if(!guardado){
+      renderTabla();
+      actualizarIndicadores();
+      return;
+    }
+
+    try{
+      const datos = JSON.parse(guardado);
+      incidentes = Array.isArray(datos.incidentes) ? datos.incidentes : incidentes;
+    }catch(error){
+      console.error("Error al cargar PGSN10-F2:", error);
+    }
+
+    renderTabla();
+    actualizarIndicadores();
+  }
+
+  document.addEventListener("DOMContentLoaded", cargarFormulario);
+</script>
+
+</body>
+</html>

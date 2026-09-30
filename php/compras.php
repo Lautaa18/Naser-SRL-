@@ -5,6 +5,7 @@ verify_csrf(); // protege todos los formularios POST de esta pagina
 require __DIR__ . '/config/db.php';
 require __DIR__ . '/config/layout.php';
 require __DIR__ . '/config/modulo.php';
+require_once __DIR__ . '/config/formularios_catalogo.php';
 
 $slug = 'compras';
 [$sector, $sid, $canEdit] = cargarModulo($pdo, $slug);
@@ -153,10 +154,6 @@ $encuestas = $pdo->prepare('SELECT e.*, c.codigo, u.nombre AS usuario_evaluador 
 $encuestas->execute([$sid]);
 $encuestas = $encuestas->fetchAll();
 
-// Carga de Formularios / Checklists de Compras
-$stForms = $pdo->prepare('SELECT f.*, u.nombre AS creado_nombre FROM compras_formularios f LEFT JOIN usuarios u ON u.id = f.creado_por WHERE f.sector_id = ? ORDER BY f.id DESC');
-$stForms->execute([$sid]);
-$formularios = $stForms->fetchAll();
 ?>
 <!doctype html>
 <html lang="es">
@@ -250,114 +247,8 @@ $formularios = $stForms->fetchAll();
     </div>
 </section>
 
-<!-- SECCIÓN: CHECKLISTS Y FORMULARIOS DE COMPRAS -->
-<div class="module-toolbar" id="formularios">
-  <h2>Formularios y Checklists de Compras</h2>
-  <span class="count-pill"><?=count($formularios)?> cargado(s)</span>
-</div>
-
-<!-- TARJETAS DE LOS FORMULARIOS SEGÚN LOS ARCHIVOS DE COMPRAS -->
-<div class="grid-forms">
-  <div class="card-form">
-    <div>
-      <h3>1. Alta de Proveedores</h3>
-      <p>Registro e incorporación de nuevos proveedores al sistema.</p>
-    </div>
-    <?php if($canEdit): ?>
-      <a href="/php/formularios/alta_proveedores.php?sector_id=<?=$sid?>" class="btn primary">Abrir Formulario</a>
-    <?php endif; ?>
-  </div>
-
-  <div class="card-form">
-    <div>
-      <h3>2. Entrega de Materiales</h3>
-      <p>Constancia de recepción y despacho de insumos/materiales.</p>
-    </div>
-    <?php if($canEdit): ?>
-      <a href="/php/formularios/entrega_materiales.php?sector_id=<?=$sid?>" class="btn primary">Abrir Formulario</a>
-    <?php endif; ?>
-  </div>
-
-  <div class="card-form">
-    <div>
-      <h3>3. Evaluación de Proveedores</h3>
-      <p>Calificación de desempeño, calidad y tiempos de respuesta.</p>
-    </div>
-    <?php if($canEdit): ?>
-      <a href="/php/formularios/evaluacion_proveedores.php?sector_id=<?=$sid?>" class="btn primary">Abrir Formulario</a>
-    <?php endif; ?>
-  </div>
-
-  <div class="card-form">
-    <div>
-      <h3>4. Listado de Proveedores, Productos y Servicios</h3>
-      <p>Catálogo unificado de proveedores y sus rubros.</p>
-    </div>
-    <?php if($canEdit): ?>
-      <a href="/php/formularios/listado_proveedores_productos_servicios.php?sector_id=<?=$sid?>" class="btn primary">Abrir Formulario</a>
-    <?php endif; ?>
-  </div>
-
-  <div class="card-form">
-    <div>
-      <h3>5. Pedido de Materiales y Servicios</h3>
-      <p>Solicitud formal de requerimiento de insumos o contrataciones.</p>
-    </div>
-    <?php if($canEdit): ?>
-      <a href="/php/formularios/pedido_materiales_servicios.php?sector_id=<?=$sid?>" class="btn primary">Abrir Formulario</a>
-    <?php endif; ?>
-  </div>
-
-  <div class="card-form">
-    <div>
-      <h3>6. Seguimiento Proveedor</h3>
-      <p>Control de entregas pendientes, estado de órdenes e incidentes.</p>
-    </div>
-    <?php if($canEdit): ?>
-      <a href="/php/formularios/seguimiento_proveedor.php?sector_id=<?=$sid?>" class="btn primary">Abrir Formulario</a>
-    <?php endif; ?>
-  </div>
-</div>
-
-<!-- TABLA DE HISTORIAL DE FORMULARIOS CARGADOS -->
-<div class="table-wrapper" style="margin-bottom: 30px;">
-  <table class="module-table">
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Código / Tipo Formulario</th>
-        <th>Proveedor / Solicitante</th>
-        <th>Fecha Emisión</th>
-        <th>Estado</th>
-        <th>Cargado por</th>
-        <th>Acción</th>
-      </tr>
-    </thead>
-    <tbody>
-      <?php if(empty($formularios)): ?>
-        <tr><td colspan="7" style="text-align: center; color: #666; padding: 18px;">No hay formularios o checklists registrados aún.</td></tr>
-      <?php else: ?>
-        <?php foreach($formularios as $f): ?>
-        <tr>
-          <td><strong>#<?=$f['id']?></strong></td>
-          <td><strong><?=h($f['codigo_form'])?></strong></td>
-          <td><?=h($f['proveedor_nombre'] ?: $f['solicitante'] ?: '-')?></td>
-          <td><?=h($f['fecha_documento'])?></td>
-          <td>
-            <span class="status-pill status-<?=h($f['estado'])?>">
-              <?=h(str_replace('_', ' ', $f['estado']))?>
-            </span>
-          </td>
-          <td><?=h($f['creado_nombre'] ?: 'Sistema')?></td>
-          <td>
-            <a class="btn secondary" href="/php/formularios/ver.php?id=<?=(int)$f['id']?>">Ver / Editar</a>
-          </td>
-        </tr>
-        <?php endforeach; ?>
-      <?php endif; ?>
-    </tbody>
-  </table>
-</div>
+<!-- SECCIÓN: FORMULARIOS DIGITALES (se guardan en la base de datos) -->
+<?php formulariosPanel($pdo, 'compras'); ?>
 
 <?php if($canEdit):?>
 <section class="module-card" id="gestion">

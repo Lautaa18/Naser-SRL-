@@ -1,6 +1,9 @@
 <?php
 require_once __DIR__ . '/schema_modulos.php';
 
+// Cambiar este numero cada vez que se agregan tablas/columnas en schema_modulos.php
+const NASER_SCHEMA_VERSION = '2026.10.02-1';
+
 function hasColumn(PDO $pdo, string $table, string $column): bool
 {
     $st = $pdo->prepare(
@@ -26,6 +29,16 @@ function naser_bootstrap(PDO $pdo): void
     }
 
     $done = true;
+
+    // Si la base ya esta actualizada a esta version, no se repite todo en cada request
+    try {
+        $v = $pdo->query("SELECT valor FROM sistema_config WHERE clave='schema_version'")->fetchColumn();
+        if ($v === NASER_SCHEMA_VERSION) {
+            return;
+        }
+    } catch (Throwable $e) {
+        // primera vez: la tabla todavia no existe
+    }
 
 
     /*
@@ -511,7 +524,9 @@ function naser_bootstrap(PDO $pdo): void
     $adminId = (int)$st->fetchColumn();
 
 
-    if (!$adminId) {
+    // La cuenta admin@naser.test solo se crea en desarrollo o si no existe ningun administrador
+    $hayAdmins = (int)$pdo->query("SELECT COUNT(*) FROM usuarios WHERE rol='admin' AND activo=1")->fetchColumn() > 0;
+    if (!$adminId && (app_is_dev() || !$hayAdmins)) {
 
         $st = $pdo->prepare("
             INSERT INTO usuarios (
@@ -543,6 +558,7 @@ function naser_bootstrap(PDO $pdo): void
     | ADMIN PUEDE VER Y EDITAR TODOS LOS SECTORES
     |--------------------------------------------------------------------------
     */
+    if ($adminId) {
 
     $pdo->prepare("
         INSERT INTO usuario_sector (
@@ -566,6 +582,7 @@ function naser_bootstrap(PDO $pdo): void
     ")->execute([
         $adminId
     ]);
+    }
 
 
     /*
@@ -574,6 +591,8 @@ function naser_bootstrap(PDO $pdo): void
     |--------------------------------------------------------------------------
     */
 
+    // Cuentas de prueba (@naser.test): solo en modo desarrollo
+    if (app_is_dev()) {
     $demoUsers = [
 
         [
@@ -762,6 +781,8 @@ function naser_bootstrap(PDO $pdo): void
             ]);
         }
     }
+    }
+
 
 
     /*
@@ -988,4 +1009,7 @@ function naser_bootstrap(PDO $pdo): void
 
     // Tablas de los modulos (Compras, RRHH, login...)
     naser_schema_modulos($pdo);
+
+    $pdo->prepare("INSERT INTO sistema_config (clave, valor) VALUES ('schema_version', ?) ON DUPLICATE KEY UPDATE valor = VALUES(valor)")
+        ->execute([NASER_SCHEMA_VERSION]);
 }

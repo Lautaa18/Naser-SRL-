@@ -1,0 +1,2160 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>PGSN02-F10 | Sanción Disciplinaria | NASER</title>
+
+  <style>
+    /* =========================================================
+       NASER SRL - PGSN02-F10
+       SANCIÓN DISCIPLINARIA
+    ========================================================= */
+
+    :root{
+      --naser:#009b49;
+      --naser-dark:#007a3a;
+      --black:#111111;
+      --black-2:#1c1c1c;
+      --white:#ffffff;
+      --bg:#f1f3f4;
+      --border:#d8dde1;
+      --text:#202124;
+      --muted:#6b7280;
+      --danger:#c62828;
+      --warning:#f59e0b;
+      --success:#009b49;
+      --shadow:0 4px 18px rgba(0,0,0,.08);
+    }
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+    }
+
+    html{
+      scroll-behavior:smooth;
+    }
+
+    body{
+      font-family:Arial, Helvetica, sans-serif;
+      background:var(--bg);
+      color:var(--text);
+    }
+
+    button,
+    input,
+    textarea,
+    select{
+      font-family:inherit;
+    }
+
+    /* ==========================
+       SIDEBAR
+    ========================== */
+
+    .sidebar{
+      position:fixed;
+      top:0;
+      left:0;
+      width:250px;
+      height:100vh;
+      background:#0d0d0d;
+      color:white;
+      z-index:1000;
+      display:flex;
+      flex-direction:column;
+      box-shadow:3px 0 15px rgba(0,0,0,.15);
+    }
+
+    .brand{
+      padding:26px 22px;
+      border-bottom:1px solid #292929;
+    }
+
+    .brand-logo{
+      font-size:31px;
+      font-weight:900;
+      letter-spacing:2px;
+      color:white;
+    }
+
+    .brand-logo span{
+      color:var(--naser);
+    }
+
+    .brand small{
+      display:block;
+      color:#9ca3af;
+      margin-top:7px;
+      font-size:11px;
+      letter-spacing:1px;
+    }
+
+    .sidebar nav{
+      padding:18px 12px;
+      flex:1;
+    }
+
+    .nav-title{
+      color:#686868;
+      font-size:10px;
+      font-weight:700;
+      letter-spacing:1.4px;
+      margin:15px 12px 7px;
+    }
+
+    .nav-link{
+      display:block;
+      color:#ccc;
+      text-decoration:none;
+      padding:13px 15px;
+      margin-bottom:5px;
+      border-radius:7px;
+      font-size:14px;
+      transition:.2s;
+    }
+
+    .nav-link:hover{
+      background:#202020;
+      color:white;
+    }
+
+    .nav-link.active{
+      background:var(--naser);
+      color:white;
+      font-weight:700;
+    }
+
+    .sidebar-footer{
+      padding:17px;
+      border-top:1px solid #292929;
+      color:#777;
+      font-size:11px;
+    }
+
+    /* ==========================
+       MAIN
+    ========================== */
+
+    .main{
+      margin-left:250px;
+      min-height:100vh;
+    }
+
+    /* HEADER */
+
+    .topbar{
+      height:72px;
+      background:white;
+      border-bottom:1px solid var(--border);
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:0 34px;
+      position:sticky;
+      top:0;
+      z-index:100;
+    }
+
+    .topbar-left h2{
+      font-size:17px;
+      font-weight:700;
+    }
+
+    .topbar-left p{
+      font-size:12px;
+      color:var(--muted);
+      margin-top:4px;
+    }
+
+    .document-code{
+      text-align:right;
+    }
+
+    .document-code strong{
+      display:block;
+      color:var(--naser);
+      font-size:15px;
+    }
+
+    .document-code span{
+      font-size:11px;
+      color:#777;
+    }
+
+    .container{
+      width:100%;
+      max-width:1300px;
+      margin:auto;
+      padding:28px;
+    }
+
+    /* ==========================
+       HERO
+    ========================== */
+
+    .hero{
+      background:#111;
+      color:white;
+      border-radius:12px;
+      padding:30px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:25px;
+      margin-bottom:20px;
+      border-left:6px solid var(--naser);
+      box-shadow:var(--shadow);
+    }
+
+    .hero-tag{
+      display:inline-block;
+      background:var(--naser);
+      padding:6px 10px;
+      border-radius:4px;
+      font-size:11px;
+      font-weight:700;
+      letter-spacing:.8px;
+      margin-bottom:12px;
+    }
+
+    .hero h1{
+      font-size:26px;
+      margin-bottom:8px;
+    }
+
+    .hero p{
+      color:#bcbcbc;
+      font-size:13px;
+      line-height:1.5;
+    }
+
+    .hero-code{
+      text-align:center;
+      min-width:150px;
+      background:#1d1d1d;
+      border:1px solid #333;
+      border-radius:8px;
+      padding:15px;
+    }
+
+    .hero-code strong{
+      display:block;
+      color:#fff;
+      font-size:18px;
+      margin-bottom:5px;
+    }
+
+    .hero-code span{
+      font-size:11px;
+      color:#aaa;
+    }
+
+    /* ==========================
+       PROGRESO
+    ========================== */
+
+    .progress-card{
+      background:white;
+      border-radius:10px;
+      padding:17px 20px;
+      box-shadow:var(--shadow);
+      margin-bottom:20px;
+    }
+
+    .progress-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:10px;
+      font-size:13px;
+      font-weight:700;
+    }
+
+    #progressPercent{
+      color:var(--naser);
+      font-size:16px;
+    }
+
+    .progress{
+      width:100%;
+      height:10px;
+      background:#e5e7eb;
+      border-radius:20px;
+      overflow:hidden;
+    }
+
+    .progress-bar{
+      width:0%;
+      height:100%;
+      background:var(--naser);
+      transition:.3s;
+    }
+
+    /* ==========================
+       CARDS
+    ========================== */
+
+    .card{
+      background:white;
+      border-radius:10px;
+      margin-bottom:20px;
+      overflow:hidden;
+      box-shadow:var(--shadow);
+      border:1px solid #e4e4e4;
+    }
+
+    .card-header{
+      background:#111;
+      color:white;
+      padding:16px 20px;
+      display:flex;
+      align-items:center;
+      gap:13px;
+    }
+
+    .section-number{
+      width:31px;
+      height:31px;
+      background:var(--naser);
+      color:white;
+      border-radius:50%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:14px;
+      font-weight:bold;
+      flex-shrink:0;
+    }
+
+    .card-header h3{
+      font-size:15px;
+      letter-spacing:.4px;
+    }
+
+    .card-body{
+      padding:23px;
+    }
+
+    /* ==========================
+       FORMULARIOS
+    ========================== */
+
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:18px;
+    }
+
+    .grid-3{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:18px;
+    }
+
+    .grid-4{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:18px;
+    }
+
+    .field{
+      display:flex;
+      flex-direction:column;
+      gap:7px;
+    }
+
+    .field.full{
+      grid-column:1/-1;
+    }
+
+    label{
+      font-size:11px;
+      text-transform:uppercase;
+      font-weight:700;
+      color:#52565b;
+      letter-spacing:.45px;
+    }
+
+    .required::after{
+      content:" *";
+      color:#d32f2f;
+    }
+
+    input,
+    textarea,
+    select{
+      width:100%;
+      border:1px solid #cfd4d9;
+      background:white;
+      padding:11px 12px;
+      border-radius:6px;
+      font-size:14px;
+      color:#222;
+      outline:none;
+      transition:.2s;
+    }
+
+    input:focus,
+    textarea:focus,
+    select:focus{
+      border-color:var(--naser);
+      box-shadow:0 0 0 3px rgba(0,155,73,.10);
+    }
+
+    input.invalid,
+    textarea.invalid,
+    select.invalid{
+      border-color:#c62828;
+      background:#fff7f7;
+    }
+
+    textarea{
+      resize:vertical;
+      min-height:100px;
+      line-height:1.5;
+    }
+
+    .large-text{
+      min-height:170px;
+    }
+
+    /* ==========================
+       COMUNICACIÓN
+    ========================== */
+
+    .communication{
+      border:1px solid #dfe3e6;
+      border-radius:8px;
+      background:#fafafa;
+      padding:20px;
+      line-height:1.7;
+      font-size:14px;
+    }
+
+    .communication p{
+      margin-bottom:15px;
+    }
+
+    .communication strong{
+      color:#111;
+    }
+
+    .fact-box{
+      margin:18px 0;
+    }
+
+    .fact-box textarea{
+      background:white;
+    }
+
+    /* ==========================
+       SANCIONES
+    ========================== */
+
+    .sanction-options{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:12px;
+      margin-bottom:20px;
+    }
+
+    .sanction-option input{
+      display:none;
+    }
+
+    .sanction-option label{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      min-height:52px;
+      border:2px solid #d8dce0;
+      border-radius:7px;
+      cursor:pointer;
+      font-size:13px;
+      transition:.2s;
+      background:#fff;
+      text-align:center;
+    }
+
+    .sanction-option input:checked + label{
+      border-color:var(--naser);
+      background:#eef9f3;
+      color:var(--naser-dark);
+    }
+
+    .sanction-option input:disabled + label{
+      cursor:not-allowed;
+      opacity:.6;
+    }
+
+    .info-box{
+      border-left:4px solid var(--naser);
+      background:#f3faf6;
+      padding:14px 16px;
+      margin:18px 0;
+      font-size:13px;
+      line-height:1.6;
+    }
+
+    .warning-box{
+      border-left:4px solid #d49b00;
+      background:#fffaf0;
+      padding:14px 16px;
+      margin:18px 0;
+      font-size:13px;
+      line-height:1.6;
+    }
+
+    /* ==========================
+       FIRMAS
+    ========================== */
+
+    .signature-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:35px;
+    }
+
+    .signature-box{
+      border:1px solid #d9dde1;
+      border-radius:8px;
+      padding:20px;
+      min-height:210px;
+    }
+
+    .signature-box h4{
+      font-size:13px;
+      text-transform:uppercase;
+      margin-bottom:18px;
+    }
+
+    .signature-line{
+      height:80px;
+      border-bottom:1px solid #333;
+      margin-bottom:12px;
+    }
+
+    .signature-label{
+      font-size:11px;
+      color:#777;
+      text-align:center;
+    }
+
+    /* ==========================
+       STATUS
+    ========================== */
+
+    .status{
+      display:none;
+      padding:13px 16px;
+      margin-bottom:18px;
+      border-radius:7px;
+      font-size:13px;
+      font-weight:600;
+    }
+
+    .status.success{
+      display:block;
+      color:#086b36;
+      background:#e9f8ef;
+      border:1px solid #b8e6ca;
+    }
+
+    .status.error{
+      display:block;
+      color:#9d1c1c;
+      background:#fff0f0;
+      border:1px solid #efc3c3;
+    }
+
+    /* ==========================
+       ACCIONES
+    ========================== */
+
+    .actions{
+      background:white;
+      border-radius:10px;
+      box-shadow:var(--shadow);
+      padding:18px;
+      display:flex;
+      justify-content:flex-end;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-bottom:40px;
+    }
+
+    .btn{
+      border:0;
+      border-radius:6px;
+      padding:11px 18px;
+      font-weight:700;
+      font-size:13px;
+      cursor:pointer;
+      transition:.2s;
+    }
+
+    .btn:hover{
+      transform:translateY(-1px);
+    }
+
+    .btn-primary{
+      background:var(--naser);
+      color:white;
+    }
+
+    .btn-primary:hover{
+      background:var(--naser-dark);
+    }
+
+    .btn-dark{
+      background:#171717;
+      color:white;
+    }
+
+    .btn-gray{
+      background:#e5e7eb;
+      color:#333;
+    }
+
+    .btn-danger{
+      background:#b71c1c;
+      color:white;
+    }
+
+    .footer{
+      color:#8b8b8b;
+      text-align:center;
+      font-size:11px;
+      padding:15px;
+    }
+
+    /* ==========================
+       FINALIZADO
+    ========================== */
+
+    body.finished input,
+    body.finished textarea,
+    body.finished select{
+      pointer-events:none;
+      background:#f4f4f4;
+    }
+
+    body.finished .sanction-option label{
+      pointer-events:none;
+    }
+
+    .finished-badge{
+      display:none;
+      background:#e8f7ef;
+      color:#05723a;
+      border:1px solid #a9ddc1;
+      padding:8px 13px;
+      border-radius:6px;
+      font-size:12px;
+      font-weight:bold;
+    }
+
+    body.finished .finished-badge{
+      display:inline-block;
+    }
+
+    /* ==========================
+       RESPONSIVE
+    ========================== */
+
+    @media(max-width:1000px){
+
+      .sidebar{
+        width:210px;
+      }
+
+      .main{
+        margin-left:210px;
+      }
+
+      .grid-4{
+        grid-template-columns:repeat(2,1fr);
+      }
+
+      .grid-3{
+        grid-template-columns:repeat(2,1fr);
+      }
+
+    }
+
+    @media(max-width:760px){
+
+      .sidebar{
+        position:relative;
+        width:100%;
+        height:auto;
+      }
+
+      .sidebar nav{
+        display:none;
+      }
+
+      .main{
+        margin-left:0;
+      }
+
+      .topbar{
+        position:relative;
+        height:auto;
+        padding:15px;
+      }
+
+      .container{
+        padding:14px;
+      }
+
+      .hero{
+        flex-direction:column;
+        align-items:flex-start;
+      }
+
+      .grid,
+      .grid-3,
+      .grid-4,
+      .signature-grid,
+      .sanction-options{
+        grid-template-columns:1fr;
+      }
+
+    }
+
+    /* ==========================
+       IMPRESIÓN / PDF
+    ========================== */
+
+    @media print{
+
+      @page{
+        size:A4;
+        margin:10mm;
+      }
+
+      body{
+        background:white;
+        font-size:11px;
+      }
+
+      .sidebar,
+      .topbar,
+      .progress-card,
+      .actions,
+      .footer,
+      .status{
+        display:none !important;
+      }
+
+      .main{
+        margin-left:0;
+      }
+
+      .container{
+        max-width:none;
+        padding:0;
+      }
+
+      .hero{
+        background:white !important;
+        color:black !important;
+        box-shadow:none;
+        border:2px solid black;
+        border-left:6px solid #009b49;
+        border-radius:0;
+        padding:15px;
+        margin-bottom:10px;
+      }
+
+      .hero p{
+        color:#333;
+      }
+
+      .hero-tag{
+        color:white !important;
+        -webkit-print-color-adjust:exact;
+        print-color-adjust:exact;
+      }
+
+      .hero-code{
+        border:1px solid #333;
+        background:white;
+      }
+
+      .hero-code strong,
+      .hero-code span{
+        color:#111;
+      }
+
+      .card{
+        box-shadow:none;
+        border:1px solid #555;
+        border-radius:0;
+        break-inside:avoid;
+        margin-bottom:10px;
+      }
+
+      .card-header{
+        background:#111 !important;
+        color:white !important;
+        -webkit-print-color-adjust:exact;
+        print-color-adjust:exact;
+        padding:9px 12px;
+      }
+
+      .section-number{
+        background:#009b49 !important;
+        -webkit-print-color-adjust:exact;
+        print-color-adjust:exact;
+      }
+
+      .card-body{
+        padding:13px;
+      }
+
+      input,
+      textarea,
+      select{
+        border:0;
+        border-bottom:1px solid #555;
+        border-radius:0;
+        padding:6px 3px;
+      }
+
+      textarea{
+        min-height:70px;
+      }
+
+      .communication{
+        background:white;
+      }
+
+      .signature-box{
+        min-height:160px;
+      }
+
+    }
+
+  </style>
+</head>
+
+<body>
+
+<!-- =========================================================
+     SIDEBAR
+========================================================= -->
+
+<aside class="sidebar">
+
+  <div class="brand">
+    <div class="brand-logo">NASER<span>.</span></div>
+    <small>SISTEMA DE GESTIÓN INTEGRADO</small>
+  </div>
+
+  <nav>
+
+    <div class="nav-title">GESTIÓN</div>
+
+    <a href="#" class="nav-link">
+      Inicio
+    </a>
+
+    <a href="#" class="nav-link">
+      Personal
+    </a>
+
+    <a href="#" class="nav-link active">
+      Sanción disciplinaria
+    </a>
+
+    <div class="nav-title">DOCUMENTO</div>
+
+    <a href="#datos" class="nav-link">
+      1. Datos del trabajador
+    </a>
+
+    <a href="#comunicacion" class="nav-link">
+      2. Comunicación
+    </a>
+
+    <a href="#sancion" class="nav-link">
+      3. Sanción
+    </a>
+
+    <a href="#firmas" class="nav-link">
+      4. Firma y aceptación
+    </a>
+
+  </nav>
+
+  <div class="sidebar-footer">
+    NASER SRL<br>
+    Gestión de Recursos Humanos
+  </div>
+
+</aside>
+
+
+<!-- =========================================================
+     MAIN
+========================================================= -->
+
+<main class="main">
+
+  <header class="topbar">
+
+    <div class="topbar-left">
+      <h2>Gestión de Personal</h2>
+      <p>Registro de sanciones disciplinarias</p>
+    </div>
+
+    <div style="display:flex;align-items:center;gap:15px;">
+
+      <span class="finished-badge">
+        ✓ DOCUMENTO FINALIZADO
+      </span>
+
+      <div class="document-code">
+        <strong>PGSN02-F10</strong>
+        <span>Rev.00 · Jul.25</span>
+      </div>
+
+    </div>
+
+  </header>
+
+
+  <div class="container">
+
+    <!-- HERO -->
+
+    <section class="hero">
+
+      <div>
+
+        <div class="hero-tag">
+          RECURSOS HUMANOS
+        </div>
+
+        <h1>Sanción Disciplinaria</h1>
+
+        <p>
+          Comunicación formal de incumplimiento y aplicación
+          de sanciones disciplinarias al trabajador.
+        </p>
+
+      </div>
+
+      <div class="hero-code">
+        <strong>PGSN02-F10</strong>
+        <span>Rev.00 · Julio 2025</span>
+      </div>
+
+    </section>
+
+
+    <!-- PROGRESO -->
+
+    <section class="progress-card">
+
+      <div class="progress-header">
+
+        <span>Completado del formulario</span>
+
+        <span id="progressPercent">
+          0%
+        </span>
+
+      </div>
+
+      <div class="progress">
+
+        <div
+          class="progress-bar"
+          id="progressBar">
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <div id="statusMessage" class="status"></div>
+
+
+    <form id="sanctionForm">
+
+      <!-- =================================================
+           1. DATOS DEL TRABAJADOR
+      ================================================= -->
+
+      <section class="card" id="datos">
+
+        <div class="card-header">
+
+          <div class="section-number">1</div>
+
+          <h3>DATOS DEL TRABAJADOR</h3>
+
+        </div>
+
+        <div class="card-body">
+
+          <div class="grid">
+
+            <div class="field full">
+
+              <label class="required">
+                Apellido y nombre
+              </label>
+
+              <input
+                type="text"
+                id="nombre"
+                data-required
+                placeholder="Apellido y nombre completo">
+
+            </div>
+
+          </div>
+
+
+          <div class="grid-4" style="margin-top:18px;">
+
+            <div class="field">
+
+              <label class="required">
+                CUIL
+              </label>
+
+              <input
+                type="text"
+                id="cuil"
+                data-required
+                maxlength="13"
+                placeholder="XX-XXXXXXXX-X">
+
+            </div>
+
+
+            <div class="field">
+
+              <label class="required">
+                Legajo
+              </label>
+
+              <input
+                type="text"
+                id="legajo"
+                data-required
+                placeholder="N° de legajo">
+
+            </div>
+
+
+            <div class="field">
+
+              <label class="required">
+                Categoría
+              </label>
+
+              <input
+                type="text"
+                id="categoria"
+                data-required
+                placeholder="Categoría laboral">
+
+            </div>
+
+
+            <div class="field">
+
+              <label class="required">
+                Fecha de ingreso
+              </label>
+
+              <input
+                type="date"
+                id="fechaIngreso"
+                data-required>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- =================================================
+           2. COMUNICACIÓN
+      ================================================= -->
+
+      <section class="card" id="comunicacion">
+
+        <div class="card-header">
+
+          <div class="section-number">2</div>
+
+          <h3>COMUNICACIÓN</h3>
+
+        </div>
+
+        <div class="card-body">
+
+          <div class="grid">
+
+            <div class="field">
+
+              <label class="required">
+                Fecha de comunicación
+              </label>
+
+              <input
+                type="date"
+                id="fechaComunicacion"
+                data-required
+                value="2025-10-13">
+
+            </div>
+
+            <div class="field">
+
+              <label>
+                Lugar de comunicación
+              </label>
+
+              <input
+                type="text"
+                id="lugarComunicacion"
+                placeholder="Ej.: Neuquén">
+
+            </div>
+
+          </div>
+
+
+          <div class="communication" style="margin-top:20px;">
+
+            <p>
+              Se le comunica a usted por este medio y de forma
+              fehaciente que, ante la falta grave de incumplimiento
+              de sus obligaciones laborales detalladas a continuación:
+            </p>
+
+            <div class="fact-box">
+
+              <div class="field">
+
+                <label class="required">
+                  Detalle del hecho
+                </label>
+
+                <textarea
+                  id="detalleHecho"
+                  class="large-text"
+                  data-required
+                  placeholder="Detallar el hecho con precisión, indicando fecha, hora, lugar y circunstancias del incumplimiento."></textarea>
+
+              </div>
+
+            </div>
+
+            <p>
+              Y atento a las prevenciones formuladas, se resuelve
+              aplicar la siguiente sanción disciplinaria:
+            </p>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- =================================================
+           3. SANCIÓN
+      ================================================= -->
+
+      <section class="card" id="sancion">
+
+        <div class="card-header">
+
+          <div class="section-number">3</div>
+
+          <h3>SANCIÓN DISCIPLINARIA</h3>
+
+        </div>
+
+        <div class="card-body">
+
+          <label class="required">
+            Tipo de sanción
+          </label>
+
+          <div class="sanction-options"
+               style="margin-top:10px;">
+
+            <div class="sanction-option">
+
+              <input
+                type="radio"
+                name="tipoSancion"
+                id="apercibimiento"
+                value="Apercibimiento"
+                checked>
+
+              <label for="apercibimiento">
+                APERCIBIMIENTO
+              </label>
+
+            </div>
+
+
+            <div class="sanction-option">
+
+              <input
+                type="radio"
+                name="tipoSancion"
+                id="suspension"
+                value="Suspensión">
+
+              <label for="suspension">
+                SUSPENSIÓN
+              </label>
+
+            </div>
+
+
+            <div class="sanction-option">
+
+              <input
+                type="radio"
+                name="tipoSancion"
+                id="otraSancion"
+                value="Otra">
+
+              <label for="otraSancion">
+                OTRA
+              </label>
+
+            </div>
+
+          </div>
+
+
+          <div class="grid">
+
+            <div class="field">
+
+              <label class="required">
+                Fecha de aplicación
+              </label>
+
+              <input
+                type="date"
+                id="fechaAplicacion"
+                data-required>
+
+            </div>
+
+
+            <div class="field">
+
+              <label>
+                Cantidad de días de suspensión
+              </label>
+
+              <input
+                type="number"
+                id="diasSuspension"
+                min="1"
+                placeholder="Solo si corresponde"
+                disabled>
+
+            </div>
+
+          </div>
+
+
+          <div class="field"
+               id="otraSancionContainer"
+               style="display:none;margin-top:18px;">
+
+            <label>
+              Especificar sanción
+            </label>
+
+            <input
+              type="text"
+              id="descripcionOtraSancion"
+              placeholder="Indicar la sanción aplicada">
+
+          </div>
+
+
+          <div class="info-box">
+
+            La sanción disciplinaria seleccionada se hará efectiva
+            a partir del día
+            <strong id="fechaAplicacionTexto">
+              dd/mm/aaaa
+            </strong>.
+
+          </div>
+
+
+          <div class="warning-box">
+
+            Se le hace saber que, de volver a incurrir en conductas
+            de este tipo y/u otras que pongan de manifiesto el
+            desinterés por su trabajo, será sancionado con mayor
+            severidad, pudiendo incluso ser despedido con justa causa,
+            conforme corresponda legalmente.
+
+          </div>
+
+
+          <div class="field">
+
+            <label>
+              Observaciones / antecedentes
+            </label>
+
+            <textarea
+              id="observaciones"
+              placeholder="Agregar observaciones, antecedentes o aclaraciones adicionales si corresponde."></textarea>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- =================================================
+           4. FIRMA Y ACEPTACIÓN
+      ================================================= -->
+
+      <section class="card" id="firmas">
+
+        <div class="card-header">
+
+          <div class="section-number">4</div>
+
+          <h3>FIRMA Y ACEPTACIÓN</h3>
+
+        </div>
+
+        <div class="card-body">
+
+          <div class="signature-grid">
+
+            <!-- EMPLEADOR -->
+
+            <div class="signature-box">
+
+              <h4>
+                Firma y aclaración del empleador
+              </h4>
+
+              <div class="field">
+
+                <label>
+                  Nombre y apellido
+                </label>
+
+                <input
+                  type="text"
+                  id="empleadorNombre"
+                  placeholder="Nombre y apellido">
+
+              </div>
+
+              <div class="signature-line"></div>
+
+              <div class="signature-label">
+                FIRMA DEL EMPLEADOR
+              </div>
+
+            </div>
+
+
+            <!-- TRABAJADOR -->
+
+            <div class="signature-box">
+
+              <h4>
+                Firma y aclaración del trabajador
+              </h4>
+
+              <div class="field">
+
+                <label>
+                  Aclaración
+                </label>
+
+                <input
+                  type="text"
+                  id="trabajadorFirma"
+                  placeholder="Nombre y apellido">
+
+              </div>
+
+              <div class="signature-line"></div>
+
+              <div class="signature-label">
+                FIRMA DEL TRABAJADOR
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- =================================================
+           ACCIONES
+      ================================================= -->
+
+      <section class="actions">
+
+        <button
+          type="button"
+          class="btn btn-gray"
+          onclick="clearForm()">
+
+          Limpiar
+
+        </button>
+
+
+        <button
+          type="button"
+          class="btn btn-dark"
+          onclick="saveForm()">
+
+          Guardar
+
+        </button>
+
+
+        <button
+          type="button"
+          class="btn btn-gray"
+          onclick="printForm()">
+
+          Imprimir / PDF
+
+        </button>
+
+
+        <button
+          type="button"
+          class="btn btn-primary"
+          onclick="finalizeForm()">
+
+          Finalizar formulario
+
+        </button>
+
+      </section>
+
+    </form>
+
+
+    <footer class="footer">
+
+      NASER SRL · Sistema de Gestión Integrado ·
+      PGSN02-F10 · Rev.00 · Jul.25
+
+    </footer>
+
+  </div>
+
+</main>
+
+
+<script>
+
+  /* =========================================================
+     CONFIGURACIÓN
+  ========================================================= */
+
+  const STORAGE_KEY = "NASER_PGSN02_F10";
+
+  const form = document.getElementById("sanctionForm");
+
+  const progressBar =
+    document.getElementById("progressBar");
+
+  const progressPercent =
+    document.getElementById("progressPercent");
+
+  const statusMessage =
+    document.getElementById("statusMessage");
+
+
+  /* =========================================================
+     ACTUALIZAR PROGRESO
+  ========================================================= */
+
+  function updateProgress(){
+
+    const requiredFields =
+      [...document.querySelectorAll("[data-required]")];
+
+    let completed = 0;
+
+    requiredFields.forEach(field => {
+
+      if(field.value.trim() !== ""){
+        completed++;
+      }
+
+    });
+
+    const percent =
+      requiredFields.length
+      ? Math.round((completed / requiredFields.length) * 100)
+      : 0;
+
+    progressBar.style.width =
+      percent + "%";
+
+    progressPercent.textContent =
+      percent + "%";
+
+  }
+
+
+  /* =========================================================
+     MENSAJES
+  ========================================================= */
+
+  function showStatus(message,type="success"){
+
+    statusMessage.className =
+      "status " + type;
+
+    statusMessage.textContent =
+      message;
+
+    window.scrollTo({
+      top:0,
+      behavior:"smooth"
+    });
+
+    setTimeout(() => {
+
+      statusMessage.className =
+        "status";
+
+    },5000);
+
+  }
+
+
+  /* =========================================================
+     VALIDAR
+  ========================================================= */
+
+  function validateForm(){
+
+    const fields =
+      [...document.querySelectorAll("[data-required]")];
+
+    let valid = true;
+
+    let firstInvalid = null;
+
+    fields.forEach(field => {
+
+      field.classList.remove("invalid");
+
+      if(!field.value.trim()){
+
+        field.classList.add("invalid");
+
+        valid = false;
+
+        if(!firstInvalid){
+          firstInvalid = field;
+        }
+
+      }
+
+    });
+
+    if(firstInvalid){
+
+      firstInvalid.scrollIntoView({
+        behavior:"smooth",
+        block:"center"
+      });
+
+      setTimeout(() => {
+        firstInvalid.focus();
+      },400);
+
+    }
+
+    return valid;
+
+  }
+
+
+  /* =========================================================
+     RECOPILAR INFORMACIÓN
+  ========================================================= */
+
+  function collectData(){
+
+    const tipoSancion =
+      document.querySelector(
+        'input[name="tipoSancion"]:checked'
+      )?.value || "";
+
+    return {
+
+      nombre:
+        document.getElementById("nombre").value,
+
+      cuil:
+        document.getElementById("cuil").value,
+
+      legajo:
+        document.getElementById("legajo").value,
+
+      categoria:
+        document.getElementById("categoria").value,
+
+      fechaIngreso:
+        document.getElementById("fechaIngreso").value,
+
+      fechaComunicacion:
+        document.getElementById("fechaComunicacion").value,
+
+      lugarComunicacion:
+        document.getElementById("lugarComunicacion").value,
+
+      detalleHecho:
+        document.getElementById("detalleHecho").value,
+
+      tipoSancion:tipoSancion,
+
+      fechaAplicacion:
+        document.getElementById("fechaAplicacion").value,
+
+      diasSuspension:
+        document.getElementById("diasSuspension").value,
+
+      otraSancion:
+        document.getElementById(
+          "descripcionOtraSancion"
+        ).value,
+
+      observaciones:
+        document.getElementById("observaciones").value,
+
+      empleadorNombre:
+        document.getElementById("empleadorNombre").value,
+
+      trabajadorFirma:
+        document.getElementById("trabajadorFirma").value,
+
+      finalizado:
+        document.body.classList.contains("finished"),
+
+      ultimaModificacion:
+        new Date().toISOString()
+
+    };
+
+  }
+
+
+  /* =========================================================
+     GUARDAR
+  ========================================================= */
+
+  function saveForm(){
+
+    const data = collectData();
+
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify(data)
+    );
+
+    showStatus(
+      "El formulario PGSN02-F10 fue guardado correctamente.",
+      "success"
+    );
+
+  }
+
+
+  /* =========================================================
+     CARGAR
+  ========================================================= */
+
+  function loadForm(){
+
+    const stored =
+      localStorage.getItem(STORAGE_KEY);
+
+    if(!stored){
+      updateProgress();
+      return;
+    }
+
+    try{
+
+      const data =
+        JSON.parse(stored);
+
+
+      document.getElementById("nombre").value =
+        data.nombre || "";
+
+      document.getElementById("cuil").value =
+        data.cuil || "";
+
+      document.getElementById("legajo").value =
+        data.legajo || "";
+
+      document.getElementById("categoria").value =
+        data.categoria || "";
+
+      document.getElementById("fechaIngreso").value =
+        data.fechaIngreso || "";
+
+      document.getElementById("fechaComunicacion").value =
+        data.fechaComunicacion || "2025-10-13";
+
+      document.getElementById("lugarComunicacion").value =
+        data.lugarComunicacion || "";
+
+      document.getElementById("detalleHecho").value =
+        data.detalleHecho || "";
+
+      document.getElementById("fechaAplicacion").value =
+        data.fechaAplicacion || "";
+
+      document.getElementById("diasSuspension").value =
+        data.diasSuspension || "";
+
+      document.getElementById(
+        "descripcionOtraSancion"
+      ).value =
+        data.otraSancion || "";
+
+      document.getElementById("observaciones").value =
+        data.observaciones || "";
+
+      document.getElementById("empleadorNombre").value =
+        data.empleadorNombre || "";
+
+      document.getElementById("trabajadorFirma").value =
+        data.trabajadorFirma || "";
+
+
+      if(data.tipoSancion){
+
+        const radio =
+          [...document.querySelectorAll(
+            'input[name="tipoSancion"]'
+          )].find(
+            radio =>
+              radio.value === data.tipoSancion
+          );
+
+        if(radio){
+          radio.checked = true;
+        }
+
+      }
+
+
+      updateSanctionFields();
+
+      updateApplicationDate();
+
+      updateProgress();
+
+
+      if(data.finalizado){
+
+        document.body.classList.add(
+          "finished"
+        );
+
+      }
+
+    }
+    catch(error){
+
+      console.error(
+        "Error cargando formulario:",
+        error
+      );
+
+    }
+
+  }
+
+
+  /* =========================================================
+     LIMPIAR
+  ========================================================= */
+
+  function clearForm(){
+
+    if(
+      !confirm(
+        "¿Desea limpiar todos los datos cargados del formulario?"
+      )
+    ){
+      return;
+    }
+
+    form.reset();
+
+    localStorage.removeItem(
+      STORAGE_KEY
+    );
+
+    document.body.classList.remove(
+      "finished"
+    );
+
+    document.getElementById(
+      "fechaComunicacion"
+    ).value = "2025-10-13";
+
+    document.getElementById(
+      "apercibimiento"
+    ).checked = true;
+
+    document.querySelectorAll(
+      ".invalid"
+    ).forEach(element => {
+      element.classList.remove("invalid");
+    });
+
+    updateSanctionFields();
+
+    updateApplicationDate();
+
+    updateProgress();
+
+    showStatus(
+      "Formulario limpiado.",
+      "success"
+    );
+
+  }
+
+
+  /* =========================================================
+     FINALIZAR
+  ========================================================= */
+
+  function finalizeForm(){
+
+    if(!validateForm()){
+
+      showStatus(
+        "Faltan completar campos obligatorios antes de finalizar.",
+        "error"
+      );
+
+      return;
+
+    }
+
+
+    const nombre =
+      document.getElementById(
+        "nombre"
+      ).value.trim();
+
+
+    const confirmar =
+      confirm(
+        `¿Confirma finalizar la sanción disciplinaria correspondiente a ${nombre}?\n\nUna vez finalizada, el formulario quedará bloqueado.`
+      );
+
+
+    if(!confirmar){
+      return;
+    }
+
+
+    document.body.classList.add(
+      "finished"
+    );
+
+
+    saveForm();
+
+
+    showStatus(
+      "Formulario finalizado correctamente.",
+      "success"
+    );
+
+  }
+
+
+  /* =========================================================
+     IMPRESIÓN
+  ========================================================= */
+
+  function printForm(){
+
+    if(!validateForm()){
+
+      const continuar =
+        confirm(
+          "Hay campos obligatorios sin completar. ¿Desea imprimir igualmente?"
+        );
+
+      if(!continuar){
+        return;
+      }
+
+    }
+
+    window.print();
+
+  }
+
+
+  /* =========================================================
+     CAMPOS DE SANCIÓN
+  ========================================================= */
+
+  function updateSanctionFields(){
+
+    const selected =
+      document.querySelector(
+        'input[name="tipoSancion"]:checked'
+      )?.value;
+
+
+    const dias =
+      document.getElementById(
+        "diasSuspension"
+      );
+
+    const otraContainer =
+      document.getElementById(
+        "otraSancionContainer"
+      );
+
+
+    if(selected === "Suspensión"){
+
+      dias.disabled = false;
+
+    }
+    else{
+
+      dias.disabled = true;
+      dias.value = "";
+
+    }
+
+
+    if(selected === "Otra"){
+
+      otraContainer.style.display =
+        "flex";
+
+    }
+    else{
+
+      otraContainer.style.display =
+        "none";
+
+    }
+
+  }
+
+
+  /* =========================================================
+     FORMATEAR FECHA
+  ========================================================= */
+
+  function formatDate(date){
+
+    if(!date){
+      return "dd/mm/aaaa";
+    }
+
+    const parts =
+      date.split("-");
+
+    return `${parts[2]}/${parts[1]}/${parts[0]}`;
+
+  }
+
+
+  function updateApplicationDate(){
+
+    const fecha =
+      document.getElementById(
+        "fechaAplicacion"
+      ).value;
+
+    document.getElementById(
+      "fechaAplicacionTexto"
+    ).textContent =
+      formatDate(fecha);
+
+  }
+
+
+  /* =========================================================
+     CUIL
+  ========================================================= */
+
+  document.getElementById("cuil")
+    .addEventListener(
+      "input",
+      function(){
+
+        let value =
+          this.value.replace(
+            /\D/g,
+            ""
+          );
+
+        value =
+          value.substring(
+            0,
+            11
+          );
+
+        if(value.length > 2){
+
+          value =
+            value.substring(0,2)
+            + "-"
+            + value.substring(2);
+
+        }
+
+        if(value.length > 11){
+
+          value =
+            value.substring(0,11)
+            + "-"
+            + value.substring(11,12);
+
+        }
+
+        this.value = value;
+
+      }
+    );
+
+
+  /* =========================================================
+     EVENTOS
+  ========================================================= */
+
+  document.querySelectorAll(
+    "input, textarea, select"
+  ).forEach(element => {
+
+    element.addEventListener(
+      "input",
+      () => {
+
+        element.classList.remove(
+          "invalid"
+        );
+
+        updateProgress();
+
+      }
+    );
+
+    element.addEventListener(
+      "change",
+      updateProgress
+    );
+
+  });
+
+
+  document.querySelectorAll(
+    'input[name="tipoSancion"]'
+  ).forEach(radio => {
+
+    radio.addEventListener(
+      "change",
+      updateSanctionFields
+    );
+
+  });
+
+
+  document.getElementById(
+    "fechaAplicacion"
+  ).addEventListener(
+    "change",
+    updateApplicationDate
+  );
+
+
+  /* =========================================================
+     ATAJO CTRL + S
+  ========================================================= */
+
+  document.addEventListener(
+    "keydown",
+    function(event){
+
+      if(
+        (event.ctrlKey || event.metaKey)
+        &&
+        event.key.toLowerCase() === "s"
+      ){
+
+        event.preventDefault();
+
+        saveForm();
+
+      }
+
+    }
+  );
+
+
+  /* =========================================================
+     INICIO
+  ========================================================= */
+
+  document.addEventListener(
+    "DOMContentLoaded",
+    loadForm
+  );
+
+</script>
+
+</body>
+</html>

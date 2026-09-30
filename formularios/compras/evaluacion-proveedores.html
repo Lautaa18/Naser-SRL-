@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NASER SRL | Evaluación de Proveedores</title>
+
+<style>
+:root{
+  --naser:#009b49;
+  --naser-dark:#007a3a;
+  --naser-soft:#eef9f3;
+  --black:#0d0d0d;
+  --black2:#181818;
+  --white:#fff;
+  --bg:#f2f4f5;
+  --line:#dce1e4;
+  --text:#191919;
+  --muted:#73777b;
+  --danger:#a62b2b;
+  --danger-soft:#fff3f3;
+  --warning:#ad7000;
+  --warning-soft:#fff7e8;
+  --sidebar:275px;
+  --shadow:0 10px 30px rgba(0,0,0,.06);
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:Inter,"Segoe UI",Arial,sans-serif;
+}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+input,select,textarea{outline:none}
+
+.sidebar{
+  position:fixed;
+  inset:0 auto 0 0;
+  width:var(--sidebar);
+  background:linear-gradient(180deg,#090909,#151515);
+  color:#fff;
+  padding:28px 20px;
+  display:flex;
+  flex-direction:column;
+  z-index:1000;
+}
+.brand{
+  display:flex;
+  align-items:center;
+  gap:13px;
+  padding:0 8px 25px;
+  border-bottom:1px solid #303030;
+}
+.brand-mark{
+  width:46px;height:46px;
+  display:grid;place-items:center;
+  background:var(--naser);
+  font-size:23px;font-weight:900;
+}
+.brand-name{font-size:21px;font-weight:900;letter-spacing:3px}
+.brand-sub{font-size:9px;letter-spacing:4px;color:#999;margin-top:2px}
+.side-label{
+  padding:25px 8px 13px;
+  font-size:9px;font-weight:800;
+  color:#727272;letter-spacing:1.5px;
+}
+.nav{display:grid;gap:5px}
+.nav-link{
+  display:flex;align-items:center;gap:12px;
+  min-height:45px;padding:10px 12px;
+  color:#aaa;text-decoration:none;
+  border-left:3px solid transparent;
+  font-size:11px;transition:.2s;
+}
+.nav-link span{width:25px;color:#666;font-size:9px;font-weight:900}
+.nav-link:hover{background:#1c1c1c;color:#fff}
+.nav-link.active{
+  color:#fff;border-left-color:var(--naser);
+  background:linear-gradient(90deg,rgba(0,155,73,.18),rgba(0,155,73,.02));
+}
+.nav-link.active span{color:var(--naser)}
+.side-footer{
+  margin-top:auto;padding:18px 8px 0;
+  border-top:1px solid #303030;
+  color:#666;font-size:9px;line-height:1.8;
+}
+.side-footer strong{display:block;color:#aaa}
+
+.main{margin-left:var(--sidebar);min-height:100vh}
+.topbar{
+  height:84px;
+  position:sticky;top:0;z-index:800;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 40px;background:#fff;border-bottom:1px solid var(--line);
+}
+.topbar-left{display:flex;align-items:center;gap:15px}
+.crumb{font-size:9px;color:#92969a;letter-spacing:1.2px;margin-bottom:5px}
+.topbar h1{margin:0;font-size:20px}
+.control{
+  display:flex;align-items:center;gap:8px;
+  font-size:9px;font-weight:800;letter-spacing:1px;color:#555;
+}
+.control i{
+  width:8px;height:8px;border-radius:50%;
+  background:var(--naser);box-shadow:0 0 0 5px rgba(0,155,73,.1);
+}
+.finished{
+  display:none;padding:8px 11px;
+  background:var(--naser);color:#fff;
+  font-size:9px;font-weight:900;letter-spacing:.6px;
+}
+.finished.show{display:block}
+.menu-btn{
+  display:none;width:41px;height:41px;border:1px solid var(--line);background:#fff;
+}
+
+.content{width:min(1480px,calc(100% - 50px));margin:30px auto 60px}
+.hero{
+  min-height:190px;margin-bottom:20px;padding:38px 42px;
+  display:flex;align-items:center;justify-content:space-between;gap:30px;
+  color:#fff;
+  background:
+    radial-gradient(circle at 90% 0%,rgba(0,155,73,.25),transparent 35%),
+    linear-gradient(120deg,#0c0c0c,#181818);
+  border-left:5px solid var(--naser);
+  box-shadow:var(--shadow);
+}
+.hero-tag{color:var(--naser);font-size:9px;font-weight:900;letter-spacing:2px}
+.hero h2{margin:10px 0;font-size:clamp(27px,3vw,39px);line-height:1}
+.hero h2 span{color:var(--naser)}
+.hero p{max-width:760px;margin:0;color:#aaa;font-size:12px;line-height:1.7}
+.hero-meta{min-width:210px;padding-left:28px;border-left:1px solid #393939}
+.hero-meta small,.hero-meta span{display:block;color:#777;font-size:9px;letter-spacing:1px}
+.hero-meta strong{display:block;margin:8px 0;font-size:13px}
+
+.metrics{
+  display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px;
+}
+.metric-card{
+  background:#fff;border:1px solid var(--line);box-shadow:var(--shadow);padding:20px 24px;
+}
+.metric-top{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;margin-bottom:12px}
+.metric-top small{display:block;color:var(--muted);font-size:8px;font-weight:900;letter-spacing:1.3px}
+.metric-top strong{display:block;margin-top:5px;font-size:13px}
+.metric-value{font-size:22px;font-weight:900;color:var(--naser)}
+.track{height:7px;border-radius:30px;background:#e8ecee;overflow:hidden}
+.bar{height:100%;width:0;background:var(--naser);border-radius:30px;transition:.2s}
+.bar.score{background:#111}
+
+.card{
+  margin-bottom:20px;background:#fff;border:1px solid var(--line);
+  box-shadow:var(--shadow);overflow:hidden;
+}
+.card-head{
+  display:flex;align-items:center;gap:15px;padding:21px 25px;border-bottom:1px solid var(--line);
+}
+.num{
+  width:39px;height:39px;flex:none;display:grid;place-items:center;
+  background:#111;color:#fff;font-size:10px;font-weight:900;
+}
+.card-head h3{margin:0;font-size:15px}
+.card-head p{margin:5px 0 0;color:var(--muted);font-size:10px}
+
+.grid{padding:25px;display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.field{min-width:0}
+.field.span2{grid-column:span 2}
+.field.full{grid-column:1/-1}
+.field label{
+  display:block;margin-bottom:7px;color:#444;font-size:9px;
+  font-weight:900;letter-spacing:.6px;text-transform:uppercase;
+}
+.req::after{content:" *";color:var(--naser)}
+.field input,.field select,.field textarea{
+  width:100%;border:1px solid #d6dade;background:#fafafa;transition:.2s;
+}
+.field input,.field select{height:43px;padding:0 12px}
+.field textarea{min-height:100px;padding:12px;resize:vertical}
+.field input:focus,.field select:focus,.field textarea:focus{
+  background:#fff;border-color:var(--naser);box-shadow:0 0 0 3px rgba(0,155,73,.07);
+}
+
+.eval-wrap{overflow:auto}
+.eval-table{width:100%;border-collapse:collapse;min-width:980px}
+.eval-table th{
+  padding:11px 10px;background:#f3f4f5;color:#65696d;
+  border-bottom:1px solid var(--line);font-size:8px;letter-spacing:.9px;
+}
+.eval-table td{padding:12px 10px;border-bottom:1px solid #ededed;font-size:11px;vertical-align:middle}
+.eval-table tbody tr:hover{background:#fafafa}
+.cat-row td{
+  background:#eef8f2;font-weight:900;font-size:10px;color:#126b37;
+  letter-spacing:.5px;border-top:1px solid #cfe8da;
+}
+.item-no{width:45px;text-align:center;color:#999;font-size:9px;font-weight:900}
+.item-name{min-width:250px;font-weight:650;line-height:1.45}
+.rating{display:flex;justify-content:center;gap:5px;min-width:330px}
+.rating label{cursor:pointer}
+.rating input{display:none}
+.rating span{
+  width:42px;height:34px;display:grid;place-items:center;
+  border:1px solid #d3d7da;background:#fff;color:#555;font-size:9px;font-weight:900;
+}
+.rating input:checked+span{background:var(--naser);color:#fff;border-color:var(--naser)}
+.rating input[value="NA"]:checked+span{background:#666;border-color:#666}
+.obs{
+  width:100%;min-width:190px;height:35px;padding:0 9px;
+  border:1px solid #d6dade;background:#fafafa;
+}
+.scale{
+  display:flex;flex-wrap:wrap;gap:8px;padding:15px 25px;
+  background:#fafafa;border-bottom:1px solid var(--line);
+}
+.scale span{
+  padding:7px 10px;background:#fff;border:1px solid #ddd;
+  color:#666;font-size:9px;
+}
+.scale b{color:#111}
+
+.summary{
+  padding:24px 25px;display:grid;grid-template-columns:repeat(6,1fr);gap:10px;
+}
+.sum{
+  padding:16px;background:#fafafa;border:1px solid var(--line);
+}
+.sum small{display:block;color:#888;font-size:8px;font-weight:900;letter-spacing:.8px;margin-bottom:8px}
+.sum strong{font-size:22px}
+.sum.green strong{color:var(--naser)}
+.sum.red strong{color:var(--danger)}
+
+.result-wrap{padding:0 25px 25px}
+.result{
+  min-height:84px;padding:18px 20px;border:1px solid var(--line);background:#fafafa;
+  display:flex;justify-content:space-between;align-items:center;gap:20px;
+}
+.result small{display:block;color:#777;font-size:8px;font-weight:900;letter-spacing:1px}
+.result strong{display:block;margin-top:6px;font-size:17px}
+.result-score{font-size:31px;font-weight:900;color:var(--naser)}
+.result.warning{background:var(--warning-soft)}
+.result.warning .result-score{color:var(--warning)}
+.result.danger{background:var(--danger-soft)}
+.result.danger .result-score{color:var(--danger)}
+
+.formula{
+  margin-top:12px;padding:12px 14px;background:#f6f7f8;border-left:4px solid #111;
+  color:#555;font-size:10px;line-height:1.6;
+}
+
+.actions{
+  display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap;margin:25px 0;
+}
+.btn{
+  min-height:44px;padding:0 20px;border:1px solid #111;
+  font-size:9px;font-weight:900;letter-spacing:.7px;
+}
+.btn-light{background:#fff;color:#111}
+.btn-light:hover{background:#eee}
+.btn-dark{background:#111;color:#fff}
+.btn-dark:hover{background:#292929}
+.btn-green{background:var(--naser);border-color:var(--naser);color:#fff}
+.btn-green:hover{background:var(--naser-dark)}
+
+.msg{display:none;margin-bottom:20px;padding:14px 17px;font-size:11px;font-weight:700}
+.msg.ok{display:block;background:#edf9f2;color:#086933;border:1px solid #9fd4b7}
+.msg.err{display:block;background:#fff1f1;color:#922929;border:1px solid #dfacac}
+
+.footer{
+  padding-top:20px;border-top:1px solid #d5dade;
+  display:flex;justify-content:space-between;gap:20px;color:#888;font-size:8px;
+}
+.footer strong{color:#222}
+.sidebar-overlay{display:none}
+
+@media(max-width:1200px){
+  .grid{grid-template-columns:repeat(2,1fr)}
+  .summary{grid-template-columns:repeat(3,1fr)}
+}
+@media(max-width:850px){
+  .sidebar{transform:translateX(-100%);transition:.25s}
+  .sidebar.open{transform:translateX(0)}
+  .sidebar-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:900}
+  .sidebar-overlay.show{display:block}
+  .main{margin-left:0}
+  .menu-btn{display:block}
+  .topbar{padding:0 18px}
+  .control{display:none}
+  .hero{flex-direction:column;align-items:flex-start;padding:30px 26px}
+  .hero-meta{width:100%;padding:18px 0 0;border-left:0;border-top:1px solid #393939}
+  .metrics{grid-template-columns:1fr}
+}
+@media(max-width:600px){
+  .content{width:calc(100% - 28px)}
+  .grid,.summary{grid-template-columns:1fr}
+  .field.span2,.field.full{grid-column:auto}
+  .hero h2{font-size:25px}
+  .actions{flex-direction:column}
+  .btn{width:100%}
+  .footer{flex-direction:column}
+}
+@media print{
+  body{background:#fff}
+  .sidebar,.topbar,.actions,.metrics{display:none!important}
+  .main{margin-left:0}
+  .content{width:100%;margin:0}
+  .card,.hero{box-shadow:none}
+  .card{break-inside:avoid}
+}
+</style>
+</head>
+
+<body>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<aside class="sidebar" id="sidebar">
+  <div class="brand">
+    <div class="brand-mark">N</div>
+    <div>
+      <div class="brand-name">NASER</div>
+      <div class="brand-sub">SRL</div>
+    </div>
+  </div>
+
+  <div class="side-label">SISTEMA DE GESTIÓN INTEGRADO</div>
+
+  <nav class="nav">
+    <a class="nav-link active" href="#datos"><span>01</span>Datos del proveedor</a>
+    <a class="nav-link" href="#evaluacion"><span>02</span>Evaluación</a>
+    <a class="nav-link" href="#resultado"><span>03</span>Resultado</a>
+    <a class="nav-link" href="#observaciones"><span>04</span>Observaciones</a>
+    <a class="nav-link" href="#responsables"><span>05</span>Responsables</a>
+  </nav>
+
+  <div class="side-footer">
+    SGI / COMPRAS
+    <strong>EVALUACIÓN DE PROVEEDORES</strong>
+    NASER SRL
+  </div>
+</aside>
+
+<main class="main">
+<header class="topbar">
+  <div class="topbar-left">
+    <button class="menu-btn" id="menuBtn" type="button">☰</button>
+    <div>
+      <div class="crumb">NASER SRL / SGI / COMPRAS</div>
+      <h1>Evaluación de Proveedores</h1>
+    </div>
+  </div>
+
+  <div style="display:flex;align-items:center;gap:14px">
+    <div class="finished" id="finishedBadge">✓ EVALUACIÓN FINALIZADA</div>
+    <div class="control"><i></i> CONTROL ACTIVO</div>
+  </div>
+</header>
+
+<div class="content">
+
+<section class="hero">
+  <div>
+    <div class="hero-tag">GESTIÓN DE PROVEEDORES</div>
+    <h2>EVALUACIÓN DE <span>PROVEEDORES</span></h2>
+    <p>
+      Registro del desempeño de proveedores de NASER SRL.
+      El sistema separa el avance del formulario del porcentaje real obtenido
+      por el proveedor para evitar cálculos incorrectos.
+    </p>
+  </div>
+
+  <div class="hero-meta">
+    <small>DOCUMENTO</small>
+    <strong>EVALUACIÓN DE PROVEEDORES</strong>
+    <span>SISTEMA DE GESTIÓN INTEGRADO</span>
+  </div>
+</section>
+
+<!-- PORCENTAJES SEPARADOS -->
+<div class="metrics">
+  <div class="metric-card">
+    <div class="metric-top">
+      <div>
+        <small>FORMULARIO COMPLETADO</small>
+        <strong id="completionText">0 de 0 criterios respondidos</strong>
+      </div>
+      <div class="metric-value" id="completionPct">0%</div>
+    </div>
+    <div class="track"><div class="bar" id="completionBar"></div></div>
+  </div>
+
+  <div class="metric-card">
+    <div class="metric-top">
+      <div>
+        <small>RESULTADO DEL PROVEEDOR</small>
+        <strong id="scoreText">Sin calificaciones aplicables</strong>
+      </div>
+      <div class="metric-value" id="scorePct">0%</div>
+    </div>
+    <div class="track"><div class="bar score" id="scoreBar"></div></div>
+  </div>
+</div>
+
+<div class="msg" id="message"></div>
+
+<section class="card" id="datos">
+  <div class="card-head">
+    <div class="num">01</div>
+    <div>
+      <h3>Datos de la evaluación</h3>
+      <p>Identificación del proveedor, período y servicio evaluado.</p>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="field span2">
+      <label class="req">Proveedor / Razón social</label>
+      <input id="proveedor" placeholder="Nombre o razón social">
+    </div>
+
+    <div class="field">
+      <label>CUIT</label>
+      <input id="cuit" placeholder="XX-XXXXXXXX-X">
+    </div>
+
+    <div class="field">
+      <label>Código de proveedor</label>
+      <input id="codigoProveedor" placeholder="Código interno">
+    </div>
+
+    <div class="field">
+      <label class="req">Fecha de evaluación</label>
+      <input id="fechaEvaluacion" type="date">
+    </div>
+
+    <div class="field">
+      <label>Período desde</label>
+      <input id="periodoDesde" type="date">
+    </div>
+
+    <div class="field">
+      <label>Período hasta</label>
+      <input id="periodoHasta" type="date">
+    </div>
+
+    <div class="field">
+      <label>N° OC / Contrato / Servicio</label>
+      <input id="ordenContrato" placeholder="Referencia">
+    </div>
+
+    <div class="field">
+      <label>Rubro / Actividad</label>
+      <input id="rubro" placeholder="Actividad principal">
+    </div>
+
+    <div class="field">
+      <label>Contacto del proveedor</label>
+      <input id="contacto" placeholder="Nombre / teléfono / correo">
+    </div>
+
+    <div class="field span2">
+      <label class="req">Producto / Servicio evaluado</label>
+      <input id="servicio" placeholder="Detalle del producto o servicio">
+    </div>
+
+    <div class="field">
+      <label class="req">Evaluador</label>
+      <input id="evaluador" placeholder="Nombre y apellido">
+    </div>
+
+    <div class="field">
+      <label>Sector solicitante</label>
+      <select id="sector">
+        <option value="">Seleccionar</option>
+        <option>Compras</option>
+        <option>Operaciones</option>
+        <option>Mantenimiento</option>
+        <option>HSE</option>
+        <option>Administración</option>
+        <option>RRHH</option>
+        <option>Gerencia</option>
+        <option>Otro</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>Proveedor crítico</label>
+      <select id="critico">
+        <option value="">Seleccionar</option>
+        <option value="SI">SÍ</option>
+        <option value="NO">NO</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>Evaluación anterior</label>
+      <input id="evaluacionAnterior" type="number" min="0" max="100" step="1" placeholder="%">
+    </div>
+  </div>
+</section>
+
+<section class="card" id="evaluacion">
+  <div class="card-head">
+    <div class="num">02</div>
+    <div>
+      <h3>Criterios de evaluación</h3>
+      <p>Todos los criterios deben responderse. N/A cuenta como respondido, pero no modifica la nota.</p>
+    </div>
+  </div>
+
+  <div class="scale">
+    <span><b>1</b> Deficiente</span>
+    <span><b>2</b> Regular</span>
+    <span><b>3</b> Aceptable</span>
+    <span><b>4</b> Bueno</span>
+    <span><b>5</b> Excelente</span>
+    <span><b>N/A</b> No aplica</span>
+  </div>
+
+  <div class="eval-wrap">
+    <table class="eval-table">
+      <thead>
+        <tr>
+          <th>Nº</th>
+          <th>CRITERIO</th>
+          <th>CALIFICACIÓN</th>
+          <th>OBSERVACIÓN</th>
+        </tr>
+      </thead>
+      <tbody id="evaluationBody"></tbody>
+    </table>
+  </div>
+</section>
+
+<section class="card" id="resultado">
+  <div class="card-head">
+    <div class="num">03</div>
+    <div>
+      <h3>Resultado general</h3>
+      <p>Resumen automático de la evaluación.</p>
+    </div>
+  </div>
+
+  <div class="summary">
+    <div class="sum"><small>TOTAL CRITERIOS</small><strong id="stTotal">0</strong></div>
+    <div class="sum green"><small>RESPONDIDOS</small><strong id="stRespondidos">0</strong></div>
+    <div class="sum"><small>APLICABLES</small><strong id="stAplicables">0</strong></div>
+    <div class="sum"><small>N/A</small><strong id="stNA">0</strong></div>
+    <div class="sum"><small>PUNTOS</small><strong id="stPuntos">0</strong></div>
+    <div class="sum green"><small>MÁXIMO POSIBLE</small><strong id="stMaximo">0</strong></div>
+  </div>
+
+  <div class="result-wrap">
+    <div class="result" id="resultBox">
+      <div>
+        <small>CLASIFICACIÓN AUTOMÁTICA</small>
+        <strong id="resultText">PENDIENTE DE EVALUACIÓN</strong>
+      </div>
+      <div class="result-score" id="resultScore">0%</div>
+    </div>
+
+    <div class="formula" id="formulaText">
+      Fórmula: puntos obtenidos ÷ máximo posible de los criterios aplicables × 100.
+      Los criterios marcados N/A quedan excluidos tanto del puntaje obtenido como del máximo posible.
+    </div>
+  </div>
+</section>
+
+<section class="card" id="observaciones">
+  <div class="card-head">
+    <div class="num">04</div>
+    <div>
+      <h3>Observaciones y seguimiento</h3>
+      <p>Comentarios, desvíos y acciones posteriores.</p>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="field full">
+      <label>Fortalezas / Aspectos destacados</label>
+      <textarea id="fortalezas" placeholder="Aspectos positivos del proveedor..."></textarea>
+    </div>
+
+    <div class="field full">
+      <label>Desvíos / Incumplimientos detectados</label>
+      <textarea id="desvios" placeholder="Detalle de desvíos, reclamos o incumplimientos..."></textarea>
+    </div>
+
+    <div class="field full">
+      <label>Acciones correctivas / Seguimiento</label>
+      <textarea id="acciones" placeholder="Acciones solicitadas al proveedor o seguimiento interno..."></textarea>
+    </div>
+
+    <div class="field">
+      <label>Fecha próxima evaluación</label>
+      <input id="proximaEvaluacion" type="date">
+    </div>
+
+    <div class="field">
+      <label>Estado final</label>
+      <select id="estadoFinal">
+        <option value="">Automático</option>
+        <option>APROBADO</option>
+        <option>APROBADO CON OBSERVACIONES</option>
+        <option>NO APROBADO</option>
+      </select>
+    </div>
+  </div>
+</section>
+
+<section class="card" id="responsables">
+  <div class="card-head">
+    <div class="num">05</div>
+    <div>
+      <h3>Responsables</h3>
+      <p>Personas responsables de la evaluación y aprobación.</p>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="field">
+      <label>Responsable de Compras</label>
+      <input id="responsableCompras" placeholder="Nombre y apellido">
+    </div>
+
+    <div class="field">
+      <label>Responsable del sector</label>
+      <input id="responsableSector" placeholder="Nombre y apellido">
+    </div>
+
+    <div class="field">
+      <label>Responsable HSE</label>
+      <input id="responsableHSE" placeholder="Nombre y apellido">
+    </div>
+
+    <div class="field">
+      <label>Responsable de aprobación</label>
+      <input id="responsableAprobacion" placeholder="Nombre y apellido">
+    </div>
+
+    <div class="field full">
+      <label>Observaciones finales</label>
+      <textarea id="observacionesFinales" placeholder="Aclaraciones finales de la evaluación..."></textarea>
+    </div>
+  </div>
+</section>
+
+<div class="actions">
+  <button class="btn btn-light" type="button" id="clearBtn">LIMPIAR</button>
+  <button class="btn btn-light" type="button" onclick="window.print()">IMPRIMIR / PDF</button>
+  <button class="btn btn-dark" type="button" id="saveBtn">GUARDAR PROGRESO</button>
+  <button class="btn btn-green" type="button" id="finishBtn">FINALIZAR EVALUACIÓN</button>
+</div>
+
+<footer class="footer">
+  <strong>NASER SRL</strong>
+  <span>Sistema de Gestión Integrado</span>
+  <span>Evaluación de Proveedores</span>
+</footer>
+
+</div>
+</main>
+
+<script>
+const KEY = "NASER_EVALUACION_PROVEEDORES_V2";
+
+const grupos = [
+  {
+    titulo:"CALIDAD DEL PRODUCTO / SERVICIO",
+    items:[
+      "Cumplimiento de las especificaciones técnicas solicitadas",
+      "Calidad general del producto o servicio entregado",
+      "Cantidad de reclamos o no conformidades asociadas al proveedor",
+      "Capacidad para corregir fallas o no conformidades"
+    ]
+  },
+  {
+    titulo:"ENTREGA Y CUMPLIMIENTO",
+    items:[
+      "Cumplimiento de los plazos de entrega acordados",
+      "Cumplimiento de cantidades solicitadas",
+      "Estado y presentación de materiales o productos entregados",
+      "Capacidad de respuesta ante urgencias"
+    ]
+  },
+  {
+    titulo:"GESTIÓN COMERCIAL Y ADMINISTRATIVA",
+    items:[
+      "Cumplimiento de condiciones comerciales acordadas",
+      "Relación precio / calidad",
+      "Exactitud de facturación, remitos y documentación comercial",
+      "Comunicación y atención brindada a NASER SRL"
+    ]
+  },
+  {
+    titulo:"DOCUMENTACIÓN Y REQUISITOS",
+    items:[
+      "Documentación técnica vigente y disponible cuando corresponde",
+      "Cumplimiento de requisitos legales aplicables",
+      "Cumplimiento de requisitos de Seguridad, Salud y Ambiente",
+      "Presentación en término de certificados, seguros o documentación requerida"
+    ]
+  }
+];
+
+const criterios = grupos.flatMap(g => g.items);
+
+function renderEvaluacion(){
+  const body = document.getElementById("evaluationBody");
+  let globalIndex = 0;
+  let html = "";
+
+  grupos.forEach(grupo => {
+    html += `<tr class="cat-row"><td colspan="4">${grupo.titulo}</td></tr>`;
+
+    grupo.items.forEach(item => {
+      const i = globalIndex++;
+      html += `
+        <tr data-index="${i}">
+          <td class="item-no">${String(i+1).padStart(2,"0")}</td>
+          <td class="item-name">${item}</td>
+          <td>
+            <div class="rating">
+              ${[1,2,3,4,5].map(v => `
+                <label>
+                  <input type="radio" name="criterio_${i}" value="${v}">
+                  <span>${v}</span>
+                </label>
+              `).join("")}
+              <label>
+                <input type="radio" name="criterio_${i}" value="NA">
+                <span>N/A</span>
+              </label>
+            </div>
+          </td>
+          <td>
+            <input class="obs" id="obs_${i}" placeholder="Observación">
+          </td>
+        </tr>`;
+    });
+  });
+
+  body.innerHTML = html;
+}
+
+function valor(id){
+  return document.getElementById(id)?.value?.trim() || "";
+}
+
+function datosCriterios(){
+  return criterios.map((texto,i) => {
+    const marcado = document.querySelector(`input[name="criterio_${i}"]:checked`);
+    return {
+      criterio:texto,
+      respuesta:marcado ? marcado.value : "",
+      observacion:valor(`obs_${i}`)
+    };
+  });
+}
+
+/*
+  REGLAS:
+  - COMPLETADO: cualquier respuesta 1-5 o N/A.
+  - RESULTADO: solo respuestas 1-5.
+  - N/A no suma puntos y tampoco suma máximo posible.
+*/
+function calcular(){
+  const datos = datosCriterios();
+
+  const respondidos = datos.filter(x => x.respuesta !== "").length;
+  const na = datos.filter(x => x.respuesta === "NA").length;
+  const aplicables = datos.filter(x => ["1","2","3","4","5"].includes(x.respuesta));
+
+  const puntos = aplicables.reduce((acc,x) => acc + Number(x.respuesta),0);
+  const maximo = aplicables.length * 5;
+
+  const porcentajeCompletado = criterios.length
+    ? Math.round((respondidos / criterios.length) * 100)
+    : 0;
+
+  const porcentajeResultado = maximo > 0
+    ? Math.round((puntos / maximo) * 100)
+    : 0;
+
+  document.getElementById("completionPct").textContent = porcentajeCompletado + "%";
+  document.getElementById("completionBar").style.width = porcentajeCompletado + "%";
+  document.getElementById("completionText").textContent =
+    `${respondidos} de ${criterios.length} criterios respondidos`;
+
+  document.getElementById("scorePct").textContent = porcentajeResultado + "%";
+  document.getElementById("scoreBar").style.width = porcentajeResultado + "%";
+  document.getElementById("scoreText").textContent =
+    aplicables.length
+      ? `${puntos} puntos de ${maximo} posibles`
+      : "Sin calificaciones aplicables";
+
+  document.getElementById("stTotal").textContent = criterios.length;
+  document.getElementById("stRespondidos").textContent = respondidos;
+  document.getElementById("stAplicables").textContent = aplicables.length;
+  document.getElementById("stNA").textContent = na;
+  document.getElementById("stPuntos").textContent = puntos;
+  document.getElementById("stMaximo").textContent = maximo;
+
+  const box = document.getElementById("resultBox");
+  box.className = "result";
+
+  let texto = "PENDIENTE DE EVALUACIÓN";
+
+  if(aplicables.length > 0){
+    if(porcentajeResultado >= 80){
+      texto = "PROVEEDOR APROBADO";
+    }else if(porcentajeResultado >= 60){
+      texto = "APROBADO CON OBSERVACIONES";
+      box.classList.add("warning");
+    }else{
+      texto = "NO APROBADO";
+      box.classList.add("danger");
+    }
+  }
+
+  document.getElementById("resultText").textContent = texto;
+  document.getElementById("resultScore").textContent = porcentajeResultado + "%";
+
+  return {
+    total:criterios.length,
+    respondidos,
+    na,
+    aplicables:aplicables.length,
+    puntos,
+    maximo,
+    porcentajeCompletado,
+    porcentajeResultado,
+    clasificacion:texto
+  };
+}
+
+function collect(){
+  const calc = calcular();
+
+  return {
+    proveedor:valor("proveedor"),
+    cuit:valor("cuit"),
+    codigoProveedor:valor("codigoProveedor"),
+    fechaEvaluacion:valor("fechaEvaluacion"),
+    periodoDesde:valor("periodoDesde"),
+    periodoHasta:valor("periodoHasta"),
+    ordenContrato:valor("ordenContrato"),
+    rubro:valor("rubro"),
+    contacto:valor("contacto"),
+    servicio:valor("servicio"),
+    evaluador:valor("evaluador"),
+    sector:valor("sector"),
+    critico:valor("critico"),
+    evaluacionAnterior:valor("evaluacionAnterior"),
+    fortalezas:valor("fortalezas"),
+    desvios:valor("desvios"),
+    acciones:valor("acciones"),
+    proximaEvaluacion:valor("proximaEvaluacion"),
+    estadoFinal:valor("estadoFinal"),
+    responsableCompras:valor("responsableCompras"),
+    responsableSector:valor("responsableSector"),
+    responsableHSE:valor("responsableHSE"),
+    responsableAprobacion:valor("responsableAprobacion"),
+    observacionesFinales:valor("observacionesFinales"),
+    criterios:datosCriterios(),
+    calculo:calc,
+    finalizada:document.getElementById("finishedBadge").classList.contains("show")
+  };
+}
+
+function restore(data){
+  if(!data) return;
+
+  const ids = [
+    "proveedor","cuit","codigoProveedor","fechaEvaluacion",
+    "periodoDesde","periodoHasta","ordenContrato","rubro","contacto",
+    "servicio","evaluador","sector","critico","evaluacionAnterior",
+    "fortalezas","desvios","acciones","proximaEvaluacion","estadoFinal",
+    "responsableCompras","responsableSector","responsableHSE",
+    "responsableAprobacion","observacionesFinales"
+  ];
+
+  ids.forEach(id => {
+    const el = document.getElementById(id);
+    if(el && data[id] !== undefined) el.value = data[id] ?? "";
+  });
+
+  if(Array.isArray(data.criterios)){
+    data.criterios.forEach((item,i) => {
+      if(item.respuesta){
+        const radio = document.querySelector(
+          `input[name="criterio_${i}"][value="${item.respuesta}"]`
+        );
+        if(radio) radio.checked = true;
+      }
+
+      const obs = document.getElementById(`obs_${i}`);
+      if(obs) obs.value = item.observacion || "";
+    });
+  }
+
+  if(data.finalizada){
+    document.getElementById("finishedBadge").classList.add("show");
+  }
+
+  calcular();
+}
+
+function mensaje(texto,tipo="ok"){
+  const box = document.getElementById("message");
+  box.className = "msg " + tipo;
+  box.textContent = texto;
+  box.scrollIntoView({behavior:"smooth",block:"center"});
+}
+
+function guardar(mostrarMensaje=true){
+  localStorage.setItem(KEY,JSON.stringify(collect()));
+  if(mostrarMensaje){
+    mensaje("Evaluación guardada correctamente en este dispositivo.","ok");
+  }
+}
+
+function validarFinalizacion(){
+  if(!valor("proveedor")){
+    mensaje("Debe completar el proveedor / razón social.","err");
+    document.getElementById("proveedor").focus();
+    return false;
+  }
+
+  if(!valor("fechaEvaluacion")){
+    mensaje("Debe completar la fecha de evaluación.","err");
+    document.getElementById("fechaEvaluacion").focus();
+    return false;
+  }
+
+  if(!valor("servicio")){
+    mensaje("Debe indicar el producto o servicio evaluado.","err");
+    document.getElementById("servicio").focus();
+    return false;
+  }
+
+  if(!valor("evaluador")){
+    mensaje("Debe ingresar el nombre del evaluador.","err");
+    document.getElementById("evaluador").focus();
+    return false;
+  }
+
+  const datos = datosCriterios();
+  const faltantes = datos.filter(x => x.respuesta === "");
+
+  if(faltantes.length){
+    mensaje(`Faltan ${faltantes.length} criterios por responder. Puede utilizar N/A cuando un criterio no corresponda.`,"err");
+    document.getElementById("evaluacion").scrollIntoView({behavior:"smooth"});
+    return false;
+  }
+
+  const calc = calcular();
+
+  if(calc.aplicables === 0){
+    mensaje("No se puede finalizar: todos los criterios fueron marcados N/A y no existe una calificación aplicable.","err");
+    return false;
+  }
+
+  return true;
+}
+
+function finalizar(){
+  if(!validarFinalizacion()) return;
+
+  const calc = calcular();
+
+  if(!valor("estadoFinal")){
+    if(calc.porcentajeResultado >= 80){
+      document.getElementById("estadoFinal").value = "APROBADO";
+    }else if(calc.porcentajeResultado >= 60){
+      document.getElementById("estadoFinal").value = "APROBADO CON OBSERVACIONES";
+    }else{
+      document.getElementById("estadoFinal").value = "NO APROBADO";
+    }
+  }
+
+  document.getElementById("finishedBadge").classList.add("show");
+  guardar(false);
+
+  mensaje(
+    `Evaluación finalizada correctamente. Resultado del proveedor: ${calc.porcentajeResultado}%.`,
+    "ok"
+  );
+
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function limpiar(){
+  if(!confirm("¿Seguro que desea limpiar toda la evaluación de proveedores?")) return;
+
+  document.querySelectorAll("input").forEach(el => {
+    if(el.type === "radio") el.checked = false;
+    else el.value = "";
+  });
+
+  document.querySelectorAll("select").forEach(el => el.selectedIndex = 0);
+  document.querySelectorAll("textarea").forEach(el => el.value = "");
+
+  document.getElementById("finishedBadge").classList.remove("show");
+  localStorage.removeItem(KEY);
+
+  colocarFecha();
+  calcular();
+  mensaje("Formulario limpiado correctamente.","ok");
+}
+
+function colocarFecha(){
+  const input = document.getElementById("fechaEvaluacion");
+  if(input.value) return;
+
+  const d = new Date();
+  const y = d.getFullYear();
+  const m = String(d.getMonth()+1).padStart(2,"0");
+  const day = String(d.getDate()).padStart(2,"0");
+  input.value = `${y}-${m}-${day}`;
+}
+
+/* AUTOGUARDADO */
+let timer;
+document.addEventListener("input",()=>{
+  clearTimeout(timer);
+  timer = setTimeout(()=>guardar(false),400);
+});
+
+document.addEventListener("change",()=>{
+  calcular();
+  clearTimeout(timer);
+  timer = setTimeout(()=>guardar(false),250);
+});
+
+/* BOTONES */
+document.getElementById("saveBtn").addEventListener("click",()=>guardar(true));
+document.getElementById("finishBtn").addEventListener("click",finalizar);
+document.getElementById("clearBtn").addEventListener("click",limpiar);
+
+/* MENÚ MOBILE */
+const sidebar = document.getElementById("sidebar");
+const overlay = document.getElementById("sidebarOverlay");
+
+document.getElementById("menuBtn").addEventListener("click",()=>{
+  sidebar.classList.toggle("open");
+  overlay.classList.toggle("show");
+});
+
+overlay.addEventListener("click",()=>{
+  sidebar.classList.remove("open");
+  overlay.classList.remove("show");
+});
+
+/* NAVEGACIÓN ACTIVA */
+const navLinks = [...document.querySelectorAll(".nav-link")];
+const sectionIds = ["datos","evaluacion","resultado","observaciones","responsables"];
+
+const observer = new IntersectionObserver(entries=>{
+  entries.forEach(entry=>{
+    if(!entry.isIntersecting) return;
+
+    navLinks.forEach(x=>x.classList.remove("active"));
+
+    const active = document.querySelector(
+      `.nav-link[href="#${entry.target.id}"]`
+    );
+
+    if(active) active.classList.add("active");
+  });
+},{threshold:.25});
+
+sectionIds.forEach(id=>{
+  const section = document.getElementById(id);
+  if(section) observer.observe(section);
+});
+
+/* INICIO */
+renderEvaluacion();
+colocarFecha();
+
+const saved = localStorage.getItem(KEY);
+
+if(saved){
+  try{
+    restore(JSON.parse(saved));
+  }catch(e){
+    console.error("No se pudo restaurar el formulario:",e);
+    calcular();
+  }
+}else{
+  calcular();
+}
+</script>
+</body>
+</html>

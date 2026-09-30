@@ -1,0 +1,4620 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>NASER | Planificación e Informe de Simulacro</title>
+
+<style>
+
+:root{
+    --green:#009b49;
+    --green-dark:#007a3a;
+    --green-light:#e8f6ee;
+
+    --black:#101010;
+    --black-2:#181818;
+
+    --bg:#f2f3f5;
+    --white:#ffffff;
+
+    --border:#d9dde3;
+    --text:#15191e;
+    --muted:#69717c;
+
+    --warning:#b54708;
+    --danger:#b42318;
+
+    --shadow:0 8px 28px rgba(16,24,40,.06);
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    font-family:Arial, Helvetica, sans-serif;
+    background:var(--bg);
+    color:var(--text);
+}
+
+/* =========================================================
+   ESTRUCTURA GENERAL
+========================================================= */
+
+.app{
+    display:flex;
+    min-height:100vh;
+}
+
+/* =========================================================
+   SIDEBAR
+========================================================= */
+
+.sidebar{
+    position:fixed;
+    top:0;
+    left:0;
+    bottom:0;
+
+    width:320px;
+
+    background:#0d0d0d;
+    color:#fff;
+
+    border-right:1px solid #252525;
+
+    z-index:1000;
+}
+
+.brand{
+    height:120px;
+
+    display:flex;
+    align-items:center;
+
+    padding:0 34px;
+
+    border-bottom:1px solid #292929;
+
+    font-size:34px;
+    font-weight:900;
+    letter-spacing:4px;
+}
+
+.sidebar-section{
+    padding:28px 0;
+}
+
+.sidebar-label{
+    padding:0 34px 14px;
+
+    color:#7d8793;
+
+    font-size:12px;
+    letter-spacing:1.2px;
+
+    text-transform:uppercase;
+}
+
+.nav-link{
+    min-height:58px;
+
+    display:flex;
+    align-items:center;
+
+    gap:15px;
+
+    padding:0 30px;
+
+    color:#e6e6e6;
+
+    text-decoration:none;
+
+    border-left:4px solid transparent;
+
+    transition:.2s;
+}
+
+.nav-link:hover{
+    background:#151515;
+}
+
+.nav-link.active{
+    background:#191919;
+    border-left-color:var(--green);
+}
+
+.nav-number{
+    width:28px;
+
+    color:#00bd5a;
+
+    font-size:18px;
+    font-weight:800;
+}
+
+.nav-name{
+    font-size:16px;
+}
+
+/* =========================================================
+   MAIN
+========================================================= */
+
+.main{
+    width:calc(100% - 320px);
+    margin-left:320px;
+}
+
+/* =========================================================
+   TOPBAR
+========================================================= */
+
+.topbar{
+    min-height:82px;
+
+    padding:0 40px;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    gap:20px;
+
+    background:#fff;
+
+    border-bottom:1px solid var(--border);
+}
+
+.breadcrumb{
+    color:#59616c;
+    font-size:14px;
+}
+
+.top-actions{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.badge{
+    padding:10px 15px;
+
+    border-radius:9px;
+
+    font-size:12px;
+    font-weight:800;
+
+    white-space:nowrap;
+}
+
+.badge-edit{
+    background:#f0f1f2;
+    color:#59616c;
+}
+
+.badge-document{
+    background:var(--green-light);
+    color:#007a3a;
+}
+
+/* =========================================================
+   PAGE
+========================================================= */
+
+.page{
+    padding:35px;
+}
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.hero{
+    position:relative;
+
+    min-height:195px;
+
+    display:flex;
+    align-items:center;
+
+    overflow:hidden;
+
+    padding:40px 42px;
+
+    color:#fff;
+
+    background:
+        linear-gradient(
+            110deg,
+            #101010 0%,
+            #191919 100%
+        );
+
+    border-radius:15px;
+}
+
+.hero::after{
+    content:"";
+
+    position:absolute;
+
+    width:310px;
+    height:310px;
+
+    right:-80px;
+    top:-120px;
+
+    border-radius:50%;
+
+    background:rgba(0,155,73,.20);
+}
+
+.hero-content{
+    position:relative;
+    z-index:2;
+}
+
+.hero-kicker{
+    margin-bottom:14px;
+
+    color:#00c65e;
+
+    font-size:13px;
+    font-weight:800;
+
+    letter-spacing:3px;
+}
+
+.hero h1{
+    max-width:1000px;
+
+    margin-bottom:14px;
+
+    font-size:37px;
+    line-height:1.15;
+}
+
+.hero p{
+    max-width:1100px;
+
+    color:#e6e8eb;
+
+    font-size:15px;
+    line-height:1.6;
+}
+
+/* =========================================================
+   INDICADORES
+========================================================= */
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+
+    gap:14px;
+
+    margin:22px 0 25px;
+}
+
+.stat{
+    min-height:105px;
+
+    padding:20px;
+
+    background:#fff;
+
+    border:1px solid var(--border);
+
+    border-radius:11px;
+}
+
+.stat-label{
+    display:block;
+
+    margin-bottom:8px;
+
+    color:#68717c;
+
+    font-size:11px;
+    font-weight:700;
+
+    text-transform:uppercase;
+}
+
+.stat-value{
+    display:block;
+
+    font-size:32px;
+    font-weight:900;
+}
+
+.green{
+    color:var(--green);
+}
+
+.warning{
+    color:var(--warning);
+}
+
+/* =========================================================
+   DOCUMENTO
+========================================================= */
+
+.document-card{
+    overflow:hidden;
+
+    background:#fff;
+
+    border:1px solid var(--border);
+
+    border-radius:15px;
+
+    box-shadow:var(--shadow);
+}
+
+.document-header{
+    min-height:98px;
+
+    display:flex;
+    align-items:center;
+
+    gap:17px;
+
+    padding:22px 27px;
+
+    border-bottom:1px solid var(--border);
+}
+
+.document-number{
+    width:50px;
+    height:50px;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    flex-shrink:0;
+
+    background:#111;
+
+    color:#00c45e;
+
+    border-radius:9px;
+
+    font-size:18px;
+    font-weight:900;
+}
+
+.document-title h2{
+    margin-bottom:5px;
+    font-size:20px;
+}
+
+.document-title p{
+    color:#6c7480;
+    font-size:13px;
+}
+
+.document-body{
+    padding:27px;
+}
+
+/* =========================================================
+   INFO
+========================================================= */
+
+.info{
+    margin-bottom:23px;
+
+    padding:18px 20px;
+
+    background:#fbfcfc;
+
+    border:1px solid #d9e7df;
+    border-left:4px solid var(--green);
+
+    border-radius:9px;
+
+    color:#4c5560;
+
+    font-size:13px;
+    line-height:1.65;
+}
+
+.info strong{
+    color:#007a39;
+}
+
+/* =========================================================
+   SECCIONES
+========================================================= */
+
+.section{
+    margin-bottom:23px;
+
+    overflow:hidden;
+
+    border:1px solid var(--border);
+
+    border-radius:12px;
+}
+
+.section-header{
+    min-height:65px;
+
+    display:flex;
+    align-items:center;
+
+    gap:13px;
+
+    padding:14px 18px;
+
+    background:#f8f9fa;
+
+    border-bottom:1px solid var(--border);
+}
+
+.section-number{
+    width:36px;
+    height:36px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    flex-shrink:0;
+
+    border-radius:8px;
+
+    background:var(--green-light);
+
+    color:var(--green);
+
+    font-size:12px;
+    font-weight:900;
+}
+
+.section-header h3{
+    margin-bottom:3px;
+    font-size:15px;
+}
+
+.section-header p{
+    color:#707884;
+    font-size:12px;
+}
+
+.section-body{
+    padding:20px;
+}
+
+/* =========================================================
+   FORM
+========================================================= */
+
+.form-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+
+    gap:16px;
+}
+
+.field{
+    display:flex;
+    flex-direction:column;
+
+    gap:7px;
+}
+
+.field.two{
+    grid-column:span 2;
+}
+
+.field.full{
+    grid-column:1 / -1;
+}
+
+.field label{
+    color:#4e5661;
+
+    font-size:10px;
+    font-weight:800;
+
+    text-transform:uppercase;
+    letter-spacing:.5px;
+}
+
+.field input,
+.field textarea,
+.field select{
+    width:100%;
+
+    border:1px solid #d4d9df;
+
+    border-radius:8px;
+
+    padding:11px 12px;
+
+    background:#fff;
+
+    color:#222;
+
+    font-size:13px;
+
+    outline:none;
+}
+
+.field textarea{
+    min-height:100px;
+    resize:vertical;
+}
+
+.field input:focus,
+.field textarea:focus,
+.field select:focus{
+    border-color:var(--green);
+
+    box-shadow:0 0 0 3px rgba(0,155,73,.08);
+}
+
+/* =========================================================
+   OPCIONES / TARJETAS
+========================================================= */
+
+.option-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+
+    gap:12px;
+}
+
+.option-group{
+    padding:15px;
+
+    background:#fafafa;
+
+    border:1px solid #e0e3e7;
+
+    border-radius:10px;
+}
+
+.option-group h4{
+    margin-bottom:12px;
+
+    font-size:12px;
+
+    color:#303740;
+}
+
+.option-check{
+    display:flex;
+
+    align-items:flex-start;
+
+    gap:8px;
+
+    margin:9px 0;
+
+    color:#444c56;
+
+    font-size:12px;
+}
+
+.option-check input{
+    margin-top:1px;
+
+    accent-color:var(--green);
+}
+
+/* =========================================================
+   RECURSOS
+========================================================= */
+
+.resource-table{
+    width:100%;
+
+    border-collapse:collapse;
+}
+
+.resource-table th{
+    padding:12px;
+
+    background:#111;
+
+    color:#fff;
+
+    border:1px solid #333;
+
+    font-size:11px;
+
+    text-transform:uppercase;
+}
+
+.resource-table td{
+    padding:9px;
+
+    border:1px solid #e0e3e7;
+
+    font-size:12px;
+
+    vertical-align:middle;
+}
+
+.resource-table tbody tr:hover{
+    background:#fafcfb;
+}
+
+.resource-name{
+    font-weight:700;
+}
+
+.table-select,
+.table-input,
+.table-area{
+    width:100%;
+
+    border:1px solid #d4d9df;
+
+    border-radius:6px;
+
+    padding:8px 9px;
+
+    background:#fff;
+
+    font-size:11px;
+
+    outline:none;
+}
+
+.table-area{
+    min-height:70px;
+
+    resize:vertical;
+}
+
+.table-select:focus,
+.table-input:focus,
+.table-area:focus{
+    border-color:var(--green);
+
+    box-shadow:0 0 0 2px rgba(0,155,73,.08);
+}
+
+/* =========================================================
+   TOOLBAR
+========================================================= */
+
+.toolbar{
+    display:flex;
+
+    justify-content:space-between;
+    align-items:center;
+
+    gap:15px;
+
+    margin-bottom:15px;
+}
+
+.search{
+    height:42px;
+
+    flex:1;
+
+    min-width:280px;
+
+    border:1px solid #d4d9df;
+
+    border-radius:8px;
+
+    padding:0 12px;
+
+    outline:none;
+}
+
+.search:focus{
+    border-color:var(--green);
+}
+
+/* =========================================================
+   TABLAS DINÁMICAS
+========================================================= */
+
+.data-table{
+    width:100%;
+
+    border-collapse:collapse;
+}
+
+.data-table th{
+    padding:12px;
+
+    background:#111;
+
+    color:#fff;
+
+    border:1px solid #333;
+
+    font-size:11px;
+
+    text-transform:uppercase;
+}
+
+.data-table td{
+    padding:8px;
+
+    border:1px solid #e0e3e7;
+
+    vertical-align:top;
+}
+
+.data-table th:first-child{
+    width:60px;
+}
+
+.data-table .time-col{
+    width:150px;
+}
+
+.data-table .action-col{
+    width:70px;
+}
+
+/* =========================================================
+   BOTONES
+========================================================= */
+
+.btn{
+    min-height:41px;
+
+    padding:0 16px;
+
+    border:none;
+
+    border-radius:8px;
+
+    font-size:12px;
+    font-weight:800;
+
+    cursor:pointer;
+
+    transition:.2s;
+}
+
+.btn:hover{
+    transform:translateY(-1px);
+}
+
+.btn-green{
+    background:var(--green);
+    color:#fff;
+}
+
+.btn-green:hover{
+    background:var(--green-dark);
+}
+
+.btn-dark{
+    background:#181818;
+    color:#fff;
+}
+
+.btn-light{
+    background:#eef0f2;
+    color:#4a525d;
+}
+
+.delete-btn{
+    width:35px;
+    height:35px;
+
+    display:block;
+
+    margin:auto;
+
+    border:none;
+
+    border-radius:7px;
+
+    background:#f0f1f2;
+
+    color:#606872;
+
+    cursor:pointer;
+
+    font-size:18px;
+}
+
+.delete-btn:hover{
+    background:#fee4e2;
+    color:var(--danger);
+}
+
+/* =========================================================
+   FOTOS
+========================================================= */
+
+.photo-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+
+    gap:15px;
+}
+
+.photo-card{
+    overflow:hidden;
+
+    background:#fff;
+
+    border:1px solid var(--border);
+
+    border-radius:10px;
+}
+
+.photo-preview{
+    min-height:180px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    background:#f5f6f7;
+
+    color:#7c848f;
+
+    font-size:12px;
+
+    text-align:center;
+}
+
+.photo-preview img{
+    width:100%;
+    height:220px;
+
+    object-fit:cover;
+}
+
+.photo-footer{
+    padding:12px;
+
+    display:flex;
+    flex-direction:column;
+
+    gap:8px;
+}
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.form-footer{
+    display:flex;
+
+    justify-content:space-between;
+    align-items:center;
+
+    gap:15px;
+}
+
+.status{
+    color:#68717b;
+    font-size:12px;
+}
+
+.status strong{
+    color:#16191d;
+}
+
+.footer-buttons{
+    display:flex;
+    gap:9px;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media(max-width:1200px){
+
+    .sidebar{
+        width:270px;
+    }
+
+    .main{
+        width:calc(100% - 270px);
+        margin-left:270px;
+    }
+
+    .stats,
+    .form-grid,
+    .option-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+}
+
+@media(max-width:800px){
+
+    .app{
+        display:block;
+    }
+
+    .sidebar{
+        position:relative;
+
+        width:100%;
+
+        min-height:auto;
+    }
+
+    .main{
+        width:100%;
+        margin-left:0;
+    }
+
+    .brand{
+        height:85px;
+    }
+
+    .topbar{
+        padding:18px 20px;
+
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    .page{
+        padding:18px;
+    }
+
+    .hero{
+        padding:28px 23px;
+    }
+
+    .hero h1{
+        font-size:28px;
+    }
+
+    .stats,
+    .form-grid,
+    .option-grid,
+    .photo-grid{
+        grid-template-columns:1fr;
+    }
+
+    .field.two{
+        grid-column:auto;
+    }
+
+    .toolbar{
+        flex-direction:column;
+        align-items:stretch;
+    }
+
+    .form-footer{
+        flex-direction:column;
+        align-items:stretch;
+    }
+
+    .footer-buttons{
+        flex-direction:column;
+    }
+
+    .section-body{
+        overflow-x:auto;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<!-- =========================================================
+     SIDEBAR
+========================================================= -->
+
+<aside class="sidebar">
+
+    <div class="brand">
+        NASER
+    </div>
+
+    <div class="sidebar-section">
+
+        <div class="sidebar-label">
+            DOCUMENTO
+        </div>
+
+        <a href="#planificacion" class="nav-link active">
+
+            <span class="nav-number">
+                01
+            </span>
+
+            <span class="nav-name">
+                Planificación
+            </span>
+
+        </a>
+
+        <a href="#recursos" class="nav-link">
+
+            <span class="nav-number">
+                02
+            </span>
+
+            <span class="nav-name">
+                Recursos
+            </span>
+
+        </a>
+
+        <a href="#desarrollo" class="nav-link">
+
+            <span class="nav-number">
+                03
+            </span>
+
+            <span class="nav-name">
+                Desarrollo
+            </span>
+
+        </a>
+
+        <a href="#evaluacion" class="nav-link">
+
+            <span class="nav-number">
+                04
+            </span>
+
+            <span class="nav-name">
+                Evaluación
+            </span>
+
+        </a>
+
+        <a href="#acciones" class="nav-link">
+
+            <span class="nav-number">
+                05
+            </span>
+
+            <span class="nav-name">
+                Acciones
+            </span>
+
+        </a>
+
+        <a href="#anexo" class="nav-link">
+
+            <span class="nav-number">
+                06
+            </span>
+
+            <span class="nav-name">
+                Anexo Fotográfico
+            </span>
+
+        </a>
+
+    </div>
+
+</aside>
+
+<!-- =========================================================
+     MAIN
+========================================================= -->
+
+<main class="main">
+
+<header class="topbar">
+
+    <div class="breadcrumb">
+
+        NASER / Gestión / Planificación e Informe de Simulacro
+
+    </div>
+
+    <div class="top-actions">
+
+        <span
+            class="badge badge-edit"
+            id="badgeEstado"
+        >
+            EN EDICIÓN
+        </span>
+
+        <span class="badge badge-document">
+            PGSN08-F1 · Rev.1 Jun 2025
+        </span>
+
+    </div>
+
+</header>
+
+<div class="page">
+
+<!-- =========================================================
+     HERO
+========================================================= -->
+
+<section class="hero">
+
+    <div class="hero-content">
+
+        <div class="hero-kicker">
+            GESTIÓN DE EMERGENCIAS
+        </div>
+
+        <h1>
+            Planificación e Informe de Simulacro
+        </h1>
+
+        <p>
+            Planificación, desarrollo y evaluación de simulacros,
+            incluyendo escenario de emergencia, recursos,
+            cronología, personal involucrado, desvíos,
+            puntos fuertes, acciones de mejora y registro fotográfico.
+        </p>
+
+    </div>
+
+</section>
+
+<!-- =========================================================
+     INDICADORES
+========================================================= -->
+
+<section class="stats">
+
+    <div class="stat">
+
+        <span class="stat-label">
+            Recursos disponibles
+        </span>
+
+        <span
+            class="stat-value green"
+            id="statRecursos"
+        >
+            0
+        </span>
+
+    </div>
+
+    <div class="stat">
+
+        <span class="stat-label">
+            Personal cierre
+        </span>
+
+        <span
+            class="stat-value"
+            id="statPersonal"
+        >
+            0
+        </span>
+
+    </div>
+
+    <div class="stat">
+
+        <span class="stat-label">
+            Acciones de mejora
+        </span>
+
+        <span
+            class="stat-value warning"
+            id="statAcciones"
+        >
+            0
+        </span>
+
+    </div>
+
+    <div class="stat">
+
+        <span class="stat-label">
+            Fotografías
+        </span>
+
+        <span
+            class="stat-value"
+            id="statFotos"
+        >
+            0
+        </span>
+
+    </div>
+
+</section>
+
+<!-- =========================================================
+     DOCUMENTO
+========================================================= -->
+
+<section class="document-card">
+
+    <div class="document-header">
+
+        <div class="document-number">
+            01
+        </div>
+
+        <div class="document-title">
+
+            <h2>
+                Planificación e Informe de Simulacro
+            </h2>
+
+            <p>
+                PGSN08-F1 · Rev.1 Jun 2025
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="document-body">
+
+        <div class="info">
+
+            Complete primero la <strong>planificación del simulacro</strong>,
+            indicando clasificación, tipo, nivel de impacto,
+            nivel de respuesta, escenario y responsables.
+
+            Luego registre los recursos, la cronología prevista y real,
+            la evaluación final y las acciones de mejora.
+
+        </div>
+
+        <!-- =================================================
+             1 PLANIFICACIÓN
+        ================================================== -->
+
+        <section
+            class="section"
+            id="planificacion"
+        >
+
+            <div class="section-header">
+
+                <div class="section-number">
+                    01
+                </div>
+
+                <div>
+
+                    <h3>
+                        Planificación
+                    </h3>
+
+                    <p>
+                        Clasificación, tipo y características del simulacro
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="section-body">
+
+                <div class="option-grid">
+
+                    <!-- CLASIFICACION -->
+
+                    <div class="option-group">
+
+                        <h4>
+                            Clasificación
+                        </h4>
+
+                        <label class="option-check">
+                            <input
+                                type="radio"
+                                name="clasificacion"
+                                value="De campo"
+                            >
+                            De campo
+                        </label>
+
+                        <label class="option-check">
+                            <input
+                                type="radio"
+                                name="clasificacion"
+                                value="Informático"
+                            >
+                            Informático
+                        </label>
+
+                    </div>
+
+                    <!-- TIPO -->
+
+                    <div class="option-group">
+
+                        <h4>
+                            Tipo
+                        </h4>
+
+                        <label class="option-check">
+                            <input
+                                type="radio"
+                                name="tipo"
+                                value="Rescate y evacuación"
+                            >
+                            Rescate y evacuación
+                        </label>
+
+                        <label class="option-check">
+                            <input
+                                type="radio"
+                                name="tipo"
+                                value="Incendio y/o explosión"
+                            >
+                            Incendio y/o explosión
+                        </label>
+
+                        <label class="option-check">
+                            <input
+                                type="radio"
+                                name="tipo"
+                                value="Derrames"
+                            >
+                            Derrames
+                        </label>
+
+                        <label class="option-check">
+                            <input
+                                type="radio"
+                                name="tipo"
+                                value="Descontrol de pozo"
+                            >
+                            Descontrol de pozo
+                        </label>
+
+                        <label class="option-check">
+                            <input
+                                type="radio"
+                                name="tipo"
+                                value="Fuga de gas"
+                            >
+                            Fuga de gas
+                        </label>
+
+                    </div>
+
+                    <!-- IMPACTO -->
+
+                    <div class="option-group">
+
+                        <h4>
+                            Nivel de impacto
+                        </h4>
+
+                        <label class="option-check">
+                            <input
+                                type="radio"
+                                name="impacto"
+                                value="Interno"
+                            >
+                            Interno
+                        </label>
+
+                        <label class="option-check">
+                            <input
+                                type="radio"
+                                name="impacto"
+                                value="Externo"
+                            >
+                            Externo
+                        </label>
+
+                    </div>
+
+                    <!-- RESPUESTA -->
+
+                    <div class="option-group">
+
+                        <h4>
+                            Nivel de respuesta
+                        </h4>
+
+                        <label class="option-check">
+                            <input
+                                type="radio"
+                                name="respuesta"
+                                value="Local"
+                            >
+                            Local
+                        </label>
+
+                        <label class="option-check">
+                            <input
+                                type="radio"
+                                name="respuesta"
+                                value="Regional"
+                            >
+                            Regional
+                        </label>
+
+                    </div>
+
+                </div>
+
+                <!-- CARACTERISTICAS -->
+
+                <div
+                    class="option-grid"
+                    style="margin-top:15px;"
+                >
+
+                    <div class="option-group">
+
+                        <h4>
+                            Características
+                        </h4>
+
+                        <label class="option-check">
+                            <input
+                                type="checkbox"
+                                id="comunicacion"
+                            >
+                            Comunicación
+                        </label>
+
+                        <label class="option-check">
+                            <input
+                                type="checkbox"
+                                id="movilizacion"
+                            >
+                            Movilización de recursos
+                        </label>
+
+                        <label class="option-check">
+                            <input
+                                type="checkbox"
+                                id="salaEntrenamiento"
+                            >
+                            Sala de entrenamiento
+                        </label>
+
+                    </div>
+
+                    <div class="option-group">
+
+                        <h4>
+                            Grado de dificultad
+                        </h4>
+
+                        <label class="option-check">
+                            <input
+                                type="radio"
+                                name="dificultad"
+                                value="Básico"
+                            >
+                            Básico
+                        </label>
+
+                        <label class="option-check">
+                            <input
+                                type="radio"
+                                name="dificultad"
+                                value="Medio"
+                            >
+                            Medio
+                        </label>
+
+                        <label class="option-check">
+                            <input
+                                type="radio"
+                                name="dificultad"
+                                value="Avanzado"
+                            >
+                            Avanzado
+                        </label>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- =================================================
+             1.1 DETALLES
+        ================================================== -->
+
+        <section class="section">
+
+            <div class="section-header">
+
+                <div class="section-number">
+                    1.1
+                </div>
+
+                <div>
+
+                    <h3>
+                        Detalles generales del simulacro
+                    </h3>
+
+                    <p>
+                        Información del escenario y responsables
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="section-body">
+
+                <div class="form-grid">
+
+                    <div class="field">
+
+                        <label>
+                            Fecha y hora
+                        </label>
+
+                        <input
+                            type="datetime-local"
+                            id="fechaHora"
+                        >
+
+                    </div>
+
+                    <div class="field">
+
+                        <label>
+                            Lugar
+                        </label>
+
+                        <input
+                            type="text"
+                            id="lugar"
+                            placeholder="Lugar del simulacro"
+                        >
+
+                    </div>
+
+                    <div class="field">
+
+                        <label>
+                            Sector
+                        </label>
+
+                        <input
+                            type="text"
+                            id="sector"
+                            placeholder="Sector"
+                        >
+
+                    </div>
+
+                    <div class="field">
+
+                        <label>
+                            Cant. personal involucrado
+                        </label>
+
+                        <input
+                            type="number"
+                            min="0"
+                            id="cantidadPersonal"
+                            placeholder="0"
+                        >
+
+                    </div>
+
+                    <div class="field full">
+
+                        <label>
+                            Descripción del escenario de emergencias
+                        </label>
+
+                        <textarea
+                            id="escenario"
+                            placeholder="Describa el escenario de emergencia..."
+                        ></textarea>
+
+                    </div>
+
+                    <div class="field two">
+
+                        <label>
+                            Nombre del observador inicial
+                        </label>
+
+                        <input
+                            type="text"
+                            id="observadorInicial"
+                            placeholder="Apellido y nombre"
+                        >
+
+                    </div>
+
+                    <div class="field two">
+
+                        <label>
+                            Involucramiento de comunidades vecinas
+                        </label>
+
+                        <select id="comunidadesVecinas">
+
+                            <option value="">
+                                Seleccionar
+                            </option>
+
+                            <option value="Sí">
+                                Sí
+                            </option>
+
+                            <option value="No">
+                                No
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                    <div class="field">
+
+                        <label>
+                            Responsable de sistemas informático
+                        </label>
+
+                        <input
+                            type="text"
+                            id="responsableSistemas"
+                            placeholder="Apellido y nombre"
+                        >
+
+                    </div>
+
+                    <div class="field">
+
+                        <label>
+                            Coordinador Gral. de campo
+                        </label>
+
+                        <input
+                            type="text"
+                            id="coordinadorCampo"
+                            placeholder="Apellido y nombre"
+                        >
+
+                    </div>
+
+                    <div class="field">
+
+                        <label>
+                            Responsable de la instalación
+                        </label>
+
+                        <input
+                            type="text"
+                            id="responsableInstalacion"
+                            placeholder="Apellido y nombre"
+                        >
+
+                    </div>
+
+                    <div class="field">
+
+                        <label>
+                            Líder de equipo de respuesta
+                        </label>
+
+                        <input
+                            type="text"
+                            id="liderRespuesta"
+                            placeholder="Apellido y nombre"
+                        >
+
+                    </div>
+
+                    <div class="field two">
+
+                        <label>
+                            Reunión previa con evaluadores
+                        </label>
+
+                        <input
+                            type="datetime-local"
+                            id="reunionPrevia"
+                        >
+
+                    </div>
+
+                    <div class="field">
+
+                        <label>
+                            Cant. de veedores necesarios
+                        </label>
+
+                        <input
+                            type="number"
+                            min="0"
+                            id="cantidadVeedores"
+                            placeholder="0"
+                        >
+
+                    </div>
+
+                    <div class="field">
+
+                        <label>
+                            Equipos / instalación
+                        </label>
+
+                        <input
+                            type="text"
+                            id="equiposInstalacion"
+                            placeholder="Detalle"
+                        >
+
+                    </div>
+
+                    <div class="field full">
+
+                        <label>
+                            Firma del coordinador del simulacro
+                        </label>
+
+                        <input
+                            type="text"
+                            id="firmaCoordinador"
+                            placeholder="Apellido, nombre / aclaración"
+                        >
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- =================================================
+             1.2 RECURSOS
+        ================================================== -->
+
+        <section
+            class="section"
+            id="recursos"
+        >
+
+            <div class="section-header">
+
+                <div class="section-number">
+                    1.2
+                </div>
+
+                <div>
+
+                    <h3>
+                        Recursos
+                    </h3>
+
+                    <p>
+                        Disponibilidad y cantidad de recursos
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="section-body">
+
+                <div style="overflow-x:auto;">
+
+                    <table class="resource-table">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    Lista de recursos
+                                </th>
+
+                                <th style="width:160px;">
+                                    Disponible
+                                </th>
+
+                                <th style="width:140px;">
+                                    Cantidad
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody id="tablaRecursos">
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+                <div
+                    class="field full"
+                    style="margin-top:16px;"
+                >
+
+                    <label>
+                        Otro
+                    </label>
+
+                    <input
+                        type="text"
+                        id="otroRecurso"
+                        placeholder="Especifique otro recurso..."
+                    >
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- =================================================
+             1.3 CRONOLOGIA PREVISTA
+        ================================================== -->
+
+        <section class="section">
+
+            <div class="section-header">
+
+                <div class="section-number">
+                    1.3
+                </div>
+
+                <div>
+
+                    <h3>
+                        Cronología prevista o planificada
+                    </h3>
+
+                    <p>
+                        Secuencia prevista del simulacro
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="section-body">
+
+                <div class="toolbar">
+
+                    <div></div>
+
+                    <button
+                        type="button"
+                        class="btn btn-green"
+                        onclick="agregarFila('prevista')"
+                    >
+                        + AGREGAR PASO
+                    </button>
+
+                </div>
+
+                <div style="overflow-x:auto;">
+
+                    <table class="data-table">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>N°</th>
+
+                                <th class="time-col">
+                                    Hora
+                                </th>
+
+                                <th>
+                                    Pasos del simulacro
+                                </th>
+
+                                <th class="action-col">
+                                    Acción
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody id="tablaPrevista">
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- =================================================
+             2 DESARROLLO
+        ================================================== -->
+
+        <section
+            class="section"
+            id="desarrollo"
+        >
+
+            <div class="section-header">
+
+                <div class="section-number">
+                    02
+                </div>
+
+                <div>
+
+                    <h3>
+                        Desarrollo
+                    </h3>
+
+                    <p>
+                        Cronología real del simulacro
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="section-body">
+
+                <div class="toolbar">
+
+                    <div></div>
+
+                    <button
+                        type="button"
+                        class="btn btn-green"
+                        onclick="agregarFila('real')"
+                    >
+                        + AGREGAR PASO
+                    </button>
+
+                </div>
+
+                <div style="overflow-x:auto;">
+
+                    <table class="data-table">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>N°</th>
+
+                                <th class="time-col">
+                                    Hora
+                                </th>
+
+                                <th>
+                                    Pasos del simulacro
+                                </th>
+
+                                <th class="action-col">
+                                    Acción
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody id="tablaReal">
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- =================================================
+             3 EVALUACIÓN
+        ================================================== -->
+
+        <section
+            class="section"
+            id="evaluacion"
+        >
+
+            <div class="section-header">
+
+                <div class="section-number">
+                    03
+                </div>
+
+                <div>
+
+                    <h3>
+                        Evaluación
+                    </h3>
+
+                    <p>
+                        Reunión de cierre y evaluación del simulacro
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="section-body">
+
+                <!-- REUNION -->
+
+                <div class="form-grid">
+
+                    <div class="field two">
+
+                        <label>
+                            3.1 Reunión de cierre - Fecha y hora
+                        </label>
+
+                        <input
+                            type="datetime-local"
+                            id="reunionCierre"
+                        >
+
+                    </div>
+
+                </div>
+
+                <!-- PERSONAL -->
+
+                <div style="margin-top:25px;">
+
+                    <div class="toolbar">
+
+                        <strong style="font-size:13px;">
+                            3.2 Personal involucrado en la reunión de cierre
+                        </strong>
+
+                        <button
+                            type="button"
+                            class="btn btn-green"
+                            onclick="agregarFila('personal')"
+                        >
+                            + AGREGAR PERSONA
+                        </button>
+
+                    </div>
+
+                    <div style="overflow-x:auto;">
+
+                        <table class="data-table">
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>N°</th>
+
+                                    <th>
+                                        Apellido y Nombre
+                                    </th>
+
+                                    <th>
+                                        Empresa
+                                    </th>
+
+                                    <th class="action-col">
+                                        Acción
+                                    </th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody id="tablaPersonal">
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+                <!-- DESVIOS -->
+
+                <div style="margin-top:25px;">
+
+                    <div class="toolbar">
+
+                        <strong style="font-size:13px;">
+                            3.3 Desvíos encontrados
+                        </strong>
+
+                        <button
+                            type="button"
+                            class="btn btn-green"
+                            onclick="agregarFila('desvios')"
+                        >
+                            + AGREGAR DESVÍO
+                        </button>
+
+                    </div>
+
+                    <div style="overflow-x:auto;">
+
+                        <table class="data-table">
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>N°</th>
+
+                                    <th>
+                                        Descripción
+                                    </th>
+
+                                    <th class="action-col">
+                                        Acción
+                                    </th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody id="tablaDesvios">
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+                <!-- PUNTOS FUERTES -->
+
+                <div style="margin-top:25px;">
+
+                    <div class="toolbar">
+
+                        <strong style="font-size:13px;">
+                            3.4 Puntos fuertes
+                        </strong>
+
+                        <button
+                            type="button"
+                            class="btn btn-green"
+                            onclick="agregarFila('fuertes')"
+                        >
+                            + AGREGAR PUNTO
+                        </button>
+
+                    </div>
+
+                    <div style="overflow-x:auto;">
+
+                        <table class="data-table">
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>N°</th>
+
+                                    <th>
+                                        Descripción
+                                    </th>
+
+                                    <th class="action-col">
+                                        Acción
+                                    </th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody id="tablaFuertes">
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- =================================================
+             4 ACCIONES
+        ================================================== -->
+
+        <section
+            class="section"
+            id="acciones"
+        >
+
+            <div class="section-header">
+
+                <div class="section-number">
+                    04
+                </div>
+
+                <div>
+
+                    <h3>
+                        Acciones
+                    </h3>
+
+                    <p>
+                        Puntos e indicaciones para mejorar
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="section-body">
+
+                <div class="toolbar">
+
+                    <div></div>
+
+                    <button
+                        type="button"
+                        class="btn btn-green"
+                        onclick="agregarFila('acciones')"
+                    >
+                        + AGREGAR ACCIÓN
+                    </button>
+
+                </div>
+
+                <div style="overflow-x:auto;">
+
+                    <table class="data-table">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>N°</th>
+
+                                <th>
+                                    Descripción
+                                </th>
+
+                                <th class="action-col">
+                                    Acción
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody id="tablaAcciones">
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- =================================================
+             5 TIEMPO IMPLEMENTACIÓN
+        ================================================== -->
+
+        <section class="section">
+
+            <div class="section-header">
+
+                <div class="section-number">
+                    05
+                </div>
+
+                <div>
+
+                    <h3>
+                        Tiempo de implementación
+                    </h3>
+
+                    <p>
+                        Tiempo previsto para implementar las acciones
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="section-body">
+
+                <div class="toolbar">
+
+                    <div></div>
+
+                    <button
+                        type="button"
+                        class="btn btn-green"
+                        onclick="agregarFila('tiempos')"
+                    >
+                        + AGREGAR
+                    </button>
+
+                </div>
+
+                <div style="overflow-x:auto;">
+
+                    <table class="data-table">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>N°</th>
+
+                                <th>
+                                    Descripción / Acción
+                                </th>
+
+                                <th style="width:220px;">
+                                    Tiempo
+                                </th>
+
+                                <th class="action-col">
+                                    Acción
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody id="tablaTiempos">
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- =================================================
+             6 ANEXO FOTOGRÁFICO
+        ================================================== -->
+
+        <section
+            class="section"
+            id="anexo"
+        >
+
+            <div class="section-header">
+
+                <div class="section-number">
+                    06
+                </div>
+
+                <div>
+
+                    <h3>
+                        Anexo fotográfico
+                    </h3>
+
+                    <p>
+                        Registro de imágenes del simulacro
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="section-body">
+
+                <div class="toolbar">
+
+                    <div></div>
+
+                    <button
+                        type="button"
+                        class="btn btn-green"
+                        onclick="agregarFoto()"
+                    >
+                        + AGREGAR FOTO
+                    </button>
+
+                </div>
+
+                <div
+                    class="photo-grid"
+                    id="photoGrid"
+                >
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- =================================================
+             CIERRE
+        ================================================== -->
+
+        <div class="form-footer">
+
+            <div class="status">
+
+                Estado:
+
+                <strong id="estadoFormulario">
+                    Documento en edición
+                </strong>
+
+            </div>
+
+            <div class="footer-buttons">
+
+                <button
+                    type="button"
+                    class="btn btn-light"
+                    onclick="limpiarFormulario()"
+                >
+                    LIMPIAR
+                </button>
+
+                <button
+                    type="button"
+                    class="btn btn-dark"
+                    onclick="guardarFormulario()"
+                >
+                    GUARDAR
+                </button>
+
+                <button
+                    type="button"
+                    class="btn btn-green"
+                    onclick="finalizarFormulario()"
+                >
+                    FINALIZAR FORMULARIO
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+</div>
+
+</main>
+
+</div>
+
+<script>
+
+/* =========================================================
+   RECURSOS
+========================================================= */
+
+const recursosBase = [
+
+    "Instrumento de medición",
+
+    "Kit de primeros auxilios",
+
+    "Equipamiento informático",
+
+    "Sistema de comunicación radiales",
+
+    "Equipos de extinción portátil",
+
+    "Vehículo de emergencia",
+
+    "Equipamiento contra incendio",
+
+    "Vehículos/equipos de la contratista",
+
+    "Herramientas manuales",
+
+    "Sistema de comunicación telefónica"
+
+];
+
+
+let recursos =
+    recursosBase.map(
+        nombre => ({
+
+            nombre:nombre,
+
+            disponible:"",
+
+            cantidad:""
+
+        })
+    );
+
+
+/* =========================================================
+   TABLAS
+========================================================= */
+
+let prevista = [];
+let real = [];
+let personal = [];
+let desvios = [];
+let fuertes = [];
+let acciones = [];
+let tiempos = [];
+let fotos = [];
+
+
+/* =========================================================
+   ID
+========================================================= */
+
+function uid(){
+
+    return (
+        Date.now().toString() +
+        Math.random()
+        .toString(16)
+        .slice(2)
+    );
+
+}
+
+
+/* =========================================================
+   ESCAPE
+========================================================= */
+
+function escapeHTML(valor){
+
+    return String(
+        valor ?? ""
+    )
+
+    .replaceAll(
+        "&",
+        "&amp;"
+    )
+
+    .replaceAll(
+        "<",
+        "&lt;"
+    )
+
+    .replaceAll(
+        ">",
+        "&gt;"
+    )
+
+    .replaceAll(
+        '"',
+        "&quot;"
+    );
+
+}
+
+
+/* =========================================================
+   RECURSOS
+========================================================= */
+
+function renderRecursos(){
+
+    const tbody =
+        document.getElementById(
+            "tablaRecursos"
+        );
+
+
+    tbody.innerHTML = "";
+
+
+    recursos.forEach(
+        (recurso,index) => {
+
+            const tr =
+                document.createElement(
+                    "tr"
+                );
+
+
+            tr.innerHTML = `
+
+                <td class="resource-name">
+
+                    ${escapeHTML(
+                        recurso.nombre
+                    )}
+
+                </td>
+
+
+                <td>
+
+                    <select
+                        class="table-select"
+                        onchange="
+                            recursos[${index}].disponible =
+                            this.value;
+
+                            actualizarIndicadores();
+                        "
+                    >
+
+                        <option
+                            value=""
+                            ${
+                                !recurso.disponible
+                                ? "selected"
+                                : ""
+                            }
+                        >
+                            Seleccionar
+                        </option>
+
+                        <option
+                            value="Sí"
+                            ${
+                                recurso.disponible === "Sí"
+                                ? "selected"
+                                : ""
+                            }
+                        >
+                            Sí
+                        </option>
+
+                        <option
+                            value="No"
+                            ${
+                                recurso.disponible === "No"
+                                ? "selected"
+                                : ""
+                            }
+                        >
+                            No
+                        </option>
+
+                    </select>
+
+                </td>
+
+
+                <td>
+
+                    <input
+                        type="number"
+                        min="0"
+
+                        class="table-input"
+
+                        value="${escapeHTML(
+                            recurso.cantidad
+                        )}"
+
+                        oninput="
+                            recursos[${index}].cantidad =
+                            this.value
+                        "
+                    >
+
+                </td>
+
+            `;
+
+
+            tbody.appendChild(
+                tr
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   AGREGAR FILA
+========================================================= */
+
+function agregarFila(tipo){
+
+    if(
+        tipo === "prevista"
+    ){
+
+        prevista.push({
+
+            id:uid(),
+
+            hora:"",
+
+            descripcion:""
+
+        });
+
+    }
+
+
+    if(
+        tipo === "real"
+    ){
+
+        real.push({
+
+            id:uid(),
+
+            hora:"",
+
+            descripcion:""
+
+        });
+
+    }
+
+
+    if(
+        tipo === "personal"
+    ){
+
+        personal.push({
+
+            id:uid(),
+
+            nombre:"",
+
+            empresa:""
+
+        });
+
+    }
+
+
+    if(
+        tipo === "desvios"
+    ){
+
+        desvios.push({
+
+            id:uid(),
+
+            descripcion:""
+
+        });
+
+    }
+
+
+    if(
+        tipo === "fuertes"
+    ){
+
+        fuertes.push({
+
+            id:uid(),
+
+            descripcion:""
+
+        });
+
+    }
+
+
+    if(
+        tipo === "acciones"
+    ){
+
+        acciones.push({
+
+            id:uid(),
+
+            descripcion:""
+
+        });
+
+    }
+
+
+    if(
+        tipo === "tiempos"
+    ){
+
+        tiempos.push({
+
+            id:uid(),
+
+            descripcion:"",
+
+            tiempo:""
+
+        });
+
+    }
+
+
+    renderTablas();
+
+    actualizarIndicadores();
+
+}
+
+
+/* =========================================================
+   ELIMINAR FILA
+========================================================= */
+
+function eliminarFila(
+    tipo,
+    id
+){
+
+    if(
+        !confirm(
+            "¿Desea eliminar este registro?"
+        )
+    ){
+        return;
+    }
+
+
+    if(tipo === "prevista"){
+
+        prevista =
+            prevista.filter(
+                item =>
+                    item.id !== id
+            );
+
+    }
+
+
+    if(tipo === "real"){
+
+        real =
+            real.filter(
+                item =>
+                    item.id !== id
+            );
+
+    }
+
+
+    if(tipo === "personal"){
+
+        personal =
+            personal.filter(
+                item =>
+                    item.id !== id
+            );
+
+    }
+
+
+    if(tipo === "desvios"){
+
+        desvios =
+            desvios.filter(
+                item =>
+                    item.id !== id
+            );
+
+    }
+
+
+    if(tipo === "fuertes"){
+
+        fuertes =
+            fuertes.filter(
+                item =>
+                    item.id !== id
+            );
+
+    }
+
+
+    if(tipo === "acciones"){
+
+        acciones =
+            acciones.filter(
+                item =>
+                    item.id !== id
+            );
+
+    }
+
+
+    if(tipo === "tiempos"){
+
+        tiempos =
+            tiempos.filter(
+                item =>
+                    item.id !== id
+            );
+
+    }
+
+
+    renderTablas();
+
+    actualizarIndicadores();
+
+}
+
+
+/* =========================================================
+   ACTUALIZAR FILA
+========================================================= */
+
+function actualizarFila(
+    tipo,
+    id,
+    campo,
+    valor
+){
+
+    let lista;
+
+
+    if(tipo === "prevista"){
+        lista = prevista;
+    }
+
+
+    if(tipo === "real"){
+        lista = real;
+    }
+
+
+    if(tipo === "personal"){
+        lista = personal;
+    }
+
+
+    if(tipo === "desvios"){
+        lista = desvios;
+    }
+
+
+    if(tipo === "fuertes"){
+        lista = fuertes;
+    }
+
+
+    if(tipo === "acciones"){
+        lista = acciones;
+    }
+
+
+    if(tipo === "tiempos"){
+        lista = tiempos;
+    }
+
+
+    const item =
+        lista.find(
+            item =>
+                item.id === id
+        );
+
+
+    if(!item){
+        return;
+    }
+
+
+    item[campo] =
+        valor;
+
+
+    actualizarIndicadores();
+
+}
+
+
+/* =========================================================
+   TABLA CRONOLOGÍA
+========================================================= */
+
+function renderCronologia(
+    lista,
+    tbodyId,
+    tipo
+){
+
+    const tbody =
+        document.getElementById(
+            tbodyId
+        );
+
+
+    tbody.innerHTML = "";
+
+
+    lista.forEach(
+        (item,index) => {
+
+            const tr =
+                document.createElement(
+                    "tr"
+                );
+
+
+            tr.innerHTML = `
+
+                <td>
+                    ${index + 1}
+                </td>
+
+
+                <td>
+
+                    <input
+                        type="time"
+
+                        class="table-input"
+
+                        value="${escapeHTML(
+                            item.hora
+                        )}"
+
+                        onchange="
+                            actualizarFila(
+                                '${tipo}',
+                                '${item.id}',
+                                'hora',
+                                this.value
+                            )
+                        "
+                    >
+
+                </td>
+
+
+                <td>
+
+                    <textarea
+                        class="table-area"
+
+                        placeholder="Detalle del paso..."
+
+                        oninput="
+                            actualizarFila(
+                                '${tipo}',
+                                '${item.id}',
+                                'descripcion',
+                                this.value
+                            )
+                        "
+                    >${escapeHTML(item.descripcion)}</textarea>
+
+                </td>
+
+
+                <td>
+
+                    <button
+                        type="button"
+
+                        class="delete-btn"
+
+                        onclick="
+                            eliminarFila(
+                                '${tipo}',
+                                '${item.id}'
+                            )
+                        "
+                    >
+                        ×
+                    </button>
+
+                </td>
+
+            `;
+
+
+            tbody.appendChild(
+                tr
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   TABLA PERSONAL
+========================================================= */
+
+function renderPersonal(){
+
+    const tbody =
+        document.getElementById(
+            "tablaPersonal"
+        );
+
+
+    tbody.innerHTML = "";
+
+
+    personal.forEach(
+        (item,index) => {
+
+            const tr =
+                document.createElement(
+                    "tr"
+                );
+
+
+            tr.innerHTML = `
+
+                <td>
+                    ${index + 1}
+                </td>
+
+
+                <td>
+
+                    <input
+                        type="text"
+
+                        class="table-input"
+
+                        value="${escapeHTML(
+                            item.nombre
+                        )}"
+
+                        placeholder="Apellido y Nombre"
+
+                        oninput="
+                            actualizarFila(
+                                'personal',
+                                '${item.id}',
+                                'nombre',
+                                this.value
+                            )
+                        "
+                    >
+
+                </td>
+
+
+                <td>
+
+                    <input
+                        type="text"
+
+                        class="table-input"
+
+                        value="${escapeHTML(
+                            item.empresa
+                        )}"
+
+                        placeholder="Empresa"
+
+                        oninput="
+                            actualizarFila(
+                                'personal',
+                                '${item.id}',
+                                'empresa',
+                                this.value
+                            )
+                        "
+                    >
+
+                </td>
+
+
+                <td>
+
+                    <button
+                        type="button"
+
+                        class="delete-btn"
+
+                        onclick="
+                            eliminarFila(
+                                'personal',
+                                '${item.id}'
+                            )
+                        "
+                    >
+                        ×
+                    </button>
+
+                </td>
+
+            `;
+
+
+            tbody.appendChild(
+                tr
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   TABLAS DESCRIPCIÓN
+========================================================= */
+
+function renderDescripcion(
+    lista,
+    tbodyId,
+    tipo
+){
+
+    const tbody =
+        document.getElementById(
+            tbodyId
+        );
+
+
+    tbody.innerHTML = "";
+
+
+    lista.forEach(
+        (item,index) => {
+
+            const tr =
+                document.createElement(
+                    "tr"
+                );
+
+
+            tr.innerHTML = `
+
+                <td>
+                    ${index + 1}
+                </td>
+
+
+                <td>
+
+                    <textarea
+                        class="table-area"
+
+                        placeholder="Descripción..."
+
+                        oninput="
+                            actualizarFila(
+                                '${tipo}',
+                                '${item.id}',
+                                'descripcion',
+                                this.value
+                            )
+                        "
+                    >${escapeHTML(item.descripcion)}</textarea>
+
+                </td>
+
+
+                <td>
+
+                    <button
+                        type="button"
+
+                        class="delete-btn"
+
+                        onclick="
+                            eliminarFila(
+                                '${tipo}',
+                                '${item.id}'
+                            )
+                        "
+                    >
+                        ×
+                    </button>
+
+                </td>
+
+            `;
+
+
+            tbody.appendChild(
+                tr
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   TABLA TIEMPOS
+========================================================= */
+
+function renderTiempos(){
+
+    const tbody =
+        document.getElementById(
+            "tablaTiempos"
+        );
+
+
+    tbody.innerHTML = "";
+
+
+    tiempos.forEach(
+        (item,index) => {
+
+            const tr =
+                document.createElement(
+                    "tr"
+                );
+
+
+            tr.innerHTML = `
+
+                <td>
+                    ${index + 1}
+                </td>
+
+
+                <td>
+
+                    <textarea
+                        class="table-area"
+
+                        placeholder="Descripción / Acción..."
+
+                        oninput="
+                            actualizarFila(
+                                'tiempos',
+                                '${item.id}',
+                                'descripcion',
+                                this.value
+                            )
+                        "
+                    >${escapeHTML(item.descripcion)}</textarea>
+
+                </td>
+
+
+                <td>
+
+                    <input
+                        type="text"
+
+                        class="table-input"
+
+                        placeholder="Tiempo"
+
+                        value="${escapeHTML(
+                            item.tiempo
+                        )}"
+
+                        oninput="
+                            actualizarFila(
+                                'tiempos',
+                                '${item.id}',
+                                'tiempo',
+                                this.value
+                            )
+                        "
+                    >
+
+                </td>
+
+
+                <td>
+
+                    <button
+                        type="button"
+
+                        class="delete-btn"
+
+                        onclick="
+                            eliminarFila(
+                                'tiempos',
+                                '${item.id}'
+                            )
+                        "
+                    >
+                        ×
+                    </button>
+
+                </td>
+
+            `;
+
+
+            tbody.appendChild(
+                tr
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   TODAS LAS TABLAS
+========================================================= */
+
+function renderTablas(){
+
+    renderCronologia(
+        prevista,
+        "tablaPrevista",
+        "prevista"
+    );
+
+
+    renderCronologia(
+        real,
+        "tablaReal",
+        "real"
+    );
+
+
+    renderPersonal();
+
+
+    renderDescripcion(
+        desvios,
+        "tablaDesvios",
+        "desvios"
+    );
+
+
+    renderDescripcion(
+        fuertes,
+        "tablaFuertes",
+        "fuertes"
+    );
+
+
+    renderDescripcion(
+        acciones,
+        "tablaAcciones",
+        "acciones"
+    );
+
+
+    renderTiempos();
+
+}
+
+
+/* =========================================================
+   FOTOS
+========================================================= */
+
+function agregarFoto(){
+
+    if(
+        fotos.length >= 6
+    ){
+
+        alert(
+            "Se pueden cargar hasta 6 fotografías."
+        );
+
+        return;
+
+    }
+
+
+    fotos.push({
+
+        id:uid(),
+
+        imagen:"",
+
+        descripcion:""
+
+    });
+
+
+    renderFotos();
+
+    actualizarIndicadores();
+
+}
+
+
+/* =========================================================
+   CARGAR FOTO
+========================================================= */
+
+function cargarFoto(
+    id,
+    input
+){
+
+    const archivo =
+        input.files[0];
+
+
+    if(!archivo){
+        return;
+    }
+
+
+    const lector =
+        new FileReader();
+
+
+    lector.onload =
+        event => {
+
+            const foto =
+                fotos.find(
+                    item =>
+                        item.id === id
+                );
+
+
+            if(!foto){
+                return;
+            }
+
+
+            foto.imagen =
+                event.target.result;
+
+
+            renderFotos();
+
+            actualizarIndicadores();
+
+        };
+
+
+    lector.readAsDataURL(
+        archivo
+    );
+
+}
+
+
+/* =========================================================
+   ELIMINAR FOTO
+========================================================= */
+
+function eliminarFoto(id){
+
+    fotos =
+        fotos.filter(
+            foto =>
+                foto.id !== id
+        );
+
+
+    renderFotos();
+
+    actualizarIndicadores();
+
+}
+
+
+/* =========================================================
+   RENDER FOTOS
+========================================================= */
+
+function renderFotos(){
+
+    const grid =
+        document.getElementById(
+            "photoGrid"
+        );
+
+
+    grid.innerHTML = "";
+
+
+    if(
+        fotos.length === 0
+    ){
+
+        grid.innerHTML = `
+
+            <div
+                style="
+                    grid-column:1/-1;
+                    padding:30px;
+                    border:1px dashed #ccd2d8;
+                    border-radius:10px;
+                    text-align:center;
+                    color:#747d88;
+                "
+            >
+                No hay fotografías cargadas.
+            </div>
+
+        `;
+
+
+        return;
+
+    }
+
+
+    fotos.forEach(
+        (foto,index) => {
+
+            const card =
+                document.createElement(
+                    "div"
+                );
+
+
+            card.className =
+                "photo-card";
+
+
+            card.innerHTML = `
+
+                <div class="photo-preview">
+
+                    ${
+                        foto.imagen
+
+                        ? `
+
+                            <img
+                                src="${foto.imagen}"
+                                alt="Foto ${index + 1}"
+                            >
+
+                          `
+
+                        : `
+
+                            Fotografía ${index + 1}
+
+                          `
+                    }
+
+                </div>
+
+
+                <div class="photo-footer">
+
+                    <input
+                        type="file"
+
+                        accept="image/*"
+
+                        onchange="
+                            cargarFoto(
+                                '${foto.id}',
+                                this
+                            )
+                        "
+                    >
+
+
+                    <input
+                        type="text"
+
+                        class="table-input"
+
+                        placeholder="Descripción"
+
+                        value="${escapeHTML(
+                            foto.descripcion
+                        )}"
+
+                        oninput="
+                            actualizarDescripcionFoto(
+                                '${foto.id}',
+                                this.value
+                            )
+                        "
+                    >
+
+
+                    <button
+                        type="button"
+
+                        class="btn btn-light"
+
+                        onclick="
+                            eliminarFoto(
+                                '${foto.id}'
+                            )
+                        "
+                    >
+                        ELIMINAR
+                    </button>
+
+                </div>
+
+            `;
+
+
+            grid.appendChild(
+                card
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   DESCRIPCIÓN FOTO
+========================================================= */
+
+function actualizarDescripcionFoto(
+    id,
+    valor
+){
+
+    const foto =
+        fotos.find(
+            item =>
+                item.id === id
+        );
+
+
+    if(foto){
+
+        foto.descripcion =
+            valor;
+
+    }
+
+}
+
+
+/* =========================================================
+   RADIO
+========================================================= */
+
+function valorRadio(nombre){
+
+    const seleccionado =
+        document.querySelector(
+            `input[name="${nombre}"]:checked`
+        );
+
+
+    return seleccionado
+        ? seleccionado.value
+        : "";
+
+}
+
+
+/* =========================================================
+   SET RADIO
+========================================================= */
+
+function setRadio(
+    nombre,
+    valor
+){
+
+    if(!valor){
+        return;
+    }
+
+
+    const radio =
+        document.querySelector(
+            `input[name="${nombre}"][value="${valor}"]`
+        );
+
+
+    if(radio){
+
+        radio.checked =
+            true;
+
+    }
+
+}
+
+
+/* =========================================================
+   INDICADORES
+========================================================= */
+
+function actualizarIndicadores(){
+
+    const disponibles =
+        recursos.filter(
+            recurso =>
+                recurso.disponible === "Sí"
+        ).length;
+
+
+    document.getElementById(
+        "statRecursos"
+    ).textContent =
+        disponibles;
+
+
+    document.getElementById(
+        "statPersonal"
+    ).textContent =
+        personal.length;
+
+
+    document.getElementById(
+        "statAcciones"
+    ).textContent =
+        acciones.length;
+
+
+    document.getElementById(
+        "statFotos"
+    ).textContent =
+        fotos.filter(
+            foto =>
+                foto.imagen
+        ).length;
+
+}
+
+
+/* =========================================================
+   OBTENER DATOS
+========================================================= */
+
+function obtenerDatos(){
+
+    return{
+
+        codigo:
+            "PGSN08-F1",
+
+        revision:
+            "Rev.1",
+
+        fechaDocumento:
+            "Jun 2025",
+
+        clasificacion:
+            valorRadio(
+                "clasificacion"
+            ),
+
+        tipo:
+            valorRadio(
+                "tipo"
+            ),
+
+        impacto:
+            valorRadio(
+                "impacto"
+            ),
+
+        respuesta:
+            valorRadio(
+                "respuesta"
+            ),
+
+        dificultad:
+            valorRadio(
+                "dificultad"
+            ),
+
+        comunicacion:
+            document.getElementById(
+                "comunicacion"
+            ).checked,
+
+        movilizacion:
+            document.getElementById(
+                "movilizacion"
+            ).checked,
+
+        salaEntrenamiento:
+            document.getElementById(
+                "salaEntrenamiento"
+            ).checked,
+
+        fechaHora:
+            document.getElementById(
+                "fechaHora"
+            ).value,
+
+        lugar:
+            document.getElementById(
+                "lugar"
+            ).value,
+
+        sector:
+            document.getElementById(
+                "sector"
+            ).value,
+
+        cantidadPersonal:
+            document.getElementById(
+                "cantidadPersonal"
+            ).value,
+
+        escenario:
+            document.getElementById(
+                "escenario"
+            ).value,
+
+        observadorInicial:
+            document.getElementById(
+                "observadorInicial"
+            ).value,
+
+        comunidadesVecinas:
+            document.getElementById(
+                "comunidadesVecinas"
+            ).value,
+
+        responsableSistemas:
+            document.getElementById(
+                "responsableSistemas"
+            ).value,
+
+        coordinadorCampo:
+            document.getElementById(
+                "coordinadorCampo"
+            ).value,
+
+        responsableInstalacion:
+            document.getElementById(
+                "responsableInstalacion"
+            ).value,
+
+        liderRespuesta:
+            document.getElementById(
+                "liderRespuesta"
+            ).value,
+
+        reunionPrevia:
+            document.getElementById(
+                "reunionPrevia"
+            ).value,
+
+        cantidadVeedores:
+            document.getElementById(
+                "cantidadVeedores"
+            ).value,
+
+        equiposInstalacion:
+            document.getElementById(
+                "equiposInstalacion"
+            ).value,
+
+        firmaCoordinador:
+            document.getElementById(
+                "firmaCoordinador"
+            ).value,
+
+        otroRecurso:
+            document.getElementById(
+                "otroRecurso"
+            ).value,
+
+        reunionCierre:
+            document.getElementById(
+                "reunionCierre"
+            ).value,
+
+        recursos:recursos,
+
+        prevista:prevista,
+
+        real:real,
+
+        personal:personal,
+
+        desvios:desvios,
+
+        fuertes:fuertes,
+
+        acciones:acciones,
+
+        tiempos:tiempos,
+
+        fotos:fotos
+
+    };
+
+}
+
+
+/* =========================================================
+   GUARDAR
+========================================================= */
+
+function guardarFormulario(){
+
+    const datos =
+        obtenerDatos();
+
+
+    try{
+
+        localStorage.setItem(
+            "NASER_PGSN08_F1",
+            JSON.stringify(
+                datos
+            )
+        );
+
+
+        document.getElementById(
+            "estadoFormulario"
+        ).textContent =
+            "Cambios guardados";
+
+
+        alert(
+            "Formulario guardado correctamente."
+        );
+
+    }
+
+    catch(error){
+
+        /*
+        En caso de que las fotografías sean muy grandes,
+        guardamos el formulario sin las imágenes.
+        */
+
+        const sinFotos = {
+
+            ...datos,
+
+            fotos:
+                datos.fotos.map(
+                    foto => ({
+
+                        ...foto,
+
+                        imagen:""
+
+                    })
+                )
+
+        };
+
+
+        localStorage.setItem(
+            "NASER_PGSN08_F1",
+            JSON.stringify(
+                sinFotos
+            )
+        );
+
+
+        alert(
+            "Los datos fueron guardados, pero las fotografías eran demasiado grandes para almacenarlas en el navegador."
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   FINALIZAR
+========================================================= */
+
+function finalizarFormulario(){
+
+    if(
+        !valorRadio(
+            "clasificacion"
+        )
+    ){
+
+        alert(
+            "Debe seleccionar la Clasificación del simulacro."
+        );
+
+        return;
+
+    }
+
+
+    if(
+        !valorRadio(
+            "tipo"
+        )
+    ){
+
+        alert(
+            "Debe seleccionar el Tipo de simulacro."
+        );
+
+        return;
+
+    }
+
+
+    if(
+        !document.getElementById(
+            "fechaHora"
+        ).value
+    ){
+
+        alert(
+            "Debe completar la Fecha y hora del simulacro."
+        );
+
+        return;
+
+    }
+
+
+    if(
+        !document.getElementById(
+            "lugar"
+        ).value.trim()
+    ){
+
+        alert(
+            "Debe completar el Lugar."
+        );
+
+        return;
+
+    }
+
+
+    if(
+        !document.getElementById(
+            "escenario"
+        ).value.trim()
+    ){
+
+        alert(
+            "Debe completar la Descripción del escenario de emergencias."
+        );
+
+        return;
+
+    }
+
+
+    guardarFormulario();
+
+
+    document.getElementById(
+        "estadoFormulario"
+    ).textContent =
+        "Documento finalizado";
+
+
+    document.getElementById(
+        "badgeEstado"
+    ).textContent =
+        "FINALIZADO";
+
+
+    alert(
+        "PGSN08-F1 finalizado correctamente."
+    );
+
+}
+
+
+/* =========================================================
+   LIMPIAR
+========================================================= */
+
+function limpiarFormulario(){
+
+    if(
+        !confirm(
+            "¿Desea limpiar completamente el formulario?"
+        )
+    ){
+        return;
+    }
+
+
+    localStorage.removeItem(
+        "NASER_PGSN08_F1"
+    );
+
+
+    document.querySelectorAll(
+        "input[type='text'], input[type='number'], input[type='datetime-local']"
+    )
+    .forEach(
+        campo => {
+
+            campo.value = "";
+
+        }
+    );
+
+
+    document.querySelectorAll(
+        "textarea"
+    )
+    .forEach(
+        campo => {
+
+            campo.value = "";
+
+        }
+    );
+
+
+    document.querySelectorAll(
+        "input[type='radio'], input[type='checkbox']"
+    )
+    .forEach(
+        campo => {
+
+            campo.checked =
+                false;
+
+        }
+    );
+
+
+    document.querySelectorAll(
+        "select"
+    )
+    .forEach(
+        campo => {
+
+            campo.value = "";
+
+        }
+    );
+
+
+    recursos =
+        recursosBase.map(
+            nombre => ({
+
+                nombre:nombre,
+
+                disponible:"",
+
+                cantidad:""
+
+            })
+        );
+
+
+    prevista = [];
+    real = [];
+    personal = [];
+    desvios = [];
+    fuertes = [];
+    acciones = [];
+    tiempos = [];
+    fotos = [];
+
+
+    document.getElementById(
+        "badgeEstado"
+    ).textContent =
+        "EN EDICIÓN";
+
+
+    document.getElementById(
+        "estadoFormulario"
+    ).textContent =
+        "Documento en edición";
+
+
+    renderRecursos();
+
+    renderTablas();
+
+    renderFotos();
+
+    actualizarIndicadores();
+
+}
+
+
+/* =========================================================
+   CARGAR
+========================================================= */
+
+function cargarFormulario(){
+
+    const guardado =
+        localStorage.getItem(
+            "NASER_PGSN08_F1"
+        );
+
+
+    if(!guardado){
+
+        prevista.push({
+
+            id:uid(),
+
+            hora:"",
+
+            descripcion:""
+
+        });
+
+
+        real.push({
+
+            id:uid(),
+
+            hora:"",
+
+            descripcion:""
+
+        });
+
+
+        renderRecursos();
+
+        renderTablas();
+
+        renderFotos();
+
+        actualizarIndicadores();
+
+        return;
+
+    }
+
+
+    try{
+
+        const datos =
+            JSON.parse(
+                guardado
+            );
+
+
+        setRadio(
+            "clasificacion",
+            datos.clasificacion
+        );
+
+
+        setRadio(
+            "tipo",
+            datos.tipo
+        );
+
+
+        setRadio(
+            "impacto",
+            datos.impacto
+        );
+
+
+        setRadio(
+            "respuesta",
+            datos.respuesta
+        );
+
+
+        setRadio(
+            "dificultad",
+            datos.dificultad
+        );
+
+
+        document.getElementById(
+            "comunicacion"
+        ).checked =
+            !!datos.comunicacion;
+
+
+        document.getElementById(
+            "movilizacion"
+        ).checked =
+            !!datos.movilizacion;
+
+
+        document.getElementById(
+            "salaEntrenamiento"
+        ).checked =
+            !!datos.salaEntrenamiento;
+
+
+        const campos = [
+
+            "fechaHora",
+
+            "lugar",
+
+            "sector",
+
+            "cantidadPersonal",
+
+            "escenario",
+
+            "observadorInicial",
+
+            "comunidadesVecinas",
+
+            "responsableSistemas",
+
+            "coordinadorCampo",
+
+            "responsableInstalacion",
+
+            "liderRespuesta",
+
+            "reunionPrevia",
+
+            "cantidadVeedores",
+
+            "equiposInstalacion",
+
+            "firmaCoordinador",
+
+            "otroRecurso",
+
+            "reunionCierre"
+
+        ];
+
+
+        campos.forEach(
+            campo => {
+
+                const elemento =
+                    document.getElementById(
+                        campo
+                    );
+
+
+                if(elemento){
+
+                    elemento.value =
+                        datos[campo] || "";
+
+                }
+
+            }
+        );
+
+
+        recursos =
+            Array.isArray(
+                datos.recursos
+            )
+            ? datos.recursos
+            : recursos;
+
+
+        prevista =
+            Array.isArray(
+                datos.prevista
+            )
+            ? datos.prevista
+            : [];
+
+
+        real =
+            Array.isArray(
+                datos.real
+            )
+            ? datos.real
+            : [];
+
+
+        personal =
+            Array.isArray(
+                datos.personal
+            )
+            ? datos.personal
+            : [];
+
+
+        desvios =
+            Array.isArray(
+                datos.desvios
+            )
+            ? datos.desvios
+            : [];
+
+
+        fuertes =
+            Array.isArray(
+                datos.fuertes
+            )
+            ? datos.fuertes
+            : [];
+
+
+        acciones =
+            Array.isArray(
+                datos.acciones
+            )
+            ? datos.acciones
+            : [];
+
+
+        tiempos =
+            Array.isArray(
+                datos.tiempos
+            )
+            ? datos.tiempos
+            : [];
+
+
+        fotos =
+            Array.isArray(
+                datos.fotos
+            )
+            ? datos.fotos
+            : [];
+
+
+        renderRecursos();
+
+        renderTablas();
+
+        renderFotos();
+
+        actualizarIndicadores();
+
+    }
+
+    catch(error){
+
+        console.error(
+            "Error cargando PGSN08-F1:",
+            error
+        );
+
+
+        renderRecursos();
+
+        renderTablas();
+
+        renderFotos();
+
+    }
+
+}
+
+
+/* =========================================================
+   INICIO
+========================================================= */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    cargarFormulario
+);
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,2471 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>PGSN03-F1 | Pedido de Materiales y Servicios | NASER</title>
+
+<style>
+
+/* =========================================================
+   NASER SRL
+   PGSN03-F1
+   PEDIDO DE MATERIALES Y SERVICIOS
+   Rev.03 - May.25
+========================================================= */
+
+:root{
+    --naser:#009b49;
+    --naser-dark:#007a3a;
+    --black:#111111;
+    --black2:#1b1b1b;
+    --white:#ffffff;
+    --bg:#f1f3f4;
+    --border:#d8dde1;
+    --text:#202124;
+    --muted:#6b7280;
+    --danger:#b91c1c;
+    --shadow:0 4px 18px rgba(0,0,0,.08);
+}
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    font-family:Arial, Helvetica, sans-serif;
+    background:var(--bg);
+    color:var(--text);
+}
+
+input,
+textarea,
+select,
+button{
+    font-family:inherit;
+}
+
+/* =========================================================
+   SIDEBAR
+========================================================= */
+
+.sidebar{
+    position:fixed;
+    left:0;
+    top:0;
+    width:250px;
+    height:100vh;
+    background:#0d0d0d;
+    color:white;
+    display:flex;
+    flex-direction:column;
+    z-index:1000;
+    box-shadow:3px 0 15px rgba(0,0,0,.15);
+}
+
+.brand{
+    padding:26px 22px;
+    border-bottom:1px solid #292929;
+}
+
+.brand-logo{
+    font-size:31px;
+    font-weight:900;
+    letter-spacing:2px;
+}
+
+.brand-logo span{
+    color:var(--naser);
+}
+
+.brand small{
+    display:block;
+    color:#999;
+    font-size:11px;
+    margin-top:7px;
+    letter-spacing:1px;
+}
+
+.sidebar nav{
+    flex:1;
+    padding:18px 12px;
+}
+
+.nav-title{
+    color:#686868;
+    font-size:10px;
+    font-weight:bold;
+    letter-spacing:1.3px;
+    margin:16px 12px 8px;
+}
+
+.nav-link{
+    display:block;
+    color:#ccc;
+    text-decoration:none;
+    padding:13px 15px;
+    border-radius:7px;
+    margin-bottom:5px;
+    font-size:14px;
+    transition:.2s;
+}
+
+.nav-link:hover{
+    background:#202020;
+    color:white;
+}
+
+.nav-link.active{
+    background:var(--naser);
+    color:white;
+    font-weight:bold;
+}
+
+.sidebar-footer{
+    padding:17px;
+    border-top:1px solid #292929;
+    color:#777;
+    font-size:11px;
+}
+
+/* =========================================================
+   MAIN
+========================================================= */
+
+.main{
+    margin-left:250px;
+    min-height:100vh;
+}
+
+.topbar{
+    height:72px;
+    background:white;
+    border-bottom:1px solid var(--border);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:0 34px;
+    position:sticky;
+    top:0;
+    z-index:100;
+}
+
+.topbar h2{
+    font-size:17px;
+}
+
+.topbar p{
+    font-size:12px;
+    color:var(--muted);
+    margin-top:4px;
+}
+
+.document-code{
+    text-align:right;
+}
+
+.document-code strong{
+    display:block;
+    color:var(--naser);
+    font-size:15px;
+}
+
+.document-code span{
+    font-size:11px;
+    color:#777;
+}
+
+.container{
+    width:100%;
+    max-width:1450px;
+    margin:auto;
+    padding:28px;
+}
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.hero{
+    background:#111;
+    color:white;
+    border-left:6px solid var(--naser);
+    border-radius:12px;
+    padding:30px;
+    margin-bottom:20px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:25px;
+    box-shadow:var(--shadow);
+}
+
+.hero-tag{
+    display:inline-block;
+    background:var(--naser);
+    padding:6px 10px;
+    border-radius:4px;
+    font-size:11px;
+    font-weight:bold;
+    margin-bottom:12px;
+}
+
+.hero h1{
+    font-size:27px;
+    margin-bottom:8px;
+}
+
+.hero p{
+    color:#bbb;
+    font-size:13px;
+    line-height:1.5;
+}
+
+.hero-code{
+    min-width:175px;
+    text-align:center;
+    background:#1d1d1d;
+    border:1px solid #333;
+    border-radius:8px;
+    padding:15px;
+}
+
+.hero-code strong{
+    display:block;
+    font-size:18px;
+    margin-bottom:5px;
+}
+
+.hero-code span{
+    font-size:11px;
+    color:#aaa;
+}
+
+/* =========================================================
+   PROGRESO
+========================================================= */
+
+.progress-card{
+    background:white;
+    border-radius:10px;
+    padding:18px 20px;
+    margin-bottom:20px;
+    box-shadow:var(--shadow);
+}
+
+.progress-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    font-size:13px;
+    font-weight:bold;
+    margin-bottom:10px;
+}
+
+#progressPercent{
+    color:var(--naser);
+    font-size:16px;
+}
+
+.progress{
+    width:100%;
+    height:10px;
+    background:#e5e7eb;
+    border-radius:20px;
+    overflow:hidden;
+}
+
+.progress-bar{
+    width:0%;
+    height:100%;
+    background:var(--naser);
+    transition:.3s;
+}
+
+/* =========================================================
+   CARDS
+========================================================= */
+
+.card{
+    background:white;
+    border:1px solid #e3e5e7;
+    border-radius:10px;
+    margin-bottom:20px;
+    overflow:hidden;
+    box-shadow:var(--shadow);
+}
+
+.card-header{
+    background:#111;
+    color:white;
+    padding:16px 20px;
+    display:flex;
+    align-items:center;
+    gap:13px;
+}
+
+.section-number{
+    width:31px;
+    height:31px;
+    background:var(--naser);
+    color:white;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:bold;
+    flex-shrink:0;
+}
+
+.card-header h3{
+    font-size:15px;
+    letter-spacing:.4px;
+}
+
+.card-body{
+    padding:23px;
+}
+
+/* =========================================================
+   FORM
+========================================================= */
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:18px;
+}
+
+.grid-3{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:18px;
+}
+
+.field{
+    display:flex;
+    flex-direction:column;
+    gap:7px;
+}
+
+.field.full{
+    grid-column:1/-1;
+}
+
+label{
+    font-size:11px;
+    text-transform:uppercase;
+    font-weight:bold;
+    color:#555;
+    letter-spacing:.4px;
+}
+
+.required::after{
+    content:" *";
+    color:#c62828;
+}
+
+input,
+textarea,
+select{
+    width:100%;
+    border:1px solid #ccd2d7;
+    border-radius:6px;
+    padding:11px 12px;
+    font-size:14px;
+    background:white;
+    outline:none;
+}
+
+input:focus,
+textarea:focus,
+select:focus{
+    border-color:var(--naser);
+    box-shadow:0 0 0 3px rgba(0,155,73,.10);
+}
+
+textarea{
+    min-height:110px;
+    resize:vertical;
+    line-height:1.5;
+}
+
+.invalid{
+    border-color:#c62828 !important;
+    background:#fff6f6 !important;
+}
+
+/* =========================================================
+   TABLA PEDIDO
+========================================================= */
+
+.table-wrapper{
+    overflow-x:auto;
+}
+
+.order-table{
+    width:100%;
+    border-collapse:collapse;
+    min-width:1050px;
+}
+
+.order-table th{
+    background:#151515;
+    color:white;
+    border:1px solid #333;
+    padding:11px 8px;
+    font-size:11px;
+    text-transform:uppercase;
+    text-align:center;
+}
+
+.order-table th.green{
+    background:var(--naser);
+}
+
+.order-table td{
+    border:1px solid #d8dde1;
+    padding:5px;
+    vertical-align:middle;
+}
+
+.order-table tbody tr:nth-child(even){
+    background:#fafafa;
+}
+
+.order-table input,
+.order-table select{
+    border:1px solid transparent;
+    border-radius:4px;
+    padding:9px;
+    font-size:12px;
+}
+
+.order-table input:focus,
+.order-table select:focus{
+    border-color:var(--naser);
+}
+
+.quantity-input{
+    text-align:center;
+    min-width:90px;
+}
+
+.unit-input{
+    min-width:110px;
+}
+
+.description-input{
+    min-width:320px;
+}
+
+.destination-input{
+    min-width:180px;
+}
+
+.deadline-input{
+    min-width:150px;
+}
+
+.row-number{
+    width:45px;
+    text-align:center;
+    font-weight:bold;
+    color:#555;
+}
+
+.action-cell{
+    width:60px;
+    text-align:center;
+}
+
+/* =========================================================
+   INFO PEDIDO
+========================================================= */
+
+.order-info{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:15px;
+}
+
+.info-box{
+    background:#f8f9fa;
+    border:1px solid #ddd;
+    border-radius:8px;
+    padding:15px;
+}
+
+.info-box small{
+    display:block;
+    color:#777;
+    font-size:10px;
+    font-weight:bold;
+    text-transform:uppercase;
+    margin-bottom:6px;
+}
+
+.info-box strong{
+    font-size:18px;
+}
+
+/* =========================================================
+   BOTONES
+========================================================= */
+
+.table-actions{
+    display:flex;
+    justify-content:flex-end;
+    gap:10px;
+    margin-top:15px;
+}
+
+.actions{
+    background:white;
+    border-radius:10px;
+    padding:18px;
+    box-shadow:var(--shadow);
+    display:flex;
+    justify-content:flex-end;
+    flex-wrap:wrap;
+    gap:10px;
+    margin-bottom:35px;
+}
+
+.btn{
+    border:0;
+    border-radius:6px;
+    padding:11px 18px;
+    font-size:13px;
+    font-weight:bold;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.btn:hover{
+    transform:translateY(-1px);
+}
+
+.btn-primary{
+    background:var(--naser);
+    color:white;
+}
+
+.btn-primary:hover{
+    background:var(--naser-dark);
+}
+
+.btn-dark{
+    background:#171717;
+    color:white;
+}
+
+.btn-gray{
+    background:#e5e7eb;
+    color:#333;
+}
+
+.btn-danger{
+    background:#b91c1c;
+    color:white;
+}
+
+.btn-small{
+    padding:7px 10px;
+    font-size:11px;
+}
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+.status{
+    display:none;
+    padding:13px 16px;
+    margin-bottom:18px;
+    border-radius:7px;
+    font-size:13px;
+    font-weight:bold;
+}
+
+.status.success{
+    display:block;
+    background:#e9f8ef;
+    border:1px solid #b8e6ca;
+    color:#086b36;
+}
+
+.status.error{
+    display:block;
+    background:#fff0f0;
+    border:1px solid #efc3c3;
+    color:#9d1c1c;
+}
+
+/* =========================================================
+   FINALIZADO
+========================================================= */
+
+.finished-badge{
+    display:none;
+    padding:8px 13px;
+    background:#e8f7ef;
+    border:1px solid #a9ddc1;
+    color:#05723a;
+    border-radius:6px;
+    font-size:12px;
+    font-weight:bold;
+}
+
+body.finished .finished-badge{
+    display:inline-block;
+}
+
+body.finished input,
+body.finished textarea,
+body.finished select{
+    pointer-events:none;
+    background:#f4f4f4;
+}
+
+body.finished .delete-row,
+body.finished #addRowBtn{
+    display:none;
+}
+
+.footer{
+    text-align:center;
+    color:#888;
+    font-size:11px;
+    padding:15px;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media(max-width:1000px){
+
+    .sidebar{
+        width:210px;
+    }
+
+    .main{
+        margin-left:210px;
+    }
+
+    .grid-3,
+    .order-info{
+        grid-template-columns:1fr;
+    }
+
+}
+
+@media(max-width:760px){
+
+    .sidebar{
+        position:relative;
+        width:100%;
+        height:auto;
+    }
+
+    .sidebar nav{
+        display:none;
+    }
+
+    .main{
+        margin-left:0;
+    }
+
+    .topbar{
+        height:auto;
+        position:relative;
+        padding:15px;
+    }
+
+    .container{
+        padding:14px;
+    }
+
+    .hero{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    .grid,
+    .grid-3{
+        grid-template-columns:1fr;
+    }
+
+}
+
+/* =========================================================
+   IMPRESIÓN / PDF
+========================================================= */
+
+@media print{
+
+    @page{
+        size:A4 landscape;
+        margin:8mm;
+    }
+
+    body{
+        background:white;
+    }
+
+    .sidebar,
+    .topbar,
+    .progress-card,
+    .actions,
+    .table-actions,
+    .status,
+    .footer,
+    .delete-column{
+        display:none !important;
+    }
+
+    .main{
+        margin:0;
+    }
+
+    .container{
+        padding:0;
+        max-width:none;
+    }
+
+    .hero{
+        background:white !important;
+        color:black !important;
+        border:2px solid black;
+        border-left:6px solid #009b49;
+        border-radius:0;
+        box-shadow:none;
+        padding:12px;
+    }
+
+    .hero p,
+    .hero-code span{
+        color:#333;
+    }
+
+    .hero-code{
+        background:white;
+        color:black;
+        border:1px solid black;
+    }
+
+    .card{
+        box-shadow:none;
+        border:1px solid #444;
+        border-radius:0;
+        break-inside:avoid;
+    }
+
+    .card-header{
+        background:#111 !important;
+        color:white !important;
+        -webkit-print-color-adjust:exact;
+        print-color-adjust:exact;
+        padding:9px 12px;
+    }
+
+    .card-body{
+        padding:10px;
+    }
+
+    .order-table{
+        min-width:0;
+    }
+
+    .order-table th{
+        background:#b7d7a8 !important;
+        color:black !important;
+        border:1px solid black;
+        font-size:8px;
+        padding:5px;
+        -webkit-print-color-adjust:exact;
+        print-color-adjust:exact;
+    }
+
+    .order-table th.green{
+        background:#b7d7a8 !important;
+    }
+
+    .order-table td{
+        border:1px solid black;
+        padding:2px;
+    }
+
+    .order-table input{
+        border:0;
+        padding:4px;
+        font-size:8px;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- =========================================================
+     SIDEBAR
+========================================================= -->
+
+<aside class="sidebar">
+
+    <div class="brand">
+
+        <div class="brand-logo">
+            NASER<span>.</span>
+        </div>
+
+        <small>
+            SISTEMA DE GESTIÓN INTEGRADO
+        </small>
+
+    </div>
+
+    <nav>
+
+        <div class="nav-title">
+            GESTIÓN
+        </div>
+
+        <a href="#" class="nav-link">
+            Inicio
+        </a>
+
+        <a href="#" class="nav-link">
+            Sectores
+        </a>
+
+        <a href="#" class="nav-link active">
+            Pedido de materiales
+        </a>
+
+        <div class="nav-title">
+            FORMULARIO
+        </div>
+
+        <a href="#datos" class="nav-link">
+            1. Datos del pedido
+        </a>
+
+        <a href="#materiales" class="nav-link">
+            2. Materiales y servicios
+        </a>
+
+        <a href="#informacion" class="nav-link">
+            3. Información adicional
+        </a>
+
+    </nav>
+
+    <div class="sidebar-footer">
+        NASER SRL<br>
+        Sistema de Gestión Integrado
+    </div>
+
+</aside>
+
+
+<!-- =========================================================
+     MAIN
+========================================================= -->
+
+<main class="main">
+
+<header class="topbar">
+
+    <div>
+
+        <h2>
+            Compras y Abastecimiento
+        </h2>
+
+        <p>
+            Solicitud de materiales y servicios
+        </p>
+
+    </div>
+
+    <div style="display:flex;align-items:center;gap:15px;">
+
+        <span class="finished-badge">
+            ✓ PEDIDO FINALIZADO
+        </span>
+
+        <div class="document-code">
+
+            <strong>
+                PGSN03-F1
+            </strong>
+
+            <span>
+                Rev.03 · May-25
+            </span>
+
+        </div>
+
+    </div>
+
+</header>
+
+
+<div class="container">
+
+<!-- =========================================================
+     HERO
+========================================================= -->
+
+<section class="hero">
+
+    <div>
+
+        <div class="hero-tag">
+            COMPRAS Y ABASTECIMIENTO
+        </div>
+
+        <h1>
+            Pedido de Materiales y Servicios
+        </h1>
+
+        <p>
+            Registro y solicitud de materiales, insumos,
+            equipos o servicios requeridos por los distintos
+            sectores de NASER.
+        </p>
+
+    </div>
+
+    <div class="hero-code">
+
+        <strong>
+            PGSN03-F1
+        </strong>
+
+        <span>
+            Rev.03 · Mayo 2025
+        </span>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     PROGRESO
+========================================================= -->
+
+<section class="progress-card">
+
+    <div class="progress-header">
+
+        <span>
+            Completado del pedido
+        </span>
+
+        <span id="progressPercent">
+            0%
+        </span>
+
+    </div>
+
+    <div class="progress">
+
+        <div
+            id="progressBar"
+            class="progress-bar">
+        </div>
+
+    </div>
+
+</section>
+
+
+<div
+    id="statusMessage"
+    class="status">
+</div>
+
+
+<form id="orderForm">
+
+<!-- =========================================================
+     1 DATOS PEDIDO
+========================================================= -->
+
+<section
+    class="card"
+    id="datos">
+
+    <div class="card-header">
+
+        <div class="section-number">
+            1
+        </div>
+
+        <h3>
+            DATOS DEL PEDIDO
+        </h3>
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="grid-3">
+
+            <div class="field">
+
+                <label class="required">
+                    Fecha
+                </label>
+
+                <input
+                    type="date"
+                    id="fecha"
+                    data-required>
+
+            </div>
+
+
+            <div class="field">
+
+                <label class="required">
+                    Solicitante
+                </label>
+
+                <input
+                    type="text"
+                    id="solicitante"
+                    data-required
+                    placeholder="Apellido y nombre">
+
+            </div>
+
+
+            <div class="field">
+
+                <label class="required">
+                    N° de pedido
+                </label>
+
+                <input
+                    type="text"
+                    id="numeroPedido"
+                    data-required
+                    placeholder="Ej.: 001-2026">
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     2 MATERIALES
+========================================================= -->
+
+<section
+    class="card"
+    id="materiales">
+
+    <div class="card-header">
+
+        <div class="section-number">
+            2
+        </div>
+
+        <h3>
+            MATERIALES Y SERVICIOS SOLICITADOS
+        </h3>
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="table-wrapper">
+
+            <table class="order-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            N°
+                        </th>
+
+                        <th class="green">
+                            Cantidad
+                        </th>
+
+                        <th class="green">
+                            Unidad
+                        </th>
+
+                        <th class="green">
+                            Descripción
+                        </th>
+
+                        <th class="green">
+                            Destino
+                        </th>
+
+                        <th class="green">
+                            Plazo
+                        </th>
+
+                        <th class="delete-column">
+                            Acción
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody id="orderBody">
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        <div class="table-actions">
+
+            <button
+                type="button"
+                id="addRowBtn"
+                class="btn btn-primary btn-small"
+                onclick="addRow()">
+
+                + Agregar material / servicio
+
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     3 INFORMACIÓN ADICIONAL
+========================================================= -->
+
+<section
+    class="card"
+    id="informacion">
+
+    <div class="card-header">
+
+        <div class="section-number">
+            3
+        </div>
+
+        <h3>
+            INFORMACIÓN ADICIONAL
+        </h3>
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="field">
+
+            <label>
+                Proveedores sugeridos
+            </label>
+
+            <textarea
+                id="proveedores"
+                placeholder="Ingrese empresas o proveedores sugeridos para la compra o contratación."></textarea>
+
+        </div>
+
+
+        <div
+            class="field"
+            style="margin-top:20px;">
+
+            <label>
+                Observaciones
+            </label>
+
+            <textarea
+                id="observaciones"
+                placeholder="Ingrese observaciones, detalles técnicos, requisitos especiales o información adicional."></textarea>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     RESUMEN
+========================================================= -->
+
+<section class="card">
+
+    <div class="card-header">
+
+        <div class="section-number">
+            4
+        </div>
+
+        <h3>
+            RESUMEN DEL PEDIDO
+        </h3>
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="order-info">
+
+            <div class="info-box">
+
+                <small>
+                    Ítems solicitados
+                </small>
+
+                <strong id="totalItems">
+                    0
+                </strong>
+
+            </div>
+
+
+            <div class="info-box">
+
+                <small>
+                    Cantidad total
+                </small>
+
+                <strong id="totalCantidad">
+                    0
+                </strong>
+
+            </div>
+
+
+            <div class="info-box">
+
+                <small>
+                    Estado
+                </small>
+
+                <strong id="estadoPedido">
+                    En preparación
+                </strong>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     ACCIONES
+========================================================= -->
+
+<section class="actions">
+
+    <button
+        type="button"
+        class="btn btn-gray"
+        onclick="clearForm()">
+
+        Limpiar
+
+    </button>
+
+
+    <button
+        type="button"
+        class="btn btn-dark"
+        onclick="saveForm()">
+
+        Guardar
+
+    </button>
+
+
+    <button
+        type="button"
+        class="btn btn-gray"
+        onclick="printForm()">
+
+        Imprimir / PDF
+
+    </button>
+
+
+    <button
+        type="button"
+        class="btn btn-primary"
+        onclick="finalizeForm()">
+
+        Finalizar pedido
+
+    </button>
+
+</section>
+
+</form>
+
+
+<footer class="footer">
+
+    NASER SRL · Sistema de Gestión Integrado ·
+    PGSN03-F1 · Rev.03 · May-25
+
+</footer>
+
+</div>
+
+</main>
+
+
+<script>
+
+/* =========================================================
+   CONFIGURACIÓN
+========================================================= */
+
+const STORAGE_KEY =
+    "NASER_PGSN03_F1";
+
+const orderBody =
+    document.getElementById(
+        "orderBody"
+    );
+
+
+/* =========================================================
+   AGREGAR FILA
+========================================================= */
+
+function addRow(data = {}){
+
+    const row =
+        document.createElement("tr");
+
+
+    row.innerHTML = `
+
+        <td class="row-number"></td>
+
+        <td>
+
+            <input
+                type="number"
+                class="quantity-input cantidad"
+                min="0"
+                step="1"
+                placeholder="0"
+                value="${data.cantidad || ""}">
+
+        </td>
+
+        <td>
+
+            <input
+                type="text"
+                class="unit-input unidad"
+                placeholder="Unidad"
+                value="${escapeHTML(data.unidad || "")}">
+
+        </td>
+
+        <td>
+
+            <input
+                type="text"
+                class="description-input descripcion"
+                placeholder="Descripción del material o servicio"
+                value="${escapeHTML(data.descripcion || "")}">
+
+        </td>
+
+        <td>
+
+            <input
+                type="text"
+                class="destination-input destino"
+                placeholder="Destino / sector"
+                value="${escapeHTML(data.destino || "")}">
+
+        </td>
+
+        <td>
+
+            <input
+                type="text"
+                class="deadline-input plazo"
+                placeholder="Ej.: 48 hs / 15-10-2026"
+                value="${escapeHTML(data.plazo || "")}">
+
+        </td>
+
+        <td class="action-cell delete-column">
+
+            <button
+                type="button"
+                class="btn btn-danger btn-small delete-row"
+                onclick="deleteRow(this)">
+
+                ×
+
+            </button>
+
+        </td>
+
+    `;
+
+
+    orderBody.appendChild(row);
+
+
+    attachRowEvents(row);
+
+    renumberRows();
+
+    updateSummary();
+
+}
+
+
+/* =========================================================
+   ELIMINAR FILA
+========================================================= */
+
+function deleteRow(button){
+
+    const rows =
+        orderBody.querySelectorAll("tr");
+
+
+    if(rows.length <= 1){
+
+        alert(
+            "El pedido debe contener al menos una fila."
+        );
+
+        return;
+
+    }
+
+
+    button
+        .closest("tr")
+        .remove();
+
+
+    renumberRows();
+
+    updateSummary();
+
+}
+
+
+/* =========================================================
+   RENUMERAR FILAS
+========================================================= */
+
+function renumberRows(){
+
+    orderBody
+        .querySelectorAll("tr")
+        .forEach(
+            (row,index) => {
+
+                row.querySelector(
+                    ".row-number"
+                ).textContent =
+                    index + 1;
+
+            }
+        );
+
+}
+
+
+/* =========================================================
+   EVENTOS DE FILA
+========================================================= */
+
+function attachRowEvents(row){
+
+    row.querySelectorAll(
+        "input"
+    ).forEach(input => {
+
+        input.addEventListener(
+            "input",
+            updateSummary
+        );
+
+        input.addEventListener(
+            "change",
+            updateSummary
+        );
+
+    });
+
+}
+
+
+/* =========================================================
+   RESUMEN
+========================================================= */
+
+function updateSummary(){
+
+    const rows =
+        [
+            ...orderBody.querySelectorAll(
+                "tr"
+            )
+        ];
+
+
+    let items = 0;
+
+    let cantidadTotal = 0;
+
+
+    rows.forEach(row => {
+
+        const descripcion =
+            row.querySelector(
+                ".descripcion"
+            ).value.trim();
+
+
+        const cantidad =
+            parseFloat(
+                row.querySelector(
+                    ".cantidad"
+                ).value
+            ) || 0;
+
+
+        if(descripcion){
+
+            items++;
+
+        }
+
+
+        cantidadTotal +=
+            cantidad;
+
+    });
+
+
+    document.getElementById(
+        "totalItems"
+    ).textContent =
+        items;
+
+
+    document.getElementById(
+        "totalCantidad"
+    ).textContent =
+        formatNumber(
+            cantidadTotal
+        );
+
+
+    updateProgress();
+
+}
+
+
+/* =========================================================
+   PROGRESO
+========================================================= */
+
+function updateProgress(){
+
+    let completed = 0;
+
+    let total = 3;
+
+
+    const fecha =
+        document.getElementById(
+            "fecha"
+        ).value;
+
+
+    const solicitante =
+        document.getElementById(
+            "solicitante"
+        ).value.trim();
+
+
+    const numeroPedido =
+        document.getElementById(
+            "numeroPedido"
+        ).value.trim();
+
+
+    if(fecha){
+        completed++;
+    }
+
+    if(solicitante){
+        completed++;
+    }
+
+    if(numeroPedido){
+        completed++;
+    }
+
+
+    const activeRows =
+        [
+            ...orderBody.querySelectorAll(
+                "tr"
+            )
+        ].filter(row => {
+
+            return row.querySelector(
+                ".descripcion"
+            ).value.trim();
+
+        });
+
+
+    activeRows.forEach(row => {
+
+        const fields = [
+
+            row.querySelector(
+                ".cantidad"
+            ),
+
+            row.querySelector(
+                ".unidad"
+            ),
+
+            row.querySelector(
+                ".descripcion"
+            ),
+
+            row.querySelector(
+                ".destino"
+            ),
+
+            row.querySelector(
+                ".plazo"
+            )
+
+        ];
+
+
+        fields.forEach(field => {
+
+            total++;
+
+            if(field.value.trim()){
+                completed++;
+            }
+
+        });
+
+    });
+
+
+    const percent =
+        total
+        ? Math.round(
+            completed /
+            total *
+            100
+        )
+        : 0;
+
+
+    document.getElementById(
+        "progressBar"
+    ).style.width =
+        percent + "%";
+
+
+    document.getElementById(
+        "progressPercent"
+    ).textContent =
+        percent + "%";
+
+}
+
+
+/* =========================================================
+   OBTENER FILAS
+========================================================= */
+
+function collectRows(){
+
+    return [
+
+        ...orderBody.querySelectorAll(
+            "tr"
+        )
+
+    ].map(row => ({
+
+        cantidad:
+            row.querySelector(
+                ".cantidad"
+            ).value,
+
+        unidad:
+            row.querySelector(
+                ".unidad"
+            ).value,
+
+        descripcion:
+            row.querySelector(
+                ".descripcion"
+            ).value,
+
+        destino:
+            row.querySelector(
+                ".destino"
+            ).value,
+
+        plazo:
+            row.querySelector(
+                ".plazo"
+            ).value
+
+    }));
+
+}
+
+
+/* =========================================================
+   GUARDAR
+========================================================= */
+
+function saveForm(){
+
+    const data = {
+
+        fecha:
+            document.getElementById(
+                "fecha"
+            ).value,
+
+        solicitante:
+            document.getElementById(
+                "solicitante"
+            ).value,
+
+        numeroPedido:
+            document.getElementById(
+                "numeroPedido"
+            ).value,
+
+        proveedores:
+            document.getElementById(
+                "proveedores"
+            ).value,
+
+        observaciones:
+            document.getElementById(
+                "observaciones"
+            ).value,
+
+        filas:
+            collectRows(),
+
+        finalizado:
+            document.body
+                .classList
+                .contains(
+                    "finished"
+                ),
+
+        ultimaModificacion:
+            new Date().toISOString()
+
+    };
+
+
+    localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify(data)
+    );
+
+
+    showStatus(
+        "Pedido guardado correctamente.",
+        "success"
+    );
+
+}
+
+
+/* =========================================================
+   CARGAR
+========================================================= */
+
+function loadForm(){
+
+    const stored =
+        localStorage.getItem(
+            STORAGE_KEY
+        );
+
+
+    if(!stored){
+
+        createInitialRows();
+
+        setToday();
+
+        return;
+
+    }
+
+
+    try{
+
+        const data =
+            JSON.parse(stored);
+
+
+        document.getElementById(
+            "fecha"
+        ).value =
+            data.fecha || "";
+
+
+        document.getElementById(
+            "solicitante"
+        ).value =
+            data.solicitante || "";
+
+
+        document.getElementById(
+            "numeroPedido"
+        ).value =
+            data.numeroPedido || "";
+
+
+        document.getElementById(
+            "proveedores"
+        ).value =
+            data.proveedores || "";
+
+
+        document.getElementById(
+            "observaciones"
+        ).value =
+            data.observaciones || "";
+
+
+        orderBody.innerHTML = "";
+
+
+        if(
+            data.filas &&
+            data.filas.length
+        ){
+
+            data.filas.forEach(
+                item =>
+                    addRow(item)
+            );
+
+        }
+        else{
+
+            createInitialRows();
+
+        }
+
+
+        if(data.finalizado){
+
+            document.body.classList.add(
+                "finished"
+            );
+
+            document.getElementById(
+                "estadoPedido"
+            ).textContent =
+                "Finalizado";
+
+        }
+
+
+        updateSummary();
+
+    }
+    catch(error){
+
+        console.error(
+            "Error cargando pedido:",
+            error
+        );
+
+
+        createInitialRows();
+
+        setToday();
+
+    }
+
+}
+
+
+/* =========================================================
+   FILAS INICIALES
+========================================================= */
+
+function createInitialRows(){
+
+    orderBody.innerHTML = "";
+
+
+    /*
+       El formulario original posee numerosas filas.
+       Dejamos 15 filas disponibles inicialmente.
+    */
+
+    for(
+        let i = 0;
+        i < 15;
+        i++
+    ){
+
+        addRow();
+
+    }
+
+}
+
+
+/* =========================================================
+   FECHA ACTUAL
+========================================================= */
+
+function setToday(){
+
+    const field =
+        document.getElementById(
+            "fecha"
+        );
+
+
+    if(field.value){
+        return;
+    }
+
+
+    const today =
+        new Date();
+
+
+    const year =
+        today.getFullYear();
+
+
+    const month =
+        String(
+            today.getMonth() + 1
+        ).padStart(
+            2,
+            "0"
+        );
+
+
+    const day =
+        String(
+            today.getDate()
+        ).padStart(
+            2,
+            "0"
+        );
+
+
+    field.value =
+        `${year}-${month}-${day}`;
+
+}
+
+
+/* =========================================================
+   VALIDAR
+========================================================= */
+
+function validateForm(){
+
+    let valid = true;
+
+    let firstInvalid = null;
+
+
+    const required = [
+
+        document.getElementById(
+            "fecha"
+        ),
+
+        document.getElementById(
+            "solicitante"
+        ),
+
+        document.getElementById(
+            "numeroPedido"
+        )
+
+    ];
+
+
+    required.forEach(field => {
+
+        field.classList.remove(
+            "invalid"
+        );
+
+
+        if(!field.value.trim()){
+
+            field.classList.add(
+                "invalid"
+            );
+
+            valid = false;
+
+
+            if(!firstInvalid){
+
+                firstInvalid =
+                    field;
+
+            }
+
+        }
+
+    });
+
+
+    const rows =
+        [
+            ...orderBody.querySelectorAll(
+                "tr"
+            )
+        ];
+
+
+    const activeRows =
+        rows.filter(row =>
+
+            row.querySelector(
+                ".descripcion"
+            ).value.trim()
+
+        );
+
+
+    if(
+        activeRows.length === 0
+    ){
+
+        valid = false;
+
+        showStatus(
+            "Debe cargar al menos un material o servicio.",
+            "error"
+        );
+
+        return false;
+
+    }
+
+
+    for(
+        const row of activeRows
+    ){
+
+        const fields = [
+
+            row.querySelector(
+                ".cantidad"
+            ),
+
+            row.querySelector(
+                ".unidad"
+            ),
+
+            row.querySelector(
+                ".descripcion"
+            ),
+
+            row.querySelector(
+                ".destino"
+            ),
+
+            row.querySelector(
+                ".plazo"
+            )
+
+        ];
+
+
+        for(
+            const field of fields
+        ){
+
+            field.classList.remove(
+                "invalid"
+            );
+
+
+            if(!field.value.trim()){
+
+                field.classList.add(
+                    "invalid"
+                );
+
+                valid = false;
+
+
+                if(!firstInvalid){
+
+                    firstInvalid =
+                        field;
+
+                }
+
+            }
+
+        }
+
+    }
+
+
+    if(firstInvalid){
+
+        firstInvalid.scrollIntoView({
+            behavior:"smooth",
+            block:"center"
+        });
+
+    }
+
+
+    return valid;
+
+}
+
+
+/* =========================================================
+   FINALIZAR
+========================================================= */
+
+function finalizeForm(){
+
+    if(!validateForm()){
+
+        showStatus(
+            "Complete los campos obligatorios del pedido antes de finalizar.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    const numeroPedido =
+        document.getElementById(
+            "numeroPedido"
+        ).value;
+
+
+    if(
+        !confirm(
+            `¿Confirma finalizar el pedido N° ${numeroPedido}? Una vez finalizado quedará bloqueado.`
+        )
+    ){
+
+        return;
+
+    }
+
+
+    document.body.classList.add(
+        "finished"
+    );
+
+
+    document.getElementById(
+        "estadoPedido"
+    ).textContent =
+        "Finalizado";
+
+
+    saveForm();
+
+
+    showStatus(
+        "Pedido finalizado correctamente.",
+        "success"
+    );
+
+}
+
+
+/* =========================================================
+   LIMPIAR
+========================================================= */
+
+function clearForm(){
+
+    if(
+        !confirm(
+            "¿Desea eliminar todos los datos cargados en este pedido?"
+        )
+    ){
+
+        return;
+
+    }
+
+
+    localStorage.removeItem(
+        STORAGE_KEY
+    );
+
+
+    document.getElementById(
+        "orderForm"
+    ).reset();
+
+
+    document.body.classList.remove(
+        "finished"
+    );
+
+
+    document.getElementById(
+        "estadoPedido"
+    ).textContent =
+        "En preparación";
+
+
+    createInitialRows();
+
+    setToday();
+
+    updateSummary();
+
+
+    document.querySelectorAll(
+        ".invalid"
+    ).forEach(element => {
+
+        element.classList.remove(
+            "invalid"
+        );
+
+    });
+
+
+    showStatus(
+        "Pedido limpiado correctamente.",
+        "success"
+    );
+
+}
+
+
+/* =========================================================
+   IMPRIMIR
+========================================================= */
+
+function printForm(){
+
+    updateSummary();
+
+    window.print();
+
+}
+
+
+/* =========================================================
+   MENSAJES
+========================================================= */
+
+function showStatus(
+    message,
+    type
+){
+
+    const status =
+        document.getElementById(
+            "statusMessage"
+        );
+
+
+    status.className =
+        "status " + type;
+
+
+    status.textContent =
+        message;
+
+
+    setTimeout(
+        () => {
+
+            status.className =
+                "status";
+
+        },
+        4500
+    );
+
+}
+
+
+/* =========================================================
+   NÚMEROS
+========================================================= */
+
+function formatNumber(value){
+
+    if(
+        Number.isInteger(value)
+    ){
+
+        return value;
+
+    }
+
+    return value.toFixed(2);
+
+}
+
+
+/* =========================================================
+   SEGURIDAD HTML
+========================================================= */
+
+function escapeHTML(value){
+
+    return String(value)
+
+        .replaceAll(
+            "&",
+            "&amp;"
+        )
+
+        .replaceAll(
+            "<",
+            "&lt;"
+        )
+
+        .replaceAll(
+            ">",
+            "&gt;"
+        )
+
+        .replaceAll(
+            '"',
+            "&quot;"
+        )
+
+        .replaceAll(
+            "'",
+            "&#039;"
+        );
+
+}
+
+
+/* =========================================================
+   EVENTOS
+========================================================= */
+
+document.querySelectorAll(
+    "#fecha, #solicitante, #numeroPedido, #proveedores, #observaciones"
+).forEach(field => {
+
+    field.addEventListener(
+        "input",
+        updateProgress
+    );
+
+    field.addEventListener(
+        "change",
+        updateProgress
+    );
+
+});
+
+
+/* =========================================================
+   CTRL + S
+========================================================= */
+
+document.addEventListener(
+    "keydown",
+    event => {
+
+        if(
+            (event.ctrlKey || event.metaKey)
+            &&
+            event.key.toLowerCase() === "s"
+        ){
+
+            event.preventDefault();
+
+            saveForm();
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   INICIO
+========================================================= */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    loadForm
+);
+
+</script>
+
+</body>
+</html>

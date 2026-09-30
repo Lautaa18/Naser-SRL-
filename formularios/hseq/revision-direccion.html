@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PGSN04-F11 - Revisión por la Dirección</title>
+
+  <style>
+    :root{
+      --bg:#f2f3f5;
+      --panel:#ffffff;
+      --border:#d8dde3;
+      --text:#0f1720;
+      --muted:#667085;
+      --dark:#050608;
+      --dark-2:#111318;
+      --green:#009b49;
+      --green-soft:#e7f6ee;
+      --shadow:0 10px 30px rgba(15, 23, 32, .06);
+      --radius:16px;
+    }
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:Arial, Helvetica, sans-serif;
+    }
+
+    body{
+      background:var(--bg);
+      color:var(--text);
+    }
+
+    .app{
+      display:flex;
+      min-height:100vh;
+      width:100%;
+    }
+
+    /* =========================
+       SIDEBAR
+    ========================= */
+    .sidebar{
+      width:320px;
+      background:#020304;
+      color:#fff;
+      display:flex;
+      flex-direction:column;
+      border-right:1px solid rgba(255,255,255,.05);
+    }
+
+    .sidebar-brand{
+      padding:38px 34px;
+      font-size:26px;
+      font-weight:800;
+      letter-spacing:1px;
+      border-bottom:1px solid rgba(255,255,255,.08);
+    }
+
+    .sidebar-group{
+      padding:28px 0 10px;
+    }
+
+    .sidebar-label{
+      padding:0 34px 14px;
+      color:#8d97a5;
+      font-size:13px;
+      letter-spacing:1.2px;
+      text-transform:uppercase;
+    }
+
+    .sidebar-item{
+      display:flex;
+      align-items:center;
+      gap:16px;
+      padding:16px 34px;
+      color:#d7dbe2;
+      text-decoration:none;
+      transition:.2s;
+      border-left:3px solid transparent;
+    }
+
+    .sidebar-item:hover{
+      background:#0b0d11;
+    }
+
+    .sidebar-item.active{
+      background:linear-gradient(90deg, rgba(255,255,255,.07), transparent);
+      border-left:3px solid var(--green);
+      color:#fff;
+    }
+
+    .sidebar-number{
+      color:#00c35d;
+      font-weight:800;
+      font-size:18px;
+      width:26px;
+      text-align:center;
+      flex-shrink:0;
+    }
+
+    .sidebar-text{
+      font-size:17px;
+    }
+
+    /* =========================
+       MAIN
+    ========================= */
+    .main{
+      flex:1;
+      min-width:0;
+    }
+
+    .topbar{
+      height:84px;
+      background:#efefef;
+      border-bottom:1px solid #d9dde2;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:20px;
+      padding:0 34px 0 38px;
+    }
+
+    .breadcrumbs{
+      color:#5f6773;
+      font-size:14px;
+    }
+
+    .breadcrumbs strong{
+      color:#3d4652;
+      font-weight:500;
+    }
+
+    .topbar-right{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .pill{
+      padding:10px 16px;
+      border-radius:10px;
+      font-size:13px;
+      font-weight:700;
+      border:1px solid transparent;
+      white-space:nowrap;
+    }
+
+    .pill.gray{
+      background:#e3e4e6;
+      color:#58606c;
+    }
+
+    .pill.green{
+      background:var(--green-soft);
+      color:#007d3b;
+    }
+
+    .page{
+      padding:34px;
+    }
+
+    /* =========================
+       HERO
+    ========================= */
+    .hero{
+      position:relative;
+      overflow:hidden;
+      border-radius:18px;
+      padding:44px 42px 40px;
+      background:
+        radial-gradient(circle at 95% 15%, rgba(0,155,73,.28) 0, rgba(0,155,73,.18) 18%, transparent 19%),
+        linear-gradient(90deg, #050608 0%, #0b0d11 45%, #17191f 100%);
+      color:#fff;
+      min-height:190px;
+      box-shadow:var(--shadow);
+    }
+
+    .hero-kicker{
+      color:#00d166;
+      font-size:13px;
+      letter-spacing:3px;
+      text-transform:uppercase;
+      margin-bottom:14px;
+    }
+
+    .hero h1{
+      font-size:40px;
+      margin-bottom:16px;
+      line-height:1.1;
+    }
+
+    .hero p{
+      max-width:980px;
+      color:#eef1f4;
+      font-size:16px;
+      line-height:1.6;
+    }
+
+    /* =========================
+       STATS
+    ========================= */
+    .stats{
+      display:grid;
+      grid-template-columns:repeat(3, 1fr);
+      gap:16px;
+      margin:28px 0 24px;
+    }
+
+    .stat-card{
+      background:var(--panel);
+      border:1px solid var(--border);
+      border-radius:14px;
+      padding:20px 22px;
+      box-shadow:0 4px 12px rgba(15,23,32,.03);
+    }
+
+    .stat-card .label{
+      font-size:13px;
+      color:#6b7280;
+      text-transform:uppercase;
+      margin-bottom:8px;
+    }
+
+    .stat-card .value{
+      font-size:38px;
+      font-weight:800;
+      line-height:1;
+    }
+
+    .stat-card.green .value{
+      color:var(--green);
+    }
+
+    .stat-card.dark .value{
+      color:#111827;
+    }
+
+    /* =========================
+       CONTENT CARD
+    ========================= */
+    .content-card{
+      background:#fff;
+      border:1px solid var(--border);
+      border-radius:16px;
+      overflow:hidden;
+      box-shadow:var(--shadow);
+    }
+
+    .content-header{
+      padding:24px 26px;
+      display:flex;
+      align-items:center;
+      gap:16px;
+      border-bottom:1px solid var(--border);
+    }
+
+    .content-index{
+      width:50px;
+      height:50px;
+      border-radius:10px;
+      background:linear-gradient(180deg, #15171b, #0c0e12);
+      color:#00d166;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:18px;
+      font-weight:800;
+      flex-shrink:0;
+    }
+
+    .content-title h2{
+      font-size:20px;
+      margin-bottom:4px;
+    }
+
+    .content-title p{
+      color:#6b7280;
+      font-size:14px;
+    }
+
+    .content-body{
+      padding:28px;
+    }
+
+    .info-box{
+      border:1px solid #cfead9;
+      border-left:4px solid var(--green);
+      background:#fbfefc;
+      border-radius:10px;
+      padding:18px 20px;
+      color:#374151;
+      line-height:1.65;
+      margin-bottom:24px;
+    }
+
+    .info-box strong{
+      color:#007a3a;
+    }
+
+    /* =========================
+       BLOCKS
+    ========================= */
+    .block{
+      border:1px solid var(--border);
+      border-radius:14px;
+      overflow:hidden;
+      margin-bottom:22px;
+      background:#fff;
+    }
+
+    .block-header{
+      background:#f8f9fb;
+      border-bottom:1px solid var(--border);
+      padding:16px 20px;
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
+
+    .block-number{
+      width:34px;
+      height:34px;
+      border-radius:8px;
+      background:var(--green-soft);
+      color:var(--green);
+      font-size:13px;
+      font-weight:800;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex-shrink:0;
+    }
+
+    .block-header h3{
+      font-size:16px;
+      margin-bottom:2px;
+    }
+
+    .block-header p{
+      color:#6b7280;
+      font-size:13px;
+    }
+
+    .block-body{
+      padding:20px;
+    }
+
+    /* =========================
+       FORM
+    ========================= */
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(2, 1fr);
+      gap:16px;
+    }
+
+    .field{
+      display:flex;
+      flex-direction:column;
+      gap:7px;
+    }
+
+    .field.full{
+      grid-column:1 / -1;
+    }
+
+    .field label{
+      font-size:12px;
+      font-weight:700;
+      color:#4b5563;
+      text-transform:uppercase;
+      letter-spacing:.4px;
+    }
+
+    .field input,
+    .field textarea{
+      width:100%;
+      border:1px solid #d5dae1;
+      border-radius:10px;
+      background:#fff;
+      padding:12px 14px;
+      font-size:14px;
+      color:#111827;
+      outline:none;
+      transition:.2s;
+    }
+
+    .field input:focus,
+    .field textarea:focus{
+      border-color:var(--green);
+      box-shadow:0 0 0 3px rgba(0,155,73,.12);
+    }
+
+    .field textarea{
+      min-height:100px;
+      resize:vertical;
+    }
+
+    /* =========================
+       TABLE
+    ========================= */
+    .table-wrap{
+      overflow:auto;
+      border:1px solid var(--border);
+      border-radius:12px;
+    }
+
+    table{
+      width:100%;
+      min-width:1050px;
+      border-collapse:collapse;
+      background:#fff;
+    }
+
+    thead{
+      background:#0e1013;
+      color:#fff;
+    }
+
+    th{
+      padding:14px 10px;
+      font-size:12px;
+      text-transform:uppercase;
+      letter-spacing:.4px;
+      border-right:1px solid rgba(255,255,255,.08);
+      text-align:center;
+      white-space:nowrap;
+    }
+
+    th:last-child{
+      border-right:none;
+    }
+
+    td{
+      border-right:1px solid #e5e7eb;
+      border-bottom:1px solid #e5e7eb;
+      padding:10px;
+      vertical-align:top;
+      font-size:14px;
+    }
+
+    td:last-child{
+      border-right:none;
+    }
+
+    tbody tr:hover{
+      background:#fafcfb;
+    }
+
+    td.process-cell{
+      min-width:260px;
+      font-weight:700;
+      color:#111827;
+      background:#fcfcfd;
+    }
+
+    .table-textarea{
+      width:100%;
+      min-height:74px;
+      border:1px solid #d5dae1;
+      border-radius:10px;
+      padding:10px 12px;
+      resize:vertical;
+      outline:none;
+      font-size:14px;
+      color:#111827;
+      background:#fff;
+      transition:.2s;
+    }
+
+    .table-textarea:focus{
+      border-color:var(--green);
+      box-shadow:0 0 0 3px rgba(0,155,73,.12);
+    }
+
+    /* =========================
+       ACTIONS
+    ========================= */
+    .actions{
+      margin-top:24px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+      flex-wrap:wrap;
+    }
+
+    .status-line{
+      font-size:14px;
+      color:#6b7280;
+    }
+
+    .status-line strong{
+      color:#111827;
+    }
+
+    .buttons{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .btn{
+      border:none;
+      border-radius:10px;
+      padding:12px 18px;
+      font-size:13px;
+      font-weight:700;
+      cursor:pointer;
+      transition:.2s;
+    }
+
+    .btn:hover{
+      transform:translateY(-1px);
+    }
+
+    .btn-dark{
+      background:#111318;
+      color:#fff;
+    }
+
+    .btn-light{
+      background:#eef1f4;
+      color:#374151;
+    }
+
+    .btn-green{
+      background:var(--green);
+      color:#fff;
+    }
+
+    /* =========================
+       RESPONSIVE
+    ========================= */
+    @media (max-width: 1200px){
+      .sidebar{
+        width:260px;
+      }
+
+      .stats{
+        grid-template-columns:1fr;
+      }
+    }
+
+    @media (max-width: 900px){
+      .app{
+        flex-direction:column;
+      }
+
+      .sidebar{
+        width:100%;
+      }
+
+      .topbar{
+        flex-direction:column;
+        height:auto;
+        align-items:flex-start;
+        padding:18px 22px;
+      }
+
+      .page{
+        padding:22px;
+      }
+
+      .hero{
+        padding:30px 24px;
+      }
+
+      .hero h1{
+        font-size:30px;
+      }
+
+      .grid{
+        grid-template-columns:1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-brand">NASER</div>
+
+      <div class="sidebar-group">
+        <div class="sidebar-label">Documento</div>
+
+        <a href="#seccion1" class="sidebar-item active">
+          <span class="sidebar-number">01</span>
+          <span class="sidebar-text">Revisión por la Dirección</span>
+        </a>
+
+        <a href="#seccion2" class="sidebar-item">
+          <span class="sidebar-number">02</span>
+          <span class="sidebar-text">Cierre</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main">
+
+      <div class="topbar">
+        <div class="breadcrumbs">
+          <strong>NASER</strong> / Gestión / Revisión por la Dirección
+        </div>
+
+        <div class="topbar-right">
+          <span class="pill gray">EN EDICIÓN</span>
+          <span class="pill green">PGSN04-F11 · Rev.03 Sep25</span>
+        </div>
+      </div>
+
+      <div class="page">
+
+        <!-- HERO -->
+        <section class="hero">
+          <div class="hero-kicker">REVISIÓN POR LA DIRECCIÓN</div>
+          <h1>Revisión por la Dirección</h1>
+          <p>
+            Registro y análisis de resultados, acciones, desempeño de procesos,
+            oportunidades de mejora, cambios en el sistema de gestión y necesidad de recursos.
+          </p>
+        </section>
+
+        <!-- STATS -->
+        <section class="stats">
+          <div class="stat-card dark">
+            <div class="label">Total de procesos</div>
+            <div class="value" id="statTotal">20</div>
+          </div>
+
+          <div class="stat-card green">
+            <div class="label">Con resultados cargados</div>
+            <div class="value" id="statResultados">0</div>
+          </div>
+
+          <div class="stat-card dark">
+            <div class="label">Con acciones cargadas</div>
+            <div class="value" id="statAcciones">0</div>
+          </div>
+        </section>
+
+        <!-- CONTENT -->
+        <section class="content-card" id="seccion1">
+
+          <div class="content-header">
+            <div class="content-index">01</div>
+            <div class="content-title">
+              <h2>Revisión por la Dirección</h2>
+              <p>PGSN04-F11 · Rev.03 Sep25</p>
+            </div>
+          </div>
+
+          <div class="content-body">
+
+            <div class="info-box">
+              Complete los datos generales y luego registre en cada proceso los
+              <strong>resultados</strong> y las <strong>acciones</strong> correspondientes.
+              Al final podrá completar el resumen de cierre y guardar el formulario.
+            </div>
+
+            <!-- DATOS GENERALES -->
+            <section class="block">
+              <div class="block-header">
+                <div class="block-number">01</div>
+                <div>
+                  <h3>Datos generales</h3>
+                  <p>Información principal del registro</p>
+                </div>
+              </div>
+
+              <div class="block-body">
+                <div class="grid">
+                  <div class="field">
+                    <label>Fecha</label>
+                    <input type="date" id="fecha">
+                  </div>
+
+                  <div class="field">
+                    <label>Lugar</label>
+                    <input type="text" id="lugar" placeholder="Ingrese el lugar">
+                  </div>
+
+                  <div class="field">
+                    <label>Periodo de evaluación</label>
+                    <input type="text" id="periodo" placeholder="Ej: Enero - Septiembre 2025">
+                  </div>
+
+                  <div class="field">
+                    <label>Participantes</label>
+                    <input type="text" id="participantes" placeholder="Ingrese participantes">
+                  </div>
+
+                  <div class="field full">
+                    <label>Fecha de última revisión por la dirección</label>
+                    <input type="text" id="fechaUltimaRevision" placeholder="Ingrese fecha de la última revisión">
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- TABLA PRINCIPAL -->
+            <section class="block">
+              <div class="block-header">
+                <div class="block-number">02</div>
+                <div>
+                  <h3>Procesos evaluados</h3>
+                  <p>Resultados y acciones por cada proceso</p>
+                </div>
+              </div>
+
+              <div class="block-body">
+                <div class="table-wrap">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th style="width:34%">Proceso</th>
+                        <th style="width:33%">Resultados</th>
+                        <th style="width:33%">Acciones</th>
+                      </tr>
+                    </thead>
+                    <tbody id="tablaProcesos"></tbody>
+                  </table>
+                </div>
+              </div>
+            </section>
+
+            <!-- CIERRE -->
+            <section class="block" id="seccion2">
+              <div class="block-header">
+                <div class="block-number">03</div>
+                <div>
+                  <h3>Cierre</h3>
+                  <p>Conclusiones principales del análisis</p>
+                </div>
+              </div>
+
+              <div class="block-body">
+                <div class="grid">
+                  <div class="field full">
+                    <label>Oportunidades de Mejora</label>
+                    <textarea id="oportunidadesMejora" placeholder="Detalle oportunidades de mejora..."></textarea>
+                  </div>
+
+                  <div class="field full">
+                    <label>Cambios en el Sistema de Gestión</label>
+                    <textarea id="cambiosSistema" placeholder="Detalle cambios en el sistema de gestión..."></textarea>
+                  </div>
+
+                  <div class="field full">
+                    <label>Necesidad de Recursos</label>
+                    <textarea id="necesidadRecursos" placeholder="Detalle necesidad de recursos..."></textarea>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- ACTIONS -->
+            <div class="actions">
+              <div class="status-line">
+                Estado: <strong id="estadoFormulario">Formulario en proceso</strong>
+              </div>
+
+              <div class="buttons">
+                <button class="btn btn-light" onclick="limpiarFormulario()">Limpiar</button>
+                <button class="btn btn-dark" onclick="guardarFormulario()">Guardar</button>
+                <button class="btn btn-green" onclick="finalizarFormulario()">Finalizar formulario</button>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const procesos = [
+      "Revisiones previas",
+      "Cambios en contexto interno y externo",
+      "Satisfacción del cliente",
+      "Retroalimentación de partes interesadas",
+      "Cumplimiento de objetivos",
+      "Desempeño de Slick Line",
+      "Desempeño de Administración",
+      "Desempeño de RRHH",
+      "Desempeño de Compras",
+      "Desempeño de HSE",
+      "Desempeño de SG",
+      "Desempeño de Mantenimiento",
+      "Desempeño de Ventas",
+      "No Conformidades y Acciones Correctivas",
+      "Seguimiento y Medición",
+      "Auditoría Interna",
+      "Visitas Gerenciales",
+      "Desempeño de proveedores",
+      "Adecuación de recursos",
+      "Eficacia de acciones para abordar Riesgos y Oportunidades",
+      "Oportunidades de mejora",
+      "Resumen"
+    ];
+
+    function generarTabla(){
+      const tbody = document.getElementById("tablaProcesos");
+      tbody.innerHTML = "";
+
+      procesos.forEach((proceso, index) => {
+        tbody.innerHTML += `
+          <tr>
+            <td class="process-cell">${proceso}</td>
+            <td>
+              <textarea
+                class="table-textarea resultado"
+                data-index="${index}"
+                placeholder="Ingrese resultados..."
+                oninput="actualizarResumen()"
+              ></textarea>
+            </td>
+            <td>
+              <textarea
+                class="table-textarea accion"
+                data-index="${index}"
+                placeholder="Ingrese acciones..."
+                oninput="actualizarResumen()"
+              ></textarea>
+            </td>
+          </tr>
+        `;
+      });
+
+      document.getElementById("statTotal").textContent = procesos.length;
+    }
+
+    function actualizarResumen(){
+      const resultados = document.querySelectorAll(".resultado");
+      const acciones = document.querySelectorAll(".accion");
+
+      let resultadosCargados = 0;
+      let accionesCargadas = 0;
+
+      resultados.forEach(item => {
+        if(item.value.trim() !== "") resultadosCargados++;
+      });
+
+      acciones.forEach(item => {
+        if(item.value.trim() !== "") accionesCargadas++;
+      });
+
+      document.getElementById("statResultados").textContent = resultadosCargados;
+      document.getElementById("statAcciones").textContent = accionesCargadas;
+
+      if(resultadosCargados === procesos.length && accionesCargadas === procesos.length){
+        document.getElementById("estadoFormulario").textContent = "Formulario completo";
+      }else{
+        document.getElementById("estadoFormulario").textContent = "Formulario en proceso";
+      }
+    }
+
+    function obtenerProcesos(){
+      const filas = [];
+
+      procesos.forEach((proceso, index) => {
+        const resultado = document.querySelector(`.resultado[data-index="${index}"]`).value;
+        const accion = document.querySelector(`.accion[data-index="${index}"]`).value;
+
+        filas.push({
+          proceso,
+          resultado,
+          accion
+        });
+      });
+
+      return filas;
+    }
+
+    function guardarFormulario(){
+      const datos = {
+        documento: "PGSN04-F11",
+        revision: "Rev.03",
+        fechaDocumento: "Sep25",
+        fecha: document.getElementById("fecha").value,
+        lugar: document.getElementById("lugar").value,
+        periodo: document.getElementById("periodo").value,
+        participantes: document.getElementById("participantes").value,
+        fechaUltimaRevision: document.getElementById("fechaUltimaRevision").value,
+        oportunidadesMejora: document.getElementById("oportunidadesMejora").value,
+        cambiosSistema: document.getElementById("cambiosSistema").value,
+        necesidadRecursos: document.getElementById("necesidadRecursos").value,
+        procesos: obtenerProcesos()
+      };
+
+      localStorage.setItem("NASER_PGSN04_F11", JSON.stringify(datos));
+      alert("Formulario guardado correctamente.");
+    }
+
+    function finalizarFormulario(){
+      const requeridos = [
+        { id: "fecha", nombre: "Fecha" },
+        { id: "lugar", nombre: "Lugar" },
+        { id: "periodo", nombre: "Periodo de evaluación" },
+        { id: "participantes", nombre: "Participantes" }
+      ];
+
+      for(const campo of requeridos){
+        const el = document.getElementById(campo.id);
+        if(!el.value.trim()){
+          alert("Debe completar: " + campo.nombre);
+          el.focus();
+          return;
+        }
+      }
+
+      guardarFormulario();
+      document.getElementById("estadoFormulario").textContent = "Formulario finalizado";
+      alert("PGSN04-F11 finalizado correctamente.");
+    }
+
+    function limpiarFormulario(){
+      if(!confirm("¿Desea limpiar completamente el formulario?")) return;
+
+      document.querySelectorAll("input, textarea").forEach(campo => {
+        campo.value = "";
+      });
+
+      localStorage.removeItem("NASER_PGSN04_F11");
+      actualizarResumen();
+    }
+
+    function cargarFormulario(){
+      const guardado = localStorage.getItem("NASER_PGSN04_F11");
+      if(!guardado) return;
+
+      try{
+        const datos = JSON.parse(guardado);
+
+        document.getElementById("fecha").value = datos.fecha || "";
+        document.getElementById("lugar").value = datos.lugar || "";
+        document.getElementById("periodo").value = datos.periodo || "";
+        document.getElementById("participantes").value = datos.participantes || "";
+        document.getElementById("fechaUltimaRevision").value = datos.fechaUltimaRevision || "";
+        document.getElementById("oportunidadesMejora").value = datos.oportunidadesMejora || "";
+        document.getElementById("cambiosSistema").value = datos.cambiosSistema || "";
+        document.getElementById("necesidadRecursos").value = datos.necesidadRecursos || "";
+
+        if(Array.isArray(datos.procesos)){
+          datos.procesos.forEach((item, index) => {
+            const resultado = document.querySelector(`.resultado[data-index="${index}"]`);
+            const accion = document.querySelector(`.accion[data-index="${index}"]`);
+            if(resultado) resultado.value = item.resultado || "";
+            if(accion) accion.value = item.accion || "";
+          });
+        }
+
+        actualizarResumen();
+      } catch(error){
+        console.error("Error al cargar formulario:", error);
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      generarTabla();
+      cargarFormulario();
+      actualizarResumen();
+    });
+  </script>
+</body>
+</html>

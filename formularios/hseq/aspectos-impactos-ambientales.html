@@ -1,0 +1,3220 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>NASER | Aspectos e Impactos Ambientales</title>
+
+<style>
+
+:root{
+    --green:#009b49;
+    --green-dark:#007a3a;
+    --green-light:#e8f6ee;
+
+    --black:#101010;
+    --black-2:#181818;
+
+    --bg:#f2f3f5;
+    --white:#ffffff;
+
+    --border:#d9dde3;
+
+    --text:#15191e;
+    --muted:#69717c;
+
+    --warning:#b54708;
+    --danger:#b42318;
+
+    --shadow:0 8px 28px rgba(16,24,40,.06);
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    font-family:Arial, Helvetica, sans-serif;
+    background:var(--bg);
+    color:var(--text);
+}
+
+/* =========================================================
+   ESTRUCTURA
+========================================================= */
+
+.app{
+    display:flex;
+    min-height:100vh;
+}
+
+/* =========================================================
+   SIDEBAR
+========================================================= */
+
+.sidebar{
+    position:fixed;
+    top:0;
+    left:0;
+    bottom:0;
+
+    width:320px;
+
+    background:#0d0d0d;
+    color:#fff;
+
+    border-right:1px solid #252525;
+
+    z-index:1000;
+}
+
+.brand{
+    height:120px;
+
+    display:flex;
+    align-items:center;
+
+    padding:0 34px;
+
+    border-bottom:1px solid #292929;
+
+    font-size:34px;
+    font-weight:900;
+    letter-spacing:4px;
+}
+
+.sidebar-section{
+    padding:28px 0;
+}
+
+.sidebar-label{
+    padding:0 34px 14px;
+
+    color:#7d8793;
+
+    font-size:12px;
+    letter-spacing:1.2px;
+
+    text-transform:uppercase;
+}
+
+.nav-link{
+    min-height:58px;
+
+    display:flex;
+    align-items:center;
+
+    gap:15px;
+
+    padding:0 30px;
+
+    color:#e6e6e6;
+
+    text-decoration:none;
+
+    border-left:4px solid transparent;
+
+    transition:.2s;
+}
+
+.nav-link:hover{
+    background:#151515;
+}
+
+.nav-link.active{
+    background:#191919;
+    border-left-color:var(--green);
+}
+
+.nav-number{
+    width:28px;
+
+    color:#00bd5a;
+
+    font-size:18px;
+    font-weight:800;
+}
+
+.nav-name{
+    font-size:17px;
+}
+
+/* =========================================================
+   MAIN
+========================================================= */
+
+.main{
+    width:calc(100% - 320px);
+    margin-left:320px;
+}
+
+/* =========================================================
+   TOPBAR
+========================================================= */
+
+.topbar{
+    min-height:82px;
+
+    padding:0 40px;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    gap:20px;
+
+    background:#fff;
+
+    border-bottom:1px solid var(--border);
+}
+
+.breadcrumb{
+    color:#59616c;
+    font-size:14px;
+}
+
+.top-actions{
+    display:flex;
+    gap:10px;
+}
+
+.badge{
+    padding:10px 15px;
+
+    border-radius:9px;
+
+    font-size:12px;
+    font-weight:800;
+
+    white-space:nowrap;
+}
+
+.badge-edit{
+    background:#f0f1f2;
+    color:#59616c;
+}
+
+.badge-document{
+    background:var(--green-light);
+    color:#007a3a;
+}
+
+/* =========================================================
+   PAGE
+========================================================= */
+
+.page{
+    padding:35px;
+}
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.hero{
+    position:relative;
+
+    min-height:195px;
+
+    display:flex;
+    align-items:center;
+
+    overflow:hidden;
+
+    padding:40px 42px;
+
+    background:
+        linear-gradient(
+            110deg,
+            #101010 0%,
+            #191919 100%
+        );
+
+    color:#fff;
+
+    border-radius:15px;
+}
+
+.hero::after{
+    content:"";
+
+    position:absolute;
+
+    width:310px;
+    height:310px;
+
+    right:-80px;
+    top:-120px;
+
+    border-radius:50%;
+
+    background:rgba(0,155,73,.20);
+}
+
+.hero-content{
+    position:relative;
+    z-index:2;
+}
+
+.hero-kicker{
+    margin-bottom:14px;
+
+    color:#00c65e;
+
+    font-size:13px;
+    font-weight:800;
+
+    letter-spacing:3px;
+}
+
+.hero h1{
+    max-width:950px;
+
+    margin-bottom:14px;
+
+    font-size:36px;
+    line-height:1.15;
+}
+
+.hero p{
+    max-width:1100px;
+
+    color:#e6e8eb;
+
+    font-size:15px;
+    line-height:1.6;
+}
+
+/* =========================================================
+   DATOS GENERALES
+========================================================= */
+
+.general-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+
+    gap:14px;
+
+    margin-top:28px;
+}
+
+.general-card{
+    background:#fff;
+
+    border:1px solid var(--border);
+
+    border-radius:11px;
+
+    padding:17px 18px;
+}
+
+.general-card label{
+    display:block;
+
+    margin-bottom:7px;
+
+    color:#727a85;
+
+    font-size:10px;
+    font-weight:800;
+
+    letter-spacing:.6px;
+    text-transform:uppercase;
+}
+
+.general-card input,
+.general-card select{
+    width:100%;
+
+    border:none;
+
+    outline:none;
+
+    background:transparent;
+
+    font-size:14px;
+    font-weight:700;
+
+    color:#171a1f;
+}
+
+/* =========================================================
+   STATS
+========================================================= */
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+
+    gap:14px;
+
+    margin:16px 0 25px;
+}
+
+.stat{
+    min-height:105px;
+
+    padding:20px;
+
+    background:#fff;
+
+    border:1px solid var(--border);
+
+    border-radius:11px;
+}
+
+.stat-label{
+    display:block;
+
+    margin-bottom:8px;
+
+    color:#68717c;
+
+    font-size:11px;
+    font-weight:700;
+
+    text-transform:uppercase;
+}
+
+.stat-value{
+    display:block;
+
+    font-size:32px;
+    font-weight:900;
+}
+
+.green{
+    color:var(--green);
+}
+
+.warning{
+    color:var(--warning);
+}
+
+/* =========================================================
+   DOCUMENT CARD
+========================================================= */
+
+.document-card{
+    overflow:hidden;
+
+    background:#fff;
+
+    border:1px solid var(--border);
+
+    border-radius:15px;
+
+    box-shadow:var(--shadow);
+}
+
+.document-header{
+    min-height:98px;
+
+    display:flex;
+    align-items:center;
+
+    gap:17px;
+
+    padding:22px 27px;
+
+    border-bottom:1px solid var(--border);
+}
+
+.document-number{
+    width:50px;
+    height:50px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    flex-shrink:0;
+
+    border-radius:9px;
+
+    background:#111;
+
+    color:#00c45e;
+
+    font-size:18px;
+    font-weight:900;
+}
+
+.document-title h2{
+    margin-bottom:5px;
+
+    font-size:20px;
+}
+
+.document-title p{
+    color:#6c7480;
+    font-size:13px;
+}
+
+.document-body{
+    padding:27px;
+}
+
+/* =========================================================
+   INFO
+========================================================= */
+
+.info{
+    margin-bottom:23px;
+
+    padding:18px 20px;
+
+    background:#fbfcfc;
+
+    border:1px solid #d9e7df;
+    border-left:4px solid var(--green);
+
+    border-radius:9px;
+
+    color:#4c5560;
+
+    font-size:13px;
+    line-height:1.65;
+}
+
+.info strong{
+    color:#007a39;
+}
+
+/* =========================================================
+   SECTIONS
+========================================================= */
+
+.section{
+    margin-bottom:23px;
+
+    overflow:hidden;
+
+    border:1px solid var(--border);
+
+    border-radius:12px;
+}
+
+.section-header{
+    min-height:65px;
+
+    display:flex;
+    align-items:center;
+
+    gap:13px;
+
+    padding:14px 18px;
+
+    background:#f8f9fa;
+
+    border-bottom:1px solid var(--border);
+}
+
+.section-number{
+    width:36px;
+    height:36px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    flex-shrink:0;
+
+    border-radius:8px;
+
+    background:var(--green-light);
+
+    color:var(--green);
+
+    font-size:12px;
+    font-weight:900;
+}
+
+.section-header h3{
+    margin-bottom:3px;
+
+    font-size:15px;
+}
+
+.section-header p{
+    color:#707884;
+    font-size:12px;
+}
+
+.section-body{
+    padding:19px;
+}
+
+/* =========================================================
+   EVALUACIÓN
+========================================================= */
+
+.evaluation-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+
+    gap:14px;
+}
+
+.eval-item{
+    padding:15px;
+
+    background:#fafafa;
+
+    border:1px solid #e0e3e7;
+
+    border-radius:9px;
+}
+
+.eval-item label{
+    display:block;
+
+    margin-bottom:9px;
+
+    color:#3f4751;
+
+    font-size:11px;
+    font-weight:800;
+}
+
+.eval-item select{
+    width:100%;
+
+    height:39px;
+
+    border:1px solid #d4d9df;
+
+    border-radius:7px;
+
+    padding:0 9px;
+
+    background:#fff;
+
+    outline:none;
+}
+
+.eval-item select:focus{
+    border-color:var(--green);
+}
+
+/* =========================================================
+   TOOLBAR
+========================================================= */
+
+.toolbar{
+    display:flex;
+
+    justify-content:space-between;
+    align-items:center;
+
+    gap:15px;
+
+    margin-bottom:16px;
+}
+
+.filters{
+    display:flex;
+    gap:9px;
+
+    flex:1;
+
+    flex-wrap:wrap;
+}
+
+.search,
+.filter{
+    height:42px;
+
+    border:1px solid #d4d9df;
+
+    border-radius:8px;
+
+    padding:0 12px;
+
+    background:#fff;
+
+    outline:none;
+
+    font-size:12px;
+}
+
+.search{
+    min-width:330px;
+    flex:1;
+}
+
+.filter{
+    min-width:160px;
+}
+
+.search:focus,
+.filter:focus{
+    border-color:var(--green);
+
+    box-shadow:0 0 0 3px rgba(0,155,73,.08);
+}
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+.btn{
+    min-height:41px;
+
+    padding:0 16px;
+
+    border:none;
+
+    border-radius:8px;
+
+    font-size:12px;
+    font-weight:800;
+
+    cursor:pointer;
+
+    transition:.2s;
+}
+
+.btn:hover{
+    transform:translateY(-1px);
+}
+
+.btn-green{
+    background:var(--green);
+    color:#fff;
+}
+
+.btn-green:hover{
+    background:var(--green-dark);
+}
+
+.btn-dark{
+    background:#181818;
+    color:#fff;
+}
+
+.btn-light{
+    background:#eef0f2;
+    color:#4a525d;
+}
+
+/* =========================================================
+   MATRIX
+========================================================= */
+
+.table-container{
+    position:relative;
+
+    width:100%;
+    max-height:680px;
+
+    overflow:auto;
+
+    border:1px solid var(--border);
+
+    border-radius:10px;
+}
+
+.matrix{
+    width:100%;
+
+    min-width:3000px;
+
+    border-collapse:separate;
+    border-spacing:0;
+
+    background:#fff;
+}
+
+.matrix thead th{
+    position:sticky;
+    top:0;
+
+    z-index:10;
+
+    height:55px;
+
+    padding:9px;
+
+    background:#121212;
+    color:#fff;
+
+    border-right:1px solid #303030;
+    border-bottom:1px solid #303030;
+
+    font-size:10px;
+
+    text-align:center;
+    text-transform:uppercase;
+
+    white-space:normal;
+}
+
+.matrix tbody td{
+    padding:8px;
+
+    background:#fff;
+
+    border-right:1px solid #e2e5e9;
+    border-bottom:1px solid #e2e5e9;
+
+    vertical-align:top;
+}
+
+.matrix tbody tr:hover td{
+    background:#fafcfb;
+}
+
+/* FIJOS */
+
+.matrix th:nth-child(1),
+.matrix td:nth-child(1){
+    position:sticky;
+
+    left:0;
+
+    min-width:55px;
+    width:55px;
+
+    z-index:7;
+}
+
+.matrix th:nth-child(2),
+.matrix td:nth-child(2){
+    position:sticky;
+
+    left:55px;
+
+    min-width:220px;
+
+    z-index:7;
+}
+
+.matrix tbody td:nth-child(1),
+.matrix tbody td:nth-child(2){
+    background:#fbfbfc;
+}
+
+.matrix thead th:nth-child(1),
+.matrix thead th:nth-child(2){
+    z-index:15;
+    background:#0d0d0d;
+}
+
+.row-id{
+    min-height:40px;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    color:var(--green);
+
+    font-size:14px;
+    font-weight:900;
+}
+
+/* =========================================================
+   TABLE INPUT
+========================================================= */
+
+.table-input,
+.table-select,
+.table-area{
+    width:100%;
+
+    border:1px solid #d7dbe1;
+
+    border-radius:6px;
+
+    padding:8px 9px;
+
+    background:#fff;
+
+    color:#222;
+
+    font-family:inherit;
+
+    font-size:11px;
+
+    outline:none;
+}
+
+.table-input,
+.table-select{
+    min-height:38px;
+}
+
+.table-area{
+    min-height:70px;
+
+    resize:vertical;
+
+    line-height:1.4;
+}
+
+.table-input:focus,
+.table-select:focus,
+.table-area:focus{
+    border-color:var(--green);
+
+    box-shadow:0 0 0 2px rgba(0,155,73,.08);
+}
+
+/* =========================================================
+   COLUMNAS
+========================================================= */
+
+.c-actividad{min-width:220px;}
+.c-aspecto{min-width:220px;}
+.c-impacto{min-width:240px;}
+.c-condicion{min-width:145px;}
+.c-frecuencia{min-width:170px;}
+.c-magnitud{min-width:185px;}
+.c-riesgo{min-width:130px;}
+.c-legales{min-width:220px;}
+.c-otros{min-width:220px;}
+.c-significancia{min-width:160px;}
+.c-objetivo{min-width:220px;}
+.c-meta{min-width:200px;}
+.c-indicador{min-width:200px;}
+.c-controlado{min-width:135px;}
+.c-fecha{min-width:140px;}
+.c-responsable{min-width:180px;}
+.c-action{min-width:70px;}
+
+/* =========================================================
+   DELETE
+========================================================= */
+
+.delete-btn{
+    width:35px;
+    height:35px;
+
+    display:block;
+
+    margin:auto;
+
+    border:none;
+
+    border-radius:7px;
+
+    background:#f0f1f2;
+
+    color:#606872;
+
+    cursor:pointer;
+
+    font-size:18px;
+}
+
+.delete-btn:hover{
+    background:#fee4e2;
+    color:#b42318;
+}
+
+/* =========================================================
+   GESTIÓN AMBIENTAL
+========================================================= */
+
+.management-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+
+    gap:16px;
+}
+
+.field{
+    display:flex;
+    flex-direction:column;
+
+    gap:7px;
+}
+
+.field.full{
+    grid-column:1/-1;
+}
+
+.field label{
+    color:#4e5661;
+
+    font-size:10px;
+    font-weight:800;
+
+    text-transform:uppercase;
+
+    letter-spacing:.5px;
+}
+
+.field input,
+.field textarea,
+.field select{
+    width:100%;
+
+    border:1px solid #d4d9df;
+
+    border-radius:8px;
+
+    padding:11px 12px;
+
+    background:#fff;
+
+    font-size:13px;
+
+    outline:none;
+}
+
+.field textarea{
+    min-height:100px;
+    resize:vertical;
+}
+
+.field input:focus,
+.field textarea:focus,
+.field select:focus{
+    border-color:var(--green);
+
+    box-shadow:0 0 0 3px rgba(0,155,73,.08);
+}
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.form-footer{
+    display:flex;
+
+    justify-content:space-between;
+    align-items:center;
+
+    gap:15px;
+}
+
+.status{
+    color:#68717b;
+
+    font-size:12px;
+}
+
+.status strong{
+    color:#16191d;
+}
+
+.footer-buttons{
+    display:flex;
+    gap:9px;
+}
+
+.empty{
+    padding:32px !important;
+
+    text-align:center;
+
+    color:#777f89;
+
+    font-size:13px;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media(max-width:1200px){
+
+    .sidebar{
+        width:270px;
+    }
+
+    .main{
+        width:calc(100% - 270px);
+        margin-left:270px;
+    }
+
+    .general-grid,
+    .stats{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .evaluation-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+}
+
+@media(max-width:760px){
+
+    .app{
+        display:block;
+    }
+
+    .sidebar{
+        position:relative;
+
+        width:100%;
+
+        min-height:auto;
+    }
+
+    .main{
+        width:100%;
+        margin-left:0;
+    }
+
+    .brand{
+        height:85px;
+    }
+
+    .topbar{
+        padding:18px 20px;
+
+        flex-direction:column;
+
+        align-items:flex-start;
+    }
+
+    .page{
+        padding:18px;
+    }
+
+    .hero{
+        padding:28px 23px;
+    }
+
+    .hero h1{
+        font-size:28px;
+    }
+
+    .general-grid,
+    .stats,
+    .evaluation-grid,
+    .management-grid{
+        grid-template-columns:1fr;
+    }
+
+    .toolbar{
+        flex-direction:column;
+        align-items:stretch;
+    }
+
+    .filters{
+        flex-direction:column;
+    }
+
+    .search,
+    .filter{
+        min-width:0;
+        width:100%;
+    }
+
+    .form-footer{
+        flex-direction:column;
+        align-items:stretch;
+    }
+
+    .footer-buttons{
+        flex-direction:column;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<!-- =========================================================
+     SIDEBAR
+========================================================= -->
+
+<aside class="sidebar">
+
+    <div class="brand">
+        NASER
+    </div>
+
+    <div class="sidebar-section">
+
+        <div class="sidebar-label">
+            DOCUMENTO
+        </div>
+
+        <a
+            href="#identificacion"
+            class="nav-link active"
+        >
+
+            <span class="nav-number">
+                01
+            </span>
+
+            <span class="nav-name">
+                Identificación
+            </span>
+
+        </a>
+
+        <a
+            href="#evaluacion"
+            class="nav-link"
+        >
+
+            <span class="nav-number">
+                02
+            </span>
+
+            <span class="nav-name">
+                Evaluación
+            </span>
+
+        </a>
+
+        <a
+            href="#gestion"
+            class="nav-link"
+        >
+
+            <span class="nav-number">
+                03
+            </span>
+
+            <span class="nav-name">
+                Gestión Ambiental
+            </span>
+
+        </a>
+
+    </div>
+
+</aside>
+
+<!-- =========================================================
+     MAIN
+========================================================= -->
+
+<main class="main">
+
+<header class="topbar">
+
+    <div class="breadcrumb">
+        NASER / Gestión Ambiental / Aspectos e Impactos
+    </div>
+
+    <div class="top-actions">
+
+        <span
+            class="badge badge-edit"
+            id="badgeEstado"
+        >
+            EN EDICIÓN
+        </span>
+
+        <span class="badge badge-document">
+            PGSN06-F1 · Rev.03 Jun-25
+        </span>
+
+    </div>
+
+</header>
+
+
+<div class="page">
+
+<!-- =========================================================
+     HERO
+========================================================= -->
+
+<section class="hero">
+
+    <div class="hero-content">
+
+        <div class="hero-kicker">
+            GESTIÓN AMBIENTAL
+        </div>
+
+        <h1>
+            Identificación de Aspectos y Evaluación de Impactos Ambientales
+        </h1>
+
+        <p>
+            Identificación y evaluación de actividades, aspectos e impactos
+            ambientales, condiciones, frecuencia, magnitud, requisitos,
+            objetivos, metas, indicadores y controles.
+        </p>
+
+    </div>
+
+</section>
+
+<!-- =========================================================
+     DATOS GENERALES
+========================================================= -->
+
+<section class="general-grid">
+
+    <div class="general-card">
+
+        <label>
+            Sector / Área
+        </label>
+
+        <input
+            type="text"
+            id="sector"
+            value="Operaciones Slick Line"
+        >
+
+    </div>
+
+
+    <div class="general-card">
+
+        <label>
+            Fecha de actualización
+        </label>
+
+        <input
+            type="date"
+            id="fechaActualizacion"
+        >
+
+    </div>
+
+
+    <div class="general-card">
+
+        <label>
+            Documento
+        </label>
+
+        <input
+            type="text"
+            value="PGSN06-F1"
+            disabled
+        >
+
+    </div>
+
+
+    <div class="general-card">
+
+        <label>
+            Revisión
+        </label>
+
+        <input
+            type="text"
+            value="Rev.03 · Jun-25"
+            disabled
+        >
+
+    </div>
+
+</section>
+
+<!-- =========================================================
+     INDICADORES
+========================================================= -->
+
+<section class="stats">
+
+    <div class="stat">
+
+        <span class="stat-label">
+            Total identificados
+        </span>
+
+        <span
+            class="stat-value"
+            id="totalRegistros"
+        >
+            0
+        </span>
+
+    </div>
+
+
+    <div class="stat">
+
+        <span class="stat-label">
+            Significativos
+        </span>
+
+        <span
+            class="stat-value warning"
+            id="totalSignificativos"
+        >
+            0
+        </span>
+
+    </div>
+
+
+    <div class="stat">
+
+        <span class="stat-label">
+            Controlados
+        </span>
+
+        <span
+            class="stat-value green"
+            id="totalControlados"
+        >
+            0
+        </span>
+
+    </div>
+
+
+    <div class="stat">
+
+        <span class="stat-label">
+            Sin responsable
+        </span>
+
+        <span
+            class="stat-value"
+            id="totalPendientes"
+        >
+            0
+        </span>
+
+    </div>
+
+</section>
+
+<!-- =========================================================
+     DOCUMENTO
+========================================================= -->
+
+<section
+    class="document-card"
+    id="identificacion"
+>
+
+    <div class="document-header">
+
+        <div class="document-number">
+            01
+        </div>
+
+        <div class="document-title">
+
+            <h2>
+                Aspectos e Impactos Ambientales
+            </h2>
+
+            <p>
+                PGSN06-F1 · Rev.03 Jun-25
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="document-body">
+
+        <div class="info">
+
+            Registre cada <strong>actividad o tarea</strong>,
+            el aspecto e impacto ambiental relacionado, su condición,
+            frecuencia, magnitud, índice de riesgo, requisitos,
+            significancia y controles correspondientes.
+
+        </div>
+
+        <!-- =================================================
+             EVALUACION
+        ================================================== -->
+
+        <section
+            class="section"
+            id="evaluacion"
+        >
+
+            <div class="section-header">
+
+                <div class="section-number">
+                    01
+                </div>
+
+                <div>
+
+                    <h3>
+                        Evaluación
+                    </h3>
+
+                    <p>
+                        Información complementaria para la identificación
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="section-body">
+
+                <div class="evaluation-grid">
+
+                    <div class="eval-item">
+
+                        <label>
+                            Control Existe
+                        </label>
+
+                        <select id="controlExiste">
+
+                            <option value="">
+                                Seleccionar
+                            </option>
+
+                            <option value="Sí">
+                                Sí
+                            </option>
+
+                            <option value="No">
+                                No
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="eval-item">
+
+                        <label>
+                            Análisis de riesgo
+                        </label>
+
+                        <select id="analisisRiesgo">
+
+                            <option value="">
+                                Seleccionar
+                            </option>
+
+                            <option value="Sí">
+                                Sí
+                            </option>
+
+                            <option value="No">
+                                No
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="eval-item">
+
+                        <label>
+                            Reclamos y quejas
+                        </label>
+
+                        <select id="reclamosQuejas">
+
+                            <option value="">
+                                Seleccionar
+                            </option>
+
+                            <option value="Sí">
+                                Sí
+                            </option>
+
+                            <option value="No">
+                                No
+                            </option>
+
+                            <option value="N/A">
+                                N/A
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="eval-item">
+
+                        <label>
+                            Identificación
+                        </label>
+
+                        <select id="identificacionEstado">
+
+                            <option value="">
+                                Seleccionar
+                            </option>
+
+                            <option value="Completa">
+                                Completa
+                            </option>
+
+                            <option value="Pendiente">
+                                Pendiente
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             MATRIZ
+        ================================================== -->
+
+        <section class="section">
+
+            <div class="section-header">
+
+                <div class="section-number">
+                    02
+                </div>
+
+                <div>
+
+                    <h3>
+                        Matriz de identificación y evaluación
+                    </h3>
+
+                    <p>
+                        Actividades, aspectos, impactos y controles ambientales
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="section-body">
+
+                <!-- TOOLBAR -->
+
+                <div class="toolbar">
+
+                    <div class="filters">
+
+                        <input
+                            type="search"
+                            class="search"
+                            id="buscar"
+                            placeholder="Buscar actividad, aspecto, impacto, objetivo o responsable..."
+                            oninput="renderTabla()"
+                        >
+
+
+                        <select
+                            class="filter"
+                            id="filtroSignificancia"
+                            onchange="renderTabla()"
+                        >
+
+                            <option value="">
+                                Significancia · Todas
+                            </option>
+
+                            <option value="Significativo">
+                                Significativo
+                            </option>
+
+                            <option value="No significativo">
+                                No significativo
+                            </option>
+
+                        </select>
+
+
+                        <select
+                            class="filter"
+                            id="filtroControlado"
+                            onchange="renderTabla()"
+                        >
+
+                            <option value="">
+                                Control · Todos
+                            </option>
+
+                            <option value="Sí">
+                                Controlado
+                            </option>
+
+                            <option value="No">
+                                No controlado
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <button
+                        type="button"
+                        class="btn btn-green"
+                        onclick="agregarRegistro()"
+                    >
+                        + AGREGAR REGISTRO
+                    </button>
+
+                </div>
+
+
+                <!-- TABLE -->
+
+                <div class="table-container">
+
+                    <table class="matrix">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>ID</th>
+
+                                <th>
+                                    ACTIVIDAD / TAREA
+                                </th>
+
+                                <th>
+                                    ASPECTO
+                                </th>
+
+                                <th>
+                                    IMPACTO
+                                </th>
+
+                                <th>
+                                    CONDICIÓN
+                                </th>
+
+                                <th>
+                                    FRECUENCIA
+                                    <br>
+                                    1 / 2 / 3 / 4
+                                </th>
+
+                                <th>
+                                    MAGNITUD
+                                    <br>
+                                    1 / 3 / 5 / 7
+                                </th>
+
+                                <th>
+                                    ÍNDICE DE RIESGO
+                                </th>
+
+                                <th>
+                                    REQUISITOS LEGALES
+                                </th>
+
+                                <th>
+                                    OTROS REQUISITOS
+                                </th>
+
+                                <th>
+                                    SIGNIFICANCIA
+                                </th>
+
+                                <th>
+                                    OBJETIVO
+                                </th>
+
+                                <th>
+                                    META
+                                </th>
+
+                                <th>
+                                    INDICADOR
+                                </th>
+
+                                <th>
+                                    CONTROLADO
+                                </th>
+
+                                <th>
+                                    FECHA
+                                </th>
+
+                                <th>
+                                    RESPONSABLE
+                                </th>
+
+                                <th>
+                                    ACCIÓN
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody id="tbody">
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- =================================================
+             GESTIÓN AMBIENTAL
+        ================================================== -->
+
+        <section
+            class="section"
+            id="gestion"
+        >
+
+            <div class="section-header">
+
+                <div class="section-number">
+                    03
+                </div>
+
+                <div>
+
+                    <h3>
+                        Programa de Gestión Ambiental
+                    </h3>
+
+                    <p>
+                        Seguimiento, revisión de controles y política
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="section-body">
+
+                <div class="management-grid">
+
+                    <div class="field">
+
+                        <label>
+                            Programa de Gestión Ambiental
+                        </label>
+
+                        <select id="programaGestion">
+
+                            <option value="">
+                                Seleccionar
+                            </option>
+
+                            <option value="Sí">
+                                Sí
+                            </option>
+
+                            <option value="No">
+                                No
+                            </option>
+
+                            <option value="N/A">
+                                N/A
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="field">
+
+                        <label>
+                            Revisión de controles
+                        </label>
+
+                        <select id="revisionControles">
+
+                            <option value="">
+                                Seleccionar
+                            </option>
+
+                            <option value="Realizada">
+                                Realizada
+                            </option>
+
+                            <option value="Pendiente">
+                                Pendiente
+                            </option>
+
+                            <option value="N/A">
+                                N/A
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="field">
+
+                        <label>
+                            Política
+                        </label>
+
+                        <select id="politica">
+
+                            <option value="">
+                                Seleccionar
+                            </option>
+
+                            <option value="Cumple">
+                                Cumple
+                            </option>
+
+                            <option value="No cumple">
+                                No cumple
+                            </option>
+
+                            <option value="N/A">
+                                N/A
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="field full">
+
+                        <label>
+                            Observaciones
+                        </label>
+
+                        <textarea
+                            id="observacionesGenerales"
+                            placeholder="Ingrese observaciones generales..."
+                        ></textarea>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             FOOTER
+        ================================================== -->
+
+        <div class="form-footer">
+
+            <div class="status">
+
+                Estado:
+
+                <strong id="estadoFormulario">
+                    Documento en edición
+                </strong>
+
+            </div>
+
+
+            <div class="footer-buttons">
+
+                <button
+                    type="button"
+                    class="btn btn-light"
+                    onclick="limpiarFormulario()"
+                >
+                    LIMPIAR
+                </button>
+
+
+                <button
+                    type="button"
+                    class="btn btn-dark"
+                    onclick="guardarFormulario()"
+                >
+                    GUARDAR
+                </button>
+
+
+                <button
+                    type="button"
+                    class="btn btn-green"
+                    onclick="finalizarFormulario()"
+                >
+                    FINALIZAR FORMULARIO
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+</div>
+
+</main>
+
+</div>
+
+
+<script>
+
+/* =========================================================
+   REGISTROS
+========================================================= */
+
+let registros = [];
+
+
+/* =========================================================
+   NUEVO REGISTRO
+========================================================= */
+
+function nuevoRegistro(){
+
+    return{
+
+        uid:
+            Date.now().toString() +
+            Math.random()
+            .toString(16)
+            .slice(2),
+
+        actividad:"",
+
+        aspecto:"",
+
+        impacto:"",
+
+        condicion:"",
+
+        frecuencia:"",
+
+        magnitud:"",
+
+        indiceRiesgo:"",
+
+        requisitosLegales:"",
+
+        otrosRequisitos:"",
+
+        significancia:"",
+
+        objetivo:"",
+
+        meta:"",
+
+        indicador:"",
+
+        controlado:"",
+
+        fecha:"",
+
+        responsable:""
+
+    };
+
+}
+
+
+/* =========================================================
+   AGREGAR
+========================================================= */
+
+function agregarRegistro(){
+
+    registros.push(
+        nuevoRegistro()
+    );
+
+    renderTabla();
+
+    actualizarIndicadores();
+
+}
+
+
+/* =========================================================
+   ACTUALIZAR
+========================================================= */
+
+function actualizar(
+    uid,
+    campo,
+    valor
+){
+
+    const registro =
+        registros.find(
+            item =>
+                item.uid === uid
+        );
+
+
+    if(!registro){
+        return;
+    }
+
+
+    registro[campo] =
+        valor;
+
+
+    actualizarIndicadores();
+
+}
+
+
+/* =========================================================
+   ELIMINAR
+========================================================= */
+
+function eliminar(uid){
+
+    if(
+        !confirm(
+            "¿Desea eliminar este registro ambiental?"
+        )
+    ){
+        return;
+    }
+
+
+    registros =
+        registros.filter(
+            item =>
+                item.uid !== uid
+        );
+
+
+    renderTabla();
+
+    actualizarIndicadores();
+
+}
+
+
+/* =========================================================
+   ESCAPE
+========================================================= */
+
+function escapeHTML(valor){
+
+    return String(
+        valor ?? ""
+    )
+    .replaceAll(
+        "&",
+        "&amp;"
+    )
+    .replaceAll(
+        "<",
+        "&lt;"
+    )
+    .replaceAll(
+        ">",
+        "&gt;"
+    )
+    .replaceAll(
+        '"',
+        "&quot;"
+    );
+
+}
+
+
+/* =========================================================
+   OPTIONS
+========================================================= */
+
+function options(
+    lista,
+    seleccionado
+){
+
+    return lista
+    .map(
+        item => {
+
+            const texto =
+                item === ""
+                ? "Seleccionar"
+                : item;
+
+
+            return `
+
+                <option
+                    value="${escapeHTML(item)}"
+                    ${
+                        item === seleccionado
+                        ? "selected"
+                        : ""
+                    }
+                >
+                    ${escapeHTML(texto)}
+                </option>
+
+            `;
+
+        }
+    )
+    .join("");
+
+}
+
+
+/* =========================================================
+   FILTRAR
+========================================================= */
+
+function obtenerFiltrados(){
+
+    const buscar =
+        document
+        .getElementById(
+            "buscar"
+        )
+        .value
+        .toLowerCase()
+        .trim();
+
+
+    const significancia =
+        document
+        .getElementById(
+            "filtroSignificancia"
+        )
+        .value;
+
+
+    const controlado =
+        document
+        .getElementById(
+            "filtroControlado"
+        )
+        .value;
+
+
+    return registros.filter(
+        registro => {
+
+            const texto = (
+
+                registro.actividad + " " +
+
+                registro.aspecto + " " +
+
+                registro.impacto + " " +
+
+                registro.objetivo + " " +
+
+                registro.responsable
+
+            ).toLowerCase();
+
+
+            return (
+
+                (
+                    !buscar ||
+                    texto.includes(
+                        buscar
+                    )
+                )
+
+                &&
+
+                (
+                    !significancia ||
+                    registro.significancia ===
+                    significancia
+                )
+
+                &&
+
+                (
+                    !controlado ||
+                    registro.controlado ===
+                    controlado
+                )
+
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   TABLA
+========================================================= */
+
+function renderTabla(){
+
+    const tbody =
+        document.getElementById(
+            "tbody"
+        );
+
+
+    tbody.innerHTML = "";
+
+
+    const filtrados =
+        obtenerFiltrados();
+
+
+    if(
+        filtrados.length === 0
+    ){
+
+        tbody.innerHTML = `
+
+            <tr>
+
+                <td
+                    colspan="18"
+                    class="empty"
+                >
+                    No hay registros ambientales
+                    que coincidan con los filtros.
+                </td>
+
+            </tr>
+
+        `;
+
+
+        return;
+
+    }
+
+
+    filtrados.forEach(
+        registro => {
+
+            const numero =
+                registros.findIndex(
+                    item =>
+                        item.uid === registro.uid
+                ) + 1;
+
+
+            const fila =
+                document.createElement(
+                    "tr"
+                );
+
+
+            fila.innerHTML = `
+
+                <td>
+
+                    <div class="row-id">
+
+                        ${numero}
+
+                    </div>
+
+                </td>
+
+
+                <td class="c-actividad">
+
+                    <textarea
+                        class="table-area"
+                        placeholder="Actividad / tarea..."
+                        oninput="actualizar(
+                            '${registro.uid}',
+                            'actividad',
+                            this.value
+                        )"
+                    >${escapeHTML(registro.actividad)}</textarea>
+
+                </td>
+
+
+                <td class="c-aspecto">
+
+                    <textarea
+                        class="table-area"
+                        placeholder="Aspecto ambiental..."
+                        oninput="actualizar(
+                            '${registro.uid}',
+                            'aspecto',
+                            this.value
+                        )"
+                    >${escapeHTML(registro.aspecto)}</textarea>
+
+                </td>
+
+
+                <td class="c-impacto">
+
+                    <textarea
+                        class="table-area"
+                        placeholder="Impacto ambiental..."
+                        oninput="actualizar(
+                            '${registro.uid}',
+                            'impacto',
+                            this.value
+                        )"
+                    >${escapeHTML(registro.impacto)}</textarea>
+
+                </td>
+
+
+                <td class="c-condicion">
+
+                    <select
+                        class="table-select"
+                        onchange="actualizar(
+                            '${registro.uid}',
+                            'condicion',
+                            this.value
+                        )"
+                    >
+
+                        ${options(
+                            [
+                                "",
+                                "Normal",
+                                "Anormal",
+                                "Emergencia"
+                            ],
+                            registro.condicion
+                        )}
+
+                    </select>
+
+                </td>
+
+
+                <td class="c-frecuencia">
+
+                    <select
+                        class="table-select"
+                        onchange="actualizar(
+                            '${registro.uid}',
+                            'frecuencia',
+                            this.value
+                        )"
+                    >
+
+                        ${options(
+                            [
+                                "",
+                                "1 - Despreciable",
+                                "2 - Baja",
+                                "3 - Media",
+                                "4 - Alta"
+                            ],
+                            registro.frecuencia
+                        )}
+
+                    </select>
+
+                </td>
+
+
+                <td class="c-magnitud">
+
+                    <select
+                        class="table-select"
+                        onchange="actualizar(
+                            '${registro.uid}',
+                            'magnitud',
+                            this.value
+                        )"
+                    >
+
+                        ${options(
+                            [
+                                "",
+                                "1 - Leve",
+                                "3 - Moderada",
+                                "5 - Grave",
+                                "7 - Muy grave"
+                            ],
+                            registro.magnitud
+                        )}
+
+                    </select>
+
+                </td>
+
+
+                <td class="c-riesgo">
+
+                    <input
+                        type="number"
+                        min="0"
+                        class="table-input"
+                        placeholder="Índice"
+
+                        value="${escapeHTML(
+                            registro.indiceRiesgo
+                        )}"
+
+                        oninput="actualizar(
+                            '${registro.uid}',
+                            'indiceRiesgo',
+                            this.value
+                        )"
+                    >
+
+                </td>
+
+
+                <td class="c-legales">
+
+                    <textarea
+                        class="table-area"
+                        placeholder="Requisitos legales..."
+                        oninput="actualizar(
+                            '${registro.uid}',
+                            'requisitosLegales',
+                            this.value
+                        )"
+                    >${escapeHTML(registro.requisitosLegales)}</textarea>
+
+                </td>
+
+
+                <td class="c-otros">
+
+                    <textarea
+                        class="table-area"
+                        placeholder="Otros requisitos..."
+                        oninput="actualizar(
+                            '${registro.uid}',
+                            'otrosRequisitos',
+                            this.value
+                        )"
+                    >${escapeHTML(registro.otrosRequisitos)}</textarea>
+
+                </td>
+
+
+                <td class="c-significancia">
+
+                    <select
+                        class="table-select"
+                        onchange="actualizar(
+                            '${registro.uid}',
+                            'significancia',
+                            this.value
+                        )"
+                    >
+
+                        ${options(
+                            [
+                                "",
+                                "Significativo",
+                                "No significativo"
+                            ],
+                            registro.significancia
+                        )}
+
+                    </select>
+
+                </td>
+
+
+                <td class="c-objetivo">
+
+                    <textarea
+                        class="table-area"
+                        placeholder="Objetivo..."
+                        oninput="actualizar(
+                            '${registro.uid}',
+                            'objetivo',
+                            this.value
+                        )"
+                    >${escapeHTML(registro.objetivo)}</textarea>
+
+                </td>
+
+
+                <td class="c-meta">
+
+                    <textarea
+                        class="table-area"
+                        placeholder="Meta..."
+                        oninput="actualizar(
+                            '${registro.uid}',
+                            'meta',
+                            this.value
+                        )"
+                    >${escapeHTML(registro.meta)}</textarea>
+
+                </td>
+
+
+                <td class="c-indicador">
+
+                    <textarea
+                        class="table-area"
+                        placeholder="Indicador..."
+                        oninput="actualizar(
+                            '${registro.uid}',
+                            'indicador',
+                            this.value
+                        )"
+                    >${escapeHTML(registro.indicador)}</textarea>
+
+                </td>
+
+
+                <td class="c-controlado">
+
+                    <select
+                        class="table-select"
+                        onchange="actualizar(
+                            '${registro.uid}',
+                            'controlado',
+                            this.value
+                        )"
+                    >
+
+                        ${options(
+                            [
+                                "",
+                                "Sí",
+                                "No"
+                            ],
+                            registro.controlado
+                        )}
+
+                    </select>
+
+                </td>
+
+
+                <td class="c-fecha">
+
+                    <input
+                        type="date"
+                        class="table-input"
+
+                        value="${escapeHTML(
+                            registro.fecha
+                        )}"
+
+                        onchange="actualizar(
+                            '${registro.uid}',
+                            'fecha',
+                            this.value
+                        )"
+                    >
+
+                </td>
+
+
+                <td class="c-responsable">
+
+                    <input
+                        type="text"
+                        class="table-input"
+                        placeholder="Responsable"
+
+                        value="${escapeHTML(
+                            registro.responsable
+                        )}"
+
+                        oninput="actualizar(
+                            '${registro.uid}',
+                            'responsable',
+                            this.value
+                        )"
+                    >
+
+                </td>
+
+
+                <td class="c-action">
+
+                    <button
+                        type="button"
+                        class="delete-btn"
+                        title="Eliminar"
+
+                        onclick="eliminar(
+                            '${registro.uid}'
+                        )"
+                    >
+                        ×
+                    </button>
+
+                </td>
+
+            `;
+
+
+            tbody.appendChild(
+                fila
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   INDICADORES
+========================================================= */
+
+function actualizarIndicadores(){
+
+    const total =
+        registros.length;
+
+
+    const significativos =
+        registros.filter(
+            registro =>
+                registro.significancia ===
+                "Significativo"
+        ).length;
+
+
+    const controlados =
+        registros.filter(
+            registro =>
+                registro.controlado ===
+                "Sí"
+        ).length;
+
+
+    const sinResponsable =
+        registros.filter(
+            registro =>
+                registro.responsable
+                .trim() === ""
+        ).length;
+
+
+    document.getElementById(
+        "totalRegistros"
+    ).textContent =
+        total;
+
+
+    document.getElementById(
+        "totalSignificativos"
+    ).textContent =
+        significativos;
+
+
+    document.getElementById(
+        "totalControlados"
+    ).textContent =
+        controlados;
+
+
+    document.getElementById(
+        "totalPendientes"
+    ).textContent =
+        sinResponsable;
+
+}
+
+
+/* =========================================================
+   GUARDAR
+========================================================= */
+
+function guardarFormulario(){
+
+    const datos = {
+
+        codigo:
+            "PGSN06-F1",
+
+        revision:
+            "Rev.03",
+
+        fechaDocumento:
+            "Jun-25",
+
+        sector:
+            document
+            .getElementById(
+                "sector"
+            )
+            .value,
+
+        fechaActualizacion:
+            document
+            .getElementById(
+                "fechaActualizacion"
+            )
+            .value,
+
+        controlExiste:
+            document
+            .getElementById(
+                "controlExiste"
+            )
+            .value,
+
+        analisisRiesgo:
+            document
+            .getElementById(
+                "analisisRiesgo"
+            )
+            .value,
+
+        reclamosQuejas:
+            document
+            .getElementById(
+                "reclamosQuejas"
+            )
+            .value,
+
+        identificacionEstado:
+            document
+            .getElementById(
+                "identificacionEstado"
+            )
+            .value,
+
+        programaGestion:
+            document
+            .getElementById(
+                "programaGestion"
+            )
+            .value,
+
+        revisionControles:
+            document
+            .getElementById(
+                "revisionControles"
+            )
+            .value,
+
+        politica:
+            document
+            .getElementById(
+                "politica"
+            )
+            .value,
+
+        observacionesGenerales:
+            document
+            .getElementById(
+                "observacionesGenerales"
+            )
+            .value,
+
+        registros:
+            registros
+
+    };
+
+
+    localStorage.setItem(
+        "NASER_PGSN06_F1",
+        JSON.stringify(
+            datos
+        )
+    );
+
+
+    document.getElementById(
+        "estadoFormulario"
+    ).textContent =
+        "Cambios guardados";
+
+
+    alert(
+        "Formulario guardado correctamente."
+    );
+
+}
+
+
+/* =========================================================
+   FINALIZAR
+========================================================= */
+
+function finalizarFormulario(){
+
+    if(
+        !document
+        .getElementById(
+            "sector"
+        )
+        .value
+        .trim()
+    ){
+
+        alert(
+            "Debe completar Sector / Área."
+        );
+
+        return;
+
+    }
+
+
+    if(
+        !document
+        .getElementById(
+            "fechaActualizacion"
+        )
+        .value
+    ){
+
+        alert(
+            "Debe completar la Fecha de actualización."
+        );
+
+        return;
+
+    }
+
+
+    if(
+        registros.length === 0
+    ){
+
+        alert(
+            "Debe existir al menos un registro ambiental."
+        );
+
+        return;
+
+    }
+
+
+    const incompletos =
+        registros.filter(
+            registro =>
+
+                !registro.actividad.trim()
+
+                ||
+
+                !registro.aspecto.trim()
+
+                ||
+
+                !registro.impacto.trim()
+
+        );
+
+
+    if(
+        incompletos.length > 0
+    ){
+
+        alert(
+            "Hay registros sin completar en Actividad/Tarea, Aspecto o Impacto."
+        );
+
+        return;
+
+    }
+
+
+    guardarFormulario();
+
+
+    document.getElementById(
+        "estadoFormulario"
+    ).textContent =
+        "Documento finalizado";
+
+
+    document.getElementById(
+        "badgeEstado"
+    ).textContent =
+        "FINALIZADO";
+
+
+    alert(
+        "PGSN06-F1 finalizado correctamente."
+    );
+
+}
+
+
+/* =========================================================
+   LIMPIAR
+========================================================= */
+
+function limpiarFormulario(){
+
+    if(
+        !confirm(
+            "¿Desea limpiar completamente el formulario?"
+        )
+    ){
+        return;
+    }
+
+
+    registros = [
+        nuevoRegistro()
+    ];
+
+
+    document.getElementById(
+        "fechaActualizacion"
+    ).value = "";
+
+
+    document.getElementById(
+        "controlExiste"
+    ).value = "";
+
+
+    document.getElementById(
+        "analisisRiesgo"
+    ).value = "";
+
+
+    document.getElementById(
+        "reclamosQuejas"
+    ).value = "";
+
+
+    document.getElementById(
+        "identificacionEstado"
+    ).value = "";
+
+
+    document.getElementById(
+        "programaGestion"
+    ).value = "";
+
+
+    document.getElementById(
+        "revisionControles"
+    ).value = "";
+
+
+    document.getElementById(
+        "politica"
+    ).value = "";
+
+
+    document.getElementById(
+        "observacionesGenerales"
+    ).value = "";
+
+
+    localStorage.removeItem(
+        "NASER_PGSN06_F1"
+    );
+
+
+    document.getElementById(
+        "estadoFormulario"
+    ).textContent =
+        "Documento en edición";
+
+
+    document.getElementById(
+        "badgeEstado"
+    ).textContent =
+        "EN EDICIÓN";
+
+
+    renderTabla();
+
+    actualizarIndicadores();
+
+}
+
+
+/* =========================================================
+   CARGAR
+========================================================= */
+
+function cargarFormulario(){
+
+    const guardado =
+        localStorage.getItem(
+            "NASER_PGSN06_F1"
+        );
+
+
+    if(!guardado){
+
+        registros = [
+            nuevoRegistro()
+        ];
+
+
+        renderTabla();
+
+        actualizarIndicadores();
+
+        return;
+
+    }
+
+
+    try{
+
+        const datos =
+            JSON.parse(
+                guardado
+            );
+
+
+        registros =
+            Array.isArray(
+                datos.registros
+            )
+            ? datos.registros
+            : [];
+
+
+        document.getElementById(
+            "sector"
+        ).value =
+            datos.sector ||
+            "Operaciones Slick Line";
+
+
+        document.getElementById(
+            "fechaActualizacion"
+        ).value =
+            datos.fechaActualizacion ||
+            "";
+
+
+        document.getElementById(
+            "controlExiste"
+        ).value =
+            datos.controlExiste ||
+            "";
+
+
+        document.getElementById(
+            "analisisRiesgo"
+        ).value =
+            datos.analisisRiesgo ||
+            "";
+
+
+        document.getElementById(
+            "reclamosQuejas"
+        ).value =
+            datos.reclamosQuejas ||
+            "";
+
+
+        document.getElementById(
+            "identificacionEstado"
+        ).value =
+            datos.identificacionEstado ||
+            "";
+
+
+        document.getElementById(
+            "programaGestion"
+        ).value =
+            datos.programaGestion ||
+            "";
+
+
+        document.getElementById(
+            "revisionControles"
+        ).value =
+            datos.revisionControles ||
+            "";
+
+
+        document.getElementById(
+            "politica"
+        ).value =
+            datos.politica ||
+            "";
+
+
+        document.getElementById(
+            "observacionesGenerales"
+        ).value =
+            datos.observacionesGenerales ||
+            "";
+
+
+        if(
+            registros.length === 0
+        ){
+
+            registros.push(
+                nuevoRegistro()
+            );
+
+        }
+
+
+        renderTabla();
+
+        actualizarIndicadores();
+
+    }
+
+    catch(error){
+
+        console.error(
+            "Error cargando PGSN06-F1:",
+            error
+        );
+
+
+        registros = [
+            nuevoRegistro()
+        ];
+
+
+        renderTabla();
+
+        actualizarIndicadores();
+
+    }
+
+}
+
+
+/* =========================================================
+   INICIO
+========================================================= */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    cargarFormulario
+);
+
+</script>
+
+</body>
+</html>

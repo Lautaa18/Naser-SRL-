@@ -1,0 +1,1895 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>VISITA GERENCIAL - PGSN04-F10</title>
+
+<style>
+
+/* =========================================================
+   NASER - ESTILO CORPORATIVO
+========================================================= */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:Arial, Helvetica, sans-serif;
+    background:#eeeeee;
+    color:#1b1b1b;
+}
+
+
+/* =========================================================
+   CONTENEDOR
+========================================================= */
+
+.contenedor{
+    width:95%;
+    max-width:1450px;
+    margin:30px auto;
+}
+
+
+/* =========================================================
+   HERO / CABECERA
+========================================================= */
+
+.hero{
+    background:#101010;
+    color:#fff;
+    padding:28px 30px;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:20px;
+
+    border-radius:10px 10px 0 0;
+    border-bottom:5px solid #009b49;
+}
+
+.hero-left{
+    display:flex;
+    align-items:center;
+    gap:18px;
+}
+
+.hero-number{
+    width:55px;
+    height:55px;
+
+    background:#009b49;
+    color:#fff;
+
+    border-radius:7px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-weight:bold;
+    font-size:20px;
+}
+
+.hero h1{
+    font-size:25px;
+    margin-bottom:5px;
+}
+
+.hero p{
+    color:#bcbcbc;
+    font-size:13px;
+}
+
+.documento{
+    display:flex;
+    background:#1d1d1d;
+    border:1px solid #333;
+    border-radius:6px;
+    overflow:hidden;
+}
+
+.documento div{
+    padding:10px 15px;
+    min-width:100px;
+    text-align:center;
+    border-right:1px solid #3d3d3d;
+}
+
+.documento div:last-child{
+    border-right:none;
+}
+
+.documento span{
+    display:block;
+    font-size:9px;
+    color:#999;
+    margin-bottom:4px;
+}
+
+.documento strong{
+    font-size:12px;
+    color:#fff;
+}
+
+
+/* =========================================================
+   TARJETAS
+========================================================= */
+
+.card{
+    background:#fff;
+    border:1px solid #dadada;
+    margin-top:18px;
+    border-radius:8px;
+    overflow:hidden;
+}
+
+.card-header{
+    min-height:58px;
+
+    background:#f7f7f7;
+    border-bottom:1px solid #dedede;
+
+    display:flex;
+    align-items:center;
+
+    gap:12px;
+
+    padding:13px 20px;
+}
+
+.card-numero{
+    width:36px;
+    height:36px;
+
+    border-radius:5px;
+
+    background:#009b49;
+    color:white;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:12px;
+    font-weight:bold;
+}
+
+.card-header h2{
+    font-size:15px;
+    margin-bottom:3px;
+}
+
+.card-header p{
+    color:#777;
+    font-size:11px;
+}
+
+
+/* =========================================================
+   FORMULARIO
+========================================================= */
+
+.form-grid{
+    padding:20px;
+
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:15px;
+}
+
+.form-grid-2{
+    grid-template-columns:repeat(2,1fr);
+}
+
+.campo{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+}
+
+.campo label{
+    font-size:10px;
+    font-weight:bold;
+    text-transform:uppercase;
+    color:#333;
+}
+
+.campo input,
+.campo textarea{
+    width:100%;
+
+    border:1px solid #cfcfcf;
+    background:#fff;
+
+    padding:11px;
+
+    border-radius:5px;
+
+    font-family:Arial, Helvetica, sans-serif;
+    font-size:13px;
+
+    outline:none;
+}
+
+.campo input:focus,
+.campo textarea:focus{
+    border-color:#009b49;
+    box-shadow:0 0 0 2px rgba(0,155,73,.10);
+}
+
+.campo textarea{
+    min-height:85px;
+    resize:vertical;
+}
+
+
+/* =========================================================
+   TABLAS
+========================================================= */
+
+.tabla-contenedor{
+    width:100%;
+    overflow-x:auto;
+}
+
+.tabla{
+    width:100%;
+    min-width:900px;
+
+    border-collapse:collapse;
+}
+
+.tabla thead{
+    background:#111;
+    color:#fff;
+}
+
+.tabla th{
+    padding:12px 9px;
+
+    font-size:10px;
+    text-align:center;
+    text-transform:uppercase;
+
+    border-right:1px solid #353535;
+}
+
+.tabla th:last-child{
+    border-right:none;
+}
+
+.tabla td{
+    padding:11px 9px;
+
+    border-right:1px solid #e1e1e1;
+    border-bottom:1px solid #e1e1e1;
+
+    text-align:center;
+    vertical-align:middle;
+}
+
+.tabla tbody tr:hover{
+    background:#f9fbfa;
+}
+
+.tabla td.descripcion{
+    text-align:left;
+}
+
+.tabla td.descripcion strong{
+    display:block;
+
+    font-size:12px;
+
+    margin-bottom:4px;
+
+    color:#222;
+}
+
+.tabla td.descripcion small{
+    display:block;
+
+    font-size:11px;
+    line-height:1.45;
+
+    color:#747474;
+}
+
+.numero{
+    font-weight:bold;
+    color:#009b49;
+}
+
+
+/* =========================================================
+   OPCIONES SI / NO / N/A
+========================================================= */
+
+.opcion{
+    display:inline-flex;
+    cursor:pointer;
+}
+
+.opcion input{
+    display:none;
+}
+
+.opcion span{
+    width:38px;
+    height:34px;
+
+    border:1px solid #c8c8c8;
+
+    border-radius:5px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    background:#fff;
+    color:#666;
+
+    font-size:11px;
+    font-weight:bold;
+
+    transition:.2s;
+}
+
+
+/* CUMPLE */
+
+.cumple input:checked + span{
+    background:#009b49;
+    border-color:#009b49;
+    color:#fff;
+}
+
+
+/* NO CUMPLE */
+
+.no-cumple input:checked + span{
+    background:#1c1c1c;
+    border-color:#1c1c1c;
+    color:#fff;
+}
+
+
+/* N/A */
+
+.na input:checked + span{
+    background:#8c8c8c;
+    border-color:#8c8c8c;
+    color:#fff;
+}
+
+
+/* =========================================================
+   OBSERVACIONES
+========================================================= */
+
+.observaciones{
+    padding:20px;
+}
+
+.observaciones textarea{
+    width:100%;
+    min-height:130px;
+
+    resize:vertical;
+
+    border:1px solid #ccc;
+    border-radius:5px;
+
+    padding:12px;
+
+    font-family:Arial, Helvetica, sans-serif;
+    font-size:13px;
+
+    outline:none;
+}
+
+.observaciones textarea:focus{
+    border-color:#009b49;
+}
+
+
+/* =========================================================
+   PROGRESO
+========================================================= */
+
+.progreso-box{
+    padding:18px 20px;
+    background:#f8f8f8;
+    border-top:1px solid #ddd;
+}
+
+.progreso-info{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:7px;
+
+    font-size:11px;
+}
+
+.progreso-info strong{
+    color:#009b49;
+}
+
+.progreso{
+    height:8px;
+    border-radius:10px;
+    background:#ddd;
+    overflow:hidden;
+}
+
+.progreso-barra{
+    width:0%;
+    height:100%;
+    background:#009b49;
+    transition:.3s;
+}
+
+
+/* =========================================================
+   RESUMEN
+========================================================= */
+
+.resumen{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:12px;
+
+    padding:20px;
+
+    background:#f6f6f6;
+}
+
+.resumen-card{
+    padding:14px;
+
+    background:#fff;
+
+    border:1px solid #ddd;
+    border-radius:6px;
+
+    text-align:center;
+}
+
+.resumen-card strong{
+    display:block;
+
+    font-size:22px;
+
+    color:#009b49;
+
+    margin-bottom:4px;
+}
+
+.resumen-card span{
+    font-size:9px;
+    color:#666;
+    font-weight:bold;
+}
+
+
+/* =========================================================
+   BOTONES
+========================================================= */
+
+.acciones{
+    background:#f4f4f4;
+
+    border-top:1px solid #ddd;
+
+    padding:18px 20px;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    gap:15px;
+}
+
+.estado-formulario{
+    font-size:11px;
+    color:#666;
+}
+
+.botones{
+    display:flex;
+    gap:9px;
+}
+
+.btn{
+    border:none;
+    border-radius:5px;
+
+    padding:11px 18px;
+
+    font-size:11px;
+    font-weight:bold;
+
+    cursor:pointer;
+
+    transition:.2s;
+}
+
+.btn:hover{
+    transform:translateY(-1px);
+}
+
+.btn-limpiar{
+    background:#222;
+    color:#fff;
+}
+
+.btn-guardar{
+    background:#fff;
+    color:#009b49;
+    border:1px solid #009b49;
+}
+
+.btn-finalizar{
+    background:#009b49;
+    color:#fff;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media(max-width:1000px){
+
+    .form-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+}
+
+
+@media(max-width:750px){
+
+    .hero{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    .documento{
+        width:100%;
+    }
+
+    .documento div{
+        flex:1;
+    }
+
+    .resumen{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .acciones{
+        flex-direction:column;
+        align-items:stretch;
+    }
+
+    .botones{
+        width:100%;
+    }
+
+    .btn{
+        flex:1;
+    }
+
+}
+
+
+@media(max-width:520px){
+
+    .form-grid,
+    .form-grid-2{
+        grid-template-columns:1fr;
+    }
+
+    .documento{
+        flex-direction:column;
+    }
+
+    .documento div{
+        border-right:none;
+        border-bottom:1px solid #333;
+    }
+
+    .botones{
+        flex-direction:column;
+    }
+
+}
+
+
+/* =========================================================
+   IMPRESIÓN
+========================================================= */
+
+@media print{
+
+    body{
+        background:white;
+    }
+
+    .contenedor{
+        width:100%;
+        margin:0;
+    }
+
+    .acciones{
+        display:none;
+    }
+
+    .card{
+        break-inside:avoid;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="contenedor">
+
+
+<!-- =========================================================
+     CABECERA
+========================================================= -->
+
+<div class="hero">
+
+    <div class="hero-left">
+
+        <div class="hero-number">
+            10
+        </div>
+
+        <div>
+            <h1>VISITA GERENCIAL</h1>
+
+            <p>
+                Control operativo y condiciones de trabajo
+            </p>
+        </div>
+
+    </div>
+
+
+    <div class="documento">
+
+        <div>
+            <span>CÓDIGO</span>
+            <strong>PGSN04-F10</strong>
+        </div>
+
+        <div>
+            <span>REVISIÓN</span>
+            <strong>Rev.01</strong>
+        </div>
+
+        <div>
+            <span>FECHA</span>
+            <strong>Sep.25</strong>
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================================================
+     DATOS DEL EQUIPO
+========================================================= -->
+
+<section class="card">
+
+    <div class="card-header">
+
+        <div class="card-numero">
+            01
+        </div>
+
+        <div>
+            <h2>DATOS DEL EQUIPO DE TRABAJO</h2>
+            <p>Información de la operación y personal interviniente</p>
+        </div>
+
+    </div>
+
+
+    <div class="form-grid">
+
+        <div class="campo">
+            <label>Fecha</label>
+            <input type="date" id="fecha">
+        </div>
+
+        <div class="campo">
+            <label>Equipo</label>
+            <input type="text" id="equipo">
+        </div>
+
+        <div class="campo">
+            <label>Pozo</label>
+            <input type="text" id="pozo">
+        </div>
+
+        <div class="campo">
+            <label>Supervisor</label>
+            <input type="text" id="supervisor">
+        </div>
+
+        <div class="campo">
+            <label>Operador</label>
+            <input type="text" id="operador">
+        </div>
+
+        <div class="campo">
+            <label>Ayudante</label>
+            <input type="text" id="ayudante1">
+        </div>
+
+        <div class="campo">
+            <label>Ayudante</label>
+            <input type="text" id="ayudante2">
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     VISITA
+========================================================= -->
+
+<section class="card">
+
+    <div class="card-header">
+
+        <div class="card-numero">
+            02
+        </div>
+
+        <div>
+            <h2>DATOS DE LA VISITA</h2>
+            <p>Visitantes y actividad observada</p>
+        </div>
+
+    </div>
+
+
+    <div class="form-grid form-grid-2">
+
+        <div class="campo">
+
+            <label>Visitantes</label>
+
+            <textarea
+                id="visitantes"
+                placeholder="Ingrese visitantes..."
+            ></textarea>
+
+        </div>
+
+
+        <div class="campo">
+
+            <label>Tarea a realizar</label>
+
+            <textarea
+                id="tarea"
+                placeholder="Describa la tarea a realizar..."
+            ></textarea>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     CONDICIONES DE TRABAJO
+========================================================= -->
+
+<section class="card">
+
+    <div class="card-header">
+
+        <div class="card-numero">
+            03
+        </div>
+
+        <div>
+            <h2>CONDICIONES DE TRABAJO</h2>
+            <p>Verificación de equipos, herramientas y documentación</p>
+        </div>
+
+    </div>
+
+
+    <div class="tabla-contenedor">
+
+        <table class="tabla">
+
+            <thead>
+
+                <tr>
+
+                    <th style="width:55px">
+                        N°
+                    </th>
+
+                    <th>
+                        CONTROL
+                    </th>
+
+                    <th style="width:95px">
+                        CUMPLE
+                    </th>
+
+                    <th style="width:95px">
+                        NO CUMPLE
+                    </th>
+
+                    <th style="width:95px">
+                        N/A
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody id="tablaChecklist"></tbody>
+
+        </table>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     RESUMEN
+========================================================= -->
+
+<section class="card">
+
+    <div class="card-header">
+
+        <div class="card-numero">
+            04
+        </div>
+
+        <div>
+            <h2>RESUMEN DE CONTROL</h2>
+            <p>Estado general de la verificación realizada</p>
+        </div>
+
+    </div>
+
+
+    <div class="resumen">
+
+        <div class="resumen-card">
+
+            <strong id="cantidadCumple">
+                0
+            </strong>
+
+            <span>CUMPLE</span>
+
+        </div>
+
+
+        <div class="resumen-card">
+
+            <strong id="cantidadNoCumple">
+                0
+            </strong>
+
+            <span>NO CUMPLE</span>
+
+        </div>
+
+
+        <div class="resumen-card">
+
+            <strong id="cantidadNA">
+                0
+            </strong>
+
+            <span>N/A</span>
+
+        </div>
+
+
+        <div class="resumen-card">
+
+            <strong id="cantidadPendientes">
+                14
+            </strong>
+
+            <span>PENDIENTES</span>
+
+        </div>
+
+    </div>
+
+
+    <div class="progreso-box">
+
+        <div class="progreso-info">
+
+            <span>
+                Progreso del formulario
+            </span>
+
+            <strong id="porcentaje">
+                0%
+            </strong>
+
+        </div>
+
+
+        <div class="progreso">
+
+            <div
+                class="progreso-barra"
+                id="barraProgreso"
+            ></div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     OBSERVACIONES
+========================================================= -->
+
+<section class="card">
+
+    <div class="card-header">
+
+        <div class="card-numero">
+            05
+        </div>
+
+        <div>
+            <h2>OBSERVACIONES</h2>
+            <p>Desvíos, recomendaciones y comentarios preventivos</p>
+        </div>
+
+    </div>
+
+
+    <div class="observaciones">
+
+        <textarea
+            id="observaciones"
+            placeholder="Ingrese las observaciones correspondientes..."
+        ></textarea>
+
+    </div>
+
+
+    <div class="acciones">
+
+        <div
+            class="estado-formulario"
+            id="estadoFormulario"
+        >
+            Formulario en proceso
+        </div>
+
+
+        <div class="botones">
+
+            <button
+                type="button"
+                class="btn btn-limpiar"
+                onclick="limpiarFormulario()"
+            >
+                LIMPIAR
+            </button>
+
+
+            <button
+                type="button"
+                class="btn btn-guardar"
+                onclick="guardarFormulario()"
+            >
+                GUARDAR
+            </button>
+
+
+            <button
+                type="button"
+                class="btn btn-finalizar"
+                onclick="finalizarFormulario()"
+            >
+                FINALIZAR
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+</div>
+
+
+
+<script>
+
+/* =========================================================
+   ITEMS DEL FORMULARIO
+========================================================= */
+
+const controles = [
+
+    {
+        titulo:
+            "HERRAMIENTAS DE MANO",
+
+        descripcion:
+            "Buen estado, limpias y ordenadas."
+    },
+
+
+    {
+        titulo:
+            "EQUIPO DE CONTROL DE PRESIÓN",
+
+        descripcion:
+            "Certificación, mantenimientos registrados, orden y limpieza."
+    },
+
+
+    {
+        titulo:
+            "EQUIPO DE IZAJE",
+
+        descripcion:
+            "Certificación, orden, limpieza y montaje."
+    },
+
+
+    {
+        titulo:
+            "VEHÍCULO LIVIANO",
+
+        descripcion:
+            "VTV y Seguro, parabrisas, luces, alarma de retroceso, matafuegos, botiquín, balizas y chaleco."
+    },
+
+
+    {
+        titulo:
+            "EQUIPO",
+
+        descripcion:
+            "Funcionamiento de comandos e instrumentos, identificación de productos, señalización y montaje."
+    },
+
+
+    {
+        titulo:
+            "DOCUMENTACIÓN TÉCNICA",
+
+        descripcion:
+            "Procedimientos, Análisis de riesgos, Rol de llamadas, Certificaciones y Credenciales habilitantes."
+    },
+
+
+    {
+        titulo:
+            "HERRAMIENTAS DE FONDO",
+
+        descripcion:
+            "Certificación, ordenadas, en buen estado y libres de óxido."
+    },
+
+
+    {
+        titulo:
+            "OBSERVACIONES PREVENTIVAS",
+
+        descripcion:
+            "Se utilizan para evitar incidentes y se cuenta con último registro."
+    },
+
+
+    {
+        titulo:
+            "USO DE EPP",
+
+        descripcion:
+            "Y Ropa de trabajo en buen estado y sin modificar."
+    },
+
+
+    {
+        titulo:
+            "PROGRAMA DE TRABAJO",
+
+        descripcion:
+            "Cuenta con información del pozo y detalle de las tareas a realizar."
+    },
+
+
+    {
+        titulo:
+            "FORMULARIOS DE CONTROL OPERATIVO",
+
+        descripcion:
+            "Completos y disponibles con análisis de riesgos."
+    },
+
+
+    {
+        titulo:
+            "ORDEN Y LIMPIEZA - GESTIÓN DE RESIDUOS",
+
+        descripcion:
+            "Durante la realización de trabajos."
+    },
+
+
+    {
+        titulo:
+            "POSTURAS DE TRABAJO",
+
+        descripcion:
+            "Al realizar esfuerzos y manipulación de herramientas."
+    },
+
+
+    {
+        titulo:
+            "PROCEDIMIENTOS OPERATIVOS",
+
+        descripcion:
+            "Conocimiento y cumplimiento para todas las tareas."
+    }
+
+];
+
+
+
+/* =========================================================
+   GENERAR TABLA
+========================================================= */
+
+function generarTabla(){
+
+    const tbody =
+        document.getElementById(
+            "tablaChecklist"
+        );
+
+
+    tbody.innerHTML = "";
+
+
+    controles.forEach(
+        (control,index) => {
+
+            const numero =
+                index + 1;
+
+
+            tbody.innerHTML += `
+
+                <tr>
+
+                    <td class="numero">
+
+                        ${numero}
+
+                    </td>
+
+
+                    <td class="descripcion">
+
+                        <strong>
+                            ${control.titulo}
+                        </strong>
+
+                        <small>
+                            ${control.descripcion}
+                        </small>
+
+                    </td>
+
+
+                    <td>
+
+                        <label class="opcion cumple">
+
+                            <input
+                                type="radio"
+                                name="control${numero}"
+                                value="Cumple"
+                                onchange="actualizarResumen()"
+                            >
+
+                            <span>
+                                SÍ
+                            </span>
+
+                        </label>
+
+                    </td>
+
+
+                    <td>
+
+                        <label class="opcion no-cumple">
+
+                            <input
+                                type="radio"
+                                name="control${numero}"
+                                value="No Cumple"
+                                onchange="actualizarResumen()"
+                            >
+
+                            <span>
+                                NO
+                            </span>
+
+                        </label>
+
+                    </td>
+
+
+                    <td>
+
+                        <label class="opcion na">
+
+                            <input
+                                type="radio"
+                                name="control${numero}"
+                                value="N/A"
+                                onchange="actualizarResumen()"
+                            >
+
+                            <span>
+                                N/A
+                            </span>
+
+                        </label>
+
+                    </td>
+
+                </tr>
+
+            `;
+
+        }
+    );
+
+}
+
+
+
+/* =========================================================
+   RESUMEN
+========================================================= */
+
+function actualizarResumen(){
+
+    let cumple = 0;
+    let noCumple = 0;
+    let na = 0;
+
+
+    controles.forEach(
+        (control,index) => {
+
+            const radio =
+                document.querySelector(
+                    `input[name="control${index + 1}"]:checked`
+                );
+
+
+            if(!radio){
+                return;
+            }
+
+
+            if(
+                radio.value === "Cumple"
+            ){
+                cumple++;
+            }
+
+
+            if(
+                radio.value === "No Cumple"
+            ){
+                noCumple++;
+            }
+
+
+            if(
+                radio.value === "N/A"
+            ){
+                na++;
+            }
+
+        }
+    );
+
+
+    const completados =
+        cumple + noCumple + na;
+
+
+    const pendientes =
+        controles.length - completados;
+
+
+    const porcentaje =
+        Math.round(
+            completados /
+            controles.length *
+            100
+        );
+
+
+    document.getElementById(
+        "cantidadCumple"
+    ).textContent = cumple;
+
+
+    document.getElementById(
+        "cantidadNoCumple"
+    ).textContent = noCumple;
+
+
+    document.getElementById(
+        "cantidadNA"
+    ).textContent = na;
+
+
+    document.getElementById(
+        "cantidadPendientes"
+    ).textContent = pendientes;
+
+
+    document.getElementById(
+        "porcentaje"
+    ).textContent =
+        porcentaje + "%";
+
+
+    document.getElementById(
+        "barraProgreso"
+    ).style.width =
+        porcentaje + "%";
+
+
+    if(
+        pendientes === 0
+    ){
+
+        document.getElementById(
+            "estadoFormulario"
+        ).textContent =
+            "Checklist completo";
+
+    }
+
+    else{
+
+        document.getElementById(
+            "estadoFormulario"
+        ).textContent =
+            "Formulario en proceso - " +
+            pendientes +
+            " controles pendientes";
+
+    }
+
+}
+
+
+
+/* =========================================================
+   DATOS DEL CHECKLIST
+========================================================= */
+
+function obtenerChecklist(){
+
+    return controles.map(
+        (control,index) => {
+
+            const seleccionado =
+                document.querySelector(
+                    `input[name="control${index + 1}"]:checked`
+                );
+
+
+            return {
+
+                numero:
+                    index + 1,
+
+                control:
+                    control.titulo,
+
+                descripcion:
+                    control.descripcion,
+
+                estado:
+                    seleccionado
+                    ? seleccionado.value
+                    : ""
+
+            };
+
+        }
+    );
+
+}
+
+
+
+/* =========================================================
+   GUARDAR
+========================================================= */
+
+function guardarFormulario(){
+
+    const datos = {
+
+        documento:
+            "PGSN04-F10",
+
+        revision:
+            "Rev.01",
+
+        fechaRevision:
+            "Sep.25",
+
+
+        fecha:
+            document.getElementById(
+                "fecha"
+            ).value,
+
+
+        equipo:
+            document.getElementById(
+                "equipo"
+            ).value,
+
+
+        pozo:
+            document.getElementById(
+                "pozo"
+            ).value,
+
+
+        supervisor:
+            document.getElementById(
+                "supervisor"
+            ).value,
+
+
+        operador:
+            document.getElementById(
+                "operador"
+            ).value,
+
+
+        ayudante1:
+            document.getElementById(
+                "ayudante1"
+            ).value,
+
+
+        ayudante2:
+            document.getElementById(
+                "ayudante2"
+            ).value,
+
+
+        visitantes:
+            document.getElementById(
+                "visitantes"
+            ).value,
+
+
+        tarea:
+            document.getElementById(
+                "tarea"
+            ).value,
+
+
+        observaciones:
+            document.getElementById(
+                "observaciones"
+            ).value,
+
+
+        checklist:
+            obtenerChecklist()
+
+    };
+
+
+    localStorage.setItem(
+        "NASER_PGSN04_F10",
+        JSON.stringify(datos)
+    );
+
+
+    alert(
+        "Formulario guardado correctamente."
+    );
+
+}
+
+
+
+/* =========================================================
+   FINALIZAR
+========================================================= */
+
+function finalizarFormulario(){
+
+    const campos = [
+
+        {
+            id:"fecha",
+            nombre:"Fecha"
+        },
+
+        {
+            id:"equipo",
+            nombre:"Equipo"
+        },
+
+        {
+            id:"pozo",
+            nombre:"Pozo"
+        },
+
+        {
+            id:"supervisor",
+            nombre:"Supervisor"
+        },
+
+        {
+            id:"operador",
+            nombre:"Operador"
+        }
+
+    ];
+
+
+    for(
+        const campo of campos
+    ){
+
+        const input =
+            document.getElementById(
+                campo.id
+            );
+
+
+        if(
+            !input.value.trim()
+        ){
+
+            alert(
+                "Debe completar: " +
+                campo.nombre
+            );
+
+
+            input.focus();
+
+            return;
+
+        }
+
+    }
+
+
+    let pendientes = 0;
+
+
+    controles.forEach(
+        (control,index) => {
+
+            const seleccionado =
+                document.querySelector(
+                    `input[name="control${index + 1}"]:checked`
+                );
+
+
+            if(
+                !seleccionado
+            ){
+
+                pendientes++;
+
+            }
+
+        }
+    );
+
+
+    if(
+        pendientes > 0
+    ){
+
+        alert(
+            "Debe completar todos los controles. Faltan " +
+            pendientes +
+            "."
+        );
+
+        return;
+
+    }
+
+
+    guardarFormulario();
+
+
+    document.getElementById(
+        "estadoFormulario"
+    ).textContent =
+        "Formulario finalizado";
+
+
+    alert(
+        "PGSN04-F10 finalizado correctamente."
+    );
+
+}
+
+
+
+/* =========================================================
+   LIMPIAR
+========================================================= */
+
+function limpiarFormulario(){
+
+    if(
+        !confirm(
+            "¿Desea limpiar todo el formulario?"
+        )
+    ){
+        return;
+    }
+
+
+    document.querySelectorAll(
+        "input[type='text'], input[type='date'], textarea"
+    ).forEach(
+        campo => {
+
+            campo.value = "";
+
+        }
+    );
+
+
+    document.querySelectorAll(
+        "input[type='radio']"
+    ).forEach(
+        radio => {
+
+            radio.checked = false;
+
+        }
+    );
+
+
+    localStorage.removeItem(
+        "NASER_PGSN04_F10"
+    );
+
+
+    actualizarResumen();
+
+}
+
+
+
+/* =========================================================
+   CARGAR DATOS
+========================================================= */
+
+function cargarFormulario(){
+
+    const guardado =
+        localStorage.getItem(
+            "NASER_PGSN04_F10"
+        );
+
+
+    if(
+        !guardado
+    ){
+        return;
+    }
+
+
+    try{
+
+        const datos =
+            JSON.parse(
+                guardado
+            );
+
+
+        document.getElementById(
+            "fecha"
+        ).value =
+            datos.fecha || "";
+
+
+        document.getElementById(
+            "equipo"
+        ).value =
+            datos.equipo || "";
+
+
+        document.getElementById(
+            "pozo"
+        ).value =
+            datos.pozo || "";
+
+
+        document.getElementById(
+            "supervisor"
+        ).value =
+            datos.supervisor || "";
+
+
+        document.getElementById(
+            "operador"
+        ).value =
+            datos.operador || "";
+
+
+        document.getElementById(
+            "ayudante1"
+        ).value =
+            datos.ayudante1 || "";
+
+
+        document.getElementById(
+            "ayudante2"
+        ).value =
+            datos.ayudante2 || "";
+
+
+        document.getElementById(
+            "visitantes"
+        ).value =
+            datos.visitantes || "";
+
+
+        document.getElementById(
+            "tarea"
+        ).value =
+            datos.tarea || "";
+
+
+        document.getElementById(
+            "observaciones"
+        ).value =
+            datos.observaciones || "";
+
+
+        if(
+            Array.isArray(
+                datos.checklist
+            )
+        ){
+
+            datos.checklist.forEach(
+                item => {
+
+                    if(
+                        !item.estado
+                    ){
+                        return;
+                    }
+
+
+                    const radio =
+                        document.querySelector(
+                            `input[name="control${item.numero}"][value="${item.estado}"]`
+                        );
+
+
+                    if(
+                        radio
+                    ){
+
+                        radio.checked =
+                            true;
+
+                    }
+
+                }
+            );
+
+        }
+
+
+        actualizarResumen();
+
+    }
+
+    catch(error){
+
+        console.error(
+            "Error cargando formulario:",
+            error
+        );
+
+    }
+
+}
+
+
+
+/* =========================================================
+   INICIAR
+========================================================= */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function(){
+
+        generarTabla();
+
+        cargarFormulario();
+
+        actualizarResumen();
+
+    }
+);
+
+</script>
+
+</body>
+</html>

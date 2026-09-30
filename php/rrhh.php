@@ -5,6 +5,7 @@ verify_csrf(); // protege todos los formularios POST de esta pagina
 require __DIR__ . '/config/db.php';
 require __DIR__ . '/config/layout.php';
 require __DIR__ . '/config/modulo.php';
+require_once __DIR__ . '/config/formularios_catalogo.php';
 
 $slug = 'rrhh';
 [$sector, $sid, $canEdit] = cargarModulo($pdo, $slug);
@@ -70,10 +71,6 @@ if($mes<1||$mes>12)$mes=(int)date('n'); if($anio<2020||$anio>2100)$anio=(int)dat
 $primerDia=sprintf('%04d-%02d-01',$anio,$mes); $diasMes=(int)date('t',strtotime($primerDia)); $inicioSemana=(int)date('N',strtotime($primerDia));
 $eventosPorDia=[]; foreach($rows as $r){if(substr($r['fecha_vencimiento'],0,7)===sprintf('%04d-%02d',$anio,$mes)){$d=(int)substr($r['fecha_vencimiento'],8,2);$eventosPorDia[$d][]=$r;}}
 
-// Consultar Formularios / Checklists
-$stForms = $pdo->prepare('SELECT f.*, u.nombre AS creado_nombre FROM rrhh_formularios f LEFT JOIN usuarios u ON u.id = f.creado_por WHERE f.sector_id = ? ORDER BY f.id DESC');
-$stForms->execute([$sid]);
-$formularios = $stForms->fetchAll();
 ?>
 
 <?php if($msg):?><div class="module-note"><?=h($msg)?></div><?php endif;?>
@@ -85,136 +82,8 @@ $formularios = $stForms->fetchAll();
   <div class="module-card"><h3>Vencidos</h3><div class="big"><?=$vencidos?></div></div>
 </section>
 
-<!-- SECCIÓN: CHECKLISTS Y FORMULARIOS DE RRHH -->
-<div class="module-toolbar" id="formularios">
-  <h2>Formularios y Checklists RRHH</h2>
-  <span class="count-pill"><?=count($formularios)?> cargado(s)</span>
-</div>
-
-<!-- TARJETAS DE LOS FORMULARIOS BASADOS EN LOS ARCHIVOS DE LA IMAGEN -->
-<div class="grid-forms">
-  <div class="card-form">
-    <div>
-      <h3>1. Comunicación de Licencias y Vacaciones</h3>
-      <p>Gestión y registro de licencias del personal.</p>
-    </div>
-    <?php if($canEdit): ?>
-      <a href="/php/formularios/comunicacion_licencias_vacaciones.php?sector_id=<?=$sid?>" class="btn primary">Abrir Formulario</a>
-    <?php endif; ?>
-  </div>
-
-  <div class="card-form">
-    <div>
-      <h3>2. Evaluación de Desempeño del Personal</h3>
-      <p>Evaluación periódica de rendimiento.</p>
-    </div>
-    <?php if($canEdit): ?>
-      <a href="/php/formularios/evaluacion_desempeno_personal.php?sector_id=<?=$sid?>" class="btn primary">Abrir Formulario</a>
-    <?php endif; ?>
-  </div>
-
-  <div class="card-form">
-    <div>
-      <h3>3. Ingreso Naser</h3>
-      <p>Alta e incorporación de nuevo personal.</p>
-    </div>
-    <?php if($canEdit): ?>
-      <a href="/php/formularios/ingreso_naser.php?sector_id=<?=$sid?>" class="btn primary">Abrir Formulario</a>
-    <?php endif; ?>
-  </div>
-
-  <div class="card-form">
-    <div>
-      <h3>4. Listado de Trabajadores</h3>
-      <p>Registro y control de empleados activos.</p>
-    </div>
-    <?php if($canEdit): ?>
-      <a href="/php/formularios/listado_trabajadores.php?sector_id=<?=$sid?>" class="btn primary">Abrir Formulario</a>
-    <?php endif; ?>
-  </div>
-
-  <div class="card-form">
-    <div>
-      <h3>5. Plan de Carrera</h3>
-      <p>Seguimiento del desarrollo profesional.</p>
-    </div>
-    <?php if($canEdit): ?>
-      <a href="/php/formularios/plan_carrera.php?sector_id=<?=$sid?>" class="btn primary">Abrir Formulario</a>
-    <?php endif; ?>
-  </div>
-
-  <div class="card-form">
-    <div>
-      <h3>6. Registro de Entrega EPP</h3>
-      <p>Constancia de entrega de equipos de protección.</p>
-    </div>
-    <?php if($canEdit): ?>
-      <a href="/php/formularios/registro_entrega_epp.php?sector_id=<?=$sid?>" class="btn primary">Abrir Formulario</a>
-    <?php endif; ?>
-  </div>
-
-  <div class="card-form">
-    <div>
-      <h3>7. Registro Formación</h3>
-      <p>Capacitaciones e inducciones del personal.</p>
-    </div>
-    <?php if($canEdit): ?>
-      <a href="/php/formularios/registro_formacion.php?sector_id=<?=$sid?>" class="btn primary">Abrir Formulario</a>
-    <?php endif; ?>
-  </div>
-
-  <div class="card-form">
-    <div>
-      <h3>8. Sanción Disciplinaria</h3>
-      <p>Registro de advertencias y apercibimientos.</p>
-    </div>
-    <?php if($canEdit): ?>
-      <a href="/php/formularios/sancion_disciplinaria.php?sector_id=<?=$sid?>" class="btn primary">Abrir Formulario</a>
-    <?php endif; ?>
-  </div>
-</div>
-
-<!-- TABLA DE HISTORIAL DE FORMULARIOS CARGADOS -->
-<div class="table-wrapper" style="margin-bottom: 30px;">
-  <table class="module-table">
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Código / Tipo Formulario</th>
-        <th>Empleado</th>
-        <th>Legajo</th>
-        <th>Fecha Emisión</th>
-        <th>Estado</th>
-        <th>Cargado por</th>
-        <th>Acción</th>
-      </tr>
-    </thead>
-    <tbody>
-      <?php if(empty($formularios)): ?>
-        <tr><td colspan="8" style="text-align: center; color: #666; padding: 18px;">No hay formularios o checklists registrados aún.</td></tr>
-      <?php else: ?>
-        <?php foreach($formularios as $f): ?>
-        <tr>
-          <td><strong>#<?=$f['id']?></strong></td>
-          <td><strong><?=h($f['codigo_form'])?></strong></td>
-          <td><?=h($f['empleado_nombre'])?></td>
-          <td><?=h($f['legajo'] ?: '-')?></td>
-          <td><?=h($f['fecha_documento'])?></td>
-          <td>
-            <span class="status-pill status-<?=h($f['estado'])?>">
-              <?=h(str_replace('_', ' ', $f['estado']))?>
-            </span>
-          </td>
-          <td><?=h($f['creado_nombre'] ?: 'Sistema')?></td>
-          <td>
-            <a class="btn secondary" href="/php/formularios/ver.php?id=<?=(int)$f['id']?>">Ver / Editar</a>
-          </td>
-        </tr>
-        <?php endforeach; ?>
-      <?php endif; ?>
-    </tbody>
-  </table>
-</div>
+<!-- SECCIÓN: FORMULARIOS DIGITALES (se guardan en la base de datos) -->
+<?php formulariosPanel($pdo, 'rrhh'); ?>
 
 <!-- SECCIÓN: GESTIÓN DE VENCIMIENTOS Y LICENCIAS -->
 <?php if($canEdit):?>

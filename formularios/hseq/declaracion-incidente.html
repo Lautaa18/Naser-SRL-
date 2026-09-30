@@ -1,0 +1,2870 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>NASER | PGSN10-F3 - Declaración ante Incidente</title>
+
+<style>
+:root{
+    --green:#009b49;
+    --green-dark:#007a3a;
+    --green-soft:#e8f6ee;
+    --bg:#f2f3f5;
+    --white:#ffffff;
+    --border:#d9dde3;
+    --text:#15191e;
+    --muted:#69717c;
+    --warning:#b54708;
+    --danger:#b42318;
+    --shadow:0 8px 28px rgba(16,24,40,.06);
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    background:var(--bg);
+    color:var(--text);
+}
+
+.app{
+    display:flex;
+    min-height:100vh;
+}
+
+/* =========================================================
+   SIDEBAR
+========================================================= */
+
+.sidebar{
+    position:fixed;
+    top:0;
+    left:0;
+    bottom:0;
+    width:320px;
+    background:#0d0d0d;
+    color:#fff;
+    border-right:1px solid #252525;
+    z-index:1000;
+}
+
+.brand{
+    height:120px;
+    display:flex;
+    align-items:center;
+    padding:0 34px;
+    border-bottom:1px solid #292929;
+    font-size:34px;
+    font-weight:900;
+    letter-spacing:4px;
+}
+
+.sidebar-section{
+    padding:28px 0;
+}
+
+.sidebar-label{
+    padding:0 34px 14px;
+    color:#7d8793;
+    font-size:12px;
+    letter-spacing:1.2px;
+    text-transform:uppercase;
+}
+
+.nav-link{
+    min-height:56px;
+    display:flex;
+    align-items:center;
+    gap:15px;
+    padding:0 30px;
+    color:#e6e6e6;
+    text-decoration:none;
+    border-left:4px solid transparent;
+    transition:.2s;
+}
+
+.nav-link:hover{
+    background:#151515;
+}
+
+.nav-link.active{
+    background:#191919;
+    border-left-color:var(--green);
+}
+
+.nav-number{
+    width:28px;
+    color:#00bd5a;
+    font-size:18px;
+    font-weight:800;
+}
+
+.nav-name{
+    font-size:15px;
+}
+
+/* =========================================================
+   MAIN
+========================================================= */
+
+.main{
+    width:calc(100% - 320px);
+    margin-left:320px;
+}
+
+/* =========================================================
+   TOPBAR
+========================================================= */
+
+.topbar{
+    min-height:82px;
+    padding:0 40px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:20px;
+    background:#fff;
+    border-bottom:1px solid var(--border);
+}
+
+.breadcrumb{
+    color:#59616c;
+    font-size:14px;
+}
+
+.top-actions{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+}
+
+.badge{
+    padding:10px 15px;
+    border-radius:9px;
+    font-size:12px;
+    font-weight:800;
+}
+
+.badge-edit{
+    background:#f0f1f2;
+    color:#59616c;
+}
+
+.badge-document{
+    background:var(--green-soft);
+    color:#007a3a;
+}
+
+.page{
+    padding:35px;
+}
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.hero{
+    position:relative;
+    min-height:190px;
+    display:flex;
+    align-items:center;
+    overflow:hidden;
+    padding:40px 42px;
+    background:linear-gradient(110deg,#101010,#191919);
+    color:#fff;
+    border-radius:15px;
+}
+
+.hero::after{
+    content:"";
+    position:absolute;
+    width:310px;
+    height:310px;
+    right:-80px;
+    top:-120px;
+    border-radius:50%;
+    background:rgba(0,155,73,.20);
+}
+
+.hero-content{
+    position:relative;
+    z-index:2;
+}
+
+.hero-kicker{
+    margin-bottom:14px;
+    color:#00c65e;
+    font-size:13px;
+    font-weight:800;
+    letter-spacing:3px;
+}
+
+.hero h1{
+    margin-bottom:14px;
+    font-size:35px;
+}
+
+.hero p{
+    max-width:1050px;
+    color:#e6e8eb;
+    font-size:15px;
+    line-height:1.6;
+}
+
+/* =========================================================
+   INDICADORES
+========================================================= */
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:14px;
+    margin:22px 0 25px;
+}
+
+.stat{
+    min-height:105px;
+    padding:20px;
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:11px;
+}
+
+.stat-label{
+    display:block;
+    margin-bottom:8px;
+    color:#68717c;
+    font-size:11px;
+    font-weight:700;
+    text-transform:uppercase;
+}
+
+.stat-value{
+    display:block;
+    font-size:32px;
+    font-weight:900;
+}
+
+.green{
+    color:var(--green);
+}
+
+.warning{
+    color:var(--warning);
+}
+
+/* =========================================================
+   DOCUMENTO
+========================================================= */
+
+.document-card{
+    overflow:hidden;
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:15px;
+    box-shadow:var(--shadow);
+}
+
+.document-header{
+    min-height:98px;
+    display:flex;
+    align-items:center;
+    gap:17px;
+    padding:22px 27px;
+    border-bottom:1px solid var(--border);
+}
+
+.document-number{
+    width:50px;
+    height:50px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-shrink:0;
+    border-radius:9px;
+    background:#111;
+    color:#00c45e;
+    font-size:18px;
+    font-weight:900;
+}
+
+.document-title h2{
+    margin-bottom:5px;
+    font-size:20px;
+}
+
+.document-title p{
+    color:#6c7480;
+    font-size:13px;
+}
+
+.document-body{
+    padding:27px;
+}
+
+/* =========================================================
+   INFO
+========================================================= */
+
+.info{
+    margin-bottom:23px;
+    padding:18px 20px;
+    background:#fbfcfc;
+    border:1px solid #d9e7df;
+    border-left:4px solid var(--green);
+    border-radius:9px;
+    color:#4c5560;
+    font-size:13px;
+    line-height:1.65;
+}
+
+.info strong{
+    color:#007a39;
+}
+
+/* =========================================================
+   SECCIONES
+========================================================= */
+
+.section{
+    margin-bottom:23px;
+    overflow:hidden;
+    border:1px solid var(--border);
+    border-radius:12px;
+    background:#fff;
+}
+
+.section-header{
+    min-height:65px;
+    display:flex;
+    align-items:center;
+    gap:13px;
+    padding:14px 18px;
+    background:#f8f9fa;
+    border-bottom:1px solid var(--border);
+}
+
+.section-number{
+    width:44px;
+    height:36px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-shrink:0;
+    border-radius:8px;
+    background:var(--green-soft);
+    color:var(--green);
+    font-size:12px;
+    font-weight:900;
+}
+
+.section-header h3{
+    margin-bottom:3px;
+    font-size:15px;
+}
+
+.section-header p{
+    color:#707884;
+    font-size:12px;
+}
+
+.section-body{
+    padding:20px;
+}
+
+/* =========================================================
+   FORMULARIO
+========================================================= */
+
+.form-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:16px;
+}
+
+.field{
+    display:flex;
+    flex-direction:column;
+    gap:7px;
+}
+
+.field.two{
+    grid-column:span 2;
+}
+
+.field label{
+    color:#4e5661;
+    font-size:10px;
+    font-weight:800;
+    text-transform:uppercase;
+    letter-spacing:.5px;
+}
+
+.field input,
+.field select{
+    width:100%;
+    border:1px solid #d4d9df;
+    border-radius:8px;
+    padding:11px 12px;
+    background:#fff;
+    font-size:13px;
+    outline:none;
+}
+
+.field input:focus,
+.field select:focus{
+    border-color:var(--green);
+    box-shadow:0 0 0 3px rgba(0,155,73,.08);
+}
+
+/* =========================================================
+   PREGUNTAS
+========================================================= */
+
+.question-list{
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+}
+
+.question-card{
+    padding:17px;
+    border:1px solid #e0e3e7;
+    border-radius:10px;
+    background:#fcfcfd;
+}
+
+.question-title{
+    display:flex;
+    align-items:flex-start;
+    gap:12px;
+    margin-bottom:11px;
+}
+
+.question-number{
+    width:32px;
+    height:32px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-shrink:0;
+    border-radius:7px;
+    background:#111;
+    color:#00c45e;
+    font-size:12px;
+    font-weight:900;
+}
+
+.question-title strong{
+    padding-top:6px;
+    font-size:13px;
+    color:#303740;
+    line-height:1.45;
+}
+
+.question-card textarea{
+    width:100%;
+    min-height:92px;
+    resize:vertical;
+    border:1px solid #d4d9df;
+    border-radius:8px;
+    padding:11px 12px;
+    background:#fff;
+    font-size:13px;
+    outline:none;
+    line-height:1.5;
+}
+
+.question-card textarea:focus{
+    border-color:var(--green);
+    box-shadow:0 0 0 3px rgba(0,155,73,.08);
+}
+
+.question-card.big textarea{
+    min-height:220px;
+}
+
+/* =========================================================
+   FIRMA
+========================================================= */
+
+.signature-strip{
+    margin-top:20px;
+    padding:16px;
+    border:1px solid #dfe4e8;
+    border-radius:10px;
+    background:#f8f9fa;
+}
+
+.signature-title{
+    margin-bottom:12px;
+    color:#3d4651;
+    font-size:11px;
+    font-weight:800;
+    text-transform:uppercase;
+}
+
+.signature-grid{
+    display:grid;
+    grid-template-columns:2fr 1.5fr 1fr;
+    gap:14px;
+}
+
+.signature-grid input{
+    width:100%;
+    border:1px solid #d4d9df;
+    border-radius:8px;
+    padding:10px 11px;
+    background:#fff;
+    font-size:12px;
+    outline:none;
+}
+
+/* =========================================================
+   PREGUNTA 7 - CROQUIS MEDIANTE IMAGEN
+========================================================= */
+
+.croquis-toolbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:15px;
+    margin-bottom:15px;
+    flex-wrap:wrap;
+}
+
+.croquis-help{
+    color:#69717c;
+    font-size:12px;
+    line-height:1.5;
+}
+
+.photo-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:15px;
+}
+
+.photo-card{
+    overflow:hidden;
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:10px;
+}
+
+.photo-preview{
+    min-height:240px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:#f5f6f7;
+    color:#7c848f;
+    text-align:center;
+    font-size:12px;
+}
+
+.photo-preview img{
+    width:100%;
+    height:260px;
+    object-fit:contain;
+    background:#f7f7f7;
+}
+
+.photo-footer{
+    padding:12px;
+    display:flex;
+    flex-direction:column;
+    gap:9px;
+}
+
+.photo-footer input[type="file"]{
+    width:100%;
+    font-size:12px;
+}
+
+.table-input{
+    width:100%;
+    border:1px solid #d4d9df;
+    border-radius:6px;
+    padding:9px;
+    background:#fff;
+    font-size:12px;
+    outline:none;
+}
+
+.empty-images{
+    grid-column:1/-1;
+    padding:38px 20px;
+    border:1px dashed #c9cfd6;
+    border-radius:10px;
+    text-align:center;
+    background:#fafbfc;
+    color:#747d88;
+    line-height:1.5;
+}
+
+.empty-images strong{
+    display:block;
+    margin-bottom:6px;
+    color:#303740;
+}
+
+/* =========================================================
+   BOTONES
+========================================================= */
+
+.btn{
+    min-height:41px;
+    padding:0 16px;
+    border:none;
+    border-radius:8px;
+    font-size:12px;
+    font-weight:800;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.btn:hover{
+    transform:translateY(-1px);
+}
+
+.btn-green{
+    background:var(--green);
+    color:#fff;
+}
+
+.btn-green:hover{
+    background:var(--green-dark);
+}
+
+.btn-dark{
+    background:#181818;
+    color:#fff;
+}
+
+.btn-light{
+    background:#eef0f2;
+    color:#4a525d;
+}
+
+.btn-danger{
+    background:#fee4e2;
+    color:#b42318;
+}
+
+/* =========================================================
+   PROGRESO
+========================================================= */
+
+.progress-box{
+    padding:15px;
+    border:1px solid #e0e3e7;
+    border-radius:9px;
+    background:#fafafa;
+}
+
+.progress-info{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:8px;
+    color:#5f6773;
+    font-size:11px;
+}
+
+.progress-info strong{
+    color:var(--green);
+}
+
+.progress{
+    height:8px;
+    overflow:hidden;
+    border-radius:20px;
+    background:#e3e6e9;
+}
+
+.progress-bar{
+    width:0%;
+    height:100%;
+    background:var(--green);
+    transition:.25s;
+}
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.form-footer{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:15px;
+    flex-wrap:wrap;
+}
+
+.status{
+    color:#68717b;
+    font-size:12px;
+}
+
+.status strong{
+    color:#16191d;
+}
+
+.footer-buttons{
+    display:flex;
+    gap:9px;
+    flex-wrap:wrap;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media(max-width:1200px){
+
+    .sidebar{
+        width:270px;
+    }
+
+    .main{
+        width:calc(100% - 270px);
+        margin-left:270px;
+    }
+
+    .stats,
+    .form-grid,
+    .photo-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+}
+
+@media(max-width:800px){
+
+    .app{
+        display:block;
+    }
+
+    .sidebar{
+        position:relative;
+        width:100%;
+        min-height:auto;
+    }
+
+    .main{
+        width:100%;
+        margin-left:0;
+    }
+
+    .brand{
+        height:85px;
+    }
+
+    .topbar{
+        padding:18px 20px;
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    .page{
+        padding:18px;
+    }
+
+    .hero{
+        padding:28px 23px;
+    }
+
+    .hero h1{
+        font-size:28px;
+    }
+
+    .stats,
+    .form-grid,
+    .signature-grid,
+    .photo-grid{
+        grid-template-columns:1fr;
+    }
+
+    .field.two{
+        grid-column:auto;
+    }
+
+    .form-footer{
+        flex-direction:column;
+        align-items:stretch;
+    }
+
+    .footer-buttons{
+        flex-direction:column;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<!-- =========================================================
+     SIDEBAR
+========================================================= -->
+
+<aside class="sidebar">
+
+    <div class="brand">
+        NASER
+    </div>
+
+    <div class="sidebar-section">
+
+        <div class="sidebar-label">
+            DOCUMENTO
+        </div>
+
+        <a href="#datos" class="nav-link active">
+            <span class="nav-number">01</span>
+            <span class="nav-name">Datos</span>
+        </a>
+
+        <a href="#cuestionario1" class="nav-link">
+            <span class="nav-number">02</span>
+            <span class="nav-name">Cuestionario I</span>
+        </a>
+
+        <a href="#croquis" class="nav-link">
+            <span class="nav-number">03</span>
+            <span class="nav-name">Croquis</span>
+        </a>
+
+        <a href="#cuestionario2" class="nav-link">
+            <span class="nav-number">04</span>
+            <span class="nav-name">Cuestionario II</span>
+        </a>
+
+        <a href="#cierre" class="nav-link">
+            <span class="nav-number">05</span>
+            <span class="nav-name">Firma y Cierre</span>
+        </a>
+
+    </div>
+
+</aside>
+
+<!-- =========================================================
+     MAIN
+========================================================= -->
+
+<main class="main">
+
+<header class="topbar">
+
+    <div class="breadcrumb">
+        NASER / Gestión / Declaración ante Incidente
+    </div>
+
+    <div class="top-actions">
+
+        <span
+            class="badge badge-edit"
+            id="badgeEstado"
+        >
+            EN EDICIÓN
+        </span>
+
+        <span class="badge badge-document">
+            PGSN10-F3 · Rev.01 · Sep. 2025
+        </span>
+
+    </div>
+
+</header>
+
+<div class="page">
+
+<!-- =========================================================
+     HERO
+========================================================= -->
+
+<section class="hero">
+
+    <div class="hero-content">
+
+        <div class="hero-kicker">
+            INVESTIGACIÓN DE INCIDENTES
+        </div>
+
+        <h1>
+            Declaración ante Incidente
+        </h1>
+
+        <p>
+            Registro digital de la declaración del involucrado o testigo,
+            datos del incidente, cuestionario de investigación, croquis,
+            causas, medidas de control y comentarios.
+        </p>
+
+    </div>
+
+</section>
+
+<!-- =========================================================
+     STATS
+========================================================= -->
+
+<section class="stats">
+
+    <div class="stat">
+
+        <span class="stat-label">
+            Preguntas totales
+        </span>
+
+        <span class="stat-value">
+            12
+        </span>
+
+    </div>
+
+    <div class="stat">
+
+        <span class="stat-label">
+            Respondidas
+        </span>
+
+        <span
+            class="stat-value green"
+            id="statRespondidas"
+        >
+            0
+        </span>
+
+    </div>
+
+    <div class="stat">
+
+        <span class="stat-label">
+            Datos principales
+        </span>
+
+        <span
+            class="stat-value"
+            id="statDatos"
+        >
+            0/4
+        </span>
+
+    </div>
+
+    <div class="stat">
+
+        <span class="stat-label">
+            Imágenes del croquis
+        </span>
+
+        <span
+            class="stat-value warning"
+            id="statImagenes"
+        >
+            0
+        </span>
+
+    </div>
+
+</section>
+
+<!-- =========================================================
+     DOCUMENTO
+========================================================= -->
+
+<section class="document-card">
+
+    <div class="document-header">
+
+        <div class="document-number">
+            01
+        </div>
+
+        <div class="document-title">
+
+            <h2>
+                Declaración ante Incidente
+            </h2>
+
+            <p>
+                PGSN10-F3 · Rev.01 · Sep. 2025
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="document-body">
+
+        <div class="info">
+
+            Complete la declaración respetando la información
+            suministrada por el <strong>involucrado o testigo</strong>.
+
+            En el punto <strong>7. Realice croquis</strong>
+            puede cargar una o más imágenes del croquis realizado.
+
+        </div>
+
+        <!-- =================================================
+             DATOS
+        ================================================== -->
+
+        <section class="section" id="datos">
+
+            <div class="section-header">
+
+                <div class="section-number">
+                    01
+                </div>
+
+                <div>
+
+                    <h3>
+                        Datos de la declaración
+                    </h3>
+
+                    <p>
+                        Información del involucrado/testigo y del incidente
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="section-body">
+
+                <div class="form-grid">
+
+                    <div class="field">
+
+                        <label>
+                            Fecha
+                        </label>
+
+                        <input
+                            type="date"
+                            id="fechaDeclaracion"
+                        >
+
+                    </div>
+
+                    <div class="field two">
+
+                        <label>
+                            Nombre y Apellido
+                        </label>
+
+                        <input
+                            type="text"
+                            id="nombreApellido"
+                            placeholder="Apellido y nombre"
+                        >
+
+                    </div>
+
+                    <div class="field">
+
+                        <label>
+                            DNI
+                        </label>
+
+                        <input
+                            type="text"
+                            id="dni"
+                            placeholder="DNI"
+                        >
+
+                    </div>
+
+                    <div class="field">
+
+                        <label>
+                            Antigüedad en el puesto
+                        </label>
+
+                        <input
+                            type="text"
+                            id="antiguedad"
+                        >
+
+                    </div>
+
+                    <div class="field">
+
+                        <label>
+                            Día de turno trabajado
+                        </label>
+
+                        <input
+                            type="text"
+                            id="diaTurno"
+                        >
+
+                    </div>
+
+                    <div class="field">
+
+                        <label>
+                            Turno día/noche
+                        </label>
+
+                        <select id="turno">
+
+                            <option value="">
+                                Seleccionar
+                            </option>
+
+                            <option value="Día">
+                                Día
+                            </option>
+
+                            <option value="Noche">
+                                Noche
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                    <div class="field">
+
+                        <label>
+                            Horas del turno trabajadas
+                        </label>
+
+                        <input
+                            type="number"
+                            min="0"
+                            step="0.5"
+                            id="horasTurno"
+                        >
+
+                    </div>
+
+                    <div class="field two">
+
+                        <label>
+                            Supervisor directo
+                        </label>
+
+                        <input
+                            type="text"
+                            id="supervisor"
+                        >
+
+                    </div>
+
+                    <div class="field">
+
+                        <label>
+                            Hora del incidente
+                        </label>
+
+                        <input
+                            type="time"
+                            id="horaIncidente"
+                        >
+
+                    </div>
+
+                    <div class="field">
+
+                        <label>
+                            Lugar del incidente
+                        </label>
+
+                        <input
+                            type="text"
+                            id="lugarIncidente"
+                        >
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- =================================================
+             PREGUNTAS 1 - 6
+        ================================================== -->
+
+        <section
+            class="section"
+            id="cuestionario1"
+        >
+
+            <div class="section-header">
+
+                <div class="section-number">
+                    02
+                </div>
+
+                <div>
+
+                    <h3>
+                        Cuestionario
+                    </h3>
+
+                    <p>
+                        Preguntas 1 a 6
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="section-body">
+
+                <div class="question-list">
+
+                    <div class="question-card">
+
+                        <div class="question-title">
+
+                            <div class="question-number">
+                                1
+                            </div>
+
+                            <strong>
+                                ¿Qué tarea estaba realizando?
+                            </strong>
+
+                        </div>
+
+                        <textarea
+                            id="q1"
+                            oninput="actualizarIndicadores()"
+                        ></textarea>
+
+                    </div>
+
+                    <div class="question-card">
+
+                        <div class="question-title">
+
+                            <div class="question-number">
+                                2
+                            </div>
+
+                            <strong>
+                                ¿La tarea la realiza en forma habitual?
+                                ¿Con qué frecuencia la realiza?
+                            </strong>
+
+                        </div>
+
+                        <textarea
+                            id="q2"
+                            oninput="actualizarIndicadores()"
+                        ></textarea>
+
+                    </div>
+
+                    <div class="question-card">
+
+                        <div class="question-title">
+
+                            <div class="question-number">
+                                3
+                            </div>
+
+                            <strong>
+                                ¿Existe algún instructivo de trabajo para esta tarea?
+                            </strong>
+
+                        </div>
+
+                        <textarea
+                            id="q3"
+                            oninput="actualizarIndicadores()"
+                        ></textarea>
+
+                    </div>
+
+                    <div class="question-card">
+
+                        <div class="question-title">
+
+                            <div class="question-number">
+                                4
+                            </div>
+
+                            <strong>
+                                ¿Se realizó algún Análisis de Riesgos
+                                y/o Check List? ¿Cuál/es?
+                            </strong>
+
+                        </div>
+
+                        <textarea
+                            id="q4"
+                            oninput="actualizarIndicadores()"
+                        ></textarea>
+
+                    </div>
+
+                    <div class="question-card">
+
+                        <div class="question-title">
+
+                            <div class="question-number">
+                                5
+                            </div>
+
+                            <strong>
+                                ¿Qué equipo de protección personal
+                                usaba en el momento del incidente?
+                            </strong>
+
+                        </div>
+
+                        <textarea
+                            id="q5"
+                            oninput="actualizarIndicadores()"
+                        ></textarea>
+
+                    </div>
+
+                    <div class="question-card big">
+
+                        <div class="question-title">
+
+                            <div class="question-number">
+                                6
+                            </div>
+
+                            <strong>
+                                Describa lo ocurrido
+                            </strong>
+
+                        </div>
+
+                        <textarea
+                            id="q6"
+                            oninput="actualizarIndicadores()"
+                        ></textarea>
+
+                    </div>
+
+                </div>
+
+                <!-- FIRMA 1 -->
+
+                <div class="signature-strip">
+
+                    <div class="signature-title">
+                        Firma de involucrado / testigo
+                    </div>
+
+                    <div class="signature-grid">
+
+                        <input
+                            type="text"
+                            id="firma1"
+                            placeholder="Firma / aclaración"
+                        >
+
+                        <input
+                            type="text"
+                            id="nombreFirma1"
+                            placeholder="Nombre"
+                        >
+
+                        <input
+                            type="text"
+                            id="dniFirma1"
+                            placeholder="DNI"
+                        >
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- =================================================
+             7. REALICE CROQUIS
+        ================================================== -->
+
+        <section
+            class="section"
+            id="croquis"
+        >
+
+            <div class="section-header">
+
+                <div class="section-number">
+                    03
+                </div>
+
+                <div>
+
+                    <h3>
+                        7. Realice croquis
+                    </h3>
+
+                    <p>
+                        Adjunte una imagen del croquis realizado
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="section-body">
+
+                <div class="croquis-toolbar">
+
+                    <div class="croquis-help">
+
+                        Puede cargar una fotografía o imagen del croquis.
+                        Si necesita más de una, puede agregar varias.
+
+                    </div>
+
+                    <button
+                        type="button"
+                        class="btn btn-green"
+                        onclick="agregarImagen()"
+                    >
+                        + AGREGAR IMAGEN
+                    </button>
+
+                </div>
+
+                <div
+                    class="photo-grid"
+                    id="photoGrid"
+                >
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- =================================================
+             PREGUNTAS 8 - 12
+        ================================================== -->
+
+        <section
+            class="section"
+            id="cuestionario2"
+        >
+
+            <div class="section-header">
+
+                <div class="section-number">
+                    04
+                </div>
+
+                <div>
+
+                    <h3>
+                        Continuación del cuestionario
+                    </h3>
+
+                    <p>
+                        Preguntas 8 a 12
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="section-body">
+
+                <div class="question-list">
+
+                    <div class="question-card">
+
+                        <div class="question-title">
+
+                            <div class="question-number">
+                                8
+                            </div>
+
+                            <strong>
+                                ¿Quién estaba con usted
+                                en el momento de los hechos?
+                            </strong>
+
+                        </div>
+
+                        <textarea
+                            id="q8"
+                            oninput="actualizarIndicadores()"
+                        ></textarea>
+
+                    </div>
+
+                    <div class="question-card">
+
+                        <div class="question-title">
+
+                            <div class="question-number">
+                                9
+                            </div>
+
+                            <strong>
+                                ¿Qué máquina, herramienta, accesorio,
+                                vehículo se estaba utilizando en ese momento?
+                            </strong>
+
+                        </div>
+
+                        <textarea
+                            id="q9"
+                            oninput="actualizarIndicadores()"
+                        ></textarea>
+
+                    </div>
+
+                    <div class="question-card">
+
+                        <div class="question-title">
+
+                            <div class="question-number">
+                                10
+                            </div>
+
+                            <strong>
+                                ¿Cuál cree usted que fueron las causas
+                                que produjeron el incidente/accidente?
+                            </strong>
+
+                        </div>
+
+                        <textarea
+                            id="q10"
+                            oninput="actualizarIndicadores()"
+                        ></textarea>
+
+                    </div>
+
+                    <div class="question-card">
+
+                        <div class="question-title">
+
+                            <div class="question-number">
+                                11
+                            </div>
+
+                            <strong>
+                                ¿Qué medidas de control propondría
+                                para que esto no vuelva a ocurrir?
+                            </strong>
+
+                        </div>
+
+                        <textarea
+                            id="q11"
+                            oninput="actualizarIndicadores()"
+                        ></textarea>
+
+                    </div>
+
+                    <div class="question-card big">
+
+                        <div class="question-title">
+
+                            <div class="question-number">
+                                12
+                            </div>
+
+                            <strong>
+                                Comentarios
+                            </strong>
+
+                        </div>
+
+                        <textarea
+                            id="q12"
+                            oninput="actualizarIndicadores()"
+                        ></textarea>
+
+                    </div>
+
+                </div>
+
+                <!-- FIRMA 2 -->
+
+                <div class="signature-strip">
+
+                    <div class="signature-title">
+                        Firma de involucrado / testigo
+                    </div>
+
+                    <div class="signature-grid">
+
+                        <input
+                            type="text"
+                            id="firma2"
+                            placeholder="Firma / aclaración"
+                        >
+
+                        <input
+                            type="text"
+                            id="nombreFirma2"
+                            placeholder="Nombre"
+                        >
+
+                        <input
+                            type="text"
+                            id="dniFirma2"
+                            placeholder="DNI"
+                        >
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- =================================================
+             CIERRE
+        ================================================== -->
+
+        <section
+            class="section"
+            id="cierre"
+        >
+
+            <div class="section-header">
+
+                <div class="section-number">
+                    05
+                </div>
+
+                <div>
+
+                    <h3>
+                        Control y cierre
+                    </h3>
+
+                    <p>
+                        Estado del formulario
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="section-body">
+
+                <div class="progress-box">
+
+                    <div class="progress-info">
+
+                        <span>
+                            Avance del cuestionario
+                        </span>
+
+                        <strong id="porcentajeAvance">
+                            0%
+                        </strong>
+
+                    </div>
+
+                    <div class="progress">
+
+                        <div
+                            class="progress-bar"
+                            id="barraAvance"
+                        ></div>
+
+                    </div>
+
+                </div>
+
+                <div
+                    class="form-footer"
+                    style="margin-top:20px;"
+                >
+
+                    <div class="status">
+
+                        Estado:
+
+                        <strong id="estadoFormulario">
+                            Documento en edición
+                        </strong>
+
+                    </div>
+
+                    <div class="footer-buttons">
+
+                        <button
+                            type="button"
+                            class="btn btn-light"
+                            onclick="limpiarFormulario()"
+                        >
+                            LIMPIAR
+                        </button>
+
+                        <button
+                            type="button"
+                            class="btn btn-dark"
+                            onclick="guardarFormulario()"
+                        >
+                            GUARDAR
+                        </button>
+
+                        <button
+                            type="button"
+                            class="btn btn-green"
+                            onclick="finalizarFormulario()"
+                        >
+                            FINALIZAR FORMULARIO
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </div>
+
+</section>
+
+</div>
+
+</main>
+
+</div>
+
+<script>
+
+/* =========================================================
+   CONFIGURACIÓN
+========================================================= */
+
+const CLAVE =
+    "NASER_PGSN10_F3";
+
+let imagenesCroquis = [];
+
+/* =========================================================
+   UID
+========================================================= */
+
+function uid(){
+
+    return (
+        Date.now().toString() +
+        Math.random().toString(16).slice(2)
+    );
+
+}
+
+/* =========================================================
+   ESCAPE
+========================================================= */
+
+function escapeHTML(valor){
+
+    return String(valor ?? "")
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;");
+
+}
+
+/* =========================================================
+   PREGUNTAS
+========================================================= */
+
+function camposPreguntas(){
+
+    return [
+        "q1",
+        "q2",
+        "q3",
+        "q4",
+        "q5",
+        "q6",
+        "q8",
+        "q9",
+        "q10",
+        "q11",
+        "q12"
+    ];
+
+}
+
+/* =========================================================
+   AGREGAR IMAGEN PARA CROQUIS
+========================================================= */
+
+function agregarImagen(){
+
+    if(
+        imagenesCroquis.length >= 9
+    ){
+
+        alert(
+            "Se pueden agregar hasta 9 imágenes."
+        );
+
+        return;
+
+    }
+
+    imagenesCroquis.push({
+
+        id:uid(),
+
+        imagen:"",
+
+        descripcion:""
+
+    });
+
+    renderImagenes();
+
+    actualizarIndicadores();
+
+}
+
+/* =========================================================
+   CARGAR IMAGEN
+========================================================= */
+
+function cargarImagen(
+    id,
+    input
+){
+
+    const archivo =
+        input.files[0];
+
+    if(!archivo){
+        return;
+    }
+
+    if(
+        !archivo.type.startsWith(
+            "image/"
+        )
+    ){
+
+        alert(
+            "Seleccione un archivo de imagen válido."
+        );
+
+        input.value = "";
+
+        return;
+
+    }
+
+    const reader =
+        new FileReader();
+
+    reader.onload =
+        event => {
+
+            const item =
+                imagenesCroquis.find(
+                    foto =>
+                        foto.id === id
+                );
+
+            if(!item){
+                return;
+            }
+
+            item.imagen =
+                event.target.result;
+
+            renderImagenes();
+
+            actualizarIndicadores();
+
+        };
+
+    reader.readAsDataURL(
+        archivo
+    );
+
+}
+
+/* =========================================================
+   DESCRIPCIÓN
+========================================================= */
+
+function actualizarDescripcionImagen(
+    id,
+    valor
+){
+
+    const item =
+        imagenesCroquis.find(
+            foto =>
+                foto.id === id
+        );
+
+    if(item){
+
+        item.descripcion =
+            valor;
+
+    }
+
+}
+
+/* =========================================================
+   ELIMINAR IMAGEN
+========================================================= */
+
+function eliminarImagen(id){
+
+    if(
+        !confirm(
+            "¿Desea eliminar esta imagen del croquis?"
+        )
+    ){
+        return;
+    }
+
+    imagenesCroquis =
+        imagenesCroquis.filter(
+            foto =>
+                foto.id !== id
+        );
+
+    renderImagenes();
+
+    actualizarIndicadores();
+
+}
+
+/* =========================================================
+   RENDER IMÁGENES
+========================================================= */
+
+function renderImagenes(){
+
+    const grid =
+        document.getElementById(
+            "photoGrid"
+        );
+
+    grid.innerHTML = "";
+
+    if(
+        imagenesCroquis.length === 0
+    ){
+
+        grid.innerHTML = `
+
+            <div class="empty-images">
+
+                <strong>
+                    No se agregó ninguna imagen del croquis
+                </strong>
+
+                Presione
+                <b>+ AGREGAR IMAGEN</b>
+                para adjuntar una fotografía o archivo del croquis.
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+    imagenesCroquis.forEach(
+        (foto,index) => {
+
+            const card =
+                document.createElement(
+                    "div"
+                );
+
+            card.className =
+                "photo-card";
+
+            card.innerHTML = `
+
+                <div class="photo-preview">
+
+                    ${
+                        foto.imagen
+
+                        ? `
+                            <img
+                                src="${foto.imagen}"
+                                alt="Croquis ${index + 1}"
+                            >
+                        `
+
+                        : `
+                            <div>
+                                Croquis ${index + 1}
+                                <br><br>
+                                Seleccione una imagen
+                            </div>
+                        `
+                    }
+
+                </div>
+
+                <div class="photo-footer">
+
+                    <input
+                        type="file"
+                        accept="image/*"
+
+                        onchange="
+                            cargarImagen(
+                                '${foto.id}',
+                                this
+                            )
+                        "
+                    >
+
+                    <input
+                        type="text"
+
+                        class="table-input"
+
+                        placeholder="Descripción opcional"
+
+                        value="${escapeHTML(
+                            foto.descripcion
+                        )}"
+
+                        oninput="
+                            actualizarDescripcionImagen(
+                                '${foto.id}',
+                                this.value
+                            )
+                        "
+                    >
+
+                    <button
+                        type="button"
+
+                        class="btn btn-danger"
+
+                        onclick="
+                            eliminarImagen(
+                                '${foto.id}'
+                            )
+                        "
+                    >
+                        ELIMINAR IMAGEN
+                    </button>
+
+                </div>
+
+            `;
+
+            grid.appendChild(
+                card
+            );
+
+        }
+    );
+
+}
+
+/* =========================================================
+   CONTAR RESPUESTAS
+========================================================= */
+
+function contarRespondidas(){
+
+    let cantidad =
+        camposPreguntas()
+        .filter(
+            id =>
+                document
+                .getElementById(id)
+                .value
+                .trim() !== ""
+        )
+        .length;
+
+    /*
+        Pregunta 7 se considera completada
+        si existe al menos una imagen cargada.
+    */
+
+    const existeCroquis =
+        imagenesCroquis.some(
+            foto =>
+                foto.imagen !== ""
+        );
+
+    if(existeCroquis){
+
+        cantidad++;
+
+    }
+
+    return cantidad;
+
+}
+
+/* =========================================================
+   INDICADORES
+========================================================= */
+
+function actualizarIndicadores(){
+
+    const respondidas =
+        contarRespondidas();
+
+    document.getElementById(
+        "statRespondidas"
+    ).textContent =
+        respondidas;
+
+
+    const datosCompletos = [
+
+        document.getElementById(
+            "fechaDeclaracion"
+        ).value,
+
+        document.getElementById(
+            "nombreApellido"
+        ).value.trim(),
+
+        document.getElementById(
+            "dni"
+        ).value.trim(),
+
+        document.getElementById(
+            "lugarIncidente"
+        ).value.trim()
+
+    ].filter(Boolean).length;
+
+
+    document.getElementById(
+        "statDatos"
+    ).textContent =
+        datosCompletos +
+        "/4";
+
+
+    const cantidadImagenes =
+        imagenesCroquis.filter(
+            foto =>
+                foto.imagen
+        ).length;
+
+
+    const indicador =
+        document.getElementById(
+            "statImagenes"
+        );
+
+
+    indicador.textContent =
+        cantidadImagenes;
+
+
+    if(
+        cantidadImagenes > 0
+    ){
+
+        indicador.classList.remove(
+            "warning"
+        );
+
+        indicador.classList.add(
+            "green"
+        );
+
+    }else{
+
+        indicador.classList.remove(
+            "green"
+        );
+
+        indicador.classList.add(
+            "warning"
+        );
+
+    }
+
+
+    const porcentaje =
+        Math.round(
+            respondidas / 12 * 100
+        );
+
+
+    document.getElementById(
+        "porcentajeAvance"
+    ).textContent =
+        porcentaje + "%";
+
+
+    document.getElementById(
+        "barraAvance"
+    ).style.width =
+        porcentaje + "%";
+
+}
+
+/* =========================================================
+   SINCRONIZAR FIRMA
+========================================================= */
+
+function sincronizarFirmas(){
+
+    const nombre =
+        document.getElementById(
+            "nombreApellido"
+        ).value;
+
+    const dni =
+        document.getElementById(
+            "dni"
+        ).value;
+
+
+    if(
+        !document.getElementById(
+            "nombreFirma1"
+        ).value
+    ){
+
+        document.getElementById(
+            "nombreFirma1"
+        ).value =
+            nombre;
+
+    }
+
+
+    if(
+        !document.getElementById(
+            "nombreFirma2"
+        ).value
+    ){
+
+        document.getElementById(
+            "nombreFirma2"
+        ).value =
+            nombre;
+
+    }
+
+
+    if(
+        !document.getElementById(
+            "dniFirma1"
+        ).value
+    ){
+
+        document.getElementById(
+            "dniFirma1"
+        ).value =
+            dni;
+
+    }
+
+
+    if(
+        !document.getElementById(
+            "dniFirma2"
+        ).value
+    ){
+
+        document.getElementById(
+            "dniFirma2"
+        ).value =
+            dni;
+
+    }
+
+}
+
+/* =========================================================
+   OBTENER DATOS
+========================================================= */
+
+function obtenerDatos(){
+
+    sincronizarFirmas();
+
+
+    const preguntas = {};
+
+
+    camposPreguntas()
+    .forEach(
+        id => {
+
+            preguntas[id] =
+                document.getElementById(
+                    id
+                ).value;
+
+        }
+    );
+
+
+    return{
+
+        codigo:
+            "PGSN10-F3",
+
+        revision:
+            "Rev.01",
+
+        fechaDocumento:
+            "Sep. 2025",
+
+        fechaDeclaracion:
+            document.getElementById(
+                "fechaDeclaracion"
+            ).value,
+
+        nombreApellido:
+            document.getElementById(
+                "nombreApellido"
+            ).value,
+
+        dni:
+            document.getElementById(
+                "dni"
+            ).value,
+
+        antiguedad:
+            document.getElementById(
+                "antiguedad"
+            ).value,
+
+        diaTurno:
+            document.getElementById(
+                "diaTurno"
+            ).value,
+
+        turno:
+            document.getElementById(
+                "turno"
+            ).value,
+
+        horasTurno:
+            document.getElementById(
+                "horasTurno"
+            ).value,
+
+        supervisor:
+            document.getElementById(
+                "supervisor"
+            ).value,
+
+        horaIncidente:
+            document.getElementById(
+                "horaIncidente"
+            ).value,
+
+        lugarIncidente:
+            document.getElementById(
+                "lugarIncidente"
+            ).value,
+
+        firma1:
+            document.getElementById(
+                "firma1"
+            ).value,
+
+        nombreFirma1:
+            document.getElementById(
+                "nombreFirma1"
+            ).value,
+
+        dniFirma1:
+            document.getElementById(
+                "dniFirma1"
+            ).value,
+
+        firma2:
+            document.getElementById(
+                "firma2"
+            ).value,
+
+        nombreFirma2:
+            document.getElementById(
+                "nombreFirma2"
+            ).value,
+
+        dniFirma2:
+            document.getElementById(
+                "dniFirma2"
+            ).value,
+
+        preguntas:
+            preguntas,
+
+        imagenesCroquis:
+            imagenesCroquis
+
+    };
+
+}
+
+/* =========================================================
+   GUARDAR
+========================================================= */
+
+function guardarFormulario(){
+
+    const datos =
+        obtenerDatos();
+
+
+    try{
+
+        localStorage.setItem(
+            CLAVE,
+            JSON.stringify(
+                datos
+            )
+        );
+
+
+        document.getElementById(
+            "estadoFormulario"
+        ).textContent =
+            "Cambios guardados";
+
+
+        alert(
+            "Declaración guardada correctamente."
+        );
+
+    }
+
+    catch(error){
+
+        /*
+            Si las imágenes son demasiado pesadas,
+            conservamos el formulario y las descripciones,
+            pero no las imágenes en base64.
+        */
+
+        const datosSinImagenes = {
+
+            ...datos,
+
+            imagenesCroquis:
+                datos.imagenesCroquis.map(
+                    foto => ({
+
+                        ...foto,
+
+                        imagen:""
+
+                    })
+                )
+
+        };
+
+
+        localStorage.setItem(
+            CLAVE,
+            JSON.stringify(
+                datosSinImagenes
+            )
+        );
+
+
+        alert(
+            "El formulario fue guardado, pero las imágenes eran demasiado grandes para almacenarlas en el navegador."
+        );
+
+    }
+
+}
+
+/* =========================================================
+   FINALIZAR
+========================================================= */
+
+function finalizarFormulario(){
+
+    const obligatorios = [
+
+        {
+            id:"fechaDeclaracion",
+            nombre:"Fecha"
+        },
+
+        {
+            id:"nombreApellido",
+            nombre:"Nombre y Apellido"
+        },
+
+        {
+            id:"dni",
+            nombre:"DNI"
+        },
+
+        {
+            id:"horaIncidente",
+            nombre:"Hora del incidente"
+        },
+
+        {
+            id:"lugarIncidente",
+            nombre:"Lugar del incidente"
+        }
+
+    ];
+
+
+    for(
+        const campo of obligatorios
+    ){
+
+        const elemento =
+            document.getElementById(
+                campo.id
+            );
+
+
+        if(
+            !String(
+                elemento.value
+            ).trim()
+        ){
+
+            alert(
+                "Debe completar: " +
+                campo.nombre +
+                "."
+            );
+
+
+            elemento.focus();
+
+
+            return;
+
+        }
+
+    }
+
+
+    const imagenCroquis =
+        imagenesCroquis.some(
+            foto =>
+                foto.imagen !== ""
+        );
+
+
+    if(
+        !imagenCroquis
+    ){
+
+        alert(
+            "Debe agregar al menos una imagen en el punto 7 - Realice croquis."
+        );
+
+
+        document.getElementById(
+            "croquis"
+        ).scrollIntoView({
+            behavior:"smooth"
+        });
+
+
+        return;
+
+    }
+
+
+    if(
+        contarRespondidas() < 12
+    ){
+
+        alert(
+            "Debe completar las 12 preguntas antes de finalizar."
+        );
+
+
+        return;
+
+    }
+
+
+    guardarFormulario();
+
+
+    document.getElementById(
+        "badgeEstado"
+    ).textContent =
+        "FINALIZADO";
+
+
+    document.getElementById(
+        "estadoFormulario"
+    ).textContent =
+        "Documento finalizado";
+
+
+    alert(
+        "PGSN10-F3 finalizado correctamente."
+    );
+
+}
+
+/* =========================================================
+   LIMPIAR
+========================================================= */
+
+function limpiarFormulario(){
+
+    if(
+        !confirm(
+            "¿Desea limpiar completamente la declaración?"
+        )
+    ){
+
+        return;
+
+    }
+
+
+    localStorage.removeItem(
+        CLAVE
+    );
+
+
+    location.reload();
+
+}
+
+/* =========================================================
+   CARGAR
+========================================================= */
+
+function cargarFormulario(){
+
+    const guardado =
+        localStorage.getItem(
+            CLAVE
+        );
+
+
+    if(!guardado){
+
+        renderImagenes();
+
+        actualizarIndicadores();
+
+        return;
+
+    }
+
+
+    try{
+
+        const datos =
+            JSON.parse(
+                guardado
+            );
+
+
+        const campos = [
+
+            "fechaDeclaracion",
+
+            "nombreApellido",
+
+            "dni",
+
+            "antiguedad",
+
+            "diaTurno",
+
+            "turno",
+
+            "horasTurno",
+
+            "supervisor",
+
+            "horaIncidente",
+
+            "lugarIncidente",
+
+            "firma1",
+
+            "nombreFirma1",
+
+            "dniFirma1",
+
+            "firma2",
+
+            "nombreFirma2",
+
+            "dniFirma2"
+
+        ];
+
+
+        campos.forEach(
+            id => {
+
+                const elemento =
+                    document.getElementById(
+                        id
+                    );
+
+
+                if(elemento){
+
+                    elemento.value =
+                        datos[id] || "";
+
+                }
+
+            }
+        );
+
+
+        if(
+            datos.preguntas
+        ){
+
+            camposPreguntas()
+            .forEach(
+                id => {
+
+                    document.getElementById(
+                        id
+                    ).value =
+                        datos.preguntas[id] || "";
+
+                }
+            );
+
+        }
+
+
+        imagenesCroquis =
+            Array.isArray(
+                datos.imagenesCroquis
+            )
+
+            ? datos.imagenesCroquis
+
+            : [];
+
+
+        renderImagenes();
+
+
+        actualizarIndicadores();
+
+    }
+
+    catch(error){
+
+        console.error(
+            "Error cargando PGSN10-F3:",
+            error
+        );
+
+
+        renderImagenes();
+
+    }
+
+}
+
+/* =========================================================
+   INICIO
+========================================================= */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    () => {
+
+        cargarFormulario();
+
+
+        [
+            "fechaDeclaracion",
+            "nombreApellido",
+            "dni",
+            "lugarIncidente"
+        ]
+
+        .forEach(
+            id => {
+
+                document
+                .getElementById(id)
+                .addEventListener(
+                    "input",
+                    actualizarIndicadores
+                );
+
+            }
+        );
+
+
+        document
+        .getElementById(
+            "nombreApellido"
+        )
+        .addEventListener(
+            "blur",
+            sincronizarFirmas
+        );
+
+
+        document
+        .getElementById(
+            "dni"
+        )
+        .addEventListener(
+            "blur",
+            sincronizarFirmas
+        );
+
+    }
+);
+
+</script>
+
+</body>
+</html>

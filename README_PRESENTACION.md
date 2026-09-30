@@ -126,3 +126,41 @@ La conexión de base también se maneja por variables `DB_HOST`, `DB_NAME`, `DB_
 - **CSS**: usar `asset('/ruta.css')` en vez de `app_url()` para que el navegador baje la versión nueva al cambiar el archivo. Estilos compartidos en `css/modules.css` y `css/checklists.css`.
 - **Páginas de módulo**: usar `require __DIR__ . '/config/modulo.php';` y `cargarModulo($pdo, 'slug')`.
 - **Base de datos**: `base_naser_compartir.sql` ya no se sube a GitHub (el repo es público). Compartirlo por otro medio.
+
+## Formularios digitales, permisos y avisos (actualización 01/10/2026)
+
+### Formularios
+- Los HTML originales están en `formularios/<sector>/` y se registran en `php/config/formularios_catalogo.php` (37 formularios: HSEQ, RRHH, Compras, Ventas y Operaciones).
+- Se completan desde **Formularios** (menú) o desde la página de cada sector. Todo se guarda en la tabla `formularios_registros` (campos + estado interno del formulario) con historial en `formularios_historial`.
+- Circuito: **Borrador → Enviado (pendiente de aprobación) → Aprobado / Rechazado**. Al enviar, los responsables del sector reciben aviso en la campanita y por mail. Al aprobar o rechazar, se avisa a quien lo cargó.
+- Los botones propios de cada formulario (Guardar, Finalizar, Agregar...) también guardan en la base.
+- Exportar a Excel: botón en la lista de formularios (filtrando por un formulario se exportan todos sus campos).
+- Para sumar un formulario nuevo: copiar el HTML a `formularios/<sector>/` y agregar una línea en el catálogo.
+
+### Permisos
+- **Super usuario** (rol admin): ve, edita y aprueba todo; administra y elimina usuarios.
+- Por sector: **Responsable** (edita, gestiona y aprueba), **Operador** (ve y completa formularios), **Observador** (ve).
+- Todos ven todos los sectores, salvo los **restringidos** (Operaciones), que solo ven sus integrantes.
+- **Burbuja colaborativa** (Burbuja 2: Finanzas, RRHH, Compras, Ventas): los responsables de cualquiera de esos sectores pueden editar y completar en todos, pero aprueba solo el responsable del área.
+- La estructura de NASER (personas, responsables, observadores, burbujas) está en `php/config/estructura_naser.php`. Se aplica desde **Usuarios y permisos → Aplicar estructura NASER**. Crea los usuarios `nombre.apellido@gruponaser.com.ar` con contraseña temporal (se cambia en el primer ingreso).
+
+### Avisos y mails
+- Campanita en el menú + página **Notificaciones**. Cada usuario puede desactivar los mails en **Mi perfil**.
+- Vencimientos (RRHH, Finanzas, documentos) se avisan solos a los responsables: 15 días antes, 3 días antes y el día del vencimiento.
+- En Docker viene **Mailpit**: todos los mails del sistema se ven en http://localhost:8025. Para mandar mails reales, completar `SMTP_*` en `.env`.
+
+### Copias de seguridad
+- El servicio `backup` guarda la base todos los días (y `uploads` los domingos) en `./backups`, conservando 7 días.
+
+### Prueba rápida antes de hacer push
+```bash
+bash tools/smoke_test.sh tu.usuario@gruponaser.com.ar 'tu-contraseña'
+```
+
+
+### Personal (legajos)
+- Menú **Personal** (lo ven RRHH y el super usuario; los responsables de Operaciones, HSEQ, Mantenimiento y Gerencia ven solo las habilitaciones del personal operativo).
+- Se carga subiendo el Excel "Listado de Empleados" (hojas PERSONAL y MAILS). Se actualiza por legajo, se puede repetir cada vez que cambie la planilla.
+- Licencias de conducir, manejo defensivo, CNRT, izaje, trabajo en altura y exámenes médicos quedan con su vencimiento y se avisan solos.
+- Los datos del personal NO se guardan en el repositorio (quedan solo en la base de datos).
+- En **Usuarios y permisos → Aplicar estructura** se puede tildar "Crear operadores desde el Personal": crea un usuario operador para cada empleado operativo con mail @gruponaser.com.ar.

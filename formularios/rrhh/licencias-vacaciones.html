@@ -1,0 +1,1273 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light">
+  <title>PGSN02-F9 | Comunicación de Licencias y Vacaciones | NASER</title>
+  <style>
+    :root {
+      --naser: #009b49;
+      --naser-dark: #007a39;
+      --black: #0d0f0e;
+      --ink: #222725;
+      --muted: #69716d;
+      --line: #d9dedb;
+      --surface: #ffffff;
+      --canvas: #eef1ef;
+      --soft: #f6f8f7;
+      --danger: #bd2c2c;
+      --danger-soft: #fff3f3;
+      --warning: #9a6500;
+      --warning-soft: #fff8e7;
+      --success-soft: #ebf8f1;
+      --shadow: 0 8px 28px rgba(12, 18, 15, .07);
+      --radius: 14px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      min-width: 320px;
+      background: var(--canvas);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.45;
+    }
+
+    button, input, select, textarea { font: inherit; }
+    button { touch-action: manipulation; }
+
+    .sidebar {
+      position: fixed;
+      inset: 0 auto 0 0;
+      z-index: 30;
+      width: 252px;
+      padding: 28px 18px;
+      background: var(--black);
+      color: #fff;
+    }
+
+    .brand {
+      padding: 2px 12px 26px;
+      border-bottom: 1px solid rgba(255, 255, 255, .1);
+      margin-bottom: 22px;
+    }
+
+    .brand-name {
+      margin: 0;
+      font-size: 31px;
+      font-weight: 900;
+      letter-spacing: .14em;
+      line-height: 1;
+    }
+
+    .brand-name span { color: var(--naser); }
+
+    .brand-subtitle {
+      margin-top: 9px;
+      color: #969d99;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+    }
+
+    .nav-label {
+      padding: 0 12px;
+      margin: 0 0 8px;
+      color: #747b77;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .sidebar nav { display: grid; gap: 6px; }
+
+    .sidebar nav a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 13px;
+      border-radius: 9px;
+      color: #c9cecb;
+      font-size: 13px;
+      font-weight: 650;
+      text-decoration: none;
+    }
+
+    .sidebar nav a:hover,
+    .sidebar nav a:focus-visible { background: #1a1e1c; color: #fff; }
+    .sidebar nav a.active { background: var(--naser); color: #fff; }
+
+    .nav-dot {
+      width: 8px;
+      height: 8px;
+      border: 2px solid currentColor;
+      border-radius: 50%;
+      opacity: .8;
+    }
+
+    .sidebar-footer {
+      position: absolute;
+      right: 30px;
+      bottom: 25px;
+      left: 30px;
+      color: #6f7772;
+      font-size: 10px;
+    }
+
+    .app { min-height: 100vh; margin-left: 252px; }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 72px;
+      padding: 12px 32px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255, 255, 255, .95);
+      backdrop-filter: blur(10px);
+    }
+
+    .topbar-title { font-size: 15px; font-weight: 800; }
+    .topbar-caption { margin-top: 2px; color: var(--muted); font-size: 11px; }
+
+    .document-meta {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-align: right;
+    }
+
+    .document-meta strong { display: block; color: var(--naser-dark); font-size: 13px; }
+    .document-meta span { color: var(--muted); font-size: 11px; }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 7px 10px;
+      border: 1px solid #d1d7d3;
+      border-radius: 999px;
+      background: var(--soft);
+      color: #555d59;
+      font-size: 10px;
+      font-weight: 850;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+
+    .status-pill::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #9aa19d;
+    }
+
+    .status-pill.finalized {
+      border-color: #a9d9bf;
+      background: var(--success-soft);
+      color: #17693a;
+    }
+
+    .status-pill.finalized::before { background: var(--naser); }
+
+    .container { width: min(1180px, 100%); margin: 0 auto; padding: 26px; }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: 30px;
+      border-radius: var(--radius);
+      background: var(--black);
+      color: #fff;
+      box-shadow: var(--shadow);
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      width: 255px;
+      height: 255px;
+      top: -142px;
+      right: -74px;
+      border: 42px solid rgba(0, 155, 73, .26);
+      border-radius: 50%;
+    }
+
+    .hero-code {
+      position: relative;
+      z-index: 1;
+      margin-bottom: 9px;
+      color: #6ce5a5;
+      font-size: 11px;
+      font-weight: 850;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .hero h1 {
+      position: relative;
+      z-index: 1;
+      max-width: 760px;
+      margin: 0;
+      font-size: clamp(24px, 3vw, 34px);
+      line-height: 1.13;
+    }
+
+    .hero p {
+      position: relative;
+      z-index: 1;
+      max-width: 680px;
+      margin: 10px 0 0;
+      color: #afb7b3;
+      font-size: 13px;
+    }
+
+    .progress-card {
+      display: grid;
+      grid-template-columns: minmax(180px, auto) 1fr auto;
+      align-items: center;
+      gap: 16px;
+      margin: 16px 0;
+      padding: 15px 18px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--surface);
+      box-shadow: 0 4px 14px rgba(12, 18, 15, .04);
+    }
+
+    .progress-label { font-size: 12px; font-weight: 800; }
+    .progress-track { height: 9px; overflow: hidden; border-radius: 999px; background: #e5e9e7; }
+    .progress-bar { width: 0; height: 100%; border-radius: inherit; background: var(--naser); transition: width .25s ease; }
+    .progress-value { min-width: 42px; color: var(--naser-dark); font-size: 12px; font-weight: 900; text-align: right; }
+
+    .notice {
+      display: none;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 16px;
+      padding: 14px 16px;
+      border: 1px solid #abdabe;
+      border-radius: 10px;
+      background: var(--success-soft);
+      color: #155d35;
+      font-size: 13px;
+    }
+
+    .notice.show { display: flex; }
+    .notice strong { display: block; margin-bottom: 2px; }
+
+    .section {
+      overflow: hidden;
+      margin-bottom: 16px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+    }
+
+    .section-heading {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 20px;
+      border-bottom: 1px solid #e8ebe9;
+    }
+
+    .section-number {
+      display: grid;
+      flex: 0 0 36px;
+      width: 36px;
+      height: 36px;
+      place-items: center;
+      border-radius: 8px;
+      background: var(--black);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    .section-heading h2 { margin: 0; font-size: 15px; }
+    .section-heading p { margin: 2px 0 0; color: var(--muted); font-size: 11px; }
+    .section-body { padding: 20px; }
+
+    .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 17px; }
+    .grid.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .full { grid-column: 1 / -1; }
+
+    .field { min-width: 0; }
+
+    .field > label,
+    .field-label {
+      display: block;
+      margin-bottom: 7px;
+      color: #414743;
+      font-size: 10px;
+      font-weight: 850;
+      letter-spacing: .055em;
+      text-transform: uppercase;
+    }
+
+    .required-mark { color: var(--danger); }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      min-height: 43px;
+      padding: 10px 12px;
+      border: 1px solid #cbd1cd;
+      border-radius: 8px;
+      outline: none;
+      background: #fff;
+      color: var(--ink);
+      font-size: 13px;
+      transition: border-color .15s, box-shadow .15s, background .15s;
+    }
+
+    textarea { min-height: 104px; resize: vertical; }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: var(--naser);
+      box-shadow: 0 0 0 3px rgba(0, 155, 73, .11);
+    }
+
+    input:disabled,
+    select:disabled,
+    textarea:disabled {
+      border-color: #dde1df;
+      background: #f4f6f5;
+      color: #5e6662;
+      opacity: 1;
+      cursor: not-allowed;
+    }
+
+    .field-error {
+      border-color: var(--danger) !important;
+      background: var(--danger-soft) !important;
+      box-shadow: 0 0 0 3px rgba(189, 44, 44, .08) !important;
+    }
+
+    .error-text {
+      display: none;
+      margin-top: 5px;
+      color: var(--danger);
+      font-size: 10px;
+      font-weight: 700;
+    }
+
+    .error-text.show { display: block; }
+
+    .segmented {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .segmented.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .segmented input { position: absolute; opacity: 0; pointer-events: none; }
+
+    .segmented label {
+      display: grid;
+      min-height: 43px;
+      padding: 8px 10px;
+      place-items: center;
+      border: 1px solid #cbd1cd;
+      border-radius: 8px;
+      background: #fff;
+      color: #4f5753;
+      font-size: 11px;
+      font-weight: 800;
+      text-align: center;
+      cursor: pointer;
+      transition: .15s;
+    }
+
+    .segmented label:hover { border-color: #98a19c; }
+    .segmented input:focus-visible + label { outline: 3px solid rgba(0, 155, 73, .2); outline-offset: 1px; }
+    .segmented input:checked + label { border-color: var(--naser); background: var(--naser); color: #fff; }
+    .segmented input:disabled + label { background: #f4f6f5; color: #7b837f; cursor: not-allowed; }
+    .segmented input:disabled:checked + label { background: var(--naser-dark); color: #fff; }
+
+    .check-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-top: 14px;
+      padding: 11px 13px;
+      border: 1px solid #dce1de;
+      border-radius: 8px;
+      background: var(--soft);
+      color: #555d59;
+      font-size: 11px;
+    }
+
+    .check-row input { flex: 0 0 auto; width: 17px; min-height: 17px; margin-top: 1px; accent-color: var(--naser); }
+
+    .communication-box {
+      margin-top: 18px;
+      padding: 20px;
+      border: 1px solid #d7ddda;
+      border-left: 5px solid var(--naser);
+      border-radius: 9px;
+      background: #fafcfb;
+      color: #2e3431;
+      font-size: 14px;
+      line-height: 2;
+    }
+
+    .communication-box p { margin: 0; }
+    .communication-box p + p { margin-top: 12px; }
+
+    .dynamic-value {
+      display: inline-block;
+      min-width: 90px;
+      padding: 0 5px;
+      border-bottom: 1px solid #78807b;
+      color: #111;
+      font-weight: 750;
+      line-height: 1.45;
+      text-align: center;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .summary-item {
+      padding: 12px;
+      border: 1px solid #dfe4e1;
+      border-radius: 8px;
+      background: #fff;
+    }
+
+    .summary-item span { display: block; color: var(--muted); font-size: 9px; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; }
+    .summary-item strong { display: block; margin-top: 4px; font-size: 12px; }
+
+    .signature-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 42px; margin-top: 28px; }
+    .signature-box { padding-top: 58px; border-top: 1px solid #3d433f; text-align: center; }
+    .signature-box strong { display: block; font-size: 10px; letter-spacing: .03em; text-transform: uppercase; }
+    .signature-box span { display: block; margin-top: 3px; color: var(--muted); font-size: 9px; }
+
+    .actions {
+      position: sticky;
+      bottom: 14px;
+      z-index: 15;
+      display: flex;
+      justify-content: flex-end;
+      gap: 9px;
+      padding: 13px;
+      border: 1px solid rgba(204, 211, 207, .95);
+      border-radius: 13px;
+      margin: 18px 0 32px;
+      background: rgba(255, 255, 255, .95);
+      box-shadow: 0 10px 30px rgba(10, 17, 13, .14);
+      backdrop-filter: blur(10px);
+    }
+
+    .btn {
+      min-height: 42px;
+      padding: 9px 15px;
+      border: 1px solid transparent;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 850;
+      cursor: pointer;
+      transition: transform .15s, opacity .15s, background .15s;
+    }
+
+    .btn:hover { transform: translateY(-1px); }
+    .btn:focus-visible { outline: 3px solid rgba(0, 155, 73, .22); outline-offset: 2px; }
+    .btn:disabled { opacity: .45; cursor: not-allowed; transform: none; }
+    .btn-secondary { border-color: #ccd2ce; background: #fff; color: #303632; }
+    .btn-dark { background: var(--black); color: #fff; }
+    .btn-green { background: var(--naser); color: #fff; }
+    .btn-green:hover { background: var(--naser-dark); }
+    .btn-danger { border-color: #e6c0c0; background: #fff; color: var(--danger); }
+    .btn-edit { display: none; border-color: #d5bd78; background: var(--warning-soft); color: var(--warning); }
+    .btn-edit.show { display: inline-block; }
+
+    .toast-region {
+      position: fixed;
+      right: 22px;
+      bottom: 90px;
+      z-index: 80;
+      display: grid;
+      gap: 8px;
+      width: min(340px, calc(100vw - 32px));
+      pointer-events: none;
+    }
+
+    .toast {
+      padding: 13px 15px;
+      border-left: 4px solid var(--naser);
+      border-radius: 9px;
+      background: #111613;
+      color: #fff;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, .2);
+      font-size: 12px;
+      animation: toast-in .22s ease-out;
+    }
+
+    .toast.error { border-left-color: #ef5a5a; }
+    @keyframes toast-in { from { opacity: 0; transform: translateY(8px); } }
+
+    .print-header { display: none; }
+
+    @media (max-width: 920px) {
+      .sidebar { display: none; }
+      .app { margin-left: 0; }
+      .container { padding: 18px; }
+      .topbar { padding: 11px 18px; }
+    }
+
+    @media (max-width: 680px) {
+      .topbar-caption, .document-meta > div { display: none; }
+      .hero { padding: 24px 20px; }
+      .progress-card { grid-template-columns: 1fr auto; }
+      .progress-track { grid-column: 1 / -1; grid-row: 2; }
+      .grid, .grid.three, .summary-grid, .signature-grid { grid-template-columns: 1fr; }
+      .segmented.three { grid-template-columns: 1fr; }
+      .section-body { padding: 17px; }
+      .communication-box { padding: 17px; font-size: 13px; line-height: 1.85; }
+      .signature-grid { gap: 26px; }
+      .actions { position: static; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .btn { width: 100%; }
+    }
+
+    @media print {
+      @page { size: A4; margin: 10mm; }
+      body { background: #fff; color: #000; font-family: Arial, Helvetica, sans-serif; font-size: 10pt; }
+      .sidebar, .topbar, .hero, .progress-card, .notice, .actions, .toast-region, .no-print { display: none !important; }
+      .app { margin: 0; }
+      .container { width: 100%; max-width: none; padding: 0; }
+      .print-header {
+        display: grid;
+        grid-template-columns: 1.2fr 3fr 1.25fr;
+        align-items: stretch;
+        margin-bottom: 5mm;
+        border: 1px solid #000;
+      }
+      .print-logo { display: grid; padding: 4mm; place-items: center; border-right: 1px solid #000; font-size: 21pt; font-weight: 900; letter-spacing: .1em; }
+      .print-logo span { color: var(--naser); }
+      .print-title { display: grid; padding: 3mm; place-items: center; border-right: 1px solid #000; font-size: 12pt; font-weight: 800; text-align: center; text-transform: uppercase; }
+      .print-meta { display: grid; grid-template-rows: repeat(3, 1fr); font-size: 8pt; }
+      .print-meta div { display: flex; align-items: center; justify-content: center; padding: 1mm; }
+      .print-meta div + div { border-top: 1px solid #000; }
+      .section { margin-bottom: 3.5mm; border: 1px solid #000; border-radius: 0; box-shadow: none; break-inside: avoid; }
+      .section-heading { padding: 2.3mm 3mm; border-bottom: 1px solid #000; }
+      .section-number { width: 7mm; height: 7mm; flex-basis: 7mm; border-radius: 0; background: #000 !important; color: #fff !important; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+      .section-heading h2 { font-size: 9.5pt; text-transform: uppercase; }
+      .section-heading p { display: none; }
+      .section-body { padding: 3.5mm; }
+      .grid { gap: 3mm 5mm; }
+      .field > label, .field-label { margin-bottom: 1mm; color: #000; font-size: 7.5pt; }
+      input, select, textarea { min-height: 7mm; padding: 1mm 1.5mm; border: none; border-bottom: 1px solid #666; border-radius: 0; background: transparent !important; color: #000 !important; font-size: 9pt; }
+      textarea { min-height: 14mm; }
+      .segmented label { min-height: 7mm; padding: 1mm; border-radius: 0; font-size: 7.5pt; }
+      .segmented input:checked + label { border-color: #000; background: #e5e5e5 !important; color: #000 !important; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+      .check-row { display: none; }
+      .communication-box { margin-top: 4mm; padding: 3.5mm; border: 1px solid #000; border-left: 2mm solid #000; border-radius: 0; background: #fff; font-size: 9pt; line-height: 1.65; }
+      .summary-grid { gap: 2mm; margin-top: 3mm; }
+      .summary-item { padding: 2mm; border-radius: 0; }
+      .signature-grid { margin-top: 14mm; gap: 14mm; }
+      .signature-box { padding-top: 2mm; }
+    }
+  </style>
+</head>
+
+<body>
+  <aside class="sidebar" aria-label="Navegación principal">
+    <div class="brand">
+      <p class="brand-name">NA<span>SER</span></p>
+      <div class="brand-subtitle">Sistema de Gestión Integrado</div>
+    </div>
+    <p class="nav-label">Gestión de personal</p>
+    <nav>
+      <a href="#"><span class="nav-dot"></span>Inicio</a>
+      <a href="#datos"><span class="nav-dot"></span>Datos del trabajador</a>
+      <a href="#comunicacion"><span class="nav-dot"></span>Comunicación</a>
+      <a href="#firmas"><span class="nav-dot"></span>Firma y aceptación</a>
+      <a href="#" class="active" aria-current="page"><span class="nav-dot"></span>PGSN02-F9</a>
+    </nav>
+    <div class="sidebar-footer">NASER SRL · Documento controlado</div>
+  </aside>
+
+  <main class="app">
+    <header class="topbar">
+      <div>
+        <div class="topbar-title">Gestión de Personal</div>
+        <div class="topbar-caption">Comunicación formal de licencias y vacaciones</div>
+      </div>
+      <div class="document-meta">
+        <span class="status-pill" id="statusPill">En edición</span>
+        <div>
+          <strong>PGSN02-F9</strong>
+          <span>Rev.01 · Jul.25</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="container">
+      <div class="print-header" aria-hidden="true">
+        <div class="print-logo">NA<span>SER</span></div>
+        <div class="print-title">Comunicación de licencias y vacaciones</div>
+        <div class="print-meta">
+          <div>PGSN02-F9</div>
+          <div>Rev.01</div>
+          <div>Jul.25</div>
+        </div>
+      </div>
+
+      <section class="hero">
+        <div class="hero-code">PGSN02-F9 · Rev.01 · Jul.25</div>
+        <h1>Comunicación de Licencias y Vacaciones</h1>
+        <p>Complete los datos requeridos. El avance se puede guardar y continuar en este mismo navegador.</p>
+      </section>
+
+      <div class="progress-card" aria-label="Progreso del formulario">
+        <div class="progress-label">Completado del formulario</div>
+        <div class="progress-track" aria-hidden="true"><div class="progress-bar" id="progressBar"></div></div>
+        <div class="progress-value" id="progressValue">0%</div>
+      </div>
+
+      <div class="notice" id="finalNotice" role="status">
+        <span aria-hidden="true">✓</span>
+        <div><strong>Formulario finalizado</strong><span id="finalNoticeText">Los datos quedaron bloqueados para evitar cambios accidentales.</span></div>
+      </div>
+
+      <form id="licenseForm" novalidate>
+        <section class="section" id="datos">
+          <div class="section-heading">
+            <div class="section-number">1</div>
+            <div><h2>Datos del trabajador</h2><p>Identificación y situación laboral.</p></div>
+          </div>
+          <div class="section-body">
+            <div class="grid">
+              <div class="field full">
+                <label for="fullName">Apellido y nombre <span class="required-mark">*</span></label>
+                <input id="fullName" name="fullName" type="text" maxlength="100" autocomplete="name" placeholder="Apellido y nombre del trabajador" data-required>
+                <div class="error-text" data-error-for="fullName"></div>
+              </div>
+              <div class="field">
+                <label for="cuil">CUIL <span class="required-mark">*</span></label>
+                <input id="cuil" name="cuil" type="text" inputmode="numeric" maxlength="13" placeholder="XX-XXXXXXXX-X" data-required>
+                <div class="error-text" data-error-for="cuil"></div>
+              </div>
+              <div class="field">
+                <label for="employeeId">Legajo <span class="required-mark">*</span></label>
+                <input id="employeeId" name="employeeId" type="text" maxlength="30" placeholder="Número de legajo" data-required>
+                <div class="error-text" data-error-for="employeeId"></div>
+              </div>
+              <div class="field">
+                <label for="category">Categoría <span class="required-mark">*</span></label>
+                <input id="category" name="category" type="text" maxlength="60" placeholder="Categoría laboral" data-required>
+                <div class="error-text" data-error-for="category"></div>
+              </div>
+              <div class="field">
+                <label for="entryDate">Fecha de ingreso <span class="required-mark">*</span></label>
+                <input id="entryDate" name="entryDate" type="date" data-required>
+                <div class="error-text" data-error-for="entryDate"></div>
+              </div>
+              <div class="field">
+                <label for="sector">Sector <span class="required-mark">*</span></label>
+                <select id="sector" name="sector" data-required>
+                  <option value="">Seleccione una opción</option>
+                  <option>Slickline</option>
+                  <option>Well Testing</option>
+                  <option>Eventos</option>
+                  <option>Administración</option>
+                  <option>HSE</option>
+                  <option>Mantenimiento</option>
+                  <option>Base</option>
+                  <option>Otro</option>
+                </select>
+                <div class="error-text" data-error-for="sector"></div>
+              </div>
+              <div class="field">
+                <span class="field-label">Condición laboral <span class="required-mark">*</span></span>
+                <div class="segmented" data-radio-group="agreement">
+                  <input type="radio" id="outsideAgreement" name="agreement" value="FUERA DE CONVENIO" data-required-radio>
+                  <label for="outsideAgreement">Fuera de convenio</label>
+                  <input type="radio" id="insideAgreement" name="agreement" value="EN CONVENIO">
+                  <label for="insideAgreement">En convenio</label>
+                </div>
+                <div class="error-text" data-error-for="agreement"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="comunicacion">
+          <div class="section-heading">
+            <div class="section-number">2</div>
+            <div><h2>Comunicación</h2><p>Detalle del período comunicado al trabajador.</p></div>
+          </div>
+          <div class="section-body">
+            <div class="grid three">
+              <div class="field">
+                <label for="communicationDate">Fecha de comunicación <span class="required-mark">*</span></label>
+                <input id="communicationDate" name="communicationDate" type="date" data-required>
+                <div class="error-text" data-error-for="communicationDate"></div>
+              </div>
+              <div class="field">
+                <span class="field-label">Tipo <span class="required-mark">*</span></span>
+                <div class="segmented" data-radio-group="leaveType">
+                  <input type="radio" id="typeVacation" name="leaveType" value="vacaciones" data-required-radio checked>
+                  <label for="typeVacation">Vacaciones</label>
+                  <input type="radio" id="typeLeave" name="leaveType" value="licencia">
+                  <label for="typeLeave">Licencia</label>
+                </div>
+                <div class="error-text" data-error-for="leaveType"></div>
+              </div>
+              <div class="field">
+                <label for="correspondingYear">Año correspondiente <span class="required-mark">*</span></label>
+                <input id="correspondingYear" name="correspondingYear" type="number" min="2000" max="2100" inputmode="numeric" placeholder="Ej.: 2025" data-required>
+                <div class="error-text" data-error-for="correspondingYear"></div>
+              </div>
+              <div class="field">
+                <label for="days">Cantidad de días corridos <span class="required-mark">*</span></label>
+                <input id="days" name="days" type="number" min="1" max="365" inputmode="numeric" placeholder="Ej.: 14" data-required>
+                <div class="error-text" data-error-for="days"></div>
+              </div>
+              <div class="field">
+                <label for="startDate">Comienza el día <span class="required-mark">*</span></label>
+                <input id="startDate" name="startDate" type="date" data-required>
+                <div class="error-text" data-error-for="startDate"></div>
+              </div>
+              <div class="field">
+                <label for="endDate">Finaliza el día <span class="required-mark">*</span></label>
+                <input id="endDate" name="endDate" type="date" data-required>
+                <div class="error-text" data-error-for="endDate"></div>
+              </div>
+              <div class="field">
+                <label for="returnDate">Reintegro a tareas <span class="required-mark">*</span></label>
+                <input id="returnDate" name="returnDate" type="date" data-required>
+                <div class="error-text" data-error-for="returnDate"></div>
+              </div>
+              <div class="field" id="licenseReasonField" hidden>
+                <label for="licenseReason">Motivo de la licencia <span class="required-mark">*</span></label>
+                <input id="licenseReason" name="licenseReason" type="text" maxlength="100" placeholder="Indique el motivo">
+                <div class="error-text" data-error-for="licenseReason"></div>
+              </div>
+            </div>
+
+            <label class="check-row no-print" for="skipWeekend">
+              <input type="checkbox" id="skipWeekend" name="skipWeekend" checked>
+              <span>Si el reintegro calculado cae sábado o domingo, trasladarlo automáticamente al lunes siguiente. Los feriados deben verificarse y ajustarse manualmente.</span>
+            </label>
+
+            <div class="communication-box" aria-live="polite">
+              <p><strong>Sr./Sra. Trabajador/a:</strong></p>
+              <p>Se le comunica que, de acuerdo con las disposiciones legales vigentes, gozará de <span id="typeText">las vacaciones</span> correspondientes al año <span class="dynamic-value" id="yearText">—</span>, por un período de <span class="dynamic-value" id="daysText">—</span> días.</p>
+              <p>El período comenzará a regir desde el día <span class="dynamic-value" id="startText">—</span> inclusive, hasta el día <span class="dynamic-value" id="endText">—</span> inclusive. Deberá reintegrarse a sus tareas el día <span class="dynamic-value" id="returnText">—</span>.</p>
+              <div class="summary-grid">
+                <div class="summary-item"><span>Trabajador</span><strong id="workerText">Sin completar</strong></div>
+                <div class="summary-item"><span>Condición</span><strong id="agreementText">Sin completar</strong></div>
+                <div class="summary-item"><span>Fecha de comunicación</span><strong id="communicationText">Sin completar</strong></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="observaciones">
+          <div class="section-heading">
+            <div class="section-number">3</div>
+            <div><h2>Observaciones</h2><p>Información complementaria, si corresponde.</p></div>
+          </div>
+          <div class="section-body">
+            <div class="field">
+              <label for="observations">Observaciones / aclaraciones</label>
+              <textarea id="observations" name="observations" maxlength="800" placeholder="Ingrese aquí cualquier aclaración relacionada con la comunicación..."></textarea>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="firmas">
+          <div class="section-heading">
+            <div class="section-number">4</div>
+            <div><h2>Firma y aceptación</h2><p>Constancia de comunicación y recepción.</p></div>
+          </div>
+          <div class="section-body">
+            <div class="grid">
+              <div class="field">
+                <label for="employerName">Empleador / responsable <span class="required-mark">*</span></label>
+                <input id="employerName" name="employerName" type="text" maxlength="100" placeholder="Apellido y nombre" data-required>
+                <div class="error-text" data-error-for="employerName"></div>
+              </div>
+              <div class="field">
+                <label for="workerSignatureName">Trabajador</label>
+                <input id="workerSignatureName" name="workerSignatureName" type="text" readonly tabindex="-1" aria-readonly="true">
+              </div>
+            </div>
+            <div class="signature-grid">
+              <div class="signature-box"><strong>Firma y aclaración del empleador</strong><span>Fecha: ____ / ____ / ______</span></div>
+              <div class="signature-box"><strong>Firma y aclaración del trabajador</strong><span>Fecha: ____ / ____ / ______</span></div>
+            </div>
+          </div>
+        </section>
+      </form>
+
+      <div class="actions" aria-label="Acciones del formulario">
+        <button type="button" class="btn btn-danger" id="clearButton">Limpiar</button>
+        <button type="button" class="btn btn-secondary" id="printButton">Imprimir / PDF</button>
+        <button type="button" class="btn btn-dark" id="saveButton">Guardar avance</button>
+        <button type="button" class="btn btn-edit" id="editButton">Habilitar edición</button>
+        <button type="button" class="btn btn-green" id="finalizeButton">Finalizar formulario</button>
+      </div>
+    </div>
+  </main>
+
+  <div class="toast-region" id="toastRegion" aria-live="polite" aria-atomic="true"></div>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const STORAGE_KEY = "NASER_PGSN02_F9_V2";
+      const form = document.getElementById("licenseForm");
+      const fields = [...form.querySelectorAll("input, select, textarea")];
+      const editableFields = fields.filter(field => field.id !== "workerSignatureName");
+
+      const $ = id => document.getElementById(id);
+      const elements = {
+        fullName: $("fullName"),
+        cuil: $("cuil"),
+        communicationDate: $("communicationDate"),
+        correspondingYear: $("correspondingYear"),
+        days: $("days"),
+        startDate: $("startDate"),
+        endDate: $("endDate"),
+        returnDate: $("returnDate"),
+        skipWeekend: $("skipWeekend"),
+        licenseReason: $("licenseReason"),
+        licenseReasonField: $("licenseReasonField"),
+        workerSignatureName: $("workerSignatureName")
+      };
+
+      let finalized = false;
+      let finalizedAt = null;
+      let saveTimer = null;
+
+      function todayISO() {
+        const now = new Date();
+        return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+      }
+
+      function parseISODate(value) {
+        if (!/^\d{4}-\d{2}-\d{2}$/.test(value || "")) return null;
+        const [year, month, day] = value.split("-").map(Number);
+        const date = new Date(Date.UTC(year, month - 1, day));
+        if (date.getUTCFullYear() !== year || date.getUTCMonth() !== month - 1 || date.getUTCDate() !== day) return null;
+        return date;
+      }
+
+      function toISODate(date) {
+        return `${date.getUTCFullYear()}-${String(date.getUTCMonth() + 1).padStart(2, "0")}-${String(date.getUTCDate()).padStart(2, "0")}`;
+      }
+
+      function addDays(date, amount) {
+        const result = new Date(date.getTime());
+        result.setUTCDate(result.getUTCDate() + amount);
+        return result;
+      }
+
+      function formatDate(value) {
+        const date = parseISODate(value);
+        if (!date) return "—";
+        return new Intl.DateTimeFormat("es-AR", { timeZone: "UTC", day: "2-digit", month: "2-digit", year: "numeric" }).format(date);
+      }
+
+      function getRadioValue(name) {
+        return form.querySelector(`input[name="${name}"]:checked`)?.value || "";
+      }
+
+      function calculateDates(force = true) {
+        const start = parseISODate(elements.startDate.value);
+        const amount = Number.parseInt(elements.days.value, 10);
+        if (!start || !Number.isInteger(amount) || amount < 1) return;
+
+        if (force || !elements.endDate.value) {
+          elements.endDate.value = toISODate(addDays(start, amount - 1));
+        }
+
+        const end = parseISODate(elements.endDate.value);
+        if (!end) return;
+
+        if (force || !elements.returnDate.value) {
+          let returnDay = addDays(end, 1);
+          if (elements.skipWeekend.checked) {
+            while (returnDay.getUTCDay() === 0 || returnDay.getUTCDay() === 6) {
+              returnDay = addDays(returnDay, 1);
+            }
+          }
+          elements.returnDate.value = toISODate(returnDay);
+        }
+      }
+
+      function formatCuil(raw) {
+        const digits = raw.replace(/\D/g, "").slice(0, 11);
+        if (digits.length <= 2) return digits;
+        if (digits.length <= 10) return `${digits.slice(0, 2)}-${digits.slice(2)}`;
+        return `${digits.slice(0, 2)}-${digits.slice(2, 10)}-${digits.slice(10)}`;
+      }
+
+      function isValidCuil(value) {
+        const digits = value.replace(/\D/g, "");
+        if (digits.length !== 11 || /^0+$/.test(digits)) return false;
+        const multipliers = [5, 4, 3, 2, 7, 6, 5, 4, 3, 2];
+        const sum = multipliers.reduce((total, multiplier, index) => total + Number(digits[index]) * multiplier, 0);
+        const verifier = 11 - (sum % 11);
+        const expected = verifier === 11 ? 0 : verifier === 10 ? 9 : verifier;
+        return expected === Number(digits[10]);
+      }
+
+      function updateType() {
+        const isLicense = getRadioValue("leaveType") === "licencia";
+        elements.licenseReasonField.hidden = !isLicense;
+        if (isLicense) {
+          elements.licenseReason.setAttribute("data-required", "");
+        } else {
+          elements.licenseReason.removeAttribute("data-required");
+          clearFieldError(elements.licenseReason);
+        }
+        $("typeText").textContent = isLicense ? "la licencia" : "las vacaciones";
+      }
+
+      function updatePreview() {
+        elements.workerSignatureName.value = elements.fullName.value.trim();
+        $("yearText").textContent = elements.correspondingYear.value || "—";
+        $("daysText").textContent = elements.days.value || "—";
+        $("startText").textContent = formatDate(elements.startDate.value);
+        $("endText").textContent = formatDate(elements.endDate.value);
+        $("returnText").textContent = formatDate(elements.returnDate.value);
+        $("workerText").textContent = elements.fullName.value.trim() || "Sin completar";
+        $("agreementText").textContent = getRadioValue("agreement") || "Sin completar";
+        $("communicationText").textContent = elements.communicationDate.value ? formatDate(elements.communicationDate.value) : "Sin completar";
+      }
+
+      function isFieldComplete(field) {
+        if (field.type === "radio") return Boolean(getRadioValue(field.name));
+        if (field.type === "checkbox") return field.checked;
+        return Boolean(String(field.value).trim());
+      }
+
+      function requiredUnits() {
+        const normal = [...form.querySelectorAll("[data-required]:not([type='radio'])")];
+        const radioNames = [...new Set([...form.querySelectorAll("[data-required-radio]")].map(field => field.name))];
+        return [
+          ...normal.map(field => ({ complete: isFieldComplete(field) })),
+          ...radioNames.map(name => ({ complete: Boolean(getRadioValue(name)) }))
+        ];
+      }
+
+      function updateProgress() {
+        const units = requiredUnits();
+        const complete = units.filter(unit => unit.complete).length;
+        const percentage = units.length ? Math.round((complete / units.length) * 100) : 0;
+        $("progressBar").style.width = `${percentage}%`;
+        $("progressValue").textContent = `${percentage}%`;
+        $("progressBar").parentElement.setAttribute("aria-label", `${percentage}% completado`);
+      }
+
+      function errorContainer(key) {
+        return form.querySelector(`[data-error-for="${key}"]`);
+      }
+
+      function setFieldError(field, message, key = field.name || field.id) {
+        if (field) field.classList.add("field-error");
+        const target = errorContainer(key);
+        if (target) {
+          target.textContent = message;
+          target.classList.add("show");
+        }
+      }
+
+      function clearFieldError(field, key = field?.name || field?.id) {
+        if (field) field.classList.remove("field-error");
+        const target = errorContainer(key);
+        if (target) {
+          target.textContent = "";
+          target.classList.remove("show");
+        }
+      }
+
+      function clearAllErrors() {
+        form.querySelectorAll(".field-error").forEach(field => field.classList.remove("field-error"));
+        form.querySelectorAll(".error-text").forEach(target => {
+          target.textContent = "";
+          target.classList.remove("show");
+        });
+      }
+
+      function validateForm(showErrors = true) {
+        clearAllErrors();
+        let firstInvalid = null;
+
+        form.querySelectorAll("[data-required]:not([type='radio'])").forEach(field => {
+          if (!String(field.value).trim()) {
+            if (showErrors) setFieldError(field, "Este campo es obligatorio.");
+            firstInvalid ||= field;
+          }
+        });
+
+        [...new Set([...form.querySelectorAll("[data-required-radio]")].map(field => field.name))].forEach(name => {
+          if (!getRadioValue(name)) {
+            const group = form.querySelector(`[data-radio-group="${name}"]`);
+            if (showErrors) {
+              group?.classList.add("field-error");
+              const target = errorContainer(name);
+              if (target) {
+                target.textContent = "Seleccione una opción.";
+                target.classList.add("show");
+              }
+            }
+            firstInvalid ||= group;
+          }
+        });
+
+        if (elements.cuil.value && !isValidCuil(elements.cuil.value)) {
+          if (showErrors) setFieldError(elements.cuil, "El CUIL no supera la validación del dígito verificador.");
+          firstInvalid ||= elements.cuil;
+        }
+
+        const year = Number(elements.correspondingYear.value);
+        if (elements.correspondingYear.value && (year < 2000 || year > 2100)) {
+          if (showErrors) setFieldError(elements.correspondingYear, "Ingrese un año entre 2000 y 2100.");
+          firstInvalid ||= elements.correspondingYear;
+        }
+
+        const amount = Number(elements.days.value);
+        if (elements.days.value && (!Number.isInteger(amount) || amount < 1 || amount > 365)) {
+          if (showErrors) setFieldError(elements.days, "Ingrese una cantidad entre 1 y 365 días.");
+          firstInvalid ||= elements.days;
+        }
+
+        const entry = parseISODate($("entryDate").value);
+        const communication = parseISODate(elements.communicationDate.value);
+        if (entry && communication && entry > communication) {
+          if (showErrors) setFieldError(elements.communicationDate, "La comunicación no puede ser anterior al ingreso.");
+          firstInvalid ||= elements.communicationDate;
+        }
+
+        const start = parseISODate(elements.startDate.value);
+        const end = parseISODate(elements.endDate.value);
+        const returnDay = parseISODate(elements.returnDate.value);
+        if (start && end && end < start) {
+          if (showErrors) setFieldError(elements.endDate, "La finalización no puede ser anterior al comienzo.");
+          firstInvalid ||= elements.endDate;
+        }
+        if (end && returnDay && returnDay <= end) {
+          if (showErrors) setFieldError(elements.returnDate, "El reintegro debe ser posterior a la finalización.");
+          firstInvalid ||= elements.returnDate;
+        }
+
+        const valid = !firstInvalid;
+        return { valid, firstInvalid };
+      }
+
+      function collectData() {
+        const data = {};
+        fields.forEach(field => {
+          if (!field.name || field.id === "workerSignatureName") return;
+          if (field.type === "radio") {
+            if (field.checked) data[field.name] = field.value;
+          } else if (field.type === "checkbox") {
+            data[field.name] = field.checked;
+          } else {
+            data[field.name] = field.value;
+          }
+        });
+        return { version: 2, data, finalized, finalizedAt, updatedAt: new Date().toISOString() };
+      }
+
+      function saveForm({ silent = false } = {}) {
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(collectData()));
+          if (!silent) showToast("Avance guardado correctamente.");
+          return true;
+        } catch (error) {
+          showToast("No se pudo guardar en este navegador.", true);
+          return false;
+        }
+      }
+
+      function applyData(payload) {
+        if (!payload || typeof payload !== "object" || !payload.data) return false;
+        const data = payload.data;
+        fields.forEach(field => {
+          if (!field.name || !(field.name in data) || field.id === "workerSignatureName") return;
+          if (field.type === "radio") field.checked = field.value === data[field.name];
+          else if (field.type === "checkbox") field.checked = Boolean(data[field.name]);
+          else field.value = data[field.name] ?? "";
+        });
+        finalized = Boolean(payload.finalized);
+        finalizedAt = payload.finalizedAt || null;
+        return true;
+      }
+
+      function loadForm() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          if (!raw) return false;
+          return applyData(JSON.parse(raw));
+        } catch (error) {
+          localStorage.removeItem(STORAGE_KEY);
+          showToast("El guardado anterior estaba dañado y fue descartado.", true);
+          return false;
+        }
+      }
+
+      function setLocked(locked) {
+        finalized = locked;
+        editableFields.forEach(field => { field.disabled = locked; });
+        $("saveButton").disabled = locked;
+        $("finalizeButton").disabled = locked;
+        $("editButton").classList.toggle("show", locked);
+        $("statusPill").classList.toggle("finalized", locked);
+        $("statusPill").textContent = locked ? "Finalizado" : "En edición";
+        $("finalNotice").classList.toggle("show", locked);
+        if (locked && finalizedAt) {
+          const stamp = new Date(finalizedAt);
+          if (!Number.isNaN(stamp.getTime())) {
+            $("finalNoticeText").textContent = `Los datos quedaron bloqueados el ${stamp.toLocaleString("es-AR", { dateStyle: "short", timeStyle: "short" })}.`;
+          }
+        } else {
+          $("finalNoticeText").textContent = "Los datos quedaron bloqueados para evitar cambios accidentales.";
+        }
+      }
+
+      function finalizeForm() {
+        const validation = validateForm(true);
+        if (!validation.valid) {
+          showToast("Revisá los campos marcados antes de finalizar.", true);
+          validation.firstInvalid?.scrollIntoView({ behavior: "smooth", block: "center" });
+          validation.firstInvalid?.focus?.({ preventScroll: true });
+          return;
+        }
+        finalizedAt = new Date().toISOString();
+        setLocked(true);
+        if (saveForm({ silent: true })) {
+          showToast("Formulario finalizado y bloqueado correctamente.");
+          $("finalNotice").scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+      }
+
+      function enableEditing() {
+        const accepted = window.confirm("El formulario está finalizado. ¿Desea habilitar la edición nuevamente?");
+        if (!accepted) return;
+        finalizedAt = null;
+        setLocked(false);
+        saveForm({ silent: true });
+        showToast("Edición habilitada.");
+      }
+
+      function clearForm() {
+        const accepted = window.confirm("¿Desea borrar todos los datos guardados de este formulario?");
+        if (!accepted) return;
+        setLocked(false);
+        form.reset();
+        localStorage.removeItem(STORAGE_KEY);
+        finalizedAt = null;
+        elements.communicationDate.value = todayISO();
+        elements.correspondingYear.value = String(new Date().getFullYear() - 1);
+        elements.skipWeekend.checked = true;
+        clearAllErrors();
+        refresh();
+        showToast("Formulario limpio.");
+        elements.fullName.focus();
+      }
+
+      function showToast(message, isError = false) {
+        const toast = document.createElement("div");
+        toast.className = `toast${isError ? " error" : ""}`;
+        toast.textContent = message;
+        $("toastRegion").appendChild(toast);
+        window.setTimeout(() => toast.remove(), 3600);
+      }
+
+      function scheduleAutosave() {
+        if (finalized) return;
+        window.clearTimeout(saveTimer);
+        saveTimer = window.setTimeout(() => saveForm({ silent: true }), 700);
+      }
+
+      function refresh() {
+        updateType();
+        updatePreview();
+        updateProgress();
+      }
+
+      elements.cuil.addEventListener("input", event => {
+        event.target.value = formatCuil(event.target.value);
+      });
+
+      [elements.days, elements.startDate, elements.skipWeekend].forEach(field => {
+        field.addEventListener("change", () => calculateDates(true));
+        field.addEventListener("input", () => calculateDates(true));
+      });
+
+      elements.endDate.addEventListener("change", () => {
+        const end = parseISODate(elements.endDate.value);
+        if (end) {
+          let next = addDays(end, 1);
+          if (elements.skipWeekend.checked) {
+            while (next.getUTCDay() === 0 || next.getUTCDay() === 6) next = addDays(next, 1);
+          }
+          elements.returnDate.value = toISODate(next);
+        }
+      });
+
+      form.addEventListener("input", event => {
+        if (event.target.matches("input, select, textarea")) {
+          clearFieldError(event.target);
+          const group = event.target.closest("[data-radio-group]");
+          if (group) {
+            group.classList.remove("field-error");
+            clearFieldError(null, event.target.name);
+          }
+          refresh();
+          scheduleAutosave();
+        }
+      });
+
+      form.addEventListener("change", () => {
+        refresh();
+        scheduleAutosave();
+      });
+
+      $("saveButton").addEventListener("click", () => saveForm());
+      $("clearButton").addEventListener("click", clearForm);
+      $("finalizeButton").addEventListener("click", finalizeForm);
+      $("editButton").addEventListener("click", enableEditing);
+      $("printButton").addEventListener("click", () => window.print());
+
+      window.addEventListener("beforeprint", updatePreview);
+
+      const loaded = loadForm();
+      if (!loaded) {
+        elements.communicationDate.value = todayISO();
+        elements.correspondingYear.value = String(new Date().getFullYear() - 1);
+      }
+      calculateDates(false);
+      setLocked(finalized);
+      refresh();
+    })();
+  </script>
+</body>
+</html>

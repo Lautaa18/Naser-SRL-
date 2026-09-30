@@ -12,7 +12,7 @@ RUN printf "upload_max_filesize=1024M\npost_max_size=1100M\nmax_file_uploads=500
     > /usr/local/etc/php/conf.d/naser.ini
 
 # Habilita los .htaccess y oculta la version del servidor
-COPY docker/apache-naser.conf /etc/apache2/conf-available/naser.conf
-RUN a2enconf naser
+COPY docker/apache-naser.conf /etc/apache2/conf-available/zz-naser.conf
+RUN a2enconf zz-naser
 
 WORKDIR /var/www/html

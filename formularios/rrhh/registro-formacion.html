@@ -1,0 +1,453 @@
+<!-- =========================================================
+     NASER SRL · REGISTRO DE FORMACIÓN
+     PGSN02-F7 · Rev.03 · Jul.25
+     HTML + CSS + JAVASCRIPT EN UN SOLO BLOQUE
+========================================================= -->
+<section id="naser-formacion-form" class="naser-formacion">
+<style>
+#naser-formacion-form{
+  --negro:#0b0b0b;--negro2:#171717;--blanco:#fff;--gris:#f3f4f6;
+  --borde:#d8dadd;--texto:#171717;--verde:#16843d;--amarillo:#e4aa00;
+  --rojo:#c62828;--azul:#1f5f8b;
+  font-family:Arial,Helvetica,sans-serif;color:var(--texto);background:var(--gris);
+  border:1px solid #ddd;border-radius:18px;overflow:hidden
+}
+#naser-formacion-form *{box-sizing:border-box}
+#naser-formacion-form .hero{
+  background:var(--negro);color:#fff;padding:26px 28px;
+  display:flex;justify-content:space-between;gap:20px;align-items:center;flex-wrap:wrap
+}
+#naser-formacion-form .hero h2{margin:0;font-size:28px;letter-spacing:.3px}
+#naser-formacion-form .hero p{margin:6px 0 0;color:#cfcfcf}
+#naser-formacion-form .rev{
+  border:1px solid #555;border-radius:10px;padding:9px 13px;font-weight:700
+}
+#naser-formacion-form .body{padding:22px}
+#naser-formacion-form .panel{
+  background:#fff;border:1px solid var(--borde);border-radius:14px;
+  padding:16px;margin-bottom:16px
+}
+#naser-formacion-form .section-title{
+  margin:0 0 12px;background:#111;color:#fff;padding:10px 12px;
+  border-radius:9px;font-size:13px;letter-spacing:.2px
+}
+#naser-formacion-form .grid{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:10px
+}
+#naser-formacion-form .span2{grid-column:span 2}
+#naser-formacion-form .span4{grid-column:1/-1}
+#naser-formacion-form label{
+  display:block;font-size:11px;font-weight:800;color:#555;margin:0 0 5px
+}
+#naser-formacion-form input,
+#naser-formacion-form select,
+#naser-formacion-form textarea,
+#naser-formacion-form button{font:inherit}
+#naser-formacion-form input,
+#naser-formacion-form select,
+#naser-formacion-form textarea{
+  width:100%;border:1px solid #c9cbd0;border-radius:9px;
+  padding:10px 11px;background:#fff;color:#111
+}
+#naser-formacion-form input,#naser-formacion-form select{height:42px}
+#naser-formacion-form textarea{min-height:82px;resize:vertical}
+#naser-formacion-form button{
+  border:0;border-radius:9px;padding:10px 14px;font-weight:700;cursor:pointer
+}
+#naser-formacion-form .btn-dark{background:#111;color:#fff}
+#naser-formacion-form .btn-light{background:#eceef0;color:#111}
+#naser-formacion-form .btn-green{background:var(--verde);color:#fff}
+
+#naser-formacion-form .progress-wrap{
+  display:grid;grid-template-columns:180px 1fr;gap:14px;align-items:center
+}
+#naser-formacion-form .progress-box{
+  background:#111;color:#fff;border-radius:12px;padding:16px;text-align:center
+}
+#naser-formacion-form .progress-box b{font-size:30px;display:block}
+#naser-formacion-form .progress-track{
+  height:16px;background:#e5e7eb;border-radius:999px;overflow:hidden
+}
+#naser-formacion-form .progress-bar{
+  height:100%;width:0%;background:var(--verde);transition:.2s
+}
+#naser-formacion-form .progress-text{
+  font-size:12px;color:#666;margin-top:7px
+}
+
+#naser-formacion-form .table-wrap{
+  overflow:auto;border:1px solid var(--borde);border-radius:12px
+}
+#naser-formacion-form table{
+  width:100%;border-collapse:separate;border-spacing:0;min-width:1050px;background:#fff
+}
+#naser-formacion-form th{
+  position:sticky;top:0;z-index:2;background:#111;color:#fff;
+  text-align:left;padding:11px 9px;font-size:11px
+}
+#naser-formacion-form td{
+  padding:8px;border-bottom:1px solid #e7e7e7;vertical-align:middle
+}
+#naser-formacion-form tbody tr:hover{background:#f8f8f8}
+#naser-formacion-form td.numero{
+  width:50px;text-align:center;font-weight:900;background:#f2f2f2
+}
+#naser-formacion-form table input,#naser-formacion-form table select{
+  min-width:130px;height:38px;font-size:12px;padding:7px 8px
+}
+#naser-formacion-form table .name{min-width:280px}
+#naser-formacion-form table .firma{min-width:220px}
+#naser-formacion-form table .eval{min-width:170px}
+
+#naser-formacion-form .summary{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:10px
+}
+#naser-formacion-form .sum-card{
+  background:#fff;border:1px solid var(--borde);border-radius:12px;padding:14px
+}
+#naser-formacion-form .sum-card small{font-weight:800;color:#666}
+#naser-formacion-form .sum-card b{display:block;font-size:24px;margin-top:4px}
+#naser-formacion-form .sum-card.green{border-left:5px solid var(--verde)}
+#naser-formacion-form .sum-card.blue{border-left:5px solid var(--azul)}
+#naser-formacion-form .sum-card.yellow{border-left:5px solid var(--amarillo)}
+#naser-formacion-form .sum-card.red{border-left:5px solid var(--rojo)}
+
+#naser-formacion-form .actions{
+  display:flex;gap:8px;flex-wrap:wrap;margin-top:12px
+}
+#naser-formacion-form .msg{
+  display:none;margin-top:10px;padding:10px 12px;border-radius:9px;
+  font-size:12px;font-weight:700
+}
+#naser-formacion-form .msg.ok{
+  display:block;background:#e4f5e9;color:#12632e
+}
+#naser-formacion-form .msg.err{
+  display:block;background:#ffe5e5;color:#9b1717
+}
+#naser-formacion-form .note{
+  font-size:12px;line-height:1.5;color:#555;background:#fafafa;
+  border-left:4px solid #111;padding:10px 12px;border-radius:8px
+}
+
+@media(max-width:1000px){
+  #naser-formacion-form .grid,
+  #naser-formacion-form .summary{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:650px){
+  #naser-formacion-form .body{padding:12px}
+  #naser-formacion-form .grid,
+  #naser-formacion-form .summary,
+  #naser-formacion-form .progress-wrap{grid-template-columns:1fr}
+  #naser-formacion-form .span2,
+  #naser-formacion-form .span4{grid-column:auto}
+}
+</style>
+
+<div class="hero">
+  <div>
+    <h2>REGISTRO DE FORMACIÓN</h2>
+    <p>Registro de capacitación y asistencia del personal</p>
+  </div>
+  <div class="rev">PGSN02-F7 · Rev.03 · Jul.25</div>
+</div>
+
+<div class="body">
+
+  <div class="panel">
+    <div class="section-title">DATOS DE LA FORMACIÓN</div>
+    <div class="grid">
+      <div>
+        <label>FECHA</label>
+        <input type="date" id="fecha">
+      </div>
+      <div>
+        <label>LUGAR DE DICTADO</label>
+        <input id="lugar" placeholder="Lugar de dictado">
+      </div>
+      <div class="span2">
+        <label>TEMA</label>
+        <input id="tema" placeholder="Tema de la formación">
+      </div>
+      <div class="span2">
+        <label>INSTRUCTOR</label>
+        <input id="instructor" placeholder="Nombre del instructor">
+      </div>
+      <div>
+        <label>DURACIÓN</label>
+        <input id="duracion" placeholder="Ej. 2 horas">
+      </div>
+      <div>
+        <label>FECHA DE ACTUALIZACIÓN</label>
+        <input type="date" id="fechaActualizacion">
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="note">
+      <strong>Listado de asistentes a la formación.</strong>
+      Complete los datos de cada participante, firma de asistencia y evaluación correspondiente.
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="progress-wrap">
+      <div class="progress-box">
+        <span>ASISTENCIA</span>
+        <b id="progressPct">0%</b>
+      </div>
+      <div>
+        <div class="progress-track">
+          <div class="progress-bar" id="progressBar"></div>
+        </div>
+        <div class="progress-text" id="progressText">0 de 16 asistentes registrados</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="section-title">LISTADO DE ASISTENTES A LA FORMACIÓN</div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>N°</th>
+            <th>APELLIDO Y NOMBRE</th>
+            <th>DNI</th>
+            <th>FIRMA DE ASISTENCIA</th>
+            <th>EVALUACIÓN</th>
+          </tr>
+        </thead>
+        <tbody id="asistentesBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="section-title">RESUMEN DEL FORMULARIO</div>
+    <div class="summary">
+      <div class="sum-card green">
+        <small>ASISTENTES REGISTRADOS</small>
+        <b id="stAsistentes">0</b>
+      </div>
+      <div class="sum-card blue">
+        <small>CON FIRMA</small>
+        <b id="stFirmas">0</b>
+      </div>
+      <div class="sum-card yellow">
+        <small>CON EVALUACIÓN</small>
+        <b id="stEvaluados">0</b>
+      </div>
+      <div class="sum-card red">
+        <small>REGISTROS INCOMPLETOS</small>
+        <b id="stIncompletos">0</b>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="section-title">CIERRE DE LA FORMACIÓN</div>
+    <div class="grid">
+      <div class="span2">
+        <label>NOMBRE DEL INSTRUCTOR</label>
+        <input id="instructorCierre" placeholder="Nombre y apellido del instructor">
+      </div>
+      <div class="span2">
+        <label>FIRMA DEL INSTRUCTOR</label>
+        <input id="firmaInstructor" placeholder="Firma / aclaración">
+      </div>
+      <div class="span4">
+        <label>OBSERVACIONES</label>
+        <textarea id="observaciones" placeholder="Observaciones adicionales"></textarea>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button type="button" class="btn-green" id="btnGuardar">Guardar progreso</button>
+      <button type="button" class="btn-light" id="btnLimpiar">Limpiar formulario</button>
+      <button type="button" class="btn-dark" id="btnFinalizar">Finalizar formulario</button>
+    </div>
+    <div class="msg" id="mensaje"></div>
+  </div>
+
+</div>
+
+<script>
+(function(){
+  const root=document.getElementById("naser-formacion-form");
+  const $=id=>document.getElementById(id);
+  const KEY="naser_pgsn02_f7_formacion_rev03";
+  const filas=16;
+
+  function rowHTML(i){
+    return `
+      <tr data-row="${i}">
+        <td class="numero">${i}</td>
+        <td><input class="name" id="nombre_${i}" placeholder="Apellido y nombre"></td>
+        <td><input id="dni_${i}" placeholder="DNI"></td>
+        <td><input class="firma" id="firma_${i}" placeholder="Firma de asistencia"></td>
+        <td>
+          <input class="eval" id="evaluacion_${i}" placeholder="Evaluación">
+        </td>
+      </tr>`;
+  }
+
+  $("asistentesBody").innerHTML=
+    Array.from({length:filas},(_,i)=>rowHTML(i+1)).join("");
+
+  function rowData(i){
+    return {
+      nombre:$("nombre_"+i).value.trim(),
+      dni:$("dni_"+i).value.trim(),
+      firma:$("firma_"+i).value.trim(),
+      evaluacion:$("evaluacion_"+i).value.trim()
+    };
+  }
+
+  function isRegistered(r){
+    return !!(r.nombre || r.dni || r.firma || r.evaluacion);
+  }
+
+  function isComplete(r){
+    return !!(r.nombre && r.dni && r.firma && r.evaluacion);
+  }
+
+  function update(){
+    let asistentes=0,firmas=0,evaluados=0,incompletos=0;
+
+    for(let i=1;i<=filas;i++){
+      const r=rowData(i);
+
+      if(isRegistered(r)){
+        asistentes++;
+        if(!isComplete(r)) incompletos++;
+      }
+
+      if(r.firma) firmas++;
+      if(r.evaluacion) evaluados++;
+    }
+
+    const pct=Math.round((asistentes/filas)*100);
+
+    $("progressPct").textContent=pct+"%";
+    $("progressBar").style.width=pct+"%";
+    $("progressText").textContent=
+      `${asistentes} de ${filas} asistentes registrados`;
+
+    $("stAsistentes").textContent=asistentes;
+    $("stFirmas").textContent=firmas;
+    $("stEvaluados").textContent=evaluados;
+    $("stIncompletos").textContent=incompletos;
+  }
+
+  function collect(){
+    const asistentes=[];
+    for(let i=1;i<=filas;i++){
+      asistentes.push(rowData(i));
+    }
+
+    return {
+      fecha:$("fecha").value,
+      lugar:$("lugar").value.trim(),
+      tema:$("tema").value.trim(),
+      instructor:$("instructor").value.trim(),
+      duracion:$("duracion").value.trim(),
+      fechaActualizacion:$("fechaActualizacion").value,
+      instructorCierre:$("instructorCierre").value.trim(),
+      firmaInstructor:$("firmaInstructor").value.trim(),
+      observaciones:$("observaciones").value.trim(),
+      asistentes
+    };
+  }
+
+  function restore(data){
+    if(!data)return;
+
+    $("fecha").value=data.fecha||"";
+    $("lugar").value=data.lugar||"";
+    $("tema").value=data.tema||"";
+    $("instructor").value=data.instructor||"";
+    $("duracion").value=data.duracion||"";
+    $("fechaActualizacion").value=data.fechaActualizacion||"";
+    $("instructorCierre").value=data.instructorCierre||"";
+    $("firmaInstructor").value=data.firmaInstructor||"";
+    $("observaciones").value=data.observaciones||"";
+
+    (data.asistentes||[]).slice(0,filas).forEach((r,idx)=>{
+      const i=idx+1;
+      $("nombre_"+i).value=r.nombre||"";
+      $("dni_"+i).value=r.dni||"";
+      $("firma_"+i).value=r.firma||"";
+      $("evaluacion_"+i).value=r.evaluacion||"";
+    });
+
+    update();
+  }
+
+  function message(text,ok=true){
+    const m=$("mensaje");
+    m.textContent=text;
+    m.className="msg "+(ok?"ok":"err");
+    setTimeout(()=>m.className="msg",3500);
+  }
+
+  root.addEventListener("input",e=>{
+    if(e.target.matches("input,textarea")) update();
+  });
+
+  $("btnGuardar").addEventListener("click",()=>{
+    localStorage.setItem(KEY,JSON.stringify(collect()));
+    message("Progreso guardado correctamente.");
+  });
+
+  $("btnLimpiar").addEventListener("click",()=>{
+    if(!confirm("¿Limpiar todo el formulario?")) return;
+
+    localStorage.removeItem(KEY);
+    root.querySelectorAll("input,textarea").forEach(el=>el.value="");
+    update();
+
+    message("Formulario limpiado correctamente.");
+  });
+
+  $("btnFinalizar").addEventListener("click",()=>{
+    const data=collect();
+
+    if(!data.fecha || !data.lugar || !data.tema || !data.instructor || !data.duracion){
+      message("Completá Fecha, Lugar de dictado, Tema, Instructor y Duración antes de finalizar.",false);
+      return;
+    }
+
+    const registrados=data.asistentes.filter(isRegistered);
+
+    if(!registrados.length){
+      message("Debe existir al menos un asistente registrado.",false);
+      return;
+    }
+
+    const incompletos=registrados.filter(r=>!isComplete(r));
+
+    if(incompletos.length){
+      message(`Hay ${incompletos.length} asistente(s) con datos incompletos.`,false);
+      return;
+    }
+
+    if(!data.instructorCierre || !data.firmaInstructor){
+      message("Completá Nombre y Firma del Instructor antes de finalizar.",false);
+      return;
+    }
+
+    localStorage.setItem(KEY,JSON.stringify(data));
+    message("Formulario finalizado correctamente.");
+  });
+
+  try{
+    const saved=JSON.parse(localStorage.getItem(KEY)||"null");
+    if(saved)restore(saved);
+  }catch(e){}
+
+  update();
+})();
+</script>
+</section>

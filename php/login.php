@@ -18,12 +18,14 @@ if ($_SERVER['REQUEST_METHOD']==='POST') {
     if (loginBloqueado($pdo,$email,$ip)) {
         $error='Demasiados intentos fallidos. Esperá '.LOGIN_MINUTOS_BLOQUEO.' minutos e intentá de nuevo.';
     } else {
-        $st=$pdo->prepare('SELECT id,nombre,email,password,rol,activo FROM usuarios WHERE LOWER(email)=? LIMIT 1');
+        $st=$pdo->prepare('SELECT id,nombre,email,password,rol,activo,debe_cambiar_password FROM usuarios WHERE LOWER(email)=? LIMIT 1');
         $st->execute([$email]); $u=$st->fetch();
         if ($u && (int)$u['activo']===1 && password_verify($password,$u['password'])) {
             $pdo->prepare('DELETE FROM login_intentos WHERE email=?')->execute([$email]);
             session_regenerate_id(true);
             $_SESSION['usuario_id']=(int)$u['id']; $_SESSION['nombre']=$u['nombre']; $_SESSION['email']=$u['email']; $_SESSION['rol']=$u['rol'];
+            if ((int)$u['debe_cambiar_password'] === 1) $_SESSION['debe_cambiar_password'] = true;
+            $pdo->prepare('UPDATE usuarios SET ultimo_acceso = NOW() WHERE id = ?')->execute([(int)$u['id']]);
             registrarActividad($pdo,'login','Inicio de sesión');
             header('Location: '.app_url('/php/dashboard.php')); exit;
         }

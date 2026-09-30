@@ -1,0 +1,473 @@
+<!-- =========================================================
+     NASER SRL · FORMULARIO DE INGRESO
+     PGSN02-F5 · Rev.03 · Jul.25
+     HTML + CSS + JAVASCRIPT EN UN SOLO BLOQUE
+========================================================= -->
+<section id="naser-check-ingreso" class="naser-check">
+<style>
+#naser-check-ingreso{
+  --negro:#0b0b0b;--negro2:#171717;--blanco:#fff;--gris:#f3f4f6;
+  --borde:#d8dadd;--texto:#171717;--verde:#16843d;--amarillo:#e4aa00;
+  --rojo:#c62828;--azul:#1f5f8b;
+  font-family:Arial,Helvetica,sans-serif;color:var(--texto);background:var(--gris);
+  border:1px solid #ddd;border-radius:18px;overflow:hidden
+}
+#naser-check-ingreso *{box-sizing:border-box}
+#naser-check-ingreso .hero{
+  background:var(--negro);color:#fff;padding:26px 28px;
+  display:flex;justify-content:space-between;gap:20px;align-items:center;flex-wrap:wrap
+}
+#naser-check-ingreso .hero h2{margin:0;font-size:28px;letter-spacing:.3px}
+#naser-check-ingreso .hero p{margin:6px 0 0;color:#cfcfcf}
+#naser-check-ingreso .rev{
+  border:1px solid #555;border-radius:10px;padding:9px 13px;font-weight:700
+}
+#naser-check-ingreso .body{padding:22px}
+#naser-check-ingreso .panel{
+  background:#fff;border:1px solid var(--borde);border-radius:14px;
+  padding:16px;margin-bottom:16px
+}
+#naser-check-ingreso .top-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:10px
+}
+#naser-check-ingreso label{
+  display:block;font-size:11px;font-weight:800;color:#555;margin:0 0 5px
+}
+#naser-check-ingreso input,
+#naser-check-ingreso select,
+#naser-check-ingreso textarea,
+#naser-check-ingreso button{font:inherit}
+#naser-check-ingreso input,
+#naser-check-ingreso select,
+#naser-check-ingreso textarea{
+  width:100%;border:1px solid #c9cbd0;border-radius:9px;padding:10px 11px;
+  background:#fff;color:#111
+}
+#naser-check-ingreso input,#naser-check-ingreso select{height:42px}
+#naser-check-ingreso textarea{min-height:90px;resize:vertical}
+#naser-check-ingreso button{
+  border:0;border-radius:9px;padding:10px 14px;font-weight:700;cursor:pointer
+}
+#naser-check-ingreso .btn-dark{background:#111;color:#fff}
+#naser-check-ingreso .btn-light{background:#eceef0;color:#111}
+#naser-check-ingreso .btn-green{background:var(--verde);color:#fff}
+#naser-check-ingreso .btn-red{background:var(--rojo);color:#fff}
+
+#naser-check-ingreso .progress-wrap{
+  display:grid;grid-template-columns:180px 1fr;gap:14px;align-items:center
+}
+#naser-check-ingreso .progress-box{
+  background:#111;color:#fff;border-radius:12px;padding:16px;text-align:center
+}
+#naser-check-ingreso .progress-box b{font-size:30px;display:block}
+#naser-check-ingreso .progress-track{
+  height:16px;background:#e5e7eb;border-radius:999px;overflow:hidden
+}
+#naser-check-ingreso .progress-bar{
+  height:100%;width:0%;background:var(--verde);transition:.2s
+}
+#naser-check-ingreso .progress-text{font-size:12px;color:#666;margin-top:7px}
+
+#naser-check-ingreso .section{
+  background:#fff;border:1px solid var(--borde);border-radius:14px;margin-bottom:16px;overflow:hidden
+}
+#naser-check-ingreso .section-head{
+  background:#111;color:#fff;padding:13px 16px;
+  display:flex;justify-content:space-between;align-items:center;gap:10px
+}
+#naser-check-ingreso .section-head h3{margin:0;font-size:14px}
+#naser-check-ingreso .section-count{
+  font-size:11px;border:1px solid #555;border-radius:999px;padding:5px 9px
+}
+#naser-check-ingreso .section-body{padding:0}
+#naser-check-ingreso .check-row{
+  display:grid;
+  grid-template-columns:minmax(240px,1.1fr) minmax(300px,1.9fr);
+  gap:12px;align-items:center;padding:12px 14px;border-bottom:1px solid #ececec
+}
+#naser-check-ingreso .check-row:last-child{border-bottom:0}
+#naser-check-ingreso .item-title{font-size:13px;font-weight:800}
+#naser-check-ingreso .item-sub{font-size:11px;color:#777;margin-top:3px}
+#naser-check-ingreso .detail-inputs{
+  display:grid;grid-template-columns:1fr;gap:7px
+}
+#naser-check-ingreso .detail-inputs.two{grid-template-columns:1fr 1fr}
+#naser-check-ingreso .detail-inputs.three{grid-template-columns:repeat(3,1fr)}
+#naser-check-ingreso .detail-inputs input,
+#naser-check-ingreso .detail-inputs select{height:38px;font-size:12px}
+
+#naser-check-ingreso .summary{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:10px
+}
+#naser-check-ingreso .sum-card{
+  background:#fff;border:1px solid var(--borde);border-radius:12px;padding:14px
+}
+#naser-check-ingreso .sum-card b{display:block;font-size:24px;margin-top:4px}
+#naser-check-ingreso .sum-card small{font-weight:800;color:#666}
+#naser-check-ingreso .sum-card.ok{border-left:5px solid var(--verde)}
+#naser-check-ingreso .sum-card.bad{border-left:5px solid var(--rojo)}
+#naser-check-ingreso .sum-card.nv{border-left:5px solid #777}
+#naser-check-ingreso .sum-card.pending{border-left:5px solid var(--amarillo)}
+
+#naser-check-ingreso .detail-summary{
+  display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px
+}
+#naser-check-ingreso .summary-list{
+  border:1px solid var(--borde);border-radius:10px;padding:12px;background:#fafafa
+}
+#naser-check-ingreso .summary-list h4{margin:0 0 8px;font-size:12px}
+#naser-check-ingreso .summary-list ul{margin:0;padding-left:18px;font-size:12px;line-height:1.55}
+#naser-check-ingreso .actions{
+  display:flex;gap:8px;flex-wrap:wrap;margin-top:12px
+}
+#naser-check-ingreso .msg{
+  display:none;margin-top:10px;padding:10px 12px;border-radius:9px;font-size:12px;font-weight:700
+}
+#naser-check-ingreso .msg.ok{
+  display:block;background:#e4f5e9;color:#12632e
+}
+#naser-check-ingreso .msg.err{
+  display:block;background:#ffe5e5;color:#9b1717
+}
+
+@media(max-width:1000px){
+  #naser-check-ingreso .top-grid{grid-template-columns:repeat(2,1fr)}
+  #naser-check-ingreso .check-row{
+    grid-template-columns:1fr 1fr
+  }
+  #naser-check-ingreso .summary{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:650px){
+  #naser-check-ingreso .body{padding:12px}
+  #naser-check-ingreso .top-grid,
+  #naser-check-ingreso .check-row,
+  #naser-check-ingreso .summary,
+  #naser-check-ingreso .detail-summary{
+    grid-template-columns:1fr
+  }
+  #naser-check-ingreso .progress-wrap{grid-template-columns:1fr}
+  #naser-check-ingreso .detail-inputs.two,
+  #naser-check-ingreso .detail-inputs.three{grid-template-columns:1fr}
+}
+</style>
+
+<div class="hero">
+  <div>
+    <h2>FORMULARIO DE INGRESO</h2>
+    <p>Formulario de ingreso y registro de datos del trabajador</p>
+  </div>
+  <div class="rev">PGSN02-F5 · Rev.03 · Jul.25</div>
+</div>
+
+<div class="body">
+
+  <div class="panel">
+    <div class="top-grid">
+      <div>
+        <label>FECHA DE ACTUALIZACIÓN</label>
+        <input type="date" id="fechaActualizacion">
+      </div>
+      <div>
+        <label>N° LEGAJO</label>
+        <input id="legajo" placeholder="Legajo">
+      </div>
+      <div>
+        <label>APELLIDO Y NOMBRE</label>
+        <input id="trabajador" placeholder="Apellido y nombre">
+      </div>
+      <div>
+        <label>DNI</label>
+        <input id="dniPrincipal" placeholder="DNI">
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="progress-wrap">
+      <div class="progress-box">
+        <span>COMPLETADO</span>
+        <b id="progressPct">0%</b>
+      </div>
+      <div>
+        <div class="progress-track"><div class="progress-bar" id="progressBar"></div></div>
+        <div class="progress-text" id="progressText">0 de 0 ítems completados</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="sections"></div>
+
+  <div class="panel">
+    <h3 style="margin:0 0 12px">RESUMEN DEL FORMULARIO</h3>
+    <div class="summary">
+      <div class="sum-card pending"><small>SIN COMPLETAR</small><b id="sumPend">0</b></div>
+    </div>
+
+    <div class="detail-summary">
+      <div class="summary-list">
+        <h4>ÍTEMS SIN COMPLETAR</h4>
+        <ul id="listPend"><li>Ninguno</li></ul>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn-green" id="btnGuardar">Guardar progreso</button>
+      <button class="btn-light" id="btnLimpiar">Limpiar</button>
+      <button class="btn-dark" id="btnFinalizar">Finalizar formulario</button>
+    </div>
+    <div class="msg" id="mensaje"></div>
+  </div>
+
+</div>
+
+<script>
+(function(){
+  const root=document.getElementById("naser-check-ingreso");
+  const $=id=>document.getElementById(id);
+  const KEY="naser_pgsn02_f5_formulario_rev03";
+
+  const sections=[
+    {
+      title:"1. DATOS PERSONALES",
+      items:[
+        {id:"cuil",label:"CUIL",fields:[["CUIL","text"]]},
+        {id:"genero",label:"GÉNERO",fields:[["Género","text"]]},
+        {id:"dni",label:"DNI",fields:[["DNI","text"]]},
+        {id:"telefono",label:"TELÉFONO",fields:[["Teléfono","text"]]},
+        {id:"email",label:"EMAIL",fields:[["Email","email"]]},
+        {id:"estadoCivil",label:"ESTADO CIVIL",fields:[["Estado civil","text"]]},
+        {id:"nacionalidad",label:"NACIONALIDAD",fields:[["Nacionalidad","text"]]},
+        {id:"residencia",label:"RESIDENCIA (EXTRANJEROS)",fields:[["Residencia","text"]]},
+        {id:"fechaNacimiento",label:"FECHA DE NACIMIENTO",fields:[["Fecha de nacimiento","date"]]},
+        {id:"licencia",label:"LICENCIA DE CONDUCIR N°",fields:[["N° licencia","text"],["Vencimiento","date"]]},
+        {id:"grupoSanguineo",label:"GRUPO SANGUÍNEO",fields:[["Grupo sanguíneo","text"]]},
+        {id:"alergias",label:"ALERGIAS",fields:[["Detalle","text"]]},
+        {id:"medicacion",label:"MEDICACIÓN HABITUAL",fields:[["Detalle","text"]]},
+        {id:"antecedentes",label:"ANTECEDENTES DE SALUD",fields:[["Detalle","text"]]},
+        {id:"centroMedico",label:"CENTRO MÉDICO HABITUAL",fields:[["Centro médico","text"],["Teléfono","text"]]},
+        {id:"profesional",label:"PROFESIONAL MÉDICO",fields:[["Profesional","text"],["Teléfono","text"]]}
+      ]
+    },
+    {
+      title:"2. DOMICILIO",
+      items:[
+        {id:"calle",label:"CALLE",fields:[["Calle","text"]]},
+        {id:"numero",label:"N°",fields:[["Número","text"]]},
+        {id:"piso",label:"PISO",fields:[["Piso","text"]]},
+        {id:"dpto",label:"DPTO",fields:[["Dpto","text"]]},
+        {id:"barrio",label:"BARRIO",fields:[["Barrio","text"]]},
+        {id:"localidad",label:"LOCALIDAD",fields:[["Localidad","text"]]},
+        {id:"cp",label:"CP",fields:[["Código postal","text"]]}
+      ]
+    },
+    {
+      title:"3. INFORMACIÓN ANTE EMERGENCIAS",
+      items:[
+        {id:"contacto1",label:"CONTACTO 1",fields:[["Apellido y nombre","text"],["Relación","text"],["Teléfono","text"]]},
+        {id:"contacto2",label:"CONTACTO 2",fields:[["Apellido y nombre","text"],["Relación","text"],["Teléfono","text"]]}
+      ]
+    },
+    {
+      title:"4. DEPENDIENTES / GREMIO",
+      items:[
+        {id:"dependiente1",label:"DEPENDIENTE 1",fields:[["Apellido y nombre","text"],["DNI","text"],["Relación","text"]]},
+        {id:"dependiente2",label:"DEPENDIENTE 2",fields:[["Apellido y nombre","text"],["DNI","text"],["Relación","text"]]},
+        {id:"afiliadoSindical",label:"AFILIADO SINDICAL",fields:[["Situación laboral / asociación sindical","text"]]},
+        {id:"cargoGremial",label:"CARGO GREMIAL",fields:[["Cargo gremial","text"],["Fecha inicio / fin","text"]]},
+        {id:"regimenPrevisional",label:"RÉGIMEN PREVISIONAL",fields:[["Régimen","text"]]}
+      ]
+    },
+    {
+      title:"5. DATOS LABORALES",
+      items:[
+        {id:"legajoLaboral",label:"LEGAJO",fields:[["Legajo","text"]]},
+        {id:"fechaAlta",label:"FECHA DE ALTA",fields:[["Fecha alta","date"]]},
+        {id:"fechaBaja",label:"FECHA DE BAJA",fields:[["Fecha baja","date"]]},
+        {id:"funcion",label:"FUNCIÓN",fields:[["Función","text"]]},
+        {id:"obraSocial",label:"OBRA SOCIAL",fields:[["Obra social","text"]]},
+        {id:"motivo",label:"MOTIVO",fields:[["Motivo","text"]]},
+        {id:"convenio",label:"CONVENIO",fields:[["Convenio","text"]]},
+        {id:"numeroConvenio",label:"N° CONVENIO",fields:[["N° convenio","text"]]},
+        {id:"categoria",label:"CATEGORÍA",fields:[["Categoría","text"]]},
+        {id:"modalidad",label:"MODALIDAD DE CONTRATACIÓN",fields:[["Modalidad","text"]]}
+      ]
+    },
+    {
+      title:"6. SEGUROS DEL TRABAJADOR",
+      items:[
+        {id:"art",label:"ART",fields:[["Compañía / ART","text"],["Póliza","text"]]},
+        {id:"seguroVida",label:"SEGURO DE VIDA",fields:[["Compañía","text"],["Póliza","text"]]},
+        {id:"accidentes",label:"ACCIDENTES PERSONALES",fields:[["Compañía","text"],["Póliza","text"]]}
+      ]
+    },
+    {
+      title:"7. OBSERVACIONES",
+      items:[
+        {id:"observaciones",label:"OBSERVACIONES GENERALES",fields:[["Observaciones","textarea"]]}
+      ]
+    }
+  ];
+
+  function esc(s){
+    return String(s||"").replace(/[&<>"']/g,m=>({
+      "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+    }[m]));
+  }
+
+  function fieldHTML(item,field,index){
+    const [ph,type]=field;
+    const id=`${item.id}_f${index}`;
+    if(type==="textarea"){
+      return `<textarea id="${id}" data-detail="${item.id}" placeholder="${esc(ph)}"></textarea>`;
+    }
+    return `<input id="${id}" data-detail="${item.id}" type="${type}" placeholder="${esc(ph)}">`;
+  }
+
+  function itemHTML(item){
+    let cls=item.fields.length===3?"three":item.fields.length===2?"two":"";
+    return `
+      <div class="check-row" data-item="${item.id}" data-label="${esc(item.label)}">
+        <div>
+          <div class="item-title">${esc(item.label)}</div>
+          <div class="item-sub">Verificar información / documentación.</div>
+        </div>
+        <div class="detail-inputs ${cls}">
+          ${item.fields.map((f,i)=>fieldHTML(item,f,i)).join("")}
+        </div>
+      </div>`;
+  }
+
+  $("sections").innerHTML=sections.map((s,idx)=>`
+    <div class="section">
+      <div class="section-head">
+        <h3>${esc(s.title)}</h3>
+        <span class="section-count">${s.items.length} ítems</span>
+      </div>
+      <div class="section-body">
+        ${s.items.map(itemHTML).join("")}
+      </div>
+    </div>
+  `).join("");
+
+  const allItems=sections.flatMap(s=>s.items);
+
+
+  function updateSummary(){
+    const pendientes=[];
+
+    allItems.forEach(item=>{
+      const values=item.fields.map((f,i)=>{
+        const el=$(`${item.id}_f${i}`);
+        return el ? el.value.trim() : "";
+      });
+
+      const completo=values.every(v=>v!=="");
+      if(!completo) pendientes.push(item.label);
+    });
+
+    const done=allItems.length-pendientes.length;
+    const pct=Math.round((done/allItems.length)*100);
+
+    $("progressPct").textContent=pct+"%";
+    $("progressBar").style.width=pct+"%";
+    $("progressText").textContent=`${done} de ${allItems.length} ítems completados`;
+    $("sumPend").textContent=pendientes.length;
+
+    $("listPend").innerHTML=pendientes.length
+      ? pendientes.map(x=>`<li>${esc(x)}</li>`).join("")
+      : "<li>Ninguno</li>";
+  }
+
+  function collect(){
+    const data={
+      fechaActualizacion:$("fechaActualizacion").value,
+      legajo:$("legajo").value,
+      trabajador:$("trabajador").value,
+      dniPrincipal:$("dniPrincipal").value,
+      items:{}
+    };
+
+    allItems.forEach(item=>{
+      data.items[item.id]={
+        detalles:item.fields.map((f,i)=>{
+          const el=$(`${item.id}_f${i}`);
+          return el?el.value:"";
+        })
+      };
+    });
+    return data;
+  }
+
+  function restore(data){
+    if(!data)return;
+    $("fechaActualizacion").value=data.fechaActualizacion||"";
+    $("legajo").value=data.legajo||"";
+    $("trabajador").value=data.trabajador||"";
+    $("dniPrincipal").value=data.dniPrincipal||"";
+
+    allItems.forEach(item=>{
+      const d=data.items?.[item.id];
+      if(!d)return;
+      (d.detalles||[]).forEach((v,i)=>{
+        const el=$(`${item.id}_f${i}`);
+        if(el)el.value=v||"";
+      });
+    });
+
+    updateSummary();
+  }
+
+  function showMsg(text,ok=true){
+    const m=$("mensaje");
+    m.textContent=text;
+    m.className="msg "+(ok?"ok":"err");
+    setTimeout(()=>m.className="msg",3500);
+  }
+
+  root.addEventListener("input",e=>{
+    if(e.target.matches("[data-detail]")) updateSummary();
+  });
+
+  root.addEventListener("change",e=>{
+    if(e.target.matches("[data-detail]")) updateSummary();
+  });
+
+  $("btnGuardar").addEventListener("click",()=>{
+    localStorage.setItem(KEY,JSON.stringify(collect()));
+    showMsg("Progreso guardado correctamente.");
+  });
+
+  $("btnLimpiar").addEventListener("click",()=>{
+    if(!confirm("¿Limpiar todo el formulario?")) return;
+    localStorage.removeItem(KEY);
+    root.querySelectorAll('input, textarea').forEach(x=>x.value="");
+    updateSummary();
+    showMsg("Formulario limpiado correctamente.");
+  });
+
+  $("btnFinalizar").addEventListener("click",()=>{
+    const pendientes=allItems.filter(item=>{
+      return item.fields.some((f,i)=>{
+        const el=$(`${item.id}_f${i}`);
+        return !el || !el.value.trim();
+      });
+    });
+
+    if(pendientes.length){
+      showMsg(`No se puede finalizar: quedan ${pendientes.length} ítems sin completar.`,false);
+      return;
+    }
+
+    localStorage.setItem(KEY,JSON.stringify(collect()));
+    showMsg("Formulario finalizado correctamente.");
+  });
+
+  try{
+    const saved=JSON.parse(localStorage.getItem(KEY)||"null");
+    if(saved)restore(saved);
+  }catch(e){}
+
+  updateSummary();
+})();
+</script>
+</section>

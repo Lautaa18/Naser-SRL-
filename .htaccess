@@ -12,7 +12,7 @@ RedirectMatch 404 ^/[^/]+\.(sql|sh|ps1|ini|md|txt|yaml|yml|bak|log|zip|conf)$
 RedirectMatch 404 ^/(Dockerfile|compose\.yaml)$
 
 # Carpetas internas que no son parte del sitio
-RedirectMatch 404 ^/(backups|logs|sql|docker|naser|Naser-SRL-)(/|$)
+RedirectMatch 404 ^/(backups|logs|sql|docker|naser|Naser-SRL-|formularios|tools)(/|$)
 
 # Scripts de consola: solo se ejecutan desde la terminal
 RedirectMatch 404 ^/php/tools/(importar_documentacion|migrar_uploads)\.php$

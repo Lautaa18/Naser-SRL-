@@ -1,0 +1,3193 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>NASER SRL | Perfil de Puesto</title>
+
+<style>
+
+/* =========================================================
+   NASER SRL - PERFIL DE PUESTO
+   PGSN02-F1 - Rev.04 - Jul.25
+========================================================= */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+:root{
+    --black:#0d0d0d;
+    --black2:#171717;
+    --white:#ffffff;
+    --bg:#f2f2f2;
+    --border:#d8d8d8;
+    --text:#111111;
+    --muted:#777777;
+    --green:#71a800;
+    --green-soft:#edf4df;
+    --red:#b42318;
+    --gray:#777777;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    font-family:Arial, Helvetica, sans-serif;
+    background:var(--bg);
+    color:var(--text);
+}
+
+/* =========================================================
+   SIDEBAR
+========================================================= */
+
+.sidebar{
+    position:fixed;
+    left:0;
+    top:0;
+    width:335px;
+    height:100vh;
+    background:var(--black);
+    color:white;
+    padding:40px 28px;
+    overflow-y:auto;
+    z-index:1000;
+}
+
+.brand{
+    display:flex;
+    align-items:center;
+    gap:18px;
+    padding:0 8px 35px;
+    border-bottom:1px solid #333;
+}
+
+.logo{
+    width:60px;
+    height:60px;
+    background:white;
+    color:black;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:30px;
+    font-weight:900;
+}
+
+.brand h1{
+    font-size:29px;
+    letter-spacing:7px;
+}
+
+.brand small{
+    color:#aaa;
+    letter-spacing:5px;
+}
+
+.sidebar-title{
+    margin:35px 10px 20px;
+    color:#888;
+    font-size:11px;
+    letter-spacing:3px;
+    line-height:1.5;
+}
+
+.menu{
+    list-style:none;
+}
+
+.menu a{
+    display:flex;
+    align-items:center;
+    gap:15px;
+    color:#ccc;
+    text-decoration:none;
+    padding:14px 12px;
+    border-left:2px solid transparent;
+    font-size:12px;
+    line-height:1.4;
+    transition:.2s;
+}
+
+.menu a:hover,
+.menu a.active{
+    color:white;
+    background:#171717;
+    border-left-color:white;
+}
+
+.menu-number{
+    min-width:25px;
+    color:#777;
+    font-size:10px;
+}
+
+/* =========================================================
+   MAIN
+========================================================= */
+
+.main{
+    margin-left:335px;
+    min-height:100vh;
+}
+
+.topbar{
+    min-height:125px;
+    background:white;
+    border-bottom:1px solid #ddd;
+    padding:28px 50px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+}
+
+.topbar-left{
+    display:flex;
+    align-items:center;
+}
+
+.breadcrumb{
+    color:#777;
+    font-size:11px;
+    letter-spacing:3px;
+    margin-bottom:16px;
+}
+
+.topbar h2{
+    font-size:28px;
+}
+
+.control-active{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-size:11px;
+    letter-spacing:2px;
+}
+
+.control-dot{
+    width:10px;
+    height:10px;
+    background:#111;
+    border-radius:50%;
+}
+
+.mobile-menu{
+    display:none;
+}
+
+.page{
+    max-width:1600px;
+    margin:auto;
+    padding:45px 48px 100px;
+}
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.hero{
+    background:#111;
+    color:white;
+    padding:45px;
+    display:grid;
+    grid-template-columns:1fr 270px;
+    gap:40px;
+    margin-bottom:30px;
+}
+
+.hero-label{
+    color:#999;
+    font-size:10px;
+    letter-spacing:4px;
+    margin-bottom:20px;
+}
+
+.hero h1{
+    font-size:34px;
+    margin-bottom:14px;
+}
+
+.hero p{
+    color:#ddd;
+    line-height:1.6;
+    max-width:850px;
+}
+
+.document{
+    border-left:1px solid #444;
+    padding-left:35px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+}
+
+.document span{
+    color:#888;
+    font-size:10px;
+    letter-spacing:3px;
+    margin-bottom:12px;
+}
+
+.document strong{
+    font-size:18px;
+    margin-bottom:8px;
+}
+
+.document small{
+    color:#bbb;
+    line-height:1.7;
+}
+
+/* =========================================================
+   PROGRESO
+========================================================= */
+
+.progress-panel{
+    background:#111;
+    color:white;
+    padding:28px 30px;
+    margin-bottom:28px;
+}
+
+.progress-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:25px;
+    margin-bottom:20px;
+}
+
+.progress-label{
+    display:block;
+    color:#888;
+    font-size:9px;
+    letter-spacing:2.5px;
+    margin-bottom:8px;
+}
+
+.progress-top h3{
+    font-size:23px;
+}
+
+.progress-counter{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    font-size:17px;
+}
+
+.progress-counter span{
+    color:#777;
+}
+
+.progress-track{
+    height:9px;
+    background:#333;
+    overflow:hidden;
+}
+
+.progress-bar{
+    height:100%;
+    width:0%;
+    background:white;
+    transition:.3s;
+}
+
+/* =========================================================
+   CARDS
+========================================================= */
+
+.card{
+    background:white;
+    border:1px solid var(--border);
+    margin-bottom:28px;
+    scroll-margin-top:25px;
+}
+
+.card-header{
+    min-height:100px;
+    padding:27px 32px;
+    border-bottom:1px solid var(--border);
+    display:flex;
+    align-items:center;
+    gap:18px;
+}
+
+.card-number{
+    width:44px;
+    height:44px;
+    background:#111;
+    color:white;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:11px;
+    font-weight:bold;
+    flex-shrink:0;
+}
+
+.card-title h3{
+    font-size:19px;
+    margin-bottom:6px;
+}
+
+.card-title p{
+    color:#777;
+    font-size:13px;
+}
+
+.card-body{
+    padding:32px;
+}
+
+/* =========================================================
+   FORMULARIOS
+========================================================= */
+
+.form-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:23px;
+}
+
+.form-group.full{
+    grid-column:1/-1;
+}
+
+.form-group.two{
+    grid-column:span 2;
+}
+
+.form-group label{
+    display:block;
+    font-size:10px;
+    font-weight:bold;
+    letter-spacing:.6px;
+    margin-bottom:9px;
+}
+
+.form-control{
+    width:100%;
+    min-height:55px;
+    background:#fafafa;
+    border:1px solid #ccc;
+    padding:0 15px;
+    font-size:14px;
+    outline:none;
+}
+
+.form-control:focus{
+    border-color:#111;
+    background:white;
+}
+
+textarea.form-control{
+    min-height:150px;
+    padding:15px;
+    resize:vertical;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+/* =========================================================
+   RESPONSABILIDADES
+========================================================= */
+
+.dynamic-list{
+    display:grid;
+    gap:12px;
+}
+
+.responsibility-row{
+    display:grid;
+    grid-template-columns:55px 1fr auto;
+    gap:12px;
+    align-items:center;
+    border:1px solid #ddd;
+    background:#fafafa;
+    padding:13px;
+}
+
+.responsibility-number{
+    height:45px;
+    background:#111;
+    color:white;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:11px;
+    font-weight:bold;
+}
+
+.responsibility-input{
+    width:100%;
+    height:45px;
+    border:1px solid #ccc;
+    background:white;
+    padding:0 13px;
+    outline:none;
+}
+
+.row-actions{
+    display:flex;
+    gap:7px;
+}
+
+.small-btn{
+    height:45px;
+    padding:0 14px;
+    border:1px solid #111;
+    background:white;
+    color:#111;
+    cursor:pointer;
+    font-size:9px;
+    font-weight:bold;
+    letter-spacing:.6px;
+}
+
+.small-btn:hover{
+    background:#eee;
+}
+
+.small-btn.delete{
+    background:#111;
+    color:white;
+}
+
+.small-btn.delete:hover{
+    background:#333;
+}
+
+.add-area{
+    margin-top:18px;
+}
+
+.add-btn{
+    border:1px solid #111;
+    background:#111;
+    color:white;
+    padding:14px 20px;
+    font-size:10px;
+    font-weight:bold;
+    letter-spacing:1px;
+    cursor:pointer;
+}
+
+.add-btn:hover{
+    background:#333;
+}
+
+/* =========================================================
+   RIESGOS / FORMACIÓN / REQUISITOS
+========================================================= */
+
+.detail-grid{
+    display:grid;
+    gap:15px;
+}
+
+.detail-row{
+    display:grid;
+    grid-template-columns:220px 1fr;
+    border:1px solid #ddd;
+    min-height:65px;
+}
+
+.detail-label{
+    background:#f4f4f4;
+    border-right:1px solid #ddd;
+    padding:20px;
+    font-size:10px;
+    font-weight:bold;
+    letter-spacing:.6px;
+    display:flex;
+    align-items:center;
+}
+
+.detail-row textarea,
+.detail-row input{
+    width:100%;
+    border:0;
+    outline:none;
+    padding:18px;
+    font-family:Arial, Helvetica, sans-serif;
+    font-size:13px;
+    resize:vertical;
+    background:white;
+}
+
+/* =========================================================
+   COMPETENCIAS
+========================================================= */
+
+.table-wrapper{
+    width:100%;
+    overflow-x:auto;
+}
+
+.competency-table{
+    width:100%;
+    min-width:800px;
+    border-collapse:collapse;
+}
+
+.competency-table th{
+    background:#111;
+    color:white;
+    padding:16px 12px;
+    font-size:10px;
+    letter-spacing:1px;
+    border-right:1px solid #333;
+}
+
+.competency-table td{
+    border-bottom:1px solid #ddd;
+    padding:14px 12px;
+    font-size:12px;
+}
+
+.competency-table tbody tr:nth-child(even){
+    background:#fafafa;
+}
+
+.competency-name{
+    font-weight:bold;
+}
+
+.radio-cell{
+    width:130px;
+    text-align:center;
+}
+
+.competency-radio{
+    width:19px;
+    height:19px;
+    cursor:pointer;
+    accent-color:#111;
+}
+
+.competency-required{
+    border-left:4px solid var(--green);
+}
+
+.competency-desirable{
+    border-left:4px solid #c89400;
+}
+
+.competency-not-required{
+    border-left:4px solid var(--gray);
+}
+
+/* =========================================================
+   ERRORES
+========================================================= */
+
+.field-error{
+    border:2px solid var(--red) !important;
+    background:#fff7f7 !important;
+}
+
+.row-error{
+    outline:2px solid var(--red);
+    outline-offset:-2px;
+    background:#fff5f5 !important;
+}
+
+/* =========================================================
+   RESUMEN COMPETENCIAS
+========================================================= */
+
+.summary{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    background:white;
+    border:1px solid #ddd;
+    margin-bottom:28px;
+}
+
+.summary-box{
+    padding:22px;
+    border-right:1px solid #ddd;
+}
+
+.summary-box:last-child{
+    border-right:none;
+}
+
+.summary-box span{
+    display:block;
+    color:#777;
+    font-size:9px;
+    letter-spacing:1.5px;
+    margin-bottom:10px;
+}
+
+.summary-box strong{
+    font-size:28px;
+}
+
+/* =========================================================
+   ACCIONES
+========================================================= */
+
+.actions{
+    display:flex;
+    justify-content:flex-end;
+    gap:12px;
+    margin-top:30px;
+    flex-wrap:wrap;
+}
+
+.btn{
+    min-width:160px;
+    padding:15px 20px;
+    border:1px solid #111;
+    cursor:pointer;
+    font-size:11px;
+    font-weight:bold;
+    letter-spacing:1px;
+}
+
+.btn-light{
+    background:white;
+    color:#111;
+}
+
+.btn-light:hover{
+    background:#eee;
+}
+
+.btn-finish{
+    min-width:220px;
+    background:#111;
+    color:white;
+}
+
+.btn-finish:hover{
+    background:#333;
+}
+
+.btn:disabled{
+    opacity:.5;
+    cursor:not-allowed;
+}
+
+/* =========================================================
+   MENSAJES
+========================================================= */
+
+.message{
+    display:none;
+    margin-top:15px;
+    padding:17px 20px;
+    border:1px solid #ddd;
+    background:white;
+    font-size:12px;
+}
+
+.message.success{
+    border-left:4px solid var(--green);
+}
+
+.message.error{
+    border-left:4px solid var(--red);
+}
+
+.finished-banner{
+    display:none;
+    background:#111;
+    color:white;
+    padding:22px 25px;
+    margin-bottom:25px;
+}
+
+.finished-banner strong{
+    display:block;
+    margin-bottom:7px;
+}
+
+.finished-banner span{
+    color:#bbb;
+    font-size:12px;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media(max-width:1100px){
+
+    .sidebar{
+        width:260px;
+    }
+
+    .main{
+        margin-left:260px;
+    }
+
+    .form-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .hero{
+        grid-template-columns:1fr;
+    }
+
+    .document{
+        border-left:0;
+        border-top:1px solid #444;
+        padding-left:0;
+        padding-top:25px;
+    }
+
+    .summary{
+        grid-template-columns:repeat(2,1fr);
+    }
+}
+
+@media(max-width:760px){
+
+    .sidebar{
+        width:290px;
+        transform:translateX(-100%);
+        transition:.3s;
+    }
+
+    .sidebar.open{
+        transform:translateX(0);
+    }
+
+    .main{
+        margin-left:0;
+    }
+
+    .mobile-menu{
+        display:block;
+        width:45px;
+        height:45px;
+        background:#111;
+        color:white;
+        border:0;
+        font-size:20px;
+        margin-right:15px;
+    }
+
+    .topbar{
+        padding:20px;
+    }
+
+    .breadcrumb,
+    .control-active{
+        display:none;
+    }
+
+    .topbar h2{
+        font-size:19px;
+    }
+
+    .page{
+        padding:22px 13px 60px;
+    }
+
+    .hero{
+        padding:28px 23px;
+    }
+
+    .hero h1{
+        font-size:25px;
+    }
+
+    .form-grid,
+    .summary{
+        grid-template-columns:1fr;
+    }
+
+    .form-group.two{
+        grid-column:span 1;
+    }
+
+    .detail-row{
+        grid-template-columns:1fr;
+    }
+
+    .detail-label{
+        border-right:0;
+        border-bottom:1px solid #ddd;
+    }
+
+    .responsibility-row{
+        grid-template-columns:45px 1fr;
+    }
+
+    .row-actions{
+        grid-column:1/-1;
+        justify-content:flex-end;
+    }
+
+    .progress-top{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    .actions{
+        flex-direction:column;
+    }
+
+    .btn{
+        width:100%;
+    }
+}
+
+/* =========================================================
+   IMPRESIÓN
+========================================================= */
+
+@media print{
+
+    .sidebar,
+    .topbar,
+    .actions,
+    .add-area,
+    .row-actions,
+    .message{
+        display:none !important;
+    }
+
+    .main{
+        margin:0;
+    }
+
+    .page{
+        padding:0;
+        max-width:none;
+    }
+
+    body{
+        background:white;
+    }
+
+    .hero,
+    .progress-panel,
+    .card-number,
+    .competency-table th{
+        -webkit-print-color-adjust:exact;
+        print-color-adjust:exact;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- =========================================================
+     SIDEBAR
+========================================================= -->
+
+<aside class="sidebar" id="sidebar">
+
+    <div class="brand">
+
+        <div class="logo">N</div>
+
+        <div>
+            <h1>NASER</h1>
+            <small>SRL</small>
+        </div>
+
+    </div>
+
+    <div class="sidebar-title">
+        SISTEMA DE GESTIÓN<br>
+        INTEGRADO
+    </div>
+
+    <ul class="menu">
+
+        <li>
+            <a href="#identificacion" class="nav-link active">
+                <span class="menu-number">01</span>
+                Identificación
+            </a>
+        </li>
+
+        <li>
+            <a href="#objetivo" class="nav-link">
+                <span class="menu-number">02</span>
+                Objetivo Principal
+            </a>
+        </li>
+
+        <li>
+            <a href="#responsabilidades" class="nav-link">
+                <span class="menu-number">03</span>
+                Responsabilidades
+            </a>
+        </li>
+
+        <li>
+            <a href="#riesgos" class="nav-link">
+                <span class="menu-number">04</span>
+                Riesgos del Trabajo
+            </a>
+        </li>
+
+        <li>
+            <a href="#formacion" class="nav-link">
+                <span class="menu-number">05</span>
+                Formación Requerida
+            </a>
+        </li>
+
+        <li>
+            <a href="#requisitos" class="nav-link">
+                <span class="menu-number">06</span>
+                Requisitos Físicos
+            </a>
+        </li>
+
+        <li>
+            <a href="#competencias" class="nav-link">
+                <span class="menu-number">07</span>
+                Competencias Laborales
+            </a>
+        </li>
+
+    </ul>
+
+</aside>
+
+<!-- =========================================================
+     MAIN
+========================================================= -->
+
+<main class="main">
+
+<header class="topbar">
+
+    <div class="topbar-left">
+
+        <button class="mobile-menu" onclick="toggleMenu()">
+            ☰
+        </button>
+
+        <div>
+
+            <div class="breadcrumb">
+                NASER SRL / SGI / RECURSOS HUMANOS
+            </div>
+
+            <h2>
+                Perfil de Puesto
+            </h2>
+
+        </div>
+
+    </div>
+
+    <div class="control-active">
+        <div class="control-dot"></div>
+        CONTROL ACTIVO
+    </div>
+
+</header>
+
+<div class="page">
+
+<!-- =========================================================
+     HERO
+========================================================= -->
+
+<section class="hero">
+
+    <div>
+
+        <div class="hero-label">
+            GESTIÓN DE PERSONAS · PERFIL DE PUESTO
+        </div>
+
+        <h1>
+            Perfil y requisitos del puesto
+        </h1>
+
+        <p>
+            Registro digital para definir la identificación, objetivo,
+            responsabilidades, riesgos, formación, requisitos físicos
+            y competencias laborales correspondientes al puesto.
+        </p>
+
+    </div>
+
+    <div class="document">
+
+        <span>DOCUMENTO</span>
+
+        <strong>PGSN02-F1</strong>
+
+        <small>
+            Rev.04<br>
+            Jul.25
+        </small>
+
+    </div>
+
+</section>
+
+<div class="finished-banner" id="finishedBanner">
+
+    <strong>PERFIL DE PUESTO FINALIZADO</strong>
+
+    <span id="finishedDate"></span>
+
+</div>
+
+<!-- =========================================================
+     PROGRESO
+========================================================= -->
+
+<section class="progress-panel">
+
+    <div class="progress-top">
+
+        <div>
+
+            <span class="progress-label">
+                PROGRESO DEL DOCUMENTO
+            </span>
+
+            <h3 id="progressText">
+                0% completado
+            </h3>
+
+        </div>
+
+        <div class="progress-counter">
+
+            <strong id="completedFields">0</strong>
+
+            <span>/</span>
+
+            <strong id="requiredFields">0</strong>
+
+        </div>
+
+    </div>
+
+    <div class="progress-track">
+
+        <div class="progress-bar" id="progressBar"></div>
+
+    </div>
+
+</section>
+
+<!-- =========================================================
+     1 IDENTIFICACIÓN
+========================================================= -->
+
+<section class="card observe" id="identificacion">
+
+    <div class="card-header">
+
+        <div class="card-number">01</div>
+
+        <div class="card-title">
+
+            <h3>Identificación</h3>
+
+            <p>
+                Información general correspondiente al puesto.
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="form-grid">
+
+            <div class="form-group two">
+
+                <label>PROCESO / ÁREA *</label>
+
+                <input
+                    type="text"
+                    id="procesoArea"
+                    class="form-control required-field"
+                    placeholder="Ej.: Operaciones">
+
+            </div>
+
+            <div class="form-group two">
+
+                <label>NOMBRE DEL PUESTO *</label>
+
+                <input
+                    type="text"
+                    id="nombrePuesto"
+                    class="form-control required-field"
+                    placeholder="Nombre del puesto">
+
+            </div>
+
+            <div class="form-group two">
+
+                <label>SUPERIOR INMEDIATO *</label>
+
+                <input
+                    type="text"
+                    id="superiorInmediato"
+                    class="form-control required-field"
+                    placeholder="Superior inmediato">
+
+            </div>
+
+            <div class="form-group">
+
+                <label>PERSONAL A CARGO *</label>
+
+                <select
+                    id="personalCargo"
+                    class="form-control required-field">
+
+                    <option value="">
+                        Seleccionar
+                    </option>
+
+                    <option value="SI">
+                        Sí
+                    </option>
+
+                    <option value="NO">
+                        No
+                    </option>
+
+                </select>
+
+            </div>
+
+            <div class="form-group">
+
+                <label>N° DE PERSONAS A CARGO *</label>
+
+                <input
+                    type="number"
+                    id="numeroPersonas"
+                    class="form-control required-field"
+                    min="0"
+                    value="0">
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- =========================================================
+     2 OBJETIVO
+========================================================= -->
+
+<section class="card observe" id="objetivo">
+
+    <div class="card-header">
+
+        <div class="card-number">02</div>
+
+        <div class="card-title">
+
+            <h3>Objetivo Principal</h3>
+
+            <p>
+                Defina el propósito principal del puesto.
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="form-group full">
+
+            <label>OBJETIVO PRINCIPAL *</label>
+
+            <textarea
+                id="objetivoPrincipal"
+                class="form-control required-field"
+                placeholder="Describa el objetivo principal del puesto..."></textarea>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- =========================================================
+     3 RESPONSABILIDADES
+========================================================= -->
+
+<section class="card observe" id="responsabilidades">
+
+    <div class="card-header">
+
+        <div class="card-number">03</div>
+
+        <div class="card-title">
+
+            <h3>Responsabilidades</h3>
+
+            <p>
+                Agregue, modifique o elimine las responsabilidades del puesto.
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="card-body">
+
+        <div
+            class="dynamic-list"
+            id="responsibilityList">
+        </div>
+
+        <div class="add-area">
+
+            <button
+                type="button"
+                class="add-btn"
+                onclick="addResponsibility()">
+
+                + AGREGAR RESPONSABILIDAD
+
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- =========================================================
+     4 RIESGOS
+========================================================= -->
+
+<section class="card observe" id="riesgos">
+
+    <div class="card-header">
+
+        <div class="card-number">04</div>
+
+        <div class="card-title">
+
+            <h3>Riesgos del Trabajo</h3>
+
+            <p>
+                Identificación de riesgos relacionados con el puesto.
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="detail-grid">
+
+            <div class="detail-row">
+
+                <div class="detail-label">
+                    SEGURIDAD *
+                </div>
+
+                <textarea
+                    id="riesgoSeguridad"
+                    class="required-field"
+                    placeholder="Describa los riesgos de seguridad..."></textarea>
+
+            </div>
+
+            <div class="detail-row">
+
+                <div class="detail-label">
+                    SALUD *
+                </div>
+
+                <textarea
+                    id="riesgoSalud"
+                    class="required-field"
+                    placeholder="Describa los riesgos para la salud..."></textarea>
+
+            </div>
+
+            <div class="detail-row">
+
+                <div class="detail-label">
+                    AMBIENTE *
+                </div>
+
+                <textarea
+                    id="riesgoAmbiente"
+                    class="required-field"
+                    placeholder="Describa los riesgos ambientales..."></textarea>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- =========================================================
+     5 FORMACIÓN
+========================================================= -->
+
+<section class="card observe" id="formacion">
+
+    <div class="card-header">
+
+        <div class="card-number">05</div>
+
+        <div class="card-title">
+
+            <h3>Formación Requerida</h3>
+
+            <p>
+                Formación académica, específica y experiencia requerida.
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="detail-grid">
+
+            <div class="detail-row">
+
+                <div class="detail-label">
+                    ACADÉMICA *
+                </div>
+
+                <textarea
+                    id="academica"
+                    class="required-field"
+                    placeholder="Formación académica requerida..."></textarea>
+
+            </div>
+
+            <div class="detail-row">
+
+                <div class="detail-label">
+                    ESPECÍFICA *
+                </div>
+
+                <textarea
+                    id="especifica"
+                    class="required-field"
+                    placeholder="Cursos, certificaciones o conocimientos específicos..."></textarea>
+
+            </div>
+
+            <div class="detail-row">
+
+                <div class="detail-label">
+                    EXPERIENCIA *
+                </div>
+
+                <textarea
+                    id="experiencia"
+                    class="required-field"
+                    placeholder="Experiencia requerida para el puesto..."></textarea>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- =========================================================
+     6 REQUISITOS FÍSICOS
+========================================================= -->
+
+<section class="card observe" id="requisitos">
+
+    <div class="card-header">
+
+        <div class="card-number">06</div>
+
+        <div class="card-title">
+
+            <h3>Requisitos Físicos</h3>
+
+            <p>
+                Condiciones y requerimientos físicos asociados al puesto.
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="detail-grid">
+
+            <div class="detail-row">
+
+                <div class="detail-label">
+                    ESFUERZOS FÍSICOS *
+                </div>
+
+                <textarea
+                    id="esfuerzosFisicos"
+                    class="required-field"
+                    placeholder="Detalle los esfuerzos físicos requeridos..."></textarea>
+
+            </div>
+
+            <div class="detail-row">
+
+                <div class="detail-label">
+                    CONDUCCIÓN VEHICULAR *
+                </div>
+
+                <textarea
+                    id="conduccionVehicular"
+                    class="required-field"
+                    placeholder="Requisitos de conducción vehicular..."></textarea>
+
+            </div>
+
+            <div class="detail-row">
+
+                <div class="detail-label">
+                    OPERACIÓN DE EQUIPOS *
+                </div>
+
+                <textarea
+                    id="operacionEquipos"
+                    class="required-field"
+                    placeholder="Equipos que debe estar habilitado o capacitado para operar..."></textarea>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- =========================================================
+     7 COMPETENCIAS
+========================================================= -->
+
+<section class="card observe" id="competencias">
+
+    <div class="card-header">
+
+        <div class="card-number">07</div>
+
+        <div class="card-title">
+
+            <h3>Competencias Laborales</h3>
+
+            <p>
+                Clasifique cada competencia como requerida, deseable o no requerida.
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="table-wrapper">
+
+            <table class="competency-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>COMPETENCIA</th>
+
+                        <th>REQUERIDO</th>
+
+                        <th>DESEABLE</th>
+
+                        <th>NO REQUERIDO</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody id="competencyBody"></tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- =========================================================
+     RESUMEN
+========================================================= -->
+
+<div class="summary">
+
+    <div class="summary-box">
+
+        <span>TOTAL COMPETENCIAS</span>
+
+        <strong id="totalCompetencies">0</strong>
+
+    </div>
+
+    <div class="summary-box">
+
+        <span>REQUERIDAS</span>
+
+        <strong id="requiredCompetencies">0</strong>
+
+    </div>
+
+    <div class="summary-box">
+
+        <span>DESEABLES</span>
+
+        <strong id="desirableCompetencies">0</strong>
+
+    </div>
+
+    <div class="summary-box">
+
+        <span>NO REQUERIDAS</span>
+
+        <strong id="notRequiredCompetencies">0</strong>
+
+    </div>
+
+</div>
+
+<!-- =========================================================
+     BOTONES
+========================================================= -->
+
+<div class="actions">
+
+    <button
+        type="button"
+        class="btn btn-light"
+        onclick="saveProfile()">
+
+        GUARDAR
+
+    </button>
+
+    <button
+        type="button"
+        class="btn btn-light"
+        onclick="clearProfile()">
+
+        LIMPIAR
+
+    </button>
+
+    <button
+        type="button"
+        class="btn btn-finish"
+        id="finishButton"
+        onclick="finishProfile()">
+
+        FINALIZAR CHECKLIST
+
+    </button>
+
+</div>
+
+<div
+    class="message"
+    id="systemMessage">
+</div>
+
+</div>
+
+</main>
+
+<script>
+
+/* =========================================================
+   CONFIGURACIÓN
+========================================================= */
+
+const STORAGE_KEY =
+    "naserPerfilPuestoPGSN02F1";
+
+const competencies = [
+
+    "Comunicación oral y escrita",
+
+    "Trabajo en equipo",
+
+    "Liderazgo",
+
+    "Disciplina operativa",
+
+    "Resistencia al estrés",
+
+    "Orientación a resultados",
+
+    "Confidencialidad",
+
+    "Orden y limpieza",
+
+    "Interés por aprendizaje",
+
+    "Manejo de recursos económicos",
+
+    "Capacidad de negociación",
+
+    "Autonomía"
+
+];
+
+/* =========================================================
+   COMPETENCIAS
+========================================================= */
+
+function renderCompetencies(){
+
+    const tbody =
+        document.getElementById(
+            "competencyBody"
+        );
+
+    tbody.innerHTML =
+        "";
+
+    competencies.forEach(
+        (competency,index)=>{
+
+            const row =
+                document.createElement(
+                    "tr"
+                );
+
+            row.dataset.index =
+                index;
+
+            row.innerHTML = `
+
+                <td class="competency-name">
+
+                    ${competency}
+
+                </td>
+
+                <td class="radio-cell">
+
+                    <input
+                        type="radio"
+                        class="competency-radio"
+                        name="competency-${index}"
+                        value="required"
+                        onchange="changeCompetency(this)">
+
+                </td>
+
+                <td class="radio-cell">
+
+                    <input
+                        type="radio"
+                        class="competency-radio"
+                        name="competency-${index}"
+                        value="desirable"
+                        onchange="changeCompetency(this)">
+
+                </td>
+
+                <td class="radio-cell">
+
+                    <input
+                        type="radio"
+                        class="competency-radio"
+                        name="competency-${index}"
+                        value="not-required"
+                        onchange="changeCompetency(this)">
+
+                </td>
+
+            `;
+
+            tbody.appendChild(
+                row
+            );
+
+        }
+    );
+
+}
+
+function changeCompetency(input){
+
+    const row =
+        input.closest("tr");
+
+    row.classList.remove(
+        "competency-required",
+        "competency-desirable",
+        "competency-not-required",
+        "row-error"
+    );
+
+    if(
+        input.value ===
+        "required"
+    ){
+
+        row.classList.add(
+            "competency-required"
+        );
+
+    }
+
+    if(
+        input.value ===
+        "desirable"
+    ){
+
+        row.classList.add(
+            "competency-desirable"
+        );
+
+    }
+
+    if(
+        input.value ===
+        "not-required"
+    ){
+
+        row.classList.add(
+            "competency-not-required"
+        );
+
+    }
+
+    updateCompetencySummary();
+
+    updateProgress();
+
+}
+
+function updateCompetencySummary(){
+
+    const required =
+        document.querySelectorAll(
+            '.competency-radio[value="required"]:checked'
+        ).length;
+
+    const desirable =
+        document.querySelectorAll(
+            '.competency-radio[value="desirable"]:checked'
+        ).length;
+
+    const notRequired =
+        document.querySelectorAll(
+            '.competency-radio[value="not-required"]:checked'
+        ).length;
+
+    document.getElementById(
+        "totalCompetencies"
+    ).textContent =
+        competencies.length;
+
+    document.getElementById(
+        "requiredCompetencies"
+    ).textContent =
+        required;
+
+    document.getElementById(
+        "desirableCompetencies"
+    ).textContent =
+        desirable;
+
+    document.getElementById(
+        "notRequiredCompetencies"
+    ).textContent =
+        notRequired;
+
+}
+
+/* =========================================================
+   RESPONSABILIDADES DINÁMICAS
+========================================================= */
+
+function addResponsibility(
+    value = ""
+){
+
+    const list =
+        document.getElementById(
+            "responsibilityList"
+        );
+
+    const row =
+        document.createElement(
+            "div"
+        );
+
+    row.className =
+        "responsibility-row";
+
+    row.innerHTML = `
+
+        <div class="responsibility-number">
+        </div>
+
+        <input
+            type="text"
+            class="responsibility-input"
+            value="${escapeHTML(value)}"
+            placeholder="Describa la responsabilidad..."
+            readonly>
+
+        <div class="row-actions">
+
+            <button
+                type="button"
+                class="small-btn edit-btn">
+
+                MODIFICAR
+
+            </button>
+
+            <button
+                type="button"
+                class="small-btn delete delete-btn">
+
+                ELIMINAR
+
+            </button>
+
+        </div>
+
+    `;
+
+    list.appendChild(
+        row
+    );
+
+    const input =
+        row.querySelector(
+            ".responsibility-input"
+        );
+
+    const editButton =
+        row.querySelector(
+            ".edit-btn"
+        );
+
+    const deleteButton =
+        row.querySelector(
+            ".delete-btn"
+        );
+
+    if(value === ""){
+
+        input.readOnly =
+            false;
+
+        input.focus();
+
+        editButton.textContent =
+            "GUARDAR";
+
+    }
+
+    editButton.addEventListener(
+        "click",
+        ()=>{
+
+            if(
+                input.readOnly
+            ){
+
+                input.readOnly =
+                    false;
+
+                input.focus();
+
+                editButton.textContent =
+                    "GUARDAR";
+
+            }
+            else{
+
+                if(
+                    input.value.trim()
+                    === ""
+                ){
+
+                    alert(
+                        "Ingrese una responsabilidad antes de guardar."
+                    );
+
+                    input.focus();
+
+                    return;
+
+                }
+
+                input.readOnly =
+                    true;
+
+                editButton.textContent =
+                    "MODIFICAR";
+
+                updateProgress();
+
+            }
+
+        }
+    );
+
+    deleteButton.addEventListener(
+        "click",
+        ()=>{
+
+            const confirmDelete =
+                confirm(
+                    "¿Desea eliminar esta responsabilidad?"
+                );
+
+            if(!confirmDelete){
+                return;
+            }
+
+            row.remove();
+
+            renumberResponsibilities();
+
+            updateProgress();
+
+        }
+    );
+
+    input.addEventListener(
+        "input",
+        ()=>{
+
+            input.classList.remove(
+                "field-error"
+            );
+
+            updateProgress();
+
+        }
+    );
+
+    renumberResponsibilities();
+
+    updateProgress();
+
+}
+
+function renumberResponsibilities(){
+
+    document
+    .querySelectorAll(
+        ".responsibility-row"
+    )
+    .forEach(
+        (row,index)=>{
+
+            row.querySelector(
+                ".responsibility-number"
+            ).textContent =
+                String(
+                    index + 1
+                ).padStart(
+                    2,
+                    "0"
+                );
+
+        }
+    );
+
+}
+
+/* =========================================================
+   PROGRESO
+========================================================= */
+
+function updateProgress(){
+
+    let total =
+        0;
+
+    let completed =
+        0;
+
+    /* CAMPOS PRINCIPALES */
+
+    document
+    .querySelectorAll(
+        ".required-field"
+    )
+    .forEach(
+        field=>{
+
+            total++;
+
+            if(
+                field.value.trim()
+                !== ""
+            ){
+
+                completed++;
+
+            }
+
+        }
+    );
+
+    /* RESPONSABILIDADES */
+
+    const responsibilities =
+        document.querySelectorAll(
+            ".responsibility-row"
+        );
+
+    /*
+       Al menos una responsabilidad
+       debe existir.
+    */
+
+    total++;
+
+    const validResponsibilities =
+        [...responsibilities]
+        .filter(
+            row=>{
+
+                return row
+                    .querySelector(
+                        ".responsibility-input"
+                    )
+                    .value
+                    .trim()
+                    !== "";
+
+            }
+        );
+
+    if(
+        validResponsibilities.length
+        > 0
+    ){
+
+        completed++;
+
+    }
+
+    /* COMPETENCIAS */
+
+    document
+    .querySelectorAll(
+        "#competencyBody tr"
+    )
+    .forEach(
+        row=>{
+
+            total++;
+
+            if(
+                row.querySelector(
+                    ".competency-radio:checked"
+                )
+            ){
+
+                completed++;
+
+            }
+
+        }
+    );
+
+    const percentage =
+        total === 0
+        ? 0
+        : Math.round(
+            completed /
+            total *
+            100
+        );
+
+    document.getElementById(
+        "completedFields"
+    ).textContent =
+        completed;
+
+    document.getElementById(
+        "requiredFields"
+    ).textContent =
+        total;
+
+    document.getElementById(
+        "progressText"
+    ).textContent =
+        percentage +
+        "% completado";
+
+    document.getElementById(
+        "progressBar"
+    ).style.width =
+        percentage +
+        "%";
+
+}
+
+/* =========================================================
+   OBTENER DATOS
+========================================================= */
+
+function getProfileData(){
+
+    const fields = {};
+
+    document
+    .querySelectorAll(
+        ".required-field"
+    )
+    .forEach(
+        field=>{
+
+            fields[field.id] =
+                field.value;
+
+        }
+    );
+
+    const responsibilities =
+        [];
+
+    document
+    .querySelectorAll(
+        ".responsibility-input"
+    )
+    .forEach(
+        input=>{
+
+            if(
+                input.value.trim()
+                !== ""
+            ){
+
+                responsibilities.push(
+                    input.value.trim()
+                );
+
+            }
+
+        }
+    );
+
+    const competencyData =
+        [];
+
+    document
+    .querySelectorAll(
+        "#competencyBody tr"
+    )
+    .forEach(
+        (row,index)=>{
+
+            const checked =
+                row.querySelector(
+                    ".competency-radio:checked"
+                );
+
+            competencyData.push({
+
+                name:
+                    competencies[index],
+
+                value:
+                    checked
+                    ? checked.value
+                    : ""
+
+            });
+
+        }
+    );
+
+    return{
+
+        fields,
+
+        responsibilities,
+
+        competencies:
+            competencyData,
+
+        savedAt:
+            new Date()
+            .toISOString()
+
+    };
+
+}
+
+/* =========================================================
+   GUARDAR
+========================================================= */
+
+function saveProfile(){
+
+    const data =
+        getProfileData();
+
+    localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify(
+            data
+        )
+    );
+
+    showMessage(
+        "Perfil de puesto guardado correctamente.",
+        "success"
+    );
+
+}
+
+/* =========================================================
+   CARGAR
+========================================================= */
+
+function loadProfile(){
+
+    const saved =
+        localStorage.getItem(
+            STORAGE_KEY
+        );
+
+    if(!saved){
+
+        createDefaultResponsibilities();
+
+        return;
+
+    }
+
+    try{
+
+        const data =
+            JSON.parse(
+                saved
+            );
+
+        if(data.fields){
+
+            Object.keys(
+                data.fields
+            )
+            .forEach(
+                id=>{
+
+                    const field =
+                        document.getElementById(
+                            id
+                        );
+
+                    if(field){
+
+                        field.value =
+                            data.fields[id];
+
+                    }
+
+                }
+            );
+
+        }
+
+        document.getElementById(
+            "responsibilityList"
+        ).innerHTML =
+            "";
+
+        if(
+            data.responsibilities &&
+            data.responsibilities.length
+        ){
+
+            data.responsibilities
+            .forEach(
+                responsibility=>{
+
+                    addResponsibility(
+                        responsibility
+                    );
+
+                }
+            );
+
+        }
+        else{
+
+            createDefaultResponsibilities();
+
+        }
+
+        if(data.competencies){
+
+            data.competencies
+            .forEach(
+                (competency,index)=>{
+
+                    if(
+                        !competency.value
+                    ){
+                        return;
+                    }
+
+                    const radio =
+                        document.querySelector(
+                            `input[name="competency-${index}"][value="${competency.value}"]`
+                        );
+
+                    if(radio){
+
+                        radio.checked =
+                            true;
+
+                        changeCompetency(
+                            radio
+                        );
+
+                    }
+
+                }
+            );
+
+        }
+
+        /*
+           Si el documento estaba finalizado,
+           se vuelve a bloquear al recargar.
+        */
+
+        if(data.finished){
+
+            showFinishedState(
+                data.finishedAt
+            );
+
+            lockProfile();
+
+        }
+
+    }
+    catch(error){
+
+        console.error(
+            "Error al cargar perfil:",
+            error
+        );
+
+        createDefaultResponsibilities();
+
+    }
+
+}
+
+/* =========================================================
+   RESPONSABILIDADES INICIALES
+========================================================= */
+
+function createDefaultResponsibilities(){
+
+    const list =
+        document.getElementById(
+            "responsibilityList"
+        );
+
+    if(
+        list.children.length
+        > 0
+    ){
+        return;
+    }
+
+    /*
+       La planilla original posee
+       nueve líneas.
+    */
+
+    for(
+        let i = 0;
+        i < 9;
+        i++
+    ){
+
+        addResponsibility();
+
+    }
+
+}
+
+/* =========================================================
+   VALIDACIÓN
+========================================================= */
+
+function validateProfile(){
+
+    let valid =
+        true;
+
+    let missing =
+        0;
+
+    let firstError =
+        null;
+
+    /* LIMPIAR ERRORES */
+
+    document
+    .querySelectorAll(
+        ".field-error"
+    )
+    .forEach(
+        element=>{
+
+            element.classList.remove(
+                "field-error"
+            );
+
+        }
+    );
+
+    document
+    .querySelectorAll(
+        ".row-error"
+    )
+    .forEach(
+        element=>{
+
+            element.classList.remove(
+                "row-error"
+            );
+
+        }
+    );
+
+    /* CAMPOS */
+
+    document
+    .querySelectorAll(
+        ".required-field"
+    )
+    .forEach(
+        field=>{
+
+            if(
+                field.value.trim()
+                === ""
+            ){
+
+                valid =
+                    false;
+
+                missing++;
+
+                field.classList.add(
+                    "field-error"
+                );
+
+                if(!firstError){
+
+                    firstError =
+                        field;
+
+                }
+
+            }
+
+        }
+    );
+
+    /* RESPONSABILIDADES */
+
+    const responsibilities =
+        [
+            ...document.querySelectorAll(
+                ".responsibility-input"
+            )
+        ];
+
+    const validResponsibilities =
+        responsibilities.filter(
+            input=>
+                input.value.trim()
+                !== ""
+        );
+
+    if(
+        validResponsibilities.length
+        === 0
+    ){
+
+        valid =
+            false;
+
+        missing++;
+
+        if(
+            responsibilities.length
+            > 0
+        ){
+
+            responsibilities[0]
+            .classList
+            .add(
+                "field-error"
+            );
+
+            if(!firstError){
+
+                firstError =
+                    responsibilities[0];
+
+            }
+
+        }
+
+    }
+
+    /* COMPETENCIAS */
+
+    document
+    .querySelectorAll(
+        "#competencyBody tr"
+    )
+    .forEach(
+        row=>{
+
+            if(
+                !row.querySelector(
+                    ".competency-radio:checked"
+                )
+            ){
+
+                valid =
+                    false;
+
+                missing++;
+
+                row.classList.add(
+                    "row-error"
+                );
+
+                if(!firstError){
+
+                    firstError =
+                        row;
+
+                }
+
+            }
+
+        }
+    );
+
+    return{
+
+        valid,
+        missing,
+        firstError
+
+    };
+
+}
+
+/* =========================================================
+   FINALIZAR
+========================================================= */
+
+function finishProfile(){
+
+    const validation =
+        validateProfile();
+
+    if(
+        !validation.valid
+    ){
+
+        showMessage(
+            `No se puede finalizar. Faltan ${validation.missing} campos o controles obligatorios.`,
+            "error"
+        );
+
+        if(
+            validation.firstError
+        ){
+
+            validation
+            .firstError
+            .scrollIntoView({
+
+                behavior:"smooth",
+                block:"center"
+
+            });
+
+        }
+
+        return;
+
+    }
+
+    const confirmation =
+        confirm(
+            "Todos los campos obligatorios están completos. ¿Desea finalizar el Perfil de Puesto?"
+        );
+
+    if(!confirmation){
+        return;
+    }
+
+    const data =
+        getProfileData();
+
+    data.finished =
+        true;
+
+    data.finishedAt =
+        new Date()
+        .toISOString();
+
+    localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify(
+            data
+        )
+    );
+
+    showFinishedState(
+        data.finishedAt
+    );
+
+    lockProfile();
+
+    document.getElementById(
+        "progressText"
+    ).textContent =
+        "100% completado";
+
+    document.getElementById(
+        "progressBar"
+    ).style.width =
+        "100%";
+
+    showMessage(
+        "Perfil de puesto finalizado correctamente.",
+        "success"
+    );
+
+    window.scrollTo({
+
+        top:0,
+        behavior:"smooth"
+
+    });
+
+}
+
+/* =========================================================
+   ESTADO FINALIZADO
+========================================================= */
+
+function showFinishedState(
+    isoDate
+){
+
+    const banner =
+        document.getElementById(
+            "finishedBanner"
+        );
+
+    banner.style.display =
+        "block";
+
+    const date =
+        isoDate
+        ? new Date(
+            isoDate
+        )
+        : new Date();
+
+    document.getElementById(
+        "finishedDate"
+    ).textContent =
+        "Finalizado el " +
+        date.toLocaleDateString(
+            "es-AR"
+        ) +
+        " a las " +
+        date.toLocaleTimeString(
+            "es-AR",
+            {
+                hour:"2-digit",
+                minute:"2-digit"
+            }
+        );
+
+}
+
+/* =========================================================
+   BLOQUEAR
+========================================================= */
+
+function lockProfile(){
+
+    document
+    .querySelectorAll(
+        "input, textarea, select"
+    )
+    .forEach(
+        element=>{
+
+            element.disabled =
+                true;
+
+        }
+    );
+
+    document
+    .querySelectorAll(
+        ".add-btn, .small-btn"
+    )
+    .forEach(
+        button=>{
+
+            button.disabled =
+                true;
+
+        }
+    );
+
+    document.getElementById(
+        "finishButton"
+    ).disabled =
+        true;
+
+}
+
+/* =========================================================
+   LIMPIAR
+========================================================= */
+
+function clearProfile(){
+
+    const confirmation =
+        confirm(
+            "¿Está seguro de que desea limpiar completamente el Perfil de Puesto?"
+        );
+
+    if(!confirmation){
+        return;
+    }
+
+    localStorage.removeItem(
+        STORAGE_KEY
+    );
+
+    document
+    .querySelectorAll(
+        "input, textarea, select"
+    )
+    .forEach(
+        element=>{
+
+            element.disabled =
+                false;
+
+            element.classList.remove(
+                "field-error"
+            );
+
+            if(
+                element.type ===
+                "radio"
+            ){
+
+                element.checked =
+                    false;
+
+            }
+            else{
+
+                element.value =
+                    "";
+
+            }
+
+        }
+    );
+
+    document.getElementById(
+        "numeroPersonas"
+    ).value =
+        "0";
+
+    document.getElementById(
+        "responsibilityList"
+    ).innerHTML =
+        "";
+
+    document
+    .querySelectorAll(
+        "#competencyBody tr"
+    )
+    .forEach(
+        row=>{
+
+            row.classList.remove(
+                "competency-required",
+                "competency-desirable",
+                "competency-not-required",
+                "row-error"
+            );
+
+        }
+    );
+
+    document
+    .querySelectorAll(
+        ".add-btn, .small-btn"
+    )
+    .forEach(
+        button=>{
+
+            button.disabled =
+                false;
+
+        }
+    );
+
+    document.getElementById(
+        "finishButton"
+    ).disabled =
+        false;
+
+    document.getElementById(
+        "finishedBanner"
+    ).style.display =
+        "none";
+
+    createDefaultResponsibilities();
+
+    updateCompetencySummary();
+
+    updateProgress();
+
+    showMessage(
+        "Perfil de puesto limpiado correctamente.",
+        "success"
+    );
+
+}
+
+/* =========================================================
+   PERSONAL A CARGO
+========================================================= */
+
+function handlePersonnel(){
+
+    const select =
+        document.getElementById(
+            "personalCargo"
+        );
+
+    const number =
+        document.getElementById(
+            "numeroPersonas"
+        );
+
+    if(
+        select.value ===
+        "NO"
+    ){
+
+        number.value =
+            "0";
+
+        number.disabled =
+            true;
+
+    }
+    else{
+
+        number.disabled =
+            false;
+
+    }
+
+    updateProgress();
+
+}
+
+/* =========================================================
+   MENSAJES
+========================================================= */
+
+function showMessage(
+    text,
+    type
+){
+
+    const message =
+        document.getElementById(
+            "systemMessage"
+        );
+
+    message.className =
+        "message " +
+        type;
+
+    message.textContent =
+        text;
+
+    message.style.display =
+        "block";
+
+    setTimeout(
+        ()=>{
+
+            message.style.display =
+                "none";
+
+        },
+        5000
+    );
+
+}
+
+/* =========================================================
+   ESCAPAR HTML
+========================================================= */
+
+function escapeHTML(
+    text
+){
+
+    const div =
+        document.createElement(
+            "div"
+        );
+
+    div.textContent =
+        text;
+
+    return div.innerHTML;
+
+}
+
+/* =========================================================
+   ACTUALIZACIÓN AUTOMÁTICA
+========================================================= */
+
+document.addEventListener(
+    "input",
+    event=>{
+
+        event.target
+        .classList
+        .remove(
+            "field-error"
+        );
+
+        updateProgress();
+
+    }
+);
+
+document.addEventListener(
+    "change",
+    event=>{
+
+        event.target
+        .classList
+        .remove(
+            "field-error"
+        );
+
+        updateProgress();
+
+    }
+);
+
+document
+.getElementById(
+    "personalCargo"
+)
+.addEventListener(
+    "change",
+    handlePersonnel
+);
+
+/* =========================================================
+   SIDEBAR
+========================================================= */
+
+function toggleMenu(){
+
+    document.getElementById(
+        "sidebar"
+    )
+    .classList
+    .toggle(
+        "open"
+    );
+
+}
+
+/* =========================================================
+   NAVEGACIÓN ACTIVA
+========================================================= */
+
+function startNavigation(){
+
+    const links =
+        document.querySelectorAll(
+            ".nav-link"
+        );
+
+    const sections =
+        document.querySelectorAll(
+            ".observe"
+        );
+
+    const observer =
+        new IntersectionObserver(
+            entries=>{
+
+                entries.forEach(
+                    entry=>{
+
+                        if(
+                            entry.isIntersecting
+                        ){
+
+                            links.forEach(
+                                link=>{
+
+                                    link.classList.remove(
+                                        "active"
+                                    );
+
+                                }
+                            );
+
+                            const active =
+                                document.querySelector(
+                                    `.nav-link[href="#${entry.target.id}"]`
+                                );
+
+                            if(active){
+
+                                active.classList.add(
+                                    "active"
+                                );
+
+                            }
+
+                        }
+
+                    }
+                );
+
+            },
+            {
+                threshold:.2,
+                rootMargin:
+                    "-15% 0px -60% 0px"
+            }
+        );
+
+    sections.forEach(
+        section=>{
+
+            observer.observe(
+                section
+            );
+
+        }
+    );
+
+    links.forEach(
+        link=>{
+
+            link.addEventListener(
+                "click",
+                ()=>{
+
+                    if(
+                        window.innerWidth
+                        <=760
+                    ){
+
+                        document
+                        .getElementById(
+                            "sidebar"
+                        )
+                        .classList
+                        .remove(
+                            "open"
+                        );
+
+                    }
+
+                }
+            );
+
+        }
+    );
+
+}
+
+/* =========================================================
+   INICIAR
+========================================================= */
+
+renderCompetencies();
+
+loadProfile();
+
+updateCompetencySummary();
+
+updateProgress();
+
+startNavigation();
+
+</script>
+
+</body>
+</html>

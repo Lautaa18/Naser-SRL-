@@ -4,6 +4,7 @@ requireLogin();
 verify_csrf(); // protege todos los formularios POST de esta pagina
 require __DIR__ . '/config/db.php';
 require __DIR__ . '/config/layout.php';
+require_once __DIR__ . '/config/formularios_catalogo.php';
 
 $slug = 'ventas';
 
@@ -417,7 +418,7 @@ if($canEdit && !empty($_GET['editar_precio'])){
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Ventas y Contratos | NASER SGI</title>
-<link rel="stylesheet" href="<?=asset('/style.css')?>">
+<link rel="stylesheet" href="<?=asset('/style.css')?>"><link rel="stylesheet" href="<?=asset('/css/modules.css')?>"><link rel="stylesheet" href="<?=asset('/css/checklists.css')?>">
 <style>
 :root{--vg:#15803d;--vd:#14532d;--vl:#e4ebe6;--vs:#f0fdf4;--vt:#1f2937;--vm:#6b7280}
 .sales-hero{position:relative;overflow:hidden;background:linear-gradient(125deg,#103c26,#15803d);color:#fff;border-radius:20px;padding:27px 29px;margin-bottom:20px;box-shadow:0 12px 30px rgba(20,70,40,.13)}
@@ -489,6 +490,7 @@ if($canEdit && !empty($_GET['editar_precio'])){
 <button onclick="tabVentas('calendario',this)">6. Calendario & Alarmas</button>
 <button onclick="tabVentas('alertas',this)">7. Avisos (<span class="pill danger"><?=$noLeidas?></span>)</button>
 <button onclick="tabVentas('mensajes',this)">8. Mensajes</button>
+<button onclick="tabVentas('formularios',this)">9. Formularios</button>
 </div>
 
 <!-- 1. CONTRATOS (ACTIVOS, EN PROCESO, FINALIZADOS) -->
@@ -963,6 +965,11 @@ if($canEdit && !empty($_GET['editar_precio'])){
 </table>
 </div>
 </div>
+</section>
+
+<!-- 9. FORMULARIOS DIGITALES -->
+<section id="tab-formularios" class="sales-tab">
+<?php formulariosPanel($pdo, 'ventas'); ?>
 </section>
 
 </main>

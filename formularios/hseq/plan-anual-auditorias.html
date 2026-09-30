@@ -1,0 +1,1147 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NASER SRL | Plan Anual de Auditorías</title>
+
+<style>
+:root{
+  --naser:#009b49;
+  --naser-dark:#007a3a;
+  --black:#0d0d0d;
+  --white:#fff;
+  --bg:#f2f4f5;
+  --line:#dce1e4;
+  --text:#191919;
+  --muted:#73777b;
+  --danger:#a62b2b;
+  --warning:#ad7000;
+  --blue:#1f5f8b;
+  --sidebar:275px;
+  --shadow:0 10px 30px rgba(0,0,0,.06);
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:Inter,"Segoe UI",Arial,sans-serif;
+}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+input,select,textarea{outline:none}
+
+/* SIDEBAR */
+.sidebar{
+  position:fixed;
+  inset:0 auto 0 0;
+  width:var(--sidebar);
+  background:linear-gradient(180deg,#090909,#151515);
+  color:#fff;
+  padding:28px 20px;
+  display:flex;
+  flex-direction:column;
+  z-index:1000;
+}
+.brand{
+  display:flex;align-items:center;gap:13px;
+  padding:0 8px 25px;border-bottom:1px solid #303030;
+}
+.brand-mark{
+  width:46px;height:46px;display:grid;place-items:center;
+  background:var(--naser);font-size:23px;font-weight:900;
+}
+.brand-name{font-size:21px;font-weight:900;letter-spacing:3px}
+.brand-sub{font-size:9px;letter-spacing:4px;color:#999;margin-top:2px}
+.side-label{
+  padding:25px 8px 13px;
+  font-size:9px;font-weight:800;color:#727272;letter-spacing:1.5px;
+}
+.nav{display:grid;gap:5px}
+.nav-link{
+  display:flex;align-items:center;gap:12px;
+  min-height:45px;padding:10px 12px;color:#aaa;text-decoration:none;
+  border-left:3px solid transparent;font-size:11px;transition:.2s;
+}
+.nav-link span{width:25px;color:#666;font-size:9px;font-weight:900}
+.nav-link:hover{background:#1c1c1c;color:#fff}
+.nav-link.active{
+  color:#fff;border-left-color:var(--naser);
+  background:linear-gradient(90deg,rgba(0,155,73,.18),rgba(0,155,73,.02));
+}
+.nav-link.active span{color:var(--naser)}
+.side-footer{
+  margin-top:auto;padding:18px 8px 0;
+  border-top:1px solid #303030;color:#666;font-size:9px;line-height:1.8;
+}
+.side-footer strong{display:block;color:#aaa}
+
+/* MAIN */
+.main{margin-left:var(--sidebar);min-height:100vh}
+.topbar{
+  height:84px;position:sticky;top:0;z-index:800;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 40px;background:#fff;border-bottom:1px solid var(--line);
+}
+.topbar-left{display:flex;align-items:center;gap:15px}
+.crumb{font-size:9px;color:#92969a;letter-spacing:1.2px;margin-bottom:5px}
+.topbar h1{margin:0;font-size:20px}
+.control{
+  display:flex;align-items:center;gap:8px;
+  font-size:9px;font-weight:800;letter-spacing:1px;color:#555;
+}
+.control i{
+  width:8px;height:8px;border-radius:50%;
+  background:var(--naser);box-shadow:0 0 0 5px rgba(0,155,73,.1);
+}
+.finished{
+  display:none;padding:8px 11px;
+  background:var(--naser);color:#fff;
+  font-size:9px;font-weight:900;letter-spacing:.6px;
+}
+.finished.show{display:block}
+.menu-btn{
+  display:none;width:41px;height:41px;border:1px solid var(--line);background:#fff;
+}
+
+.content{
+  width:min(1750px,calc(100% - 50px));
+  margin:30px auto 60px;
+}
+
+/* HERO */
+.hero{
+  min-height:190px;margin-bottom:20px;padding:38px 42px;
+  display:flex;align-items:center;justify-content:space-between;gap:30px;
+  color:#fff;
+  background:
+    radial-gradient(circle at 90% 0%,rgba(0,155,73,.25),transparent 35%),
+    linear-gradient(120deg,#0c0c0c,#181818);
+  border-left:5px solid var(--naser);
+  box-shadow:var(--shadow);
+}
+.hero-tag{color:var(--naser);font-size:9px;font-weight:900;letter-spacing:2px}
+.hero h2{margin:10px 0;font-size:clamp(27px,3vw,39px);line-height:1}
+.hero h2 span{color:var(--naser)}
+.hero p{max-width:800px;margin:0;color:#aaa;font-size:12px;line-height:1.7}
+.hero-meta{min-width:220px;padding-left:28px;border-left:1px solid #393939}
+.hero-meta small,.hero-meta span{display:block;color:#777;font-size:9px;letter-spacing:1px}
+.hero-meta strong{display:block;margin:8px 0;font-size:13px}
+
+/* METRICS */
+.metrics{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:14px;margin-bottom:20px;
+}
+.metric{
+  background:#fff;border:1px solid var(--line);
+  box-shadow:var(--shadow);padding:18px 20px;
+}
+.metric small{
+  display:block;color:var(--muted);
+  font-size:8px;font-weight:900;letter-spacing:1.2px;margin-bottom:8px;
+}
+.metric strong{font-size:25px}
+.metric.green strong{color:var(--naser)}
+.metric.warning strong{color:var(--warning)}
+.metric.red strong{color:var(--danger)}
+
+.progress-card{
+  background:#fff;border:1px solid var(--line);
+  box-shadow:var(--shadow);padding:20px 24px;margin-bottom:20px;
+}
+.progress-top{
+  display:flex;justify-content:space-between;align-items:flex-end;
+  gap:20px;margin-bottom:12px;
+}
+.progress-top small{
+  display:block;color:var(--muted);
+  font-size:8px;font-weight:900;letter-spacing:1.3px;
+}
+.progress-top strong{display:block;margin-top:5px;font-size:13px}
+.progress-value{font-size:22px;font-weight:900;color:var(--naser)}
+.track{height:7px;background:#e8ecee;border-radius:30px;overflow:hidden}
+.bar{height:100%;width:0;background:var(--naser);border-radius:30px;transition:.2s}
+
+/* CARDS */
+.card{
+  margin-bottom:20px;background:#fff;border:1px solid var(--line);
+  box-shadow:var(--shadow);overflow:hidden;
+}
+.card-head{
+  display:flex;align-items:center;gap:15px;
+  padding:21px 25px;border-bottom:1px solid var(--line);
+}
+.num{
+  width:39px;height:39px;flex:none;display:grid;place-items:center;
+  background:#111;color:#fff;font-size:10px;font-weight:900;
+}
+.card-head h3{margin:0;font-size:15px}
+.card-head p{margin:5px 0 0;color:var(--muted);font-size:10px}
+
+.grid{
+  padding:25px;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:20px;
+}
+.field{min-width:0}
+.field.span2{grid-column:span 2}
+.field.full{grid-column:1/-1}
+.field label{
+  display:block;margin-bottom:7px;color:#444;font-size:9px;
+  font-weight:900;letter-spacing:.6px;text-transform:uppercase;
+}
+.req::after{content:" *";color:var(--naser)}
+.field input,.field select,.field textarea{
+  width:100%;border:1px solid #d6dade;background:#fafafa;transition:.2s;
+}
+.field input,.field select{height:43px;padding:0 12px}
+.field textarea{min-height:100px;padding:12px;resize:vertical}
+.field input:focus,.field select:focus,.field textarea:focus{
+  background:#fff;border-color:var(--naser);
+  box-shadow:0 0 0 3px rgba(0,155,73,.07);
+}
+
+/* TABLES */
+.table-wrap{overflow:auto}
+.audit-table,.participant-table,.summary-table{
+  width:100%;border-collapse:collapse;
+}
+.audit-table{min-width:2200px}
+.participant-table{min-width:900px}
+.summary-table{min-width:1100px}
+
+.audit-table th,.participant-table th,.summary-table th{
+  padding:10px 7px;background:#111;color:#fff;
+  border-right:1px solid #2f2f2f;
+  font-size:8px;letter-spacing:.5px;text-align:center;
+}
+.audit-table td,.participant-table td,.summary-table td{
+  padding:7px;border-bottom:1px solid #eceff1;border-right:1px solid #eceff1;
+  vertical-align:middle;font-size:10px;
+}
+.audit-table tbody tr:hover,.participant-table tbody tr:hover{background:#fafafa}
+
+.audit-table input,.audit-table select,
+.participant-table input,.participant-table select{
+  width:100%;height:34px;padding:0 7px;
+  border:1px solid #d6dade;background:#fafafa;font-size:10px;
+}
+.audit-table textarea{
+  width:100%;min-height:50px;padding:7px;
+  border:1px solid #d6dade;background:#fafafa;font-size:10px;resize:vertical;
+}
+.audit-table input:focus,.audit-table select:focus,.audit-table textarea:focus,
+.participant-table input:focus,.participant-table select:focus{
+  background:#fff;border-color:var(--naser);
+}
+
+.col-num{width:42px;text-align:center;color:#777;font-size:9px;font-weight:900}
+.col-process{min-width:180px}
+.col-objective{min-width:220px}
+.col-auditor{min-width:170px}
+.col-hours{min-width:95px}
+.month{min-width:92px;text-align:center}
+.month select{min-width:78px}
+.month .planned{font-weight:900}
+.month .done{color:var(--naser);font-weight:900}
+
+/* SUMMARY */
+.summary-wrap{padding:25px}
+.summary-table td{text-align:center}
+.summary-table .label{
+  text-align:left;font-weight:900;background:#f6f7f8;min-width:220px;
+}
+.summary-table .annual{
+  background:#eef8f2;font-weight:900;color:#086b36;
+}
+.percent-ok{color:var(--naser);font-weight:900}
+.percent-warning{color:var(--warning);font-weight:900}
+.percent-zero{color:#888;font-weight:900}
+
+/* LEGEND */
+.legend{
+  padding:15px 25px;display:flex;gap:10px;flex-wrap:wrap;
+  border-bottom:1px solid var(--line);background:#fafafa;
+}
+.legend span{
+  padding:7px 10px;border:1px solid #ddd;background:#fff;
+  color:#666;font-size:9px;
+}
+.legend b{color:#111}
+
+/* PARTICIPANTS */
+.participant-actions{
+  padding:15px 25px;display:flex;justify-content:flex-end;
+  border-bottom:1px solid var(--line);background:#fafafa;
+}
+.btn-icon{
+  width:34px;height:34px;border:1px solid #d6dade;
+  background:#fff;color:#555;font-weight:900;
+}
+.btn-icon:hover{background:#eee}
+.btn-icon.danger:hover{background:#fff1f1;color:var(--danger);border-color:#e2b6b6}
+
+/* BUTTONS */
+.actions{
+  display:flex;justify-content:flex-end;
+  gap:10px;flex-wrap:wrap;margin:25px 0;
+}
+.btn{
+  min-height:44px;padding:0 20px;border:1px solid #111;
+  font-size:9px;font-weight:900;letter-spacing:.7px;
+}
+.btn-light{background:#fff;color:#111}
+.btn-light:hover{background:#eee}
+.btn-dark{background:#111;color:#fff}
+.btn-dark:hover{background:#292929}
+.btn-green{background:var(--naser);border-color:var(--naser);color:#fff}
+.btn-green:hover{background:var(--naser-dark)}
+
+.msg{
+  display:none;margin-bottom:20px;padding:14px 17px;
+  font-size:11px;font-weight:700;
+}
+.msg.ok{display:block;background:#edf9f2;color:#086933;border:1px solid #9fd4b7}
+.msg.err{display:block;background:#fff1f1;color:#922929;border:1px solid #dfacac}
+
+.footer{
+  padding-top:20px;border-top:1px solid #d5dade;
+  display:flex;justify-content:space-between;gap:20px;
+  color:#888;font-size:8px;
+}
+.footer strong{color:#222}
+.sidebar-overlay{display:none}
+
+@media(max-width:1200px){
+  .grid{grid-template-columns:repeat(2,1fr)}
+  .metrics{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:850px){
+  .sidebar{transform:translateX(-100%);transition:.25s}
+  .sidebar.open{transform:translateX(0)}
+  .sidebar-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:900}
+  .sidebar-overlay.show{display:block}
+  .main{margin-left:0}
+  .menu-btn{display:block}
+  .topbar{padding:0 18px}
+  .control{display:none}
+  .hero{flex-direction:column;align-items:flex-start;padding:30px 26px}
+  .hero-meta{width:100%;padding:18px 0 0;border-left:0;border-top:1px solid #393939}
+}
+@media(max-width:600px){
+  .content{width:calc(100% - 28px)}
+  .grid,.metrics{grid-template-columns:1fr}
+  .field.span2,.field.full{grid-column:auto}
+  .hero h2{font-size:25px}
+  .actions{flex-direction:column}
+  .btn{width:100%}
+  .footer{flex-direction:column}
+}
+@media print{
+  body{background:#fff}
+  .sidebar,.topbar,.actions,.progress-card,.metrics,.participant-actions{display:none!important}
+  .main{margin-left:0}
+  .content{width:100%;margin:0}
+  .card,.hero{box-shadow:none}
+  .audit-table{min-width:0;font-size:6px}
+  .audit-table th,.audit-table td,
+  .participant-table th,.participant-table td,
+  .summary-table th,.summary-table td{padding:2px}
+  .audit-table input,.audit-table select,.audit-table textarea,
+  .participant-table input,.participant-table select{
+    border:0;background:transparent;padding:0;font-size:6px;min-height:auto;height:auto;
+  }
+}
+</style>
+</head>
+
+<body>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<aside class="sidebar" id="sidebar">
+  <div class="brand">
+    <div class="brand-mark">N</div>
+    <div>
+      <div class="brand-name">NASER</div>
+      <div class="brand-sub">SRL</div>
+    </div>
+  </div>
+
+  <div class="side-label">SISTEMA DE GESTIÓN INTEGRADO</div>
+
+  <nav class="nav">
+    <a class="nav-link active" href="#datos"><span>01</span>Datos generales</a>
+    <a class="nav-link" href="#plan"><span>02</span>Plan anual</a>
+    <a class="nav-link" href="#participantes"><span>03</span>Personal participante</a>
+    <a class="nav-link" href="#cumplimiento"><span>04</span>Cumplimiento</a>
+  </nav>
+
+  <div class="side-footer">
+    SGI / AUDITORÍAS
+    <strong>PLAN ANUAL DE AUDITORÍAS</strong>
+    PGSN04-F2 · Rev.04 · Ago.25
+  </div>
+</aside>
+
+<main class="main">
+<header class="topbar">
+  <div class="topbar-left">
+    <button class="menu-btn" id="menuBtn" type="button">☰</button>
+    <div>
+      <div class="crumb">NASER SRL / SGI / AUDITORÍAS</div>
+      <h1>Plan Anual de Auditorías</h1>
+    </div>
+  </div>
+
+  <div style="display:flex;align-items:center;gap:14px">
+    <div class="finished" id="finishedBadge">✓ PLAN FINALIZADO</div>
+    <div class="control"><i></i> PGSN04-F2</div>
+  </div>
+</header>
+
+<div class="content">
+
+<section class="hero">
+  <div>
+    <div class="hero-tag">SISTEMA DE GESTIÓN INTEGRADO</div>
+    <h2>PLAN ANUAL DE <span>AUDITORÍAS</span></h2>
+    <p>
+      Programación y seguimiento mensual de auditorías, auditores,
+      horas de duración, personal participante y cumplimiento anual.
+    </p>
+  </div>
+
+  <div class="hero-meta">
+    <small>CÓDIGO</small>
+    <strong>PGSN04-F2</strong>
+    <span>Rev.04 · Ago.25</span>
+  </div>
+</section>
+
+<div class="metrics">
+  <div class="metric">
+    <small>AUDITORÍAS PROGRAMADAS</small>
+    <strong id="stProgramadas">0</strong>
+  </div>
+
+  <div class="metric green">
+    <small>AUDITORÍAS REALIZADAS</small>
+    <strong id="stRealizadas">0</strong>
+  </div>
+
+  <div class="metric warning">
+    <small>AUDITORES REGISTRADOS</small>
+    <strong id="stAuditores">0</strong>
+  </div>
+
+  <div class="metric red">
+    <small>PERSONAL PARTICIPANTE</small>
+    <strong id="stParticipantes">0</strong>
+  </div>
+</div>
+
+<section class="progress-card">
+  <div class="progress-top">
+    <div>
+      <small>CUMPLIMIENTO ANUAL DEL PROGRAMA</small>
+      <strong id="progressText">Sin auditorías programadas</strong>
+    </div>
+    <div class="progress-value" id="progressPct">0%</div>
+  </div>
+  <div class="track"><div class="bar" id="progressBar"></div></div>
+</section>
+
+<div class="msg" id="message"></div>
+
+<section class="card" id="datos">
+  <div class="card-head">
+    <div class="num">01</div>
+    <div>
+      <h3>Datos generales</h3>
+      <p>Información del documento y fecha de actualización.</p>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="field">
+      <label>Documento</label>
+      <input value="PGSN04-F2" readonly>
+    </div>
+
+    <div class="field">
+      <label>Revisión</label>
+      <input value="Rev.04" readonly>
+    </div>
+
+    <div class="field">
+      <label>Fecha de revisión</label>
+      <input value="Ago.25" readonly>
+    </div>
+
+    <div class="field">
+      <label class="req">Fecha de actualización</label>
+      <input id="fechaActualizacion" type="date">
+    </div>
+  </div>
+</section>
+
+<section class="card" id="plan">
+  <div class="card-head">
+    <div class="num">02</div>
+    <div>
+      <h3>Plan anual de auditorías</h3>
+      <p>11 registros de auditoría con programación mensual de enero a diciembre.</p>
+    </div>
+  </div>
+
+  <div class="legend">
+    <span><b>P</b> = Programada</span>
+    <span><b>R</b> = Realizada</span>
+    <span><b>P/R</b> = Programada y realizada</span>
+    <span><b>—</b> = Sin actividad</span>
+  </div>
+
+  <div class="table-wrap">
+    <table class="audit-table">
+      <thead>
+        <tr>
+          <th>N°</th>
+          <th>PROCESO</th>
+          <th>HORAS DE DURACIÓN</th>
+          <th>AUDITOR/ES</th>
+          <th>ENE</th>
+          <th>FEB</th>
+          <th>MAR</th>
+          <th>ABR</th>
+          <th>MAY</th>
+          <th>JUN</th>
+          <th>JUL</th>
+          <th>AGO</th>
+          <th>SEP</th>
+          <th>OCT</th>
+          <th>NOV</th>
+          <th>DIC</th>
+        </tr>
+      </thead>
+      <tbody id="auditBody"></tbody>
+    </table>
+  </div>
+</section>
+
+<section class="card" id="participantes">
+  <div class="card-head">
+    <div class="num">03</div>
+    <div>
+      <h3>Personal participante</h3>
+      <p>Personal que participa de las auditorías y sector correspondiente.</p>
+    </div>
+  </div>
+
+  <div class="participant-actions">
+    <button class="btn btn-green" type="button" id="addParticipantBtn">
+      + AGREGAR PARTICIPANTE
+    </button>
+  </div>
+
+  <div class="table-wrap">
+    <table class="participant-table">
+      <thead>
+        <tr>
+          <th>N°</th>
+          <th>PERSONAL PARTICIPANTE</th>
+          <th>SECTOR</th>
+          <th>AUDITORÍA N°</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="participantBody"></tbody>
+    </table>
+  </div>
+</section>
+
+<section class="card" id="cumplimiento">
+  <div class="card-head">
+    <div class="num">04</div>
+    <div>
+      <h3>Cumplimiento mensual y anual</h3>
+      <p>Los porcentajes se calculan automáticamente y nunca muestran #¡DIV/0!.</p>
+    </div>
+  </div>
+
+  <div class="summary-wrap">
+    <div class="table-wrap">
+      <table class="summary-table">
+        <thead>
+          <tr>
+            <th>INDICADOR</th>
+            <th>ENE</th>
+            <th>FEB</th>
+            <th>MAR</th>
+            <th>ABR</th>
+            <th>MAY</th>
+            <th>JUN</th>
+            <th>JUL</th>
+            <th>AGO</th>
+            <th>SEP</th>
+            <th>OCT</th>
+            <th>NOV</th>
+            <th>DIC</th>
+            <th>ANUAL</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="label">AUDITORÍAS PROGRAMADAS</td>
+            <td id="prog_ene">0</td><td id="prog_feb">0</td><td id="prog_mar">0</td>
+            <td id="prog_abr">0</td><td id="prog_may">0</td><td id="prog_jun">0</td>
+            <td id="prog_jul">0</td><td id="prog_ago">0</td><td id="prog_sep">0</td>
+            <td id="prog_oct">0</td><td id="prog_nov">0</td><td id="prog_dic">0</td>
+            <td class="annual" id="prog_anual">0</td>
+          </tr>
+
+          <tr>
+            <td class="label">AUDITORÍAS REALIZADAS</td>
+            <td id="real_ene">0</td><td id="real_feb">0</td><td id="real_mar">0</td>
+            <td id="real_abr">0</td><td id="real_may">0</td><td id="real_jun">0</td>
+            <td id="real_jul">0</td><td id="real_ago">0</td><td id="real_sep">0</td>
+            <td id="real_oct">0</td><td id="real_nov">0</td><td id="real_dic">0</td>
+            <td class="annual" id="real_anual">0</td>
+          </tr>
+
+          <tr>
+            <td class="label">% CUMPLIMIENTO</td>
+            <td id="pct_ene">0%</td><td id="pct_feb">0%</td><td id="pct_mar">0%</td>
+            <td id="pct_abr">0%</td><td id="pct_may">0%</td><td id="pct_jun">0%</td>
+            <td id="pct_jul">0%</td><td id="pct_ago">0%</td><td id="pct_sep">0%</td>
+            <td id="pct_oct">0%</td><td id="pct_nov">0%</td><td id="pct_dic">0%</td>
+            <td class="annual" id="pct_anual">0%</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<div class="actions">
+  <button class="btn btn-light" type="button" id="clearBtn">LIMPIAR</button>
+  <button class="btn btn-light" type="button" onclick="window.print()">IMPRIMIR / PDF</button>
+  <button class="btn btn-dark" type="button" id="saveBtn">GUARDAR PROGRESO</button>
+  <button class="btn btn-green" type="button" id="finishBtn">FINALIZAR PLAN</button>
+</div>
+
+<footer class="footer">
+  <strong>NASER SRL</strong>
+  <span>Sistema de Gestión Integrado</span>
+  <span>PGSN04-F2 · Rev.04 · Ago.25</span>
+</footer>
+
+</div>
+</main>
+
+<script>
+const STORAGE_KEY = "NASER_PGSN04_F2_REV04";
+const meses = ["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
+const TOTAL_AUDITORIAS = 11;
+
+let auditorias = Array.from({length:TOTAL_AUDITORIAS},(_,i)=>crearAuditoria(i+1));
+let participantes = [
+  crearParticipante(),
+  crearParticipante(),
+  crearParticipante(),
+  crearParticipante()
+];
+
+function uid(){
+  return Date.now().toString(36) + Math.random().toString(36).slice(2);
+}
+
+function crearAuditoria(numero,data={}){
+  const mesData = {};
+  meses.forEach(m=>mesData[m]=data[m] || "");
+
+  return {
+    numero,
+    proceso:data.proceso || "",
+    horas:data.horas ?? "",
+    auditores:data.auditores || "",
+    ...mesData
+  };
+}
+
+function crearParticipante(data={}){
+  return {
+    id:data.id || uid(),
+    nombre:data.nombre || "",
+    sector:data.sector || "",
+    auditoria:data.auditoria || ""
+  };
+}
+
+function escapeHTML(text){
+  return String(text ?? "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;");
+}
+
+function opcionesMes(valor){
+  const opciones = [
+    ["","—"],
+    ["P","P"],
+    ["R","R"],
+    ["PR","P/R"]
+  ];
+
+  return opciones.map(([v,t])=>
+    `<option value="${v}" ${valor===v?"selected":""}>${t}</option>`
+  ).join("");
+}
+
+function renderAuditorias(){
+  const body = document.getElementById("auditBody");
+
+  body.innerHTML = auditorias.map((a,i)=>`
+    <tr data-index="${i}">
+      <td class="col-num">${a.numero}</td>
+
+      <td class="col-process">
+        <input data-field="proceso" value="${escapeHTML(a.proceso)}" placeholder="Proceso">
+      </td>
+
+      <td class="col-hours">
+        <input data-field="horas" type="number" min="0" step="0.5"
+          value="${escapeHTML(a.horas)}" placeholder="0">
+      </td>
+
+      <td class="col-auditor">
+        <input data-field="auditores" value="${escapeHTML(a.auditores)}"
+          placeholder="Auditor/es">
+      </td>
+
+      ${meses.map(m=>`
+        <td class="month">
+          <select data-field="${m}">
+            ${opcionesMes(a[m])}
+          </select>
+        </td>
+      `).join("")}
+    </tr>
+  `).join("");
+
+  actualizarTodo();
+}
+
+function renderParticipantes(){
+  const body = document.getElementById("participantBody");
+
+  body.innerHTML = participantes.map((p,i)=>`
+    <tr data-id="${p.id}">
+      <td class="col-num">${i+1}</td>
+
+      <td>
+        <input data-field="nombre" value="${escapeHTML(p.nombre)}"
+          placeholder="Apellido y nombre">
+      </td>
+
+      <td>
+        <input data-field="sector" value="${escapeHTML(p.sector)}"
+          placeholder="Sector">
+      </td>
+
+      <td>
+        <select data-field="auditoria">
+          <option value="">Seleccionar</option>
+          ${Array.from({length:TOTAL_AUDITORIAS},(_,n)=>n+1)
+            .map(n=>`<option value="${n}" ${String(p.auditoria)===String(n)?"selected":""}>${n}</option>`)
+            .join("")}
+        </select>
+      </td>
+
+      <td>
+        <button class="btn-icon danger" type="button" data-delete="${p.id}" title="Eliminar">
+          ×
+        </button>
+      </td>
+    </tr>
+  `).join("");
+
+  actualizarTodo();
+}
+
+function esProgramada(valor){
+  return valor==="P" || valor==="PR";
+}
+
+function esRealizada(valor){
+  return valor==="R" || valor==="PR";
+}
+
+function porcentajeSeguro(realizadas,programadas){
+  if(programadas<=0) return 0;
+  return Math.round((realizadas/programadas)*100);
+}
+
+function aplicarClasePct(el,pct,programadas){
+  el.classList.remove("percent-ok","percent-warning","percent-zero");
+
+  if(programadas===0){
+    el.classList.add("percent-zero");
+  }else if(pct>=100){
+    el.classList.add("percent-ok");
+  }else{
+    el.classList.add("percent-warning");
+  }
+}
+
+function calcularCumplimiento(){
+  let totalProgramadas = 0;
+  let totalRealizadas = 0;
+
+  meses.forEach(m=>{
+    const programadas = auditorias.filter(a=>esProgramada(a[m])).length;
+    const realizadas = auditorias.filter(a=>esRealizada(a[m])).length;
+
+    totalProgramadas += programadas;
+    totalRealizadas += realizadas;
+
+    const pct = porcentajeSeguro(realizadas,programadas);
+
+    document.getElementById(`prog_${m}`).textContent = programadas;
+    document.getElementById(`real_${m}`).textContent = realizadas;
+
+    const pctEl = document.getElementById(`pct_${m}`);
+    pctEl.textContent = pct + "%";
+    aplicarClasePct(pctEl,pct,programadas);
+  });
+
+  const pctAnual = porcentajeSeguro(totalRealizadas,totalProgramadas);
+
+  document.getElementById("prog_anual").textContent = totalProgramadas;
+  document.getElementById("real_anual").textContent = totalRealizadas;
+
+  const pctAnualEl = document.getElementById("pct_anual");
+  pctAnualEl.textContent = pctAnual + "%";
+  aplicarClasePct(pctAnualEl,pctAnual,totalProgramadas);
+
+  return {totalProgramadas,totalRealizadas,pctAnual};
+}
+
+function actualizarTodo(){
+  const cumplimiento = calcularCumplimiento();
+
+  const auditores = new Set(
+    auditorias
+      .flatMap(a=>a.auditores.split(/[,;/]+/))
+      .map(x=>x.trim())
+      .filter(Boolean)
+  ).size;
+
+  const participantesCargados = participantes.filter(p=>p.nombre.trim()).length;
+
+  document.getElementById("stProgramadas").textContent = cumplimiento.totalProgramadas;
+  document.getElementById("stRealizadas").textContent = cumplimiento.totalRealizadas;
+  document.getElementById("stAuditores").textContent = auditores;
+  document.getElementById("stParticipantes").textContent = participantesCargados;
+
+  document.getElementById("progressPct").textContent = cumplimiento.pctAnual + "%";
+  document.getElementById("progressBar").style.width =
+    Math.min(cumplimiento.pctAnual,100) + "%";
+
+  document.getElementById("progressText").textContent =
+    cumplimiento.totalProgramadas > 0
+      ? `${cumplimiento.totalRealizadas} realizadas de ${cumplimiento.totalProgramadas} programadas`
+      : "Sin auditorías programadas";
+
+  return {...cumplimiento,auditores,participantesCargados};
+}
+
+function collect(){
+  return {
+    codigo:"PGSN04-F2",
+    revision:"Rev.04",
+    fechaRevision:"Ago.25",
+    fechaActualizacion:document.getElementById("fechaActualizacion").value,
+    auditorias,
+    participantes,
+    resumen:actualizarTodo(),
+    finalizado:document.getElementById("finishedBadge").classList.contains("show")
+  };
+}
+
+function guardar(mostrar=true){
+  localStorage.setItem(STORAGE_KEY,JSON.stringify(collect()));
+
+  if(mostrar){
+    mensaje("Plan Anual de Auditorías guardado correctamente.","ok");
+  }
+}
+
+function restore(data){
+  if(!data) return;
+
+  if(data.fechaActualizacion!==undefined){
+    document.getElementById("fechaActualizacion").value =
+      data.fechaActualizacion || "";
+  }
+
+  if(Array.isArray(data.auditorias)){
+    auditorias = Array.from({length:TOTAL_AUDITORIAS},(_,i)=>
+      crearAuditoria(i+1,data.auditorias[i] || {})
+    );
+  }
+
+  if(Array.isArray(data.participantes) && data.participantes.length){
+    participantes = data.participantes.map(crearParticipante);
+  }
+
+  if(data.finalizado){
+    document.getElementById("finishedBadge").classList.add("show");
+  }
+
+  renderAuditorias();
+  renderParticipantes();
+}
+
+function mensaje(texto,tipo="ok"){
+  const box = document.getElementById("message");
+  box.className = "msg " + tipo;
+  box.textContent = texto;
+  box.scrollIntoView({behavior:"smooth",block:"center"});
+}
+
+let timer;
+function autoGuardar(){
+  clearTimeout(timer);
+  timer = setTimeout(()=>guardar(false),350);
+}
+
+function validar(){
+  if(!document.getElementById("fechaActualizacion").value){
+    mensaje("Debe completar la fecha de actualización.","err");
+    document.getElementById("fechaActualizacion").focus();
+    return false;
+  }
+
+  const auditoriasConDatos = auditorias.filter(a=>
+    a.proceso.trim() ||
+    a.auditores.trim() ||
+    a.horas !== "" ||
+    meses.some(m=>a[m])
+  );
+
+  if(auditoriasConDatos.length===0){
+    mensaje("Debe cargar al menos una auditoría en el plan anual.","err");
+    return false;
+  }
+
+  const incompletas = auditoriasConDatos.filter(a=>
+    !a.proceso.trim() ||
+    a.horas === "" ||
+    !a.auditores.trim()
+  );
+
+  if(incompletas.length){
+    mensaje(
+      `Hay ${incompletas.length} auditoría(s) con datos incompletos. Complete Proceso, Horas de duración y Auditor/es.`,
+      "err"
+    );
+    return false;
+  }
+
+  return true;
+}
+
+function finalizar(){
+  if(!validar()) return;
+
+  document.getElementById("finishedBadge").classList.add("show");
+  guardar(false);
+
+  const r = actualizarTodo();
+
+  mensaje(
+    `Plan finalizado. Cumplimiento anual: ${r.pctAnual}%. ${r.totalRealizadas} auditorías realizadas de ${r.totalProgramadas} programadas.`,
+    "ok"
+  );
+
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function limpiar(){
+  if(!confirm("¿Seguro que desea limpiar todo el Plan Anual de Auditorías?")) return;
+
+  auditorias = Array.from({length:TOTAL_AUDITORIAS},(_,i)=>crearAuditoria(i+1));
+  participantes = [
+    crearParticipante(),
+    crearParticipante(),
+    crearParticipante(),
+    crearParticipante()
+  ];
+
+  document.getElementById("fechaActualizacion").value="";
+  document.getElementById("finishedBadge").classList.remove("show");
+
+  localStorage.removeItem(STORAGE_KEY);
+
+  colocarFecha();
+  renderAuditorias();
+  renderParticipantes();
+
+  mensaje("Formulario limpiado correctamente.","ok");
+}
+
+function colocarFecha(){
+  const el = document.getElementById("fechaActualizacion");
+  if(el.value) return;
+
+  const d = new Date();
+  const y = d.getFullYear();
+  const m = String(d.getMonth()+1).padStart(2,"0");
+  const day = String(d.getDate()).padStart(2,"0");
+  el.value = `${y}-${m}-${day}`;
+}
+
+/* AUDITORÍAS */
+document.getElementById("auditBody").addEventListener("input",e=>{
+  const field = e.target.dataset.field;
+  if(!field) return;
+
+  const row = e.target.closest("tr[data-index]");
+  const idx = Number(row.dataset.index);
+
+  auditorias[idx][field] = e.target.value;
+
+  actualizarTodo();
+  autoGuardar();
+});
+
+document.getElementById("auditBody").addEventListener("change",e=>{
+  const field = e.target.dataset.field;
+  if(!field) return;
+
+  const row = e.target.closest("tr[data-index]");
+  const idx = Number(row.dataset.index);
+
+  auditorias[idx][field] = e.target.value;
+
+  actualizarTodo();
+  autoGuardar();
+});
+
+/* PARTICIPANTES */
+document.getElementById("addParticipantBtn").addEventListener("click",()=>{
+  participantes.push(crearParticipante());
+  renderParticipantes();
+  autoGuardar();
+});
+
+document.getElementById("participantBody").addEventListener("input",e=>{
+  const field = e.target.dataset.field;
+  if(!field) return;
+
+  const row = e.target.closest("tr[data-id]");
+  const p = participantes.find(x=>x.id===row.dataset.id);
+
+  if(p){
+    p[field] = e.target.value;
+    actualizarTodo();
+    autoGuardar();
+  }
+});
+
+document.getElementById("participantBody").addEventListener("change",e=>{
+  const field = e.target.dataset.field;
+  if(!field) return;
+
+  const row = e.target.closest("tr[data-id]");
+  const p = participantes.find(x=>x.id===row.dataset.id);
+
+  if(p){
+    p[field] = e.target.value;
+    actualizarTodo();
+    autoGuardar();
+  }
+});
+
+document.getElementById("participantBody").addEventListener("click",e=>{
+  const id = e.target.dataset.delete;
+  if(!id) return;
+
+  if(participantes.length===1){
+    participantes=[crearParticipante()];
+  }else{
+    participantes=participantes.filter(x=>x.id!==id);
+  }
+
+  renderParticipantes();
+  autoGuardar();
+});
+
+/* GENERAL */
+document.getElementById("fechaActualizacion").addEventListener("change",autoGuardar);
+
+/* BOTONES */
+document.getElementById("saveBtn").addEventListener("click",()=>guardar(true));
+document.getElementById("finishBtn").addEventListener("click",finalizar);
+document.getElementById("clearBtn").addEventListener("click",limpiar);
+
+/* MOBILE */
+const sidebar=document.getElementById("sidebar");
+const overlay=document.getElementById("sidebarOverlay");
+
+document.getElementById("menuBtn").addEventListener("click",()=>{
+  sidebar.classList.toggle("open");
+  overlay.classList.toggle("show");
+});
+
+overlay.addEventListener("click",()=>{
+  sidebar.classList.remove("open");
+  overlay.classList.remove("show");
+});
+
+/* NAV */
+const navLinks=[...document.querySelectorAll(".nav-link")];
+const sectionIds=["datos","plan","participantes","cumplimiento"];
+
+const observer=new IntersectionObserver(entries=>{
+  entries.forEach(entry=>{
+    if(!entry.isIntersecting) return;
+
+    navLinks.forEach(x=>x.classList.remove("active"));
+
+    const active=document.querySelector(`.nav-link[href="#${entry.target.id}"]`);
+    if(active) active.classList.add("active");
+  });
+},{threshold:.2});
+
+sectionIds.forEach(id=>{
+  const el=document.getElementById(id);
+  if(el) observer.observe(el);
+});
+
+/* INIT */
+colocarFecha();
+
+const saved=localStorage.getItem(STORAGE_KEY);
+
+if(saved){
+  try{
+    restore(JSON.parse(saved));
+  }catch(e){
+    console.error("Error al restaurar:",e);
+    renderAuditorias();
+    renderParticipantes();
+  }
+}else{
+  renderAuditorias();
+  renderParticipantes();
+}
+</script>
+</body>
+</html>

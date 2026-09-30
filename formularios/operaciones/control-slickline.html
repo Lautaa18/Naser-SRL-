@@ -1,0 +1,4188 @@
+
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<meta
+    name="csrf-token"
+    content="<?= htmlspecialchars($_SESSION['csrf_slickline']) ?>"
+>
+
+<title>
+    NASER SRL | Control Operativo Slickline
+</title>
+
+<style>
+
+/* ============================================================
+   VARIABLES
+   ============================================================ */
+
+:root {
+
+    --verde:#009b49;
+    --verde-dark:#007e3b;
+    --verde-soft:#effaf4;
+
+    --negro:#101010;
+    --negro-2:#191919;
+    --negro-3:#242424;
+
+    --blanco:#ffffff;
+
+    --gris-fondo:#f1f3f4;
+    --gris-claro:#f8f9fa;
+    --gris-linea:#dde1e4;
+
+    --texto:#161616;
+    --muted:#74787c;
+
+    --rojo:#a62c2c;
+    --rojo-soft:#fff3f3;
+
+    --amarillo:#a26d00;
+    --amarillo-soft:#fff9e9;
+
+    --sidebar:280px;
+
+    --sombra:
+        0 10px 30px rgba(0,0,0,.06);
+
+    --radio:8px;
+}
+
+/* ============================================================
+   RESET
+   ============================================================ */
+
+*{
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    margin:0;
+    background:var(--gris-fondo);
+    color:var(--texto);
+
+    font-family:
+        Inter,
+        "Segoe UI",
+        Arial,
+        sans-serif;
+}
+
+button,
+input,
+select,
+textarea{
+    font:inherit;
+}
+
+button{
+    cursor:pointer;
+}
+
+input,
+select,
+textarea{
+    outline:none;
+}
+
+/* ============================================================
+   LAYOUT
+   ============================================================ */
+
+.app{
+    min-height:100vh;
+}
+
+.sidebar{
+
+    width:var(--sidebar);
+    height:100vh;
+
+    position:fixed;
+
+    top:0;
+    left:0;
+
+    z-index:1000;
+
+    background:
+        linear-gradient(
+            180deg,
+            #0b0b0b,
+            #151515
+        );
+
+    color:#fff;
+
+    padding:28px 20px;
+
+    display:flex;
+    flex-direction:column;
+}
+
+.main{
+
+    margin-left:var(--sidebar);
+
+    min-height:100vh;
+}
+
+/* ============================================================
+   LOGO / BRAND
+   ============================================================ */
+
+.brand{
+
+    display:flex;
+    align-items:center;
+
+    gap:14px;
+
+    padding:
+        0 8px 25px;
+
+    border-bottom:
+        1px solid rgba(255,255,255,.12);
+}
+
+.brand-mark{
+
+    width:46px;
+    height:46px;
+
+    display:grid;
+    place-items:center;
+
+    background:var(--verde);
+
+    color:#fff;
+
+    font-size:23px;
+    font-weight:900;
+
+    box-shadow:
+        0 0 0 5px rgba(0,155,73,.1);
+}
+
+.brand-name{
+
+    font-size:21px;
+
+    font-weight:900;
+
+    letter-spacing:3px;
+}
+
+.brand-sub{
+
+    margin-top:2px;
+
+    color:#999;
+
+    font-size:9px;
+
+    letter-spacing:4px;
+}
+
+/* ============================================================
+   SIDEBAR
+   ============================================================ */
+
+.side-label{
+
+    padding:
+        26px
+        8px
+        13px;
+
+    color:#777;
+
+    font-size:9px;
+
+    font-weight:800;
+
+    letter-spacing:1.5px;
+}
+
+.nav{
+
+    display:grid;
+
+    gap:5px;
+}
+
+.nav-link{
+
+    min-height:46px;
+
+    padding:
+        10px
+        12px;
+
+    display:flex;
+    align-items:center;
+
+    gap:13px;
+
+    color:#aaa;
+
+    text-decoration:none;
+
+    border-left:
+        3px solid transparent;
+
+    transition:.2s;
+
+    font-size:11px;
+}
+
+.nav-link span{
+
+    width:25px;
+
+    color:#666;
+
+    font-size:9px;
+
+    font-weight:900;
+}
+
+.nav-link:hover{
+
+    color:#fff;
+
+    background:#1c1c1c;
+}
+
+.nav-link.active{
+
+    color:#fff;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(0,155,73,.18),
+            rgba(0,155,73,.03)
+        );
+
+    border-left-color:
+        var(--verde);
+}
+
+.nav-link.active span{
+    color:var(--verde);
+}
+
+.side-footer{
+
+    margin-top:auto;
+
+    padding:
+        18px
+        8px
+        0;
+
+    border-top:
+        1px solid rgba(255,255,255,.12);
+
+    color:#676767;
+
+    font-size:9px;
+
+    line-height:1.8;
+}
+
+.side-footer strong{
+
+    display:block;
+
+    color:#aaa;
+}
+
+/* ============================================================
+   TOPBAR
+   ============================================================ */
+
+.topbar{
+
+    height:84px;
+
+    position:sticky;
+
+    top:0;
+
+    z-index:800;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    padding:
+        0 40px;
+
+    background:#fff;
+
+    border-bottom:
+        1px solid var(--gris-linea);
+}
+
+.topbar-left{
+
+    display:flex;
+    align-items:center;
+
+    gap:16px;
+}
+
+.crumb{
+
+    color:#92969a;
+
+    font-size:9px;
+
+    letter-spacing:1.2px;
+
+    margin-bottom:5px;
+}
+
+.topbar h1{
+
+    margin:0;
+
+    font-size:20px;
+}
+
+.live{
+
+    display:flex;
+    align-items:center;
+
+    gap:8px;
+
+    color:#555;
+
+    font-size:9px;
+
+    font-weight:700;
+
+    letter-spacing:1px;
+}
+
+.live i{
+
+    width:8px;
+    height:8px;
+
+    border-radius:50%;
+
+    background:var(--verde);
+
+    box-shadow:
+        0 0 0 5px
+        rgba(0,155,73,.1);
+}
+
+/* ============================================================
+   MOBILE BUTTON
+   ============================================================ */
+
+.menu-btn{
+
+    display:none;
+
+    width:42px;
+    height:42px;
+
+    border:
+        1px solid var(--gris-linea);
+
+    background:#fff;
+
+    font-size:20px;
+}
+
+/* ============================================================
+   CONTENIDO
+   ============================================================ */
+
+.content{
+
+    width:
+        min(
+            1500px,
+            calc(100% - 50px)
+        );
+
+    margin:
+        30px
+        auto
+        60px;
+}
+
+/* ============================================================
+   HERO
+   ============================================================ */
+
+.hero{
+
+    min-height:195px;
+
+    margin-bottom:20px;
+
+    padding:
+        38px
+        42px;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    gap:30px;
+
+    color:#fff;
+
+    background:
+
+        radial-gradient(
+            circle at 90% 0%,
+            rgba(0,155,73,.25),
+            transparent 30%
+        ),
+
+        linear-gradient(
+            120deg,
+            #0d0d0d,
+            #171717
+        );
+
+    border-left:
+        5px solid var(--verde);
+
+    box-shadow:var(--sombra);
+}
+
+.hero-kicker{
+
+    color:var(--verde);
+
+    font-size:9px;
+
+    font-weight:900;
+
+    letter-spacing:2px;
+}
+
+.hero h2{
+
+    margin:
+        10px
+        0;
+
+    font-size:
+        clamp(
+            27px,
+            3vw,
+            39px
+        );
+
+    line-height:1;
+}
+
+.hero h2 span{
+
+    color:var(--verde);
+}
+
+.hero p{
+
+    max-width:760px;
+
+    margin:0;
+
+    color:#aaa;
+
+    font-size:12px;
+
+    line-height:1.7;
+}
+
+.doc-info{
+
+    min-width:210px;
+
+    padding-left:30px;
+
+    border-left:
+        1px solid #393939;
+}
+
+.doc-info small,
+.doc-info span{
+
+    display:block;
+
+    color:#777;
+
+    font-size:9px;
+
+    letter-spacing:1px;
+}
+
+.doc-info strong{
+
+    display:block;
+
+    margin:
+        9px
+        0;
+
+    font-size:13px;
+}
+
+/* ============================================================
+   PROGRESS
+   ============================================================ */
+
+.progress-card{
+
+    padding:
+        20px
+        25px;
+
+    margin-bottom:20px;
+
+    background:#fff;
+
+    border:
+        1px solid var(--gris-linea);
+
+    box-shadow:var(--sombra);
+}
+
+.progress-top{
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    margin-bottom:13px;
+}
+
+.progress-label{
+
+    color:var(--muted);
+
+    font-size:8px;
+
+    font-weight:900;
+
+    letter-spacing:1.5px;
+}
+
+.progress-title{
+
+    display:block;
+
+    margin-top:4px;
+
+    font-size:13px;
+
+    font-weight:800;
+}
+
+.progress-counter{
+
+    color:var(--verde);
+
+    font-size:19px;
+
+    font-weight:900;
+}
+
+.progress-track{
+
+    height:7px;
+
+    overflow:hidden;
+
+    border-radius:100px;
+
+    background:#e9ecee;
+}
+
+.progress-bar{
+
+    width:0;
+
+    height:100%;
+
+    background:var(--verde);
+
+    border-radius:100px;
+
+    transition:.25s;
+}
+
+/* ============================================================
+   CARDS
+   ============================================================ */
+
+.card,
+.check-section{
+
+    margin-bottom:20px;
+
+    background:#fff;
+
+    border:
+        1px solid var(--gris-linea);
+
+    box-shadow:var(--sombra);
+
+    border-radius:var(--radio);
+
+    overflow:hidden;
+}
+
+.card-header,
+.section-header{
+
+    display:flex;
+    align-items:center;
+
+    gap:15px;
+
+    padding:
+        21px
+        24px;
+}
+
+.number{
+
+    width:40px;
+    height:40px;
+
+    flex:none;
+
+    display:grid;
+    place-items:center;
+
+    background:var(--negro);
+
+    color:#fff;
+
+    font-size:10px;
+
+    font-weight:900;
+}
+
+.card-header h3,
+.section-header h3{
+
+    margin:0;
+
+    font-size:15px;
+}
+
+.card-header p,
+.section-header p{
+
+    margin:
+        5px
+        0
+        0;
+
+    color:var(--muted);
+
+    font-size:10px;
+}
+
+/* ============================================================
+   FORMULARIO
+   ============================================================ */
+
+.form-grid{
+
+    padding:
+        25px;
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(
+            4,
+            1fr
+        );
+
+    gap:20px;
+}
+
+.field{
+
+    min-width:0;
+}
+
+.field.full{
+
+    grid-column:
+        1 / -1;
+}
+
+.field label{
+
+    display:block;
+
+    margin-bottom:7px;
+
+    color:#444;
+
+    font-size:9px;
+
+    font-weight:900;
+
+    letter-spacing:.7px;
+
+    text-transform:uppercase;
+}
+
+.field input,
+.field select,
+.field textarea{
+
+    width:100%;
+
+    border:
+        1px solid #d7dbde;
+
+    background:#fafafa;
+
+    transition:.2s;
+}
+
+.field input,
+.field select{
+
+    height:43px;
+
+    padding:
+        0
+        12px;
+}
+
+.field textarea{
+
+    min-height:110px;
+
+    padding:12px;
+
+    resize:vertical;
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus{
+
+    border-color:var(--verde);
+
+    background:#fff;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(0,155,73,.07);
+}
+
+/* ============================================================
+   PROGRAMA DE POZO
+   ============================================================ */
+
+.binary{
+
+    display:flex;
+
+    gap:8px;
+}
+
+.binary label{
+
+    margin:0;
+}
+
+.binary input{
+
+    display:none;
+}
+
+.binary span{
+
+    min-width:80px;
+
+    height:40px;
+
+    display:grid;
+    place-items:center;
+
+    border:
+        1px solid #d6dadd;
+
+    background:#fff;
+
+    font-size:10px;
+
+    cursor:pointer;
+}
+
+.binary input:checked + span{
+
+    background:var(--verde);
+
+    color:#fff;
+
+    border-color:var(--verde);
+}
+
+/* ============================================================
+   CHECKLIST HEADER
+   ============================================================ */
+
+.checklist-title{
+
+    margin-bottom:14px;
+
+    padding:
+        17px
+        20px;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    gap:20px;
+
+    background:var(--negro);
+
+    color:#fff;
+}
+
+.checklist-title strong{
+
+    display:block;
+
+    font-size:12px;
+}
+
+.checklist-title small{
+
+    display:block;
+
+    margin-top:4px;
+
+    color:#888;
+
+    font-size:9px;
+}
+
+.legend{
+
+    display:flex;
+
+    gap:18px;
+
+    color:#bbb;
+
+    font-size:9px;
+}
+
+.legend span{
+
+    display:flex;
+    align-items:center;
+
+    gap:6px;
+}
+
+.legend i{
+
+    width:8px;
+    height:8px;
+
+    display:block;
+
+    border-radius:50%;
+}
+
+.legend .si{
+
+    background:var(--verde);
+}
+
+.legend .no{
+
+    background:var(--rojo);
+}
+
+.legend .na{
+
+    background:#777;
+}
+
+/* ============================================================
+   SECCIONES
+   ============================================================ */
+
+.section-header{
+
+    position:relative;
+}
+
+.section-info{
+
+    flex:1;
+}
+
+.section-info small{
+
+    color:var(--verde);
+
+    font-size:8px;
+
+    font-weight:900;
+
+    letter-spacing:1.2px;
+}
+
+.section-percent{
+
+    color:var(--verde);
+
+    font-size:18px;
+
+    font-weight:900;
+}
+
+.section-line{
+
+    height:3px;
+
+    background:#eee;
+}
+
+.section-line span{
+
+    display:block;
+
+    width:0;
+
+    height:100%;
+
+    background:var(--verde);
+
+    transition:.25s;
+}
+
+/* ============================================================
+   TABLA
+   ============================================================ */
+
+.table-head,
+.check-row{
+
+    display:grid;
+
+    grid-template-columns:
+        55px
+        minmax(260px,1.7fr)
+        230px
+        150px
+        minmax(170px,1fr);
+
+    align-items:center;
+}
+
+.table-head{
+
+    padding:
+        11px
+        18px;
+
+    background:#f3f4f5;
+
+    border-top:
+        1px solid var(--gris-linea);
+
+    border-bottom:
+        1px solid var(--gris-linea);
+
+    color:#6e7275;
+
+    font-size:8px;
+
+    font-weight:900;
+
+    letter-spacing:1px;
+}
+
+.check-row{
+
+    min-height:70px;
+
+    padding:
+        11px
+        18px;
+
+    border-bottom:
+        1px solid #ededed;
+
+    transition:.15s;
+}
+
+.check-row:last-child{
+
+    border-bottom:0;
+}
+
+.check-row:hover{
+
+    background:#fafafa;
+}
+
+.check-row.row-si{
+
+    border-left:
+        3px solid var(--verde);
+
+    background:
+        linear-gradient(
+            90deg,
+            var(--verde-soft),
+            transparent 13%
+        );
+}
+
+.check-row.row-no{
+
+    border-left:
+        3px solid var(--rojo);
+
+    background:
+        linear-gradient(
+            90deg,
+            var(--rojo-soft),
+            transparent 13%
+        );
+}
+
+.item-number{
+
+    color:#9a9da0;
+
+    font-size:9px;
+
+    font-weight:900;
+}
+
+.item-name{
+
+    padding-right:15px;
+
+    font-size:11px;
+
+    font-weight:650;
+
+    line-height:1.45;
+}
+
+/* ============================================================
+   BOTONES SI NO NA
+   ============================================================ */
+
+.choice{
+
+    display:flex;
+
+    gap:5px;
+}
+
+.choice label{
+
+    cursor:pointer;
+}
+
+.choice input{
+
+    display:none;
+}
+
+.choice span{
+
+    min-width:62px;
+
+    height:33px;
+
+    display:grid;
+    place-items:center;
+
+    background:#fff;
+
+    border:
+        1px solid #d1d5d8;
+
+    color:#666;
+
+    font-size:8px;
+
+    font-weight:900;
+
+    transition:.15s;
+}
+
+.choice span:hover{
+
+    border-color:#444;
+
+    color:#111;
+}
+
+.choice input[value="SI"]:checked + span{
+
+    background:var(--verde);
+
+    color:#fff;
+
+    border-color:var(--verde);
+}
+
+.choice input[value="NO"]:checked + span{
+
+    background:var(--rojo);
+
+    color:#fff;
+
+    border-color:var(--rojo);
+}
+
+.choice input[value="NA"]:checked + span{
+
+    background:#666;
+
+    color:#fff;
+
+    border-color:#666;
+}
+
+.row-field{
+
+    padding-right:8px;
+}
+
+.row-field input,
+.row-field select{
+
+    width:100%;
+
+    height:35px;
+
+    padding:
+        0
+        9px;
+
+    border:
+        1px solid #d5d9dc;
+
+    background:#fafafa;
+
+    font-size:9px;
+}
+
+.row-field input:focus,
+.row-field select:focus{
+
+    border-color:var(--verde);
+
+    background:#fff;
+}
+
+/* ============================================================
+   RESULTADO
+   ============================================================ */
+
+.stats{
+
+    padding:
+        22px
+        25px;
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(
+            5,
+            1fr
+        );
+
+    gap:12px;
+}
+
+.stat{
+
+    padding:17px;
+
+    border:
+        1px solid var(--gris-linea);
+
+    background:#fafafa;
+}
+
+.stat small{
+
+    display:block;
+
+    margin-bottom:8px;
+
+    color:#888;
+
+    font-size:8px;
+
+    font-weight:900;
+
+    letter-spacing:1px;
+}
+
+.stat strong{
+
+    font-size:24px;
+}
+
+.stat.good strong{
+
+    color:var(--verde);
+}
+
+.stat.bad strong{
+
+    color:var(--rojo);
+}
+
+.result-grid{
+
+    padding:
+        0
+        25px
+        25px;
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(
+            2,
+            1fr
+        );
+
+    gap:20px;
+}
+
+/* ============================================================
+   ACTIONS
+   ============================================================ */
+
+.actions{
+
+    display:flex;
+
+    justify-content:flex-end;
+
+    flex-wrap:wrap;
+
+    gap:10px;
+
+    margin:
+        25px
+        0;
+}
+
+.btn{
+
+    min-height:44px;
+
+    padding:
+        0
+        20px;
+
+    border:
+        1px solid #111;
+
+    font-size:9px;
+
+    font-weight:900;
+
+    letter-spacing:.7px;
+
+    transition:.15s;
+}
+
+.btn-light{
+
+    background:#fff;
+
+    color:#111;
+}
+
+.btn-light:hover{
+
+    background:#eee;
+}
+
+.btn-dark{
+
+    background:#111;
+
+    color:#fff;
+}
+
+.btn-dark:hover{
+
+    background:#292929;
+}
+
+.btn-green{
+
+    background:var(--verde);
+
+    border-color:var(--verde);
+
+    color:#fff;
+}
+
+.btn-green:hover{
+
+    background:var(--verde-dark);
+}
+
+/* ============================================================
+   MENSAJE
+   ============================================================ */
+
+.message{
+
+    display:none;
+
+    margin:
+        20px
+        0;
+
+    padding:
+        15px
+        18px;
+
+    border-radius:5px;
+
+    font-size:11px;
+
+    font-weight:700;
+}
+
+.message.success{
+
+    display:block;
+
+    color:#086a35;
+
+    border:
+        1px solid #9bd3b4;
+
+    background:#edf9f2;
+}
+
+.message.error{
+
+    display:block;
+
+    color:#902626;
+
+    border:
+        1px solid #dfaaaa;
+
+    background:#fff2f2;
+}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+
+.footer{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    gap:20px;
+
+    padding-top:20px;
+
+    border-top:
+        1px solid #d6dadd;
+
+    color:#888;
+
+    font-size:8px;
+
+    letter-spacing:.5px;
+}
+
+.footer strong{
+
+    color:#222;
+
+    letter-spacing:1.5px;
+}
+
+/* ============================================================
+   OVERLAY
+   ============================================================ */
+
+.sidebar-overlay{
+
+    display:none;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+
+@media(max-width:1200px){
+
+    .table-head,
+    .check-row{
+
+        grid-template-columns:
+            45px
+            minmax(210px,1.5fr)
+            210px
+            130px
+            minmax(150px,1fr);
+    }
+
+    .form-grid{
+
+        grid-template-columns:
+            repeat(
+                2,
+                1fr
+            );
+    }
+
+}
+
+@media(max-width:900px){
+
+    .sidebar{
+
+        transform:
+            translateX(-100%);
+
+        transition:.25s;
+    }
+
+    .sidebar.open{
+
+        transform:
+            translateX(0);
+    }
+
+    .sidebar-overlay{
+
+        position:fixed;
+
+        inset:0;
+
+        z-index:900;
+
+        background:
+            rgba(0,0,0,.45);
+    }
+
+    .sidebar-overlay.show{
+
+        display:block;
+    }
+
+    .main{
+
+        margin-left:0;
+    }
+
+    .menu-btn{
+
+        display:block;
+    }
+
+    .topbar{
+
+        padding:
+            0
+            18px;
+    }
+
+    .live{
+
+        display:none;
+    }
+
+    .content{
+
+        width:
+            calc(100% - 28px);
+    }
+
+    .hero{
+
+        flex-direction:column;
+
+        align-items:flex-start;
+
+        padding:
+            30px
+            26px;
+    }
+
+    .doc-info{
+
+        width:100%;
+
+        padding:
+            18px
+            0
+            0;
+
+        border-left:0;
+
+        border-top:
+            1px solid #393939;
+    }
+
+    .table-head{
+
+        display:none;
+    }
+
+    .check-row{
+
+        grid-template-columns:
+            35px
+            1fr;
+
+        gap:
+            9px
+            6px;
+
+        padding:
+            17px;
+    }
+
+    .choice,
+    .row-field{
+
+        grid-column:2;
+    }
+
+    .choice{
+
+        flex-wrap:wrap;
+    }
+
+    .stats{
+
+        grid-template-columns:
+            repeat(
+                2,
+                1fr
+            );
+    }
+
+}
+
+@media(max-width:600px){
+
+    .form-grid,
+    .result-grid{
+
+        grid-template-columns:
+            1fr;
+    }
+
+    .field.full{
+
+        grid-column:auto;
+    }
+
+    .hero h2{
+
+        font-size:26px;
+    }
+
+    .checklist-title{
+
+        align-items:flex-start;
+
+        flex-direction:column;
+    }
+
+    .legend{
+
+        flex-wrap:wrap;
+    }
+
+    .section-percent{
+
+        display:none;
+    }
+
+    .stats{
+
+        grid-template-columns:
+            1fr
+            1fr;
+    }
+
+    .actions{
+
+        flex-direction:column;
+    }
+
+    .btn{
+
+        width:100%;
+    }
+
+    .footer{
+
+        flex-direction:column;
+
+        gap:8px;
+    }
+
+}
+
+/* ============================================================
+   IMPRESIÓN / PDF
+   ============================================================ */
+
+@media print{
+
+    body{
+
+        background:#fff;
+    }
+
+    .sidebar,
+    .topbar,
+    .actions,
+    .checklist-title,
+    .progress-card{
+
+        display:none !important;
+    }
+
+    .main{
+
+        margin-left:0;
+    }
+
+    .content{
+
+        width:100%;
+
+        margin:0;
+
+        padding:0;
+    }
+
+    .hero{
+
+        color:#000;
+
+        background:#fff;
+
+        border:
+            1px solid #000;
+
+        box-shadow:none;
+    }
+
+    .hero h2,
+    .hero p{
+
+        color:#000;
+    }
+
+    .card,
+    .check-section{
+
+        box-shadow:none;
+
+        break-inside:avoid;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="app">
+
+<div
+    class="sidebar-overlay"
+    id="sidebarOverlay">
+</div>
+
+<!-- ==========================================================
+     SIDEBAR
+=========================================================== -->
+
+<aside
+    class="sidebar"
+    id="sidebar">
+
+    <div class="brand">
+
+        <div class="brand-mark">
+            N
+        </div>
+
+        <div>
+
+            <div class="brand-name">
+                NASER
+            </div>
+
+            <div class="brand-sub">
+                SRL
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="side-label">
+        SISTEMA DE GESTIÓN INTEGRADO
+    </div>
+
+    <nav class="nav">
+
+        <a
+            href="#datos"
+            class="nav-link active">
+
+            <span>01</span>
+
+            Datos del servicio
+
+        </a>
+
+        <a
+            href="#section-01"
+            class="nav-link">
+
+            <span>02</span>
+
+            Orden y limpieza
+
+        </a>
+
+        <a
+            href="#section-02"
+            class="nav-link">
+
+            <span>03</span>
+
+            Equipos y herramientas
+
+        </a>
+
+        <a
+            href="#section-03"
+            class="nav-link">
+
+            <span>04</span>
+
+            Operación
+
+        </a>
+
+        <a
+            href="#resultado"
+            class="nav-link">
+
+            <span>05</span>
+
+            Resultado
+
+        </a>
+
+    </nav>
+
+    <div class="side-footer">
+
+        SGI / OPERACIONES
+
+        <strong>
+            CONTROL OPERATIVO SLICKLINE
+        </strong>
+
+        REV. 01 · 2026
+
+    </div>
+
+</aside>
+
+<!-- ==========================================================
+     MAIN
+=========================================================== -->
+
+<main class="main">
+
+<header class="topbar">
+
+    <div class="topbar-left">
+
+        <button
+            type="button"
+            class="menu-btn"
+            id="menuBtn">
+            ☰
+        </button>
+
+        <div>
+
+            <div class="crumb">
+                NASER SRL / SGI / OPERACIONES / SLICKLINE
+            </div>
+
+            <h1>
+                Control Operativo Slickline
+            </h1>
+
+        </div>
+
+    </div>
+
+    <div class="live">
+
+        <i></i>
+
+        CONTROL ACTIVO
+
+    </div>
+
+</header>
+
+<div class="content">
+
+<!-- ==========================================================
+     HERO
+=========================================================== -->
+
+<section class="hero">
+
+    <div>
+
+        <div class="hero-kicker">
+            INSPECCIÓN OPERATIVA
+        </div>
+
+        <h2>
+            CONTROL OPERATIVO
+            <span>SLICKLINE</span>
+        </h2>
+
+        <p>
+            Verificación integral de condiciones de seguridad,
+            orden, limpieza, herramientas, equipos y correcta
+            ejecución de actividades de Slickline.
+        </p>
+
+    </div>
+
+    <div class="doc-info">
+
+        <small>
+            DOCUMENTO
+        </small>
+
+        <strong>
+            SGI-OP-SLK-001
+        </strong>
+
+        <span>
+            REV. 01 · 2026
+        </span>
+
+    </div>
+
+</section>
+
+<!-- ==========================================================
+     PROGRESO
+=========================================================== -->
+
+<section class="progress-card">
+
+    <div class="progress-top">
+
+        <div>
+
+            <span class="progress-label">
+                PROGRESO GENERAL
+            </span>
+
+            <strong
+                class="progress-title"
+                id="globalProgress">
+
+                0% completado
+
+            </strong>
+
+        </div>
+
+        <div
+            class="progress-counter"
+            id="progressCounter">
+
+            0 / 38
+
+        </div>
+
+    </div>
+
+    <div class="progress-track">
+
+        <div
+            class="progress-bar"
+            id="progressBar">
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ==========================================================
+     DATOS DEL SERVICIO
+=========================================================== -->
+
+<section
+    class="card"
+    id="datos">
+
+    <div class="card-header">
+
+        <div class="number">
+            01
+        </div>
+
+        <div>
+
+            <h3>
+                Datos del servicio
+            </h3>
+
+            <p>
+                Identificación general de la operación.
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="form-grid">
+
+        <div class="field">
+
+            <label>
+                Operador / Responsable *
+            </label>
+
+            <input
+                type="text"
+                id="operator"
+                placeholder="Nombre y apellido">
+
+        </div>
+
+        <div class="field">
+
+            <label>
+                Legajo / ID
+            </label>
+
+            <input
+                type="text"
+                id="legajo"
+                placeholder="Identificación">
+
+        </div>
+
+        <div class="field">
+
+            <label>
+                Fecha *
+            </label>
+
+            <input
+                type="date"
+                id="date">
+
+        </div>
+
+        <div class="field">
+
+            <label>
+                Turno
+            </label>
+
+            <select id="shift">
+
+                <option value="">
+                    Seleccionar
+                </option>
+
+                <option value="Mañana">
+                    Mañana
+                </option>
+
+                <option value="Tarde">
+                    Tarde
+                </option>
+
+                <option value="Noche">
+                    Noche
+                </option>
+
+            </select>
+
+        </div>
+
+        <div class="field">
+
+            <label>
+                Equipo / Unidad
+            </label>
+
+            <input
+                type="text"
+                id="unit"
+                placeholder="Ej: SL-23">
+
+        </div>
+
+        <div class="field">
+
+            <label>
+                Interno / Patente
+            </label>
+
+            <input
+                type="text"
+                id="plate"
+                placeholder="Identificación">
+
+        </div>
+
+        <div class="field">
+
+            <label>
+                Cliente *
+            </label>
+
+            <input
+                type="text"
+                id="client"
+                placeholder="Cliente">
+
+        </div>
+
+        <div class="field">
+
+            <label>
+                Pozo / Locación *
+            </label>
+
+            <input
+                type="text"
+                id="well"
+                placeholder="Pozo / Locación">
+
+        </div>
+
+        <div class="field full">
+
+            <label>
+                Programa de pozo
+            </label>
+
+            <div class="binary">
+
+                <label>
+
+                    <input
+                        type="radio"
+                        name="programaPozo"
+                        value="SI">
+
+                    <span>
+                        SÍ
+                    </span>
+
+                </label>
+
+                <label>
+
+                    <input
+                        type="radio"
+                        name="programaPozo"
+                        value="NO">
+
+                    <span>
+                        NO
+                    </span>
+
+                </label>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ==========================================================
+     TITULO CHECKLIST
+=========================================================== -->
+
+<div class="checklist-title">
+
+    <div>
+
+        <strong>
+            LISTA DE VERIFICACIÓN
+        </strong>
+
+        <small>
+            Complete cada control según corresponda.
+        </small>
+
+    </div>
+
+    <div class="legend">
+
+        <span>
+            <i class="si"></i>
+            CUMPLE
+        </span>
+
+        <span>
+            <i class="no"></i>
+            NO CUMPLE
+        </span>
+
+        <span>
+            <i class="na"></i>
+            N/A
+        </span>
+
+    </div>
+
+</div>
+
+<!-- ==========================================================
+     SECCION 01
+=========================================================== -->
+
+<section
+    class="check-section"
+    id="section-01">
+
+    <div class="section-header">
+
+        <div class="number">
+            02
+        </div>
+
+        <div class="section-info">
+
+            <small>
+                CONTROL OPERATIVO SLICKLINE
+            </small>
+
+            <h3>
+                ORDEN · LIMPIEZA · PRESENTACIÓN
+            </h3>
+
+            <p
+                id="sectionText01">
+
+                0 / 10 puntos completados
+
+            </p>
+
+        </div>
+
+        <div
+            class="section-percent"
+            id="sectionPercent01">
+
+            0%
+
+        </div>
+
+    </div>
+
+    <div class="section-line">
+
+        <span
+            id="sectionBar01">
+        </span>
+
+    </div>
+
+    <div class="table-head">
+
+        <span>Nº</span>
+
+        <span>
+            ELEMENTO / CONTROL
+        </span>
+
+        <span>
+            RESULTADO
+        </span>
+
+        <span>
+            ESTADO
+        </span>
+
+        <span>
+            OBSERVACIÓN
+        </span>
+
+    </div>
+
+    <div
+        id="rows01">
+    </div>
+
+</section>
+
+<!-- ==========================================================
+     SECCION 02
+=========================================================== -->
+
+<section
+    class="check-section"
+    id="section-02">
+
+    <div class="section-header">
+
+        <div class="number">
+            03
+        </div>
+
+        <div class="section-info">
+
+            <small>
+                CONTROL OPERATIVO SLICKLINE
+            </small>
+
+            <h3>
+                USO DE EQUIPOS Y HERRAMIENTAS
+            </h3>
+
+            <p
+                id="sectionText02">
+
+                0 / 18 puntos completados
+
+            </p>
+
+        </div>
+
+        <div
+            class="section-percent"
+            id="sectionPercent02">
+
+            0%
+
+        </div>
+
+    </div>
+
+    <div class="section-line">
+
+        <span
+            id="sectionBar02">
+        </span>
+
+    </div>
+
+    <div class="table-head">
+
+        <span>Nº</span>
+        <span>ELEMENTO / CONTROL</span>
+        <span>RESULTADO</span>
+        <span>ESTADO</span>
+        <span>OBSERVACIÓN</span>
+
+    </div>
+
+    <div
+        id="rows02">
+    </div>
+
+</section>
+
+<!-- ==========================================================
+     SECCION 03
+=========================================================== -->
+
+<section
+    class="check-section"
+    id="section-03">
+
+    <div class="section-header">
+
+        <div class="number">
+            04
+        </div>
+
+        <div class="section-info">
+
+            <small>
+                CONTROL OPERATIVO SLICKLINE
+            </small>
+
+            <h3>
+                OPERACIÓN
+            </h3>
+
+            <p
+                id="sectionText03">
+
+                0 / 10 puntos completados
+
+            </p>
+
+        </div>
+
+        <div
+            class="section-percent"
+            id="sectionPercent03">
+
+            0%
+
+        </div>
+
+    </div>
+
+    <div class="section-line">
+
+        <span
+            id="sectionBar03">
+        </span>
+
+    </div>
+
+    <div class="table-head">
+
+        <span>Nº</span>
+        <span>ELEMENTO / CONTROL</span>
+        <span>RESULTADO</span>
+        <span>ESTADO</span>
+        <span>OBSERVACIÓN</span>
+
+    </div>
+
+    <div
+        id="rows03">
+    </div>
+
+</section>
+
+<!-- ==========================================================
+     RESULTADO
+=========================================================== -->
+
+<section
+    class="card"
+    id="resultado">
+
+    <div class="card-header">
+
+        <div class="number">
+            05
+        </div>
+
+        <div>
+
+            <h3>
+                Resultado final
+            </h3>
+
+            <p>
+                Resumen automático del control.
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="stats">
+
+        <div class="stat">
+
+            <small>
+                TOTAL
+            </small>
+
+            <strong id="total">
+                38
+            </strong>
+
+        </div>
+
+        <div class="stat">
+
+            <small>
+                COMPLETADOS
+            </small>
+
+            <strong id="completed">
+                0
+            </strong>
+
+        </div>
+
+        <div class="stat good">
+
+            <small>
+                CUMPLE
+            </small>
+
+            <strong id="yes">
+                0
+            </strong>
+
+        </div>
+
+        <div class="stat bad">
+
+            <small>
+                NO CUMPLE
+            </small>
+
+            <strong id="no">
+                0
+            </strong>
+
+        </div>
+
+        <div class="stat">
+
+            <small>
+                N/A
+            </small>
+
+            <strong id="na">
+                0
+            </strong>
+
+        </div>
+
+    </div>
+
+    <div class="result-grid">
+
+        <div class="field">
+
+            <label>
+                Condición general *
+            </label>
+
+            <select id="finalStatus">
+
+                <option value="">
+                    Seleccionar
+                </option>
+
+                <option value="APTO PARA OPERAR">
+                    APTO PARA OPERAR
+                </option>
+
+                <option value="APTO CON OBSERVACIONES">
+                    APTO CON OBSERVACIONES
+                </option>
+
+                <option value="NO APTO PARA OPERAR">
+                    NO APTO PARA OPERAR
+                </option>
+
+            </select>
+
+        </div>
+
+        <div class="field">
+
+            <label>
+                Supervisor NASER
+            </label>
+
+            <input
+                type="text"
+                id="supervisor"
+                placeholder="Nombre y apellido">
+
+        </div>
+
+        <div class="field">
+
+            <label>
+                Responsable del cliente
+            </label>
+
+            <input
+                type="text"
+                id="responsableCliente"
+                placeholder="Nombre y apellido">
+
+        </div>
+
+        <div class="field full">
+
+            <label>
+                Observaciones generales
+            </label>
+
+            <textarea
+                id="generalObs"
+                placeholder="Detalle observaciones, condiciones inseguras, desvíos o acciones correctivas...">
+            </textarea>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ==========================================================
+     ACCIONES
+=========================================================== -->
+
+<div class="actions">
+
+    <button
+        type="button"
+        class="btn btn-light"
+        id="clearBtn">
+
+        LIMPIAR
+
+    </button>
+
+    <button
+        type="button"
+        class="btn btn-light"
+        id="printBtn">
+
+        IMPRIMIR / PDF
+
+    </button>
+
+    <button
+        type="button"
+        class="btn btn-dark"
+        id="saveBtn">
+
+        GUARDAR BORRADOR
+
+    </button>
+
+    <button
+        type="button"
+        class="btn btn-green"
+        id="finishBtn">
+
+        FINALIZAR FORMULARIO
+
+    </button>
+
+</div>
+
+<div
+    class="message"
+    id="message">
+</div>
+
+<footer class="footer">
+
+    <strong>
+        NASER SRL
+    </strong>
+
+    <span>
+        Sistema de Gestión Integrado
+    </span>
+
+    <span>
+        SGI-OP-SLK-001
+    </span>
+
+</footer>
+
+</div>
+
+</main>
+
+</div>
+
+<script>
+
+/* ============================================================
+   DATOS DEL CHECKLIST
+   ============================================================ */
+
+const checklist = {
+
+    "01": [
+
+        "Orden y limpieza general del área de trabajo",
+
+        "Presentación personal acorde a los requisitos de seguridad",
+
+        "Uso de arnés y cabo de vida cuando corresponda",
+
+        "Uso responsable del teléfono celular",
+
+        "Uso de conos y cartelería de seguridad",
+
+        "Carteles guía de camino correctamente colocados",
+
+        "Manga de viento disponible y en condiciones",
+
+        "Bandeja antiderrame instalada y en condiciones",
+
+        "Rociador de gas oil en alambre disponible y operativo",
+
+        "Bidones homologados para almacenamiento y transporte"
+
+    ],
+
+    "02": [
+
+        "Documentación del personal vigente",
+
+        "Documentación del equipo vigente",
+
+        "Lectura y conocimiento del procedimiento de trabajo",
+
+        "Uso de detector de gases",
+
+        "Puesta a tierra del equipo",
+
+        "Matafuegos disponibles, accesibles y vigentes",
+
+        "Calzas colocadas en vehículos",
+
+        "Elementos de izaje en condiciones",
+
+        "Bomba en condiciones de uso",
+
+        "Stuffing Box en condiciones de uso",
+
+        "Cabina en condiciones y ordenada",
+
+        "Guinche en condiciones de uso",
+
+        "Equipo de izaje en condiciones",
+
+        "Equipo de control de presión en condiciones",
+
+        "Herramientas de Slickline en condiciones",
+
+        "BHA acorde a pozo y programa",
+
+        "Uso de morsa durante las tareas que corresponda",
+
+        "Velocidad de operación acorde al procedimiento y programa"
+
+    ],
+
+    "03": [
+
+        "Control operativo Slickline realizado antes de iniciar la tarea",
+
+        "Operación conforme al procedimiento vigente",
+
+        "Comunicación y coordinación del equipo durante la operación",
+
+        "Control de condiciones del pozo y del programa antes de operar",
+
+        "Uso correcto de equipos y herramientas durante la operación",
+
+        "Uso de protecciones y EPP requeridos durante la operación",
+
+        "Control de presión y condiciones operativas durante la tarea",
+
+        "Estado de cubiertas de vehículos",
+
+        "Elementos para cambio de cubiertas disponibles y en condiciones",
+
+        "Observaciones operativas registradas y comunicadas"
+
+    ]
+
+};
+
+/* ============================================================
+   CREAR FILAS
+   ============================================================ */
+
+function crearFila(
+    seccion,
+    numero,
+    texto
+){
+
+    const nro =
+        String(numero + 1)
+        .padStart(
+            2,
+            "0"
+        );
+
+    const name =
+        `item_${seccion}_${numero + 1}`;
+
+    return `
+
+    <article
+        class="check-row"
+        data-section="${seccion}"
+        data-item="${numero + 1}">
+
+        <div class="item-number">
+            ${nro}
+        </div>
+
+        <div class="item-name">
+            ${texto}
+        </div>
+
+        <div class="choice">
+
+            <label>
+
+                <input
+                    type="radio"
+                    name="${name}"
+                    value="SI">
+
+                <span>
+                    CUMPLE
+                </span>
+
+            </label>
+
+            <label>
+
+                <input
+                    type="radio"
+                    name="${name}"
+                    value="NO">
+
+                <span>
+                    NO CUMPLE
+                </span>
+
+            </label>
+
+            <label>
+
+                <input
+                    type="radio"
+                    name="${name}"
+                    value="NA">
+
+                <span>
+                    N/A
+                </span>
+
+            </label>
+
+        </div>
+
+        <div class="row-field">
+
+            <select
+                class="estado">
+
+                <option value="">
+                    Estado
+                </option>
+
+                <option value="Bueno">
+                    Bueno
+                </option>
+
+                <option value="Regular">
+                    Regular
+                </option>
+
+                <option value="Malo">
+                    Malo
+                </option>
+
+                <option value="No corresponde">
+                    No corresponde
+                </option>
+
+            </select>
+
+        </div>
+
+        <div class="row-field">
+
+            <input
+                class="observacion"
+                type="text"
+                placeholder="Observación">
+
+        </div>
+
+    </article>
+
+    `;
+
+}
+
+/* ============================================================
+   RENDER
+   ============================================================ */
+
+function renderChecklist(){
+
+    Object.entries(
+        checklist
+    ).forEach(
+        ([seccion, items]) => {
+
+            const container =
+                document.getElementById(
+                    `rows${seccion}`
+                );
+
+            container.innerHTML =
+                items
+                .map(
+                    (
+                        item,
+                        index
+                    ) =>
+                    crearFila(
+                        seccion,
+                        index,
+                        item
+                    )
+                )
+                .join("");
+
+        }
+    );
+
+}
+
+/* ============================================================
+   TODAS LAS FILAS
+   ============================================================ */
+
+function getRows(){
+
+    return [
+        ...document.querySelectorAll(
+            ".check-row"
+        )
+    ];
+
+}
+
+/* ============================================================
+   ACTUALIZAR PROGRESO
+   ============================================================ */
+
+function updateProgress(){
+
+    const rows =
+        getRows();
+
+    let completed = 0;
+
+    let yes = 0;
+
+    let no = 0;
+
+    let na = 0;
+
+    rows.forEach(
+        row => {
+
+            const selected =
+                row.querySelector(
+                    'input[type="radio"]:checked'
+                );
+
+            row.classList.remove(
+                "row-si",
+                "row-no"
+            );
+
+            if(selected){
+
+                completed++;
+
+                if(
+                    selected.value === "SI"
+                ){
+
+                    yes++;
+
+                    row.classList.add(
+                        "row-si"
+                    );
+
+                }
+
+                if(
+                    selected.value === "NO"
+                ){
+
+                    no++;
+
+                    row.classList.add(
+                        "row-no"
+                    );
+
+                }
+
+                if(
+                    selected.value === "NA"
+                ){
+
+                    na++;
+
+                }
+
+            }
+
+        }
+    );
+
+    const total =
+        rows.length;
+
+    const percent =
+        total > 0
+        ?
+        Math.round(
+            completed /
+            total *
+            100
+        )
+        :
+        0;
+
+    document.getElementById(
+        "total"
+    ).textContent =
+        total;
+
+    document.getElementById(
+        "completed"
+    ).textContent =
+        completed;
+
+    document.getElementById(
+        "yes"
+    ).textContent =
+        yes;
+
+    document.getElementById(
+        "no"
+    ).textContent =
+        no;
+
+    document.getElementById(
+        "na"
+    ).textContent =
+        na;
+
+    document.getElementById(
+        "globalProgress"
+    ).textContent =
+        percent +
+        "% completado";
+
+    document.getElementById(
+        "progressCounter"
+    ).textContent =
+        completed +
+        " / " +
+        total;
+
+    document.getElementById(
+        "progressBar"
+    ).style.width =
+        percent +
+        "%";
+
+    ["01","02","03"].forEach(
+        seccion => {
+
+            const sectionRows =
+                rows.filter(
+                    row =>
+                    row.dataset.section ===
+                    seccion
+                );
+
+            const sectionCompleted =
+                sectionRows.filter(
+                    row =>
+                    row.querySelector(
+                        'input[type="radio"]:checked'
+                    )
+                ).length;
+
+            const sectionPercent =
+                sectionRows.length
+                ?
+                Math.round(
+                    sectionCompleted /
+                    sectionRows.length *
+                    100
+                )
+                :
+                0;
+
+            document.getElementById(
+                `sectionText${seccion}`
+            ).textContent =
+                `${sectionCompleted} / ${sectionRows.length} puntos completados`;
+
+            document.getElementById(
+                `sectionPercent${seccion}`
+            ).textContent =
+                sectionPercent +
+                "%";
+
+            document.getElementById(
+                `sectionBar${seccion}`
+            ).style.width =
+                sectionPercent +
+                "%";
+
+        }
+    );
+
+}
+
+/* ============================================================
+   RECOLECTAR DATOS
+   ============================================================ */
+
+function collectData(){
+
+    const rows =
+        getRows()
+        .map(
+            row => {
+
+                const selected =
+                    row.querySelector(
+                        'input[type="radio"]:checked'
+                    );
+
+                return {
+
+                    section:
+                        row.dataset.section,
+
+                    item:
+                        row.dataset.item,
+
+                    control:
+                        row
+                        .querySelector(
+                            ".item-name"
+                        )
+                        .textContent
+                        .trim(),
+
+                    result:
+                        selected
+                        ?
+                        selected.value
+                        :
+                        "",
+
+                    status:
+                        row
+                        .querySelector(
+                            ".estado"
+                        )
+                        .value,
+
+                    observation:
+                        row
+                        .querySelector(
+                            ".observacion"
+                        )
+                        .value
+                        .trim()
+
+                };
+
+            }
+        );
+
+    const programaPozo =
+        document.querySelector(
+            'input[name="programaPozo"]:checked'
+        );
+
+    return {
+
+        operator:
+            document
+            .getElementById(
+                "operator"
+            )
+            .value
+            .trim(),
+
+        legajo:
+            document
+            .getElementById(
+                "legajo"
+            )
+            .value
+            .trim(),
+
+        date:
+            document
+            .getElementById(
+                "date"
+            )
+            .value,
+
+        shift:
+            document
+            .getElementById(
+                "shift"
+            )
+            .value,
+
+        unit:
+            document
+            .getElementById(
+                "unit"
+            )
+            .value
+            .trim(),
+
+        plate:
+            document
+            .getElementById(
+                "plate"
+            )
+            .value
+            .trim(),
+
+        client:
+            document
+            .getElementById(
+                "client"
+            )
+            .value
+            .trim(),
+
+        well:
+            document
+            .getElementById(
+                "well"
+            )
+            .value
+            .trim(),
+
+        programaPozo:
+            programaPozo
+            ?
+            programaPozo.value
+            :
+            "",
+
+        finalStatus:
+            document
+            .getElementById(
+                "finalStatus"
+            )
+            .value,
+
+        supervisor:
+            document
+            .getElementById(
+                "supervisor"
+            )
+            .value
+            .trim(),
+
+        responsableCliente:
+            document
+            .getElementById(
+                "responsableCliente"
+            )
+            .value
+            .trim(),
+
+        generalObs:
+            document
+            .getElementById(
+                "generalObs"
+            )
+            .value
+            .trim(),
+
+        rows:
+            rows
+
+    };
+
+}
+
+/* ============================================================
+   GUARDAR LOCAL
+   ============================================================ */
+
+function saveLocal(){
+
+    const data =
+        collectData();
+
+    localStorage.setItem(
+        "naser_slickline_borrador",
+        JSON.stringify(
+            data
+        )
+    );
+
+}
+
+/* ============================================================
+   RESTAURAR LOCAL
+   ============================================================ */
+
+function loadLocal(){
+
+    const saved =
+        localStorage.getItem(
+            "naser_slickline_borrador"
+        );
+
+    if(!saved){
+        return;
+    }
+
+    try{
+
+        const data =
+            JSON.parse(
+                saved
+            );
+
+        const fields = [
+
+            "operator",
+            "legajo",
+            "date",
+            "shift",
+            "unit",
+            "plate",
+            "client",
+            "well",
+            "finalStatus",
+            "supervisor",
+            "responsableCliente",
+            "generalObs"
+
+        ];
+
+        fields.forEach(
+            id => {
+
+                const el =
+                    document.getElementById(
+                        id
+                    );
+
+                if(
+                    el &&
+                    data[id] !== undefined
+                ){
+
+                    el.value =
+                        data[id];
+
+                }
+
+            }
+        );
+
+        if(
+            data.programaPozo
+        ){
+
+            const radio =
+                document.querySelector(
+                    `input[name="programaPozo"][value="${data.programaPozo}"]`
+                );
+
+            if(radio){
+
+                radio.checked =
+                    true;
+
+            }
+
+        }
+
+        if(
+            Array.isArray(
+                data.rows
+            )
+        ){
+
+            data.rows.forEach(
+                item => {
+
+                    const row =
+                        document.querySelector(
+                            `.check-row[data-section="${item.section}"][data-item="${item.item}"]`
+                        );
+
+                    if(!row){
+                        return;
+                    }
+
+                    if(item.result){
+
+                        const radio =
+                            row.querySelector(
+                                `input[value="${item.result}"]`
+                            );
+
+                        if(radio){
+
+                            radio.checked =
+                                true;
+
+                        }
+
+                    }
+
+                    const estado =
+                        row.querySelector(
+                            ".estado"
+                        );
+
+                    const observation =
+                        row.querySelector(
+                            ".observacion"
+                        );
+
+                    if(estado){
+
+                        estado.value =
+                            item.status || "";
+
+                    }
+
+                    if(observation){
+
+                        observation.value =
+                            item.observation || "";
+
+                    }
+
+                }
+            );
+
+        }
+
+    }
+    catch(error){
+
+        console.error(
+            "Error cargando borrador:",
+            error
+        );
+
+    }
+
+}
+
+/* ============================================================
+   MENSAJES
+   ============================================================ */
+
+function showMessage(
+    message,
+    type = "success"
+){
+
+    const box =
+        document.getElementById(
+            "message"
+        );
+
+    box.className =
+        "message " +
+        type;
+
+    box.textContent =
+        message;
+
+    box.scrollIntoView({
+        behavior:"smooth",
+        block:"center"
+    });
+
+}
+
+/* ============================================================
+   PETICION PHP
+   ============================================================ */
+
+async function sendToServer(
+    accion
+){
+
+    const data =
+        collectData();
+
+    const csrf =
+        document
+        .querySelector(
+            'meta[name="csrf-token"]'
+        )
+        .content;
+
+    const response =
+        await fetch(
+            window.location.href,
+            {
+
+                method:"POST",
+
+                headers:{
+                    "Content-Type":
+                    "application/json"
+                },
+
+                body:
+                    JSON.stringify({
+
+                        csrf:
+                            csrf,
+
+                        accion:
+                            accion,
+
+                        formulario:
+                            data
+
+                    })
+
+            }
+        );
+
+    const result =
+        await response.json();
+
+    if(!result.ok){
+
+        throw new Error(
+            result.mensaje ||
+            "Error al guardar."
+        );
+
+    }
+
+    return result;
+
+}
+
+/* ============================================================
+   VALIDACION
+   ============================================================ */
+
+function validateFinal(){
+
+    const data =
+        collectData();
+
+    if(
+        !data.operator
+    ){
+
+        showMessage(
+            "Debe ingresar el operador o responsable.",
+            "error"
+        );
+
+        document
+        .getElementById(
+            "operator"
+        )
+        .focus();
+
+        return false;
+
+    }
+
+    if(
+        !data.date
+    ){
+
+        showMessage(
+            "Debe ingresar la fecha.",
+            "error"
+        );
+
+        return false;
+
+    }
+
+    if(
+        !data.client
+    ){
+
+        showMessage(
+            "Debe ingresar el cliente.",
+            "error"
+        );
+
+        document
+        .getElementById(
+            "client"
+        )
+        .focus();
+
+        return false;
+
+    }
+
+    if(
+        !data.well
+    ){
+
+        showMessage(
+            "Debe ingresar el pozo o locación.",
+            "error"
+        );
+
+        document
+        .getElementById(
+            "well"
+        )
+        .focus();
+
+        return false;
+
+    }
+
+    const incomplete =
+        data.rows.filter(
+            row =>
+            !row.result
+        );
+
+    if(
+        incomplete.length > 0
+    ){
+
+        showMessage(
+            `Faltan ${incomplete.length} puntos del checklist por completar.`,
+            "error"
+        );
+
+        const first =
+            incomplete[0];
+
+        const row =
+            document.querySelector(
+                `.check-row[data-section="${first.section}"][data-item="${first.item}"]`
+            );
+
+        if(row){
+
+            row.scrollIntoView({
+                behavior:"smooth",
+                block:"center"
+            });
+
+        }
+
+        return false;
+
+    }
+
+    if(
+        !data.finalStatus
+    ){
+
+        showMessage(
+            "Debe seleccionar la condición general.",
+            "error"
+        );
+
+        document
+        .getElementById(
+            "finalStatus"
+        )
+        .focus();
+
+        return false;
+
+    }
+
+    return true;
+
+}
+
+/* ============================================================
+   BOTON GUARDAR
+   ============================================================ */
+
+document
+.getElementById(
+    "saveBtn"
+)
+.addEventListener(
+    "click",
+    async () => {
+
+        saveLocal();
+
+        try{
+
+            const result =
+                await sendToServer(
+                    "guardar"
+                );
+
+            showMessage(
+                result.mensaje,
+                "success"
+            );
+
+        }
+        catch(error){
+
+            showMessage(
+                "El borrador se guardó en este equipo, pero hubo un problema al guardarlo en el servidor: " +
+                error.message,
+                "error"
+            );
+
+        }
+
+    }
+);
+
+/* ============================================================
+   FINALIZAR
+   ============================================================ */
+
+document
+.getElementById(
+    "finishBtn"
+)
+.addEventListener(
+    "click",
+    async () => {
+
+        if(
+            !validateFinal()
+        ){
+
+            return;
+
+        }
+
+        const button =
+            document.getElementById(
+                "finishBtn"
+            );
+
+        const original =
+            button.textContent;
+
+        button.disabled =
+            true;
+
+        button.textContent =
+            "GUARDANDO...";
+
+        try{
+
+            const result =
+                await sendToServer(
+                    "finalizar"
+                );
+
+            localStorage.removeItem(
+                "naser_slickline_borrador"
+            );
+
+            showMessage(
+                result.mensaje,
+                "success"
+            );
+
+            button.textContent =
+                "FORMULARIO FINALIZADO";
+
+        }
+        catch(error){
+
+            showMessage(
+                error.message,
+                "error"
+            );
+
+            button.disabled =
+                false;
+
+            button.textContent =
+                original;
+
+        }
+
+    }
+);
+
+/* ============================================================
+   LIMPIAR
+   ============================================================ */
+
+document
+.getElementById(
+    "clearBtn"
+)
+.addEventListener(
+    "click",
+    () => {
+
+        const confirmation =
+            confirm(
+                "¿Seguro que desea limpiar todo el formulario Slickline?"
+            );
+
+        if(!confirmation){
+            return;
+        }
+
+        document
+        .querySelectorAll(
+            "input"
+        )
+        .forEach(
+            input => {
+
+                if(
+                    input.type ===
+                    "radio"
+                ){
+
+                    input.checked =
+                        false;
+
+                }
+                else{
+
+                    input.value =
+                        "";
+
+                }
+
+            }
+        );
+
+        document
+        .querySelectorAll(
+            "select"
+        )
+        .forEach(
+            select => {
+
+                select.selectedIndex =
+                    0;
+
+            }
+        );
+
+        document
+        .querySelectorAll(
+            "textarea"
+        )
+        .forEach(
+            textarea => {
+
+                textarea.value =
+                    "";
+
+            }
+        );
+
+        localStorage.removeItem(
+            "naser_slickline_borrador"
+        );
+
+        setToday();
+
+        updateProgress();
+
+        showMessage(
+            "Formulario limpiado correctamente.",
+            "success"
+        );
+
+        window.scrollTo({
+            top:0,
+            behavior:"smooth"
+        });
+
+    }
+);
+
+/* ============================================================
+   IMPRIMIR
+   ============================================================ */
+
+document
+.getElementById(
+    "printBtn"
+)
+.addEventListener(
+    "click",
+    () => {
+
+        window.print();
+
+    }
+);
+
+/* ============================================================
+   AUTO GUARDADO
+   ============================================================ */
+
+let autosaveTimer;
+
+function autosave(){
+
+    clearTimeout(
+        autosaveTimer
+    );
+
+    autosaveTimer =
+        setTimeout(
+            () => {
+
+                saveLocal();
+
+            },
+            500
+        );
+
+}
+
+document
+.addEventListener(
+    "input",
+    autosave
+);
+
+document
+.addEventListener(
+    "change",
+    () => {
+
+        autosave();
+
+        updateProgress();
+
+    }
+);
+
+/* ============================================================
+   SIDEBAR ACTIVO
+   ============================================================ */
+
+const navLinks =
+    document.querySelectorAll(
+        ".nav-link"
+    );
+
+const observedSections = [
+
+    document.getElementById(
+        "datos"
+    ),
+
+    document.getElementById(
+        "section-01"
+    ),
+
+    document.getElementById(
+        "section-02"
+    ),
+
+    document.getElementById(
+        "section-03"
+    ),
+
+    document.getElementById(
+        "resultado"
+    )
+
+];
+
+const observer =
+    new IntersectionObserver(
+        entries => {
+
+            entries.forEach(
+                entry => {
+
+                    if(
+                        entry.isIntersecting
+                    ){
+
+                        navLinks
+                        .forEach(
+                            link =>
+                            link.classList.remove(
+                                "active"
+                            )
+                        );
+
+                        const active =
+                            document.querySelector(
+                                `.nav-link[href="#${entry.target.id}"]`
+                            );
+
+                        if(active){
+
+                            active.classList.add(
+                                "active"
+                            );
+
+                        }
+
+                    }
+
+                }
+            );
+
+        },
+        {
+            threshold:.25
+        }
+    );
+
+observedSections
+.forEach(
+    section => {
+
+        if(section){
+
+            observer.observe(
+                section
+            );
+
+        }
+
+    }
+);
+
+/* ============================================================
+   SIDEBAR MOBILE
+   ============================================================ */
+
+const sidebar =
+    document.getElementById(
+        "sidebar"
+    );
+
+const sidebarOverlay =
+    document.getElementById(
+        "sidebarOverlay"
+    );
+
+document
+.getElementById(
+    "menuBtn"
+)
+.addEventListener(
+    "click",
+    () => {
+
+        sidebar
+        .classList
+        .toggle(
+            "open"
+        );
+
+        sidebarOverlay
+        .classList
+        .toggle(
+            "show"
+        );
+
+    }
+);
+
+sidebarOverlay
+.addEventListener(
+    "click",
+    () => {
+
+        sidebar
+        .classList
+        .remove(
+            "open"
+        );
+
+        sidebarOverlay
+        .classList
+        .remove(
+            "show"
+        );
+
+    }
+);
+
+navLinks
+.forEach(
+    link => {
+
+        link.addEventListener(
+            "click",
+            () => {
+
+                sidebar
+                .classList
+                .remove(
+                    "open"
+                );
+
+                sidebarOverlay
+                .classList
+                .remove(
+                    "show"
+                );
+
+            }
+        );
+
+    }
+);
+
+/* ============================================================
+   FECHA ACTUAL
+   ============================================================ */
+
+function setToday(){
+
+    const dateInput =
+        document.getElementById(
+            "date"
+        );
+
+    if(
+        !dateInput.value
+    ){
+
+        const today =
+            new Date();
+
+        const year =
+            today.getFullYear();
+
+        const month =
+            String(
+                today.getMonth() + 1
+            )
+            .padStart(
+                2,
+                "0"
+            );
+
+        const day =
+            String(
+                today.getDate()
+            )
+            .padStart(
+                2,
+                "0"
+            );
+
+        dateInput.value =
+            `${year}-${month}-${day}`;
+
+    }
+
+}
+
+/* ============================================================
+   INICIO
+   ============================================================ */
+
+renderChecklist();
+
+setToday();
+
+loadLocal();
+
+updateProgress();
+
+</script>
+
+</body>
+
+</html>

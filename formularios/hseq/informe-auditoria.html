@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NASER SRL | Informe de Auditoría PGSN04-F4</title>
+
+<style>
+:root{
+  --naser:#009b49;
+  --naser-dark:#007a3a;
+  --black:#0d0d0d;
+  --white:#fff;
+  --bg:#f2f4f5;
+  --line:#dce1e4;
+  --text:#191919;
+  --muted:#73777b;
+  --danger:#a62b2b;
+  --warning:#ad7000;
+  --blue:#dfe9f7;
+  --green-soft:#b8d99c;
+  --sidebar:275px;
+  --shadow:0 10px 30px rgba(0,0,0,.06);
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:Inter,"Segoe UI",Arial,sans-serif;
+}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+input,select,textarea{outline:none}
+
+/* SIDEBAR */
+.sidebar{
+  position:fixed;
+  inset:0 auto 0 0;
+  width:var(--sidebar);
+  background:linear-gradient(180deg,#090909,#151515);
+  color:#fff;
+  padding:28px 20px;
+  display:flex;
+  flex-direction:column;
+  z-index:1000;
+}
+.brand{
+  display:flex;
+  align-items:center;
+  gap:13px;
+  padding:0 8px 25px;
+  border-bottom:1px solid #303030;
+}
+.brand-mark{
+  width:46px;height:46px;
+  display:grid;place-items:center;
+  background:var(--naser);
+  font-size:23px;font-weight:900;
+}
+.brand-name{font-size:21px;font-weight:900;letter-spacing:3px}
+.brand-sub{font-size:9px;letter-spacing:4px;color:#999;margin-top:2px}
+.side-label{
+  padding:25px 8px 13px;
+  font-size:9px;font-weight:800;color:#727272;letter-spacing:1.5px;
+}
+.nav{display:grid;gap:5px}
+.nav-link{
+  display:flex;align-items:center;gap:12px;
+  min-height:45px;padding:10px 12px;
+  color:#aaa;text-decoration:none;
+  border-left:3px solid transparent;
+  font-size:11px;transition:.2s;
+}
+.nav-link span{width:25px;color:#666;font-size:9px;font-weight:900}
+.nav-link:hover{background:#1c1c1c;color:#fff}
+.nav-link.active{
+  color:#fff;border-left-color:var(--naser);
+  background:linear-gradient(90deg,rgba(0,155,73,.18),rgba(0,155,73,.02));
+}
+.nav-link.active span{color:var(--naser)}
+.side-footer{
+  margin-top:auto;padding:18px 8px 0;
+  border-top:1px solid #303030;color:#666;font-size:9px;line-height:1.8;
+}
+.side-footer strong{display:block;color:#aaa}
+
+/* MAIN */
+.main{margin-left:var(--sidebar);min-height:100vh}
+.topbar{
+  height:84px;
+  position:sticky;top:0;z-index:800;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 40px;background:#fff;border-bottom:1px solid var(--line);
+}
+.topbar-left{display:flex;align-items:center;gap:15px}
+.crumb{font-size:9px;color:#92969a;letter-spacing:1.2px;margin-bottom:5px}
+.topbar h1{margin:0;font-size:20px}
+.control{
+  display:flex;align-items:center;gap:8px;
+  font-size:9px;font-weight:800;letter-spacing:1px;color:#555;
+}
+.control i{
+  width:8px;height:8px;border-radius:50%;
+  background:var(--naser);box-shadow:0 0 0 5px rgba(0,155,73,.1);
+}
+.finished{
+  display:none;padding:8px 11px;
+  background:var(--naser);color:#fff;
+  font-size:9px;font-weight:900;letter-spacing:.6px;
+}
+.finished.show{display:block}
+.menu-btn{
+  display:none;width:41px;height:41px;
+  border:1px solid var(--line);background:#fff;
+}
+
+.content{width:min(1450px,calc(100% - 50px));margin:30px auto 60px}
+
+/* HERO */
+.hero{
+  min-height:190px;margin-bottom:20px;padding:38px 42px;
+  display:flex;align-items:center;justify-content:space-between;gap:30px;
+  color:#fff;
+  background:
+    radial-gradient(circle at 90% 0%,rgba(0,155,73,.25),transparent 35%),
+    linear-gradient(120deg,#0c0c0c,#181818);
+  border-left:5px solid var(--naser);
+  box-shadow:var(--shadow);
+}
+.hero-tag{color:var(--naser);font-size:9px;font-weight:900;letter-spacing:2px}
+.hero h2{margin:10px 0;font-size:clamp(27px,3vw,39px);line-height:1}
+.hero h2 span{color:var(--naser)}
+.hero p{max-width:760px;margin:0;color:#aaa;font-size:12px;line-height:1.7}
+.hero-meta{min-width:220px;padding-left:28px;border-left:1px solid #393939}
+.hero-meta small,.hero-meta span{display:block;color:#777;font-size:9px;letter-spacing:1px}
+.hero-meta strong{display:block;margin:8px 0;font-size:13px}
+
+/* CARD */
+.card{
+  margin-bottom:20px;background:#fff;border:1px solid var(--line);
+  box-shadow:var(--shadow);overflow:hidden;
+}
+.card-head{
+  display:flex;align-items:center;gap:15px;
+  padding:21px 25px;border-bottom:1px solid var(--line);
+}
+.num{
+  width:39px;height:39px;flex:none;
+  display:grid;place-items:center;
+  background:#111;color:#fff;font-size:10px;font-weight:900;
+}
+.card-head h3{margin:0;font-size:15px}
+.card-head p{margin:5px 0 0;color:var(--muted);font-size:10px}
+
+/* FORM GRID */
+.grid{
+  padding:25px;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:20px;
+}
+.field{min-width:0}
+.field.span2{grid-column:span 2}
+.field.full{grid-column:1/-1}
+.field label{
+  display:block;margin-bottom:7px;
+  color:#444;font-size:9px;font-weight:900;
+  letter-spacing:.6px;text-transform:uppercase;
+}
+.req::after{content:" *";color:var(--naser)}
+.field input,.field textarea{
+  width:100%;
+  border:1px solid #d6dade;
+  background:#fafafa;
+  transition:.2s;
+}
+.field input{height:43px;padding:0 12px}
+.field textarea{min-height:90px;padding:12px;resize:vertical}
+.field input:focus,.field textarea:focus{
+  background:#fff;border-color:var(--naser);
+  box-shadow:0 0 0 3px rgba(0,155,73,.07);
+}
+
+/* DOCUMENTACION */
+.iso-box{
+  margin:25px;
+  border:1px solid var(--line);
+  background:#fff;
+}
+.iso-row{
+  display:grid;
+  grid-template-columns:220px 1fr;
+  min-height:52px;
+}
+.iso-label{
+  display:flex;
+  align-items:center;
+  padding:12px;
+  border-right:1px solid var(--line);
+  font-size:10px;font-weight:900;
+}
+.iso-list{
+  padding:12px 20px;
+  background:#fafafa;
+}
+.iso-list label{
+  display:flex;align-items:center;gap:10px;
+  margin:5px 0;font-size:11px;
+}
+.iso-list input{accent-color:var(--naser)}
+
+/* RESULTADOS */
+.results-wrap{padding:25px}
+.results-title{
+  text-align:center;
+  padding:8px 12px;
+  background:var(--green-soft);
+  border:1px solid #8ebc73;
+  font-weight:900;font-size:11px;
+}
+.result-section{
+  border:1px solid var(--line);
+  border-top:0;
+}
+.result-section-title{
+  padding:7px 10px;
+  background:var(--blue);
+  text-align:center;
+  font-size:10px;font-weight:900;
+}
+.result-section textarea{
+  width:100%;
+  min-height:115px;
+  border:0;
+  padding:12px;
+  resize:vertical;
+  font-size:11px;
+  line-height:1.5;
+}
+.result-section textarea:focus{
+  box-shadow:inset 0 0 0 2px rgba(0,155,73,.25);
+}
+
+/* COUNT */
+.metrics{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:14px;
+  margin-bottom:20px;
+}
+.metric{
+  background:#fff;border:1px solid var(--line);
+  box-shadow:var(--shadow);padding:18px 20px;
+}
+.metric small{
+  display:block;color:var(--muted);
+  font-size:8px;font-weight:900;
+  letter-spacing:1.2px;margin-bottom:8px;
+}
+.metric strong{font-size:24px}
+.metric.green strong{color:var(--naser)}
+.metric.red strong{color:var(--danger)}
+.metric.warning strong{color:var(--warning)}
+
+/* ACTIONS */
+.actions{
+  display:flex;justify-content:flex-end;
+  gap:10px;flex-wrap:wrap;margin:25px 0;
+}
+.btn{
+  min-height:44px;padding:0 20px;
+  border:1px solid #111;
+  font-size:9px;font-weight:900;letter-spacing:.7px;
+}
+.btn-light{background:#fff;color:#111}
+.btn-light:hover{background:#eee}
+.btn-dark{background:#111;color:#fff}
+.btn-dark:hover{background:#292929}
+.btn-green{background:var(--naser);border-color:var(--naser);color:#fff}
+.btn-green:hover{background:var(--naser-dark)}
+
+.msg{
+  display:none;margin-bottom:20px;padding:14px 17px;
+  font-size:11px;font-weight:700;
+}
+.msg.ok{display:block;background:#edf9f2;color:#086933;border:1px solid #9fd4b7}
+.msg.err{display:block;background:#fff1f1;color:#922929;border:1px solid #dfacac}
+
+.footer{
+  padding-top:20px;border-top:1px solid #d5dade;
+  display:flex;justify-content:space-between;gap:20px;
+  color:#888;font-size:8px;
+}
+.footer strong{color:#222}
+.sidebar-overlay{display:none}
+
+@media(max-width:1100px){
+  .grid{grid-template-columns:repeat(2,1fr)}
+  .metrics{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:850px){
+  .sidebar{transform:translateX(-100%);transition:.25s}
+  .sidebar.open{transform:translateX(0)}
+  .sidebar-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:900}
+  .sidebar-overlay.show{display:block}
+  .main{margin-left:0}
+  .menu-btn{display:block}
+  .topbar{padding:0 18px}
+  .control{display:none}
+  .hero{flex-direction:column;align-items:flex-start;padding:30px 26px}
+  .hero-meta{width:100%;padding:18px 0 0;border-left:0;border-top:1px solid #393939}
+}
+@media(max-width:600px){
+  .content{width:calc(100% - 28px)}
+  .grid,.metrics{grid-template-columns:1fr}
+  .field.span2,.field.full{grid-column:auto}
+  .hero h2{font-size:25px}
+  .actions{flex-direction:column}
+  .btn{width:100%}
+  .footer{flex-direction:column}
+  .iso-row{grid-template-columns:1fr}
+  .iso-label{border-right:0;border-bottom:1px solid var(--line)}
+}
+@media print{
+  body{background:#fff}
+  .sidebar,.topbar,.actions,.metrics{display:none!important}
+  .main{margin-left:0}
+  .content{width:100%;margin:0}
+  .card,.hero{box-shadow:none}
+}
+</style>
+</head>
+
+<body>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<aside class="sidebar" id="sidebar">
+  <div class="brand">
+    <div class="brand-mark">N</div>
+    <div>
+      <div class="brand-name">NASER</div>
+      <div class="brand-sub">SRL</div>
+    </div>
+  </div>
+
+  <div class="side-label">SISTEMA DE GESTIÓN INTEGRADO</div>
+
+  <nav class="nav">
+    <a class="nav-link active" href="#datos"><span>01</span>Datos del informe</a>
+    <a class="nav-link" href="#documentacion"><span>02</span>Documentación</a>
+    <a class="nav-link" href="#resultados"><span>03</span>Resultados</a>
+    <a class="nav-link" href="#cierre"><span>04</span>Cierre</a>
+  </nav>
+
+  <div class="side-footer">
+    SGI / AUDITORÍAS
+    <strong>INFORME DE AUDITORÍA</strong>
+    PGSN04-F4 · Rev.02 · Sep.25
+  </div>
+</aside>
+
+<main class="main">
+<header class="topbar">
+  <div class="topbar-left">
+    <button class="menu-btn" id="menuBtn" type="button">☰</button>
+    <div>
+      <div class="crumb">NASER SRL / SGI / AUDITORÍAS</div>
+      <h1>Informe de Auditoría</h1>
+    </div>
+  </div>
+
+  <div style="display:flex;align-items:center;gap:14px">
+    <div class="finished" id="finishedBadge">✓ INFORME FINALIZADO</div>
+    <div class="control"><i></i> PGSN04-F4</div>
+  </div>
+</header>
+
+<div class="content">
+
+<section class="hero">
+  <div>
+    <div class="hero-tag">SISTEMA DE GESTIÓN INTEGRADO</div>
+    <h2>INFORME DE <span>AUDITORÍA</span></h2>
+    <p>
+      Registro formal de resultados de auditoría, incluyendo fortalezas,
+      no conformidades, observaciones y oportunidades de mejora.
+    </p>
+  </div>
+
+  <div class="hero-meta">
+    <small>CÓDIGO</small>
+    <strong>PGSN04-F4</strong>
+    <span>Rev.02 · Sep.25</span>
+  </div>
+</section>
+
+<div class="metrics">
+  <div class="metric green">
+    <small>FORTALEZAS</small>
+    <strong id="stFortalezas">0</strong>
+  </div>
+  <div class="metric red">
+    <small>NO CONFORMIDADES</small>
+    <strong id="stNC">0</strong>
+  </div>
+  <div class="metric warning">
+    <small>OBSERVACIONES</small>
+    <strong id="stObs">0</strong>
+  </div>
+  <div class="metric">
+    <small>OPORTUNIDADES DE MEJORA</small>
+    <strong id="stOM">0</strong>
+  </div>
+</div>
+
+<div class="msg" id="message"></div>
+
+<section class="card" id="datos">
+  <div class="card-head">
+    <div class="num">01</div>
+    <div>
+      <h3>Datos del informe</h3>
+      <p>Información general de la auditoría.</p>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="field">
+      <label class="req">Fecha de informe</label>
+      <input id="fechaInforme" type="date">
+    </div>
+
+    <div class="field">
+      <label class="req">Fecha de auditoría</label>
+      <input id="fechaAuditoria" type="date">
+    </div>
+
+    <div class="field span2">
+      <label class="req">Proceso</label>
+      <input id="proceso" placeholder="Proceso auditado">
+    </div>
+
+    <div class="field span2">
+      <label>Personal participante</label>
+      <input id="personalParticipante" placeholder="Nombre/s y apellido/s">
+    </div>
+
+    <div class="field span2">
+      <label class="req">Auditores</label>
+      <input id="auditores" placeholder="Auditor líder / equipo auditor">
+    </div>
+
+    <div class="field full">
+      <label class="req">Objetivo de auditoría</label>
+      <textarea id="objetivo" placeholder="Objetivo de la auditoría"></textarea>
+    </div>
+  </div>
+</section>
+
+<section class="card" id="documentacion">
+  <div class="card-head">
+    <div class="num">02</div>
+    <div>
+      <h3>Documentación de referencia</h3>
+      <p>Normas de referencia aplicables al informe.</p>
+    </div>
+  </div>
+
+  <div class="iso-box">
+    <div class="iso-row">
+      <div class="iso-label">Documentación de referencia:</div>
+      <div class="iso-list">
+        <label>
+          <input type="checkbox" id="iso9001" checked>
+          ISO 9001:2015
+        </label>
+        <label>
+          <input type="checkbox" id="iso14001" checked>
+          ISO 14001:2015
+        </label>
+        <label>
+          <input type="checkbox" id="iso45001" checked>
+          ISO 45001:2018
+        </label>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="card" id="resultados">
+  <div class="card-head">
+    <div class="num">03</div>
+    <div>
+      <h3>Resultados de auditoría</h3>
+      <p>Clasificación de los resultados según el formato original.</p>
+    </div>
+  </div>
+
+  <div class="results-wrap">
+    <div class="results-title">Resultados a auditoría</div>
+
+    <div class="result-section">
+      <div class="result-section-title">
+        Fortalezas (Correcto desempeño en el SG)
+      </div>
+      <textarea id="fortalezas" placeholder="Detalle las fortalezas detectadas..."></textarea>
+    </div>
+
+    <div class="result-section">
+      <div class="result-section-title">
+        No Conformidad (Incumplimiento de requisito normativo, procedimental, legal, etc.)
+      </div>
+      <textarea id="noConformidad" placeholder="Detalle las no conformidades detectadas..."></textarea>
+    </div>
+
+    <div class="result-section">
+      <div class="result-section-title">
+        Observación (Situación que debe analizarse para evitar una NC)
+      </div>
+      <textarea id="observacion" placeholder="Detalle las observaciones..."></textarea>
+    </div>
+
+    <div class="result-section">
+      <div class="result-section-title">
+        Oportunidad de mejora (Situación que se puede analizar para encontrar un beneficio)
+      </div>
+      <textarea id="oportunidadMejora" placeholder="Detalle las oportunidades de mejora..."></textarea>
+    </div>
+  </div>
+</section>
+
+<section class="card" id="cierre">
+  <div class="card-head">
+    <div class="num">04</div>
+    <div>
+      <h3>Cierre del informe</h3>
+      <p>Agradecimiento y responsables del cierre.</p>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="field full">
+      <label>Agradecimiento</label>
+      <textarea id="agradecimiento" placeholder="Agradecimiento al personal participante..."></textarea>
+    </div>
+
+    <div class="field span2">
+      <label>Personal Participante</label>
+      <input id="responsableParticipante" placeholder="Nombre y apellido">
+    </div>
+
+    <div class="field span2">
+      <label class="req">Auditor Líder</label>
+      <input id="auditorLider" placeholder="Nombre y apellido">
+    </div>
+  </div>
+</section>
+
+<div class="actions">
+  <button class="btn btn-light" type="button" id="clearBtn">LIMPIAR</button>
+  <button class="btn btn-light" type="button" onclick="window.print()">IMPRIMIR / PDF</button>
+  <button class="btn btn-dark" type="button" id="saveBtn">GUARDAR PROGRESO</button>
+  <button class="btn btn-green" type="button" id="finishBtn">FINALIZAR INFORME</button>
+</div>
+
+<footer class="footer">
+  <strong>NASER SRL</strong>
+  <span>Sistema de Gestión Integrado</span>
+  <span>PGSN04-F4 · Rev.02 · Sep.25</span>
+</footer>
+
+</div>
+</main>
+
+<script>
+const STORAGE_KEY = "NASER_PGSN04_F4_REV02";
+
+function value(id){
+  return document.getElementById(id)?.value?.trim() || "";
+}
+
+function contarLineas(texto){
+  if(!texto.trim()) return 0;
+
+  return texto
+    .split(/\n+/)
+    .map(x=>x.trim())
+    .filter(Boolean)
+    .length;
+}
+
+function actualizarContadores(){
+  document.getElementById("stFortalezas").textContent =
+    contarLineas(value("fortalezas"));
+
+  document.getElementById("stNC").textContent =
+    contarLineas(value("noConformidad"));
+
+  document.getElementById("stObs").textContent =
+    contarLineas(value("observacion"));
+
+  document.getElementById("stOM").textContent =
+    contarLineas(value("oportunidadMejora"));
+}
+
+function collect(){
+  return {
+    codigo:"PGSN04-F4",
+    revision:"Rev.02",
+    fechaRevision:"Sep.25",
+
+    fechaInforme:value("fechaInforme"),
+    fechaAuditoria:value("fechaAuditoria"),
+    proceso:value("proceso"),
+    personalParticipante:value("personalParticipante"),
+    auditores:value("auditores"),
+    objetivo:value("objetivo"),
+
+    iso9001:document.getElementById("iso9001").checked,
+    iso14001:document.getElementById("iso14001").checked,
+    iso45001:document.getElementById("iso45001").checked,
+
+    fortalezas:value("fortalezas"),
+    noConformidad:value("noConformidad"),
+    observacion:value("observacion"),
+    oportunidadMejora:value("oportunidadMejora"),
+
+    agradecimiento:value("agradecimiento"),
+    responsableParticipante:value("responsableParticipante"),
+    auditorLider:value("auditorLider"),
+
+    finalizado:document.getElementById("finishedBadge").classList.contains("show")
+  };
+}
+
+function guardar(mostrar=true){
+  localStorage.setItem(STORAGE_KEY,JSON.stringify(collect()));
+
+  if(mostrar){
+    mensaje("Informe de Auditoría guardado correctamente.","ok");
+  }
+}
+
+function restore(data){
+  if(!data) return;
+
+  const ids = [
+    "fechaInforme","fechaAuditoria","proceso","personalParticipante",
+    "auditores","objetivo","fortalezas","noConformidad",
+    "observacion","oportunidadMejora","agradecimiento",
+    "responsableParticipante","auditorLider"
+  ];
+
+  ids.forEach(id=>{
+    if(data[id] !== undefined){
+      document.getElementById(id).value = data[id] || "";
+    }
+  });
+
+  if(data.iso9001 !== undefined)
+    document.getElementById("iso9001").checked = data.iso9001;
+
+  if(data.iso14001 !== undefined)
+    document.getElementById("iso14001").checked = data.iso14001;
+
+  if(data.iso45001 !== undefined)
+    document.getElementById("iso45001").checked = data.iso45001;
+
+  if(data.finalizado){
+    document.getElementById("finishedBadge").classList.add("show");
+  }
+
+  actualizarContadores();
+}
+
+function mensaje(texto,tipo="ok"){
+  const box = document.getElementById("message");
+  box.className = "msg " + tipo;
+  box.textContent = texto;
+  box.scrollIntoView({behavior:"smooth",block:"center"});
+}
+
+let timer;
+function autoGuardar(){
+  clearTimeout(timer);
+  timer=setTimeout(()=>{
+    actualizarContadores();
+    guardar(false);
+  },300);
+}
+
+function validar(){
+  const requeridos = [
+    ["fechaInforme","Debe completar la fecha de informe."],
+    ["fechaAuditoria","Debe completar la fecha de auditoría."],
+    ["proceso","Debe completar el proceso."],
+    ["auditores","Debe completar los auditores."],
+    ["objetivo","Debe completar el objetivo de auditoría."],
+    ["auditorLider","Debe completar el Auditor Líder."]
+  ];
+
+  for(const [id,texto] of requeridos){
+    if(!value(id)){
+      mensaje(texto,"err");
+      document.getElementById(id).focus();
+      return false;
+    }
+  }
+
+  if(
+    !document.getElementById("iso9001").checked &&
+    !document.getElementById("iso14001").checked &&
+    !document.getElementById("iso45001").checked
+  ){
+    mensaje("Debe seleccionar al menos una documentación de referencia.","err");
+    return false;
+  }
+
+  return true;
+}
+
+function finalizar(){
+  if(!validar()) return;
+
+  document.getElementById("finishedBadge").classList.add("show");
+  guardar(false);
+
+  mensaje("Informe de Auditoría finalizado correctamente.","ok");
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function limpiar(){
+  if(!confirm("¿Seguro que desea limpiar todo el Informe de Auditoría?")) return;
+
+  document.querySelectorAll("input").forEach(el=>{
+    if(el.type==="checkbox"){
+      el.checked=true;
+    }else{
+      el.value="";
+    }
+  });
+
+  document.querySelectorAll("textarea").forEach(el=>el.value="");
+
+  document.getElementById("finishedBadge").classList.remove("show");
+  localStorage.removeItem(STORAGE_KEY);
+
+  colocarFechas();
+  actualizarContadores();
+
+  mensaje("Informe limpiado correctamente.","ok");
+}
+
+function colocarFechas(){
+  const d=new Date();
+  const y=d.getFullYear();
+  const m=String(d.getMonth()+1).padStart(2,"0");
+  const day=String(d.getDate()).padStart(2,"0");
+  const fecha=`${y}-${m}-${day}`;
+
+  if(!document.getElementById("fechaInforme").value){
+    document.getElementById("fechaInforme").value=fecha;
+  }
+}
+
+/* AUTOGUARDADO */
+document.addEventListener("input",autoGuardar);
+document.addEventListener("change",autoGuardar);
+
+/* BOTONES */
+document.getElementById("saveBtn").addEventListener("click",()=>guardar(true));
+document.getElementById("finishBtn").addEventListener("click",finalizar);
+document.getElementById("clearBtn").addEventListener("click",limpiar);
+
+/* MOBILE */
+const sidebar=document.getElementById("sidebar");
+const overlay=document.getElementById("sidebarOverlay");
+
+document.getElementById("menuBtn").addEventListener("click",()=>{
+  sidebar.classList.toggle("open");
+  overlay.classList.toggle("show");
+});
+
+overlay.addEventListener("click",()=>{
+  sidebar.classList.remove("open");
+  overlay.classList.remove("show");
+});
+
+/* NAV */
+const navLinks=[...document.querySelectorAll(".nav-link")];
+const sectionIds=["datos","documentacion","resultados","cierre"];
+
+const observer=new IntersectionObserver(entries=>{
+  entries.forEach(entry=>{
+    if(!entry.isIntersecting) return;
+
+    navLinks.forEach(x=>x.classList.remove("active"));
+
+    const active=document.querySelector(
+      `.nav-link[href="#${entry.target.id}"]`
+    );
+
+    if(active) active.classList.add("active");
+  });
+},{threshold:.2});
+
+sectionIds.forEach(id=>{
+  const el=document.getElementById(id);
+  if(el) observer.observe(el);
+});
+
+/* INIT */
+colocarFechas();
+
+const saved=localStorage.getItem(STORAGE_KEY);
+
+if(saved){
+  try{
+    restore(JSON.parse(saved));
+  }catch(e){
+    console.error("Error al restaurar:",e);
+    actualizarContadores();
+  }
+}else{
+  actualizarContadores();
+}
+</script>
+</body>
+</html>

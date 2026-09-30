@@ -1,0 +1,3578 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>PGSN04-F7 | Diagrama Causa-Efecto | NASER</title>
+
+<style>
+
+/* =========================================================
+   VARIABLES NASER
+========================================================= */
+
+:root{
+    --verde:#009b49;
+    --verde-oscuro:#00783a;
+    --verde-claro:#eaf7f0;
+
+    --negro:#111111;
+    --negro-suave:#1b1b1b;
+
+    --blanco:#ffffff;
+
+    --gris-fondo:#f4f5f7;
+    --gris-borde:#d9dde3;
+    --gris-texto:#6b7280;
+
+    --rojo:#dc3545;
+    --rojo-claro:#fff0f1;
+
+    --amarillo:#d99b18;
+    --amarillo-claro:#fff7e3;
+
+    --sombra:0 5px 18px rgba(0,0,0,.07);
+}
+
+
+/* =========================================================
+   RESET
+========================================================= */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    font-family:Arial, Helvetica, sans-serif;
+    background:var(--gris-fondo);
+    color:#222;
+}
+
+
+/* =========================================================
+   SIDEBAR
+========================================================= */
+
+.sidebar{
+    position:fixed;
+    top:0;
+    left:0;
+
+    width:255px;
+    height:100vh;
+
+    background:var(--negro);
+
+    color:white;
+
+    z-index:1000;
+
+    display:flex;
+    flex-direction:column;
+}
+
+
+/* =========================================================
+   LOGO
+========================================================= */
+
+.logo{
+    padding:30px 24px;
+
+    border-bottom:1px solid #303030;
+}
+
+.logo h1{
+    font-size:28px;
+
+    letter-spacing:2px;
+
+    font-weight:800;
+
+    color:white;
+}
+
+
+/* =========================================================
+   SIDEBAR
+========================================================= */
+
+.sidebar-title{
+    padding:24px 24px 10px;
+
+    color:#747474;
+
+    font-size:10px;
+
+    font-weight:bold;
+
+    letter-spacing:1px;
+}
+
+.nav-item{
+    display:flex;
+
+    align-items:center;
+
+    gap:13px;
+
+    padding:14px 22px;
+
+    color:#bbb;
+
+    text-decoration:none;
+
+    border-left:4px solid transparent;
+
+    transition:.2s;
+}
+
+.nav-item:hover,
+.nav-item.active{
+    color:white;
+
+    background:#191919;
+
+    border-left-color:var(--verde);
+}
+
+.nav-number{
+    color:var(--verde);
+
+    font-weight:bold;
+}
+
+
+/* =========================================================
+   MAIN
+========================================================= */
+
+.main{
+    margin-left:255px;
+
+    min-height:100vh;
+}
+
+
+/* =========================================================
+   TOPBAR
+========================================================= */
+
+.topbar{
+    min-height:70px;
+
+    background:white;
+
+    border-bottom:1px solid var(--gris-borde);
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    gap:20px;
+
+    padding:0 32px;
+
+    position:sticky;
+
+    top:0;
+
+    z-index:100;
+}
+
+.breadcrumb{
+    color:#666;
+
+    font-size:12px;
+}
+
+.topbar-right{
+    display:flex;
+
+    align-items:center;
+
+    gap:9px;
+}
+
+.document-code{
+    padding:8px 12px;
+
+    border-radius:6px;
+
+    background:var(--verde-claro);
+
+    color:var(--verde-oscuro);
+
+    font-size:11px;
+
+    font-weight:bold;
+}
+
+.status-badge{
+    padding:8px 12px;
+
+    border-radius:6px;
+
+    background:#f0f1f2;
+
+    color:#666;
+
+    font-size:11px;
+
+    font-weight:bold;
+}
+
+.status-badge.finalizado{
+    background:var(--verde-claro);
+
+    color:var(--verde-oscuro);
+}
+
+
+/* =========================================================
+   CONTENIDO
+========================================================= */
+
+.content{
+    width:100%;
+
+    max-width:1500px;
+
+    margin:auto;
+
+    padding:28px;
+}
+
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.hero{
+    position:relative;
+
+    overflow:hidden;
+
+    padding:32px 34px;
+
+    margin-bottom:24px;
+
+    border-radius:11px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #101010,
+            #202020
+        );
+
+    color:white;
+}
+
+.hero::after{
+    content:"";
+
+    position:absolute;
+
+    width:230px;
+
+    height:230px;
+
+    top:-90px;
+
+    right:-65px;
+
+    border-radius:50%;
+
+    background:rgba(0,155,73,.16);
+}
+
+.hero small{
+    color:var(--verde);
+
+    font-size:10px;
+
+    font-weight:bold;
+
+    letter-spacing:2px;
+}
+
+.hero h2{
+    margin-top:9px;
+
+    font-size:30px;
+}
+
+.hero p{
+    max-width:850px;
+
+    margin-top:11px;
+
+    color:#c9c9c9;
+
+    font-size:13px;
+
+    line-height:1.6;
+}
+
+
+/* =========================================================
+   DATOS GENERALES
+========================================================= */
+
+.general-grid{
+    display:grid;
+
+    grid-template-columns:repeat(4,1fr);
+
+    gap:12px;
+
+    margin-bottom:24px;
+}
+
+.general-item{
+    background:white;
+
+    padding:15px;
+
+    border:1px solid var(--gris-borde);
+
+    border-radius:8px;
+
+    box-shadow:var(--sombra);
+}
+
+.general-item label{
+    display:block;
+
+    margin-bottom:7px;
+
+    color:#777;
+
+    font-size:10px;
+
+    font-weight:bold;
+
+    text-transform:uppercase;
+}
+
+.general-item input{
+    width:100%;
+
+    padding:9px 10px;
+
+    border:1px solid var(--gris-borde);
+
+    border-radius:5px;
+
+    outline:none;
+
+    font-size:12px;
+}
+
+.general-item input:focus{
+    border-color:var(--verde);
+
+    box-shadow:0 0 0 2px rgba(0,155,73,.08);
+}
+
+
+/* =========================================================
+   CARDS
+========================================================= */
+
+.card{
+    background:white;
+
+    border:1px solid var(--gris-borde);
+
+    border-radius:11px;
+
+    box-shadow:var(--sombra);
+
+    margin-bottom:26px;
+
+    overflow:hidden;
+}
+
+.card-head{
+    display:flex;
+
+    align-items:center;
+
+    gap:13px;
+
+    padding:19px 22px;
+
+    border-bottom:1px solid var(--gris-borde);
+}
+
+.card-number{
+    width:40px;
+
+    height:40px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    flex:none;
+
+    border-radius:7px;
+
+    background:#151515;
+
+    color:var(--verde);
+
+    font-weight:bold;
+}
+
+.card-title h3{
+    font-size:17px;
+}
+
+.card-title p{
+    margin-top:4px;
+
+    color:#777;
+
+    font-size:12px;
+}
+
+.card-body{
+    padding:22px;
+}
+
+
+/* =========================================================
+   INFO
+========================================================= */
+
+.info-box{
+    margin-bottom:20px;
+
+    padding:15px 17px;
+
+    border:1px solid var(--gris-borde);
+
+    border-left:4px solid var(--verde);
+
+    border-radius:7px;
+
+    background:#fafafa;
+
+    color:#555;
+
+    font-size:12px;
+
+    line-height:1.6;
+}
+
+.info-box strong{
+    color:var(--verde-oscuro);
+}
+
+
+/* =========================================================
+   DIAGRAMA
+========================================================= */
+
+.diagram-wrapper{
+    width:100%;
+
+    border:1px solid var(--gris-borde);
+
+    border-radius:9px;
+
+    background:#fafafa;
+
+    padding:20px;
+}
+
+
+/* =========================================================
+   GRILLA DE CAUSAS
+========================================================= */
+
+.cause-grid{
+    display:grid;
+
+    grid-template-columns:
+        repeat(3,minmax(220px,1fr));
+
+    gap:18px;
+}
+
+
+/* =========================================================
+   GRUPOS
+========================================================= */
+
+.cause-group{
+    min-width:0;
+
+    background:white;
+
+    border:1px solid var(--gris-borde);
+
+    border-radius:8px;
+
+    overflow:hidden;
+}
+
+.cause-group-header{
+    position:relative;
+
+    padding:11px;
+
+    background:#171717;
+
+    border-bottom:3px solid var(--verde);
+}
+
+.category-title{
+    width:100%;
+
+    border:none;
+
+    outline:none;
+
+    background:transparent;
+
+    color:white;
+
+    text-align:center;
+
+    font-size:13px;
+
+    font-weight:bold;
+}
+
+.category-title:focus{
+    color:#50d287;
+}
+
+
+/* =========================================================
+   CAUSAS
+========================================================= */
+
+.causes-container{
+    display:flex;
+
+    flex-direction:column;
+
+    gap:7px;
+
+    padding:10px;
+
+    min-height:96px;
+
+    max-height:235px;
+
+    overflow-y:auto;
+}
+
+.cause-row{
+    display:grid;
+
+    grid-template-columns:1fr 30px;
+
+    gap:6px;
+
+    align-items:center;
+}
+
+.cause-input{
+    width:100%;
+
+    padding:8px 9px;
+
+    border:1px solid var(--gris-borde);
+
+    border-radius:5px;
+
+    background:#fff;
+
+    outline:none;
+
+    font-size:12px;
+
+    transition:.2s;
+}
+
+.cause-input:focus{
+    border-color:var(--verde);
+
+    box-shadow:0 0 0 2px rgba(0,155,73,.08);
+}
+
+.delete-cause{
+    width:30px;
+
+    height:30px;
+
+    border:none;
+
+    border-radius:5px;
+
+    background:var(--rojo-claro);
+
+    color:#c7242d;
+
+    font-size:17px;
+
+    font-weight:bold;
+
+    cursor:pointer;
+}
+
+.delete-cause:hover{
+    color:white;
+
+    background:var(--rojo);
+}
+
+.add-cause-box{
+    padding:0 10px 10px;
+}
+
+.add-cause{
+    width:100%;
+
+    padding:8px;
+
+    border:1px dashed var(--verde);
+
+    border-radius:5px;
+
+    background:var(--verde-claro);
+
+    color:var(--verde-oscuro);
+
+    font-size:10px;
+
+    font-weight:bold;
+
+    cursor:pointer;
+}
+
+.add-cause:hover{
+    background:#dff3e8;
+}
+
+
+/* =========================================================
+   ESPINA CENTRAL
+========================================================= */
+
+.effect-row{
+    display:grid;
+
+    grid-template-columns:1fr 290px;
+
+    align-items:center;
+
+    gap:0;
+
+    margin:22px 0;
+}
+
+.spine{
+    display:flex;
+
+    align-items:center;
+
+    width:100%;
+}
+
+.spine-line{
+    flex:1;
+
+    height:6px;
+
+    background:var(--verde);
+}
+
+.spine-arrow{
+    width:0;
+
+    height:0;
+
+    border-top:14px solid transparent;
+
+    border-bottom:14px solid transparent;
+
+    border-left:25px solid var(--verde);
+}
+
+
+/* =========================================================
+   NO CONFORMIDAD
+========================================================= */
+
+.effect-box{
+    margin-left:14px;
+
+    padding:12px;
+
+    background:white;
+
+    border:2px solid var(--verde);
+
+    border-radius:7px;
+}
+
+.effect-box label{
+    display:block;
+
+    margin-bottom:7px;
+
+    text-align:center;
+
+    color:var(--verde-oscuro);
+
+    font-size:11px;
+
+    font-weight:bold;
+}
+
+.effect-box textarea{
+    width:100%;
+
+    min-height:80px;
+
+    padding:8px;
+
+    resize:vertical;
+
+    border:1px solid var(--gris-borde);
+
+    border-radius:5px;
+
+    outline:none;
+
+    font-family:inherit;
+
+    font-size:12px;
+}
+
+.effect-box textarea:focus{
+    border-color:var(--verde);
+}
+
+
+/* =========================================================
+   PLAN DE ACCIÓN
+========================================================= */
+
+.table-wrapper{
+    width:100%;
+
+    overflow-x:auto;
+
+    border:1px solid var(--gris-borde);
+
+    border-radius:8px;
+}
+
+table{
+    width:100%;
+
+    min-width:1050px;
+
+    border-collapse:collapse;
+}
+
+thead{
+    color:white;
+
+    background:#171717;
+}
+
+th{
+    padding:12px 10px;
+
+    border-right:1px solid #373737;
+
+    font-size:11px;
+
+    text-align:left;
+}
+
+th:last-child{
+    border-right:none;
+}
+
+td{
+    padding:7px;
+
+    border-right:1px solid var(--gris-borde);
+
+    border-bottom:1px solid var(--gris-borde);
+
+    vertical-align:middle;
+}
+
+td:last-child{
+    border-right:none;
+}
+
+tbody tr:nth-child(even){
+    background:#f7f8f9;
+}
+
+.table-input,
+.table-textarea{
+    width:100%;
+
+    padding:9px;
+
+    border:1px solid transparent;
+
+    border-radius:5px;
+
+    background:transparent;
+
+    outline:none;
+
+    font-family:inherit;
+
+    font-size:12px;
+}
+
+.table-textarea{
+    min-height:55px;
+
+    resize:vertical;
+}
+
+.table-input:focus,
+.table-textarea:focus{
+    background:white;
+
+    border-color:var(--verde);
+
+    box-shadow:0 0 0 2px rgba(0,155,73,.08);
+}
+
+.delete-action{
+    width:32px;
+
+    height:32px;
+
+    border:none;
+
+    border-radius:5px;
+
+    background:var(--rojo-claro);
+
+    color:#c7242d;
+
+    cursor:pointer;
+
+    font-size:18px;
+
+    font-weight:bold;
+}
+
+.delete-action:hover{
+    background:var(--rojo);
+
+    color:white;
+}
+
+
+/* =========================================================
+   BOTONES
+========================================================= */
+
+.actions{
+    display:flex;
+
+    flex-wrap:wrap;
+
+    gap:9px;
+
+    margin-top:18px;
+}
+
+.btn{
+    padding:11px 17px;
+
+    border:none;
+
+    border-radius:6px;
+
+    font-size:11px;
+
+    font-weight:bold;
+
+    cursor:pointer;
+
+    transition:.2s;
+}
+
+.btn:hover{
+    transform:translateY(-1px);
+}
+
+.btn-green{
+    background:var(--verde);
+
+    color:white;
+}
+
+.btn-green:hover{
+    background:var(--verde-oscuro);
+}
+
+.btn-dark{
+    background:#171717;
+
+    color:white;
+}
+
+.btn-light{
+    background:white;
+
+    color:#333;
+
+    border:1px solid var(--gris-borde);
+}
+
+.btn-danger{
+    color:#c7242d;
+
+    background:var(--rojo-claro);
+
+    border:1px solid #efc0c4;
+}
+
+.btn-danger:hover{
+    color:white;
+
+    background:var(--rojo);
+}
+
+.btn-warning{
+    color:#835c00;
+
+    background:var(--amarillo-claro);
+
+    border:1px solid #efd59a;
+}
+
+
+/* =========================================================
+   MENSAJES
+========================================================= */
+
+.message{
+    display:none;
+
+    margin-top:15px;
+
+    padding:11px 14px;
+
+    border-radius:6px;
+
+    font-size:12px;
+
+    font-weight:bold;
+}
+
+.message.success{
+    color:var(--verde-oscuro);
+
+    background:var(--verde-claro);
+
+    border:1px solid #bbe3cc;
+}
+
+.message.error{
+    color:#aa1c24;
+
+    background:var(--rojo-claro);
+
+    border:1px solid #f0bcc1;
+}
+
+
+/* =========================================================
+   BLOQUEO
+========================================================= */
+
+.locked input,
+.locked textarea,
+.locked button.add-cause,
+.locked button.delete-cause,
+.locked button.delete-action{
+    pointer-events:none;
+}
+
+.locked input,
+.locked textarea{
+    opacity:.75;
+}
+
+.locked .add-cause,
+.locked .delete-cause,
+.locked .delete-action{
+    opacity:.35;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media(max-width:1050px){
+
+    .sidebar{
+        width:80px;
+    }
+
+    .logo{
+        padding:26px 12px;
+    }
+
+    .logo h1{
+        font-size:15px;
+        text-align:center;
+    }
+
+    .sidebar-title,
+    .nav-item span:not(.nav-number){
+        display:none;
+    }
+
+    .nav-item{
+        justify-content:center;
+
+        padding:15px;
+    }
+
+    .main{
+        margin-left:80px;
+    }
+
+    .general-grid{
+        grid-template-columns:
+            repeat(2,1fr);
+    }
+
+    .cause-grid{
+        grid-template-columns:
+            repeat(2,1fr);
+    }
+
+}
+
+
+@media(max-width:700px){
+
+    .sidebar{
+        display:none;
+    }
+
+    .main{
+        margin-left:0;
+    }
+
+    .content{
+        padding:15px;
+    }
+
+    .topbar{
+        padding:0 15px;
+    }
+
+    .document-code{
+        display:none;
+    }
+
+    .hero{
+        padding:25px 21px;
+    }
+
+    .hero h2{
+        font-size:24px;
+    }
+
+    .general-grid{
+        grid-template-columns:1fr;
+    }
+
+    .cause-grid{
+        grid-template-columns:1fr;
+    }
+
+    .effect-row{
+        grid-template-columns:1fr;
+
+        gap:15px;
+    }
+
+    .spine{
+        display:none;
+    }
+
+    .effect-box{
+        margin-left:0;
+    }
+
+}
+
+
+/* =========================================================
+   IMPRESIÓN
+========================================================= */
+
+@media print{
+
+    body{
+        background:white;
+    }
+
+    .sidebar,
+    .topbar,
+    .actions,
+    .delete-cause,
+    .delete-action,
+    .add-cause{
+        display:none !important;
+    }
+
+    .main{
+        margin-left:0;
+    }
+
+    .content{
+        max-width:none;
+
+        padding:10px;
+    }
+
+    .card{
+        box-shadow:none;
+
+        break-inside:avoid;
+    }
+
+    .cause-grid{
+        grid-template-columns:
+            repeat(3,1fr);
+    }
+
+    .causes-container{
+        max-height:none;
+
+        overflow:visible;
+    }
+
+    table{
+        min-width:0;
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================================================
+     SIDEBAR
+========================================================= -->
+
+<aside class="sidebar">
+
+    <div class="logo">
+
+        <h1>
+            NASER
+        </h1>
+
+    </div>
+
+
+    <div class="sidebar-title">
+        DOCUMENTO
+    </div>
+
+
+    <a
+        href="#diagrama"
+        class="nav-item active"
+    >
+
+        <span class="nav-number">
+            01
+        </span>
+
+        <span>
+            Causa - Efecto
+        </span>
+
+    </a>
+
+
+    <a
+        href="#plan"
+        class="nav-item"
+    >
+
+        <span class="nav-number">
+            02
+        </span>
+
+        <span>
+            Plan de acción
+        </span>
+
+    </a>
+
+
+    <a
+        href="#cierre"
+        class="nav-item"
+    >
+
+        <span class="nav-number">
+            03
+        </span>
+
+        <span>
+            Cierre
+        </span>
+
+    </a>
+
+</aside>
+
+
+
+<!-- =========================================================
+     MAIN
+========================================================= -->
+
+<main class="main" id="mainContent">
+
+
+<!-- =========================================================
+     TOPBAR
+========================================================= -->
+
+<header class="topbar">
+
+    <div class="breadcrumb">
+        NASER / No Conformidad / Diagrama Causa - Efecto
+    </div>
+
+
+    <div class="topbar-right">
+
+        <div
+            class="status-badge"
+            id="statusBadge"
+        >
+            EN EDICIÓN
+        </div>
+
+
+        <div class="document-code">
+            PGSN04-F7 · Rev.01 Sep.25
+        </div>
+
+    </div>
+
+</header>
+
+
+
+<div class="content">
+
+
+<!-- =========================================================
+     HERO
+========================================================= -->
+
+<section class="hero">
+
+    <small>
+        GESTIÓN DE NO CONFORMIDADES
+    </small>
+
+    <h2>
+        Diagrama Causa - Efecto
+    </h2>
+
+    <p>
+        Análisis de las causas que pueden dar origen a una
+        No Conformidad y definición del correspondiente Plan de acción.
+    </p>
+
+</section>
+
+
+
+<!-- =========================================================
+     DATOS GENERALES
+========================================================= -->
+
+<section class="general-grid">
+
+
+    <div class="general-item">
+
+        <label>
+            Fecha
+        </label>
+
+        <input
+            type="date"
+            id="fecha"
+        >
+
+    </div>
+
+
+    <div class="general-item">
+
+        <label>
+            Área / Sector
+        </label>
+
+        <input
+            type="text"
+            id="sector"
+            placeholder="Ej.: Slickline"
+        >
+
+    </div>
+
+
+    <div class="general-item">
+
+        <label>
+            Responsable del análisis
+        </label>
+
+        <input
+            type="text"
+            id="responsableAnalisis"
+            placeholder="Apellido y nombre"
+        >
+
+    </div>
+
+
+    <div class="general-item">
+
+        <label>
+            N° No Conformidad
+        </label>
+
+        <input
+            type="text"
+            id="numeroNC"
+            placeholder="Ej.: NC-001"
+        >
+
+    </div>
+
+
+</section>
+
+
+
+<!-- =========================================================
+     01 - DIAGRAMA
+========================================================= -->
+
+<section
+    class="card"
+    id="diagrama"
+>
+
+
+    <div class="card-head">
+
+        <div class="card-number">
+            01
+        </div>
+
+
+        <div class="card-title">
+
+            <h3>
+                Diagrama Causa - Efecto
+            </h3>
+
+            <p>
+                Identificación y análisis de posibles causas.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="card-body">
+
+
+        <div class="info-box">
+
+            Registre las posibles causas relacionadas con la
+            <strong>No Conformidad</strong>.
+
+            Puede agregar, editar y eliminar causas de forma independiente
+            en cada categoría.
+
+        </div>
+
+
+
+        <div class="diagram-wrapper">
+
+
+            <!-- =================================================
+                 SUPERIOR
+            ================================================== -->
+
+            <div class="cause-grid">
+
+
+                <!-- MATERIALES -->
+
+                <div
+                    class="cause-group"
+                    data-category="materiales"
+                >
+
+                    <div class="cause-group-header">
+
+                        <input
+                            type="text"
+                            class="category-title"
+                            value="Materiales"
+                        >
+
+                    </div>
+
+
+                    <div class="causes-container">
+                    </div>
+
+
+                    <div class="add-cause-box">
+
+                        <button
+                            type="button"
+                            class="add-cause"
+                            onclick="agregarCausa('materiales')"
+                        >
+                            + AGREGAR CAUSA
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- MANO DE OBRA -->
+
+                <div
+                    class="cause-group"
+                    data-category="mano"
+                >
+
+                    <div class="cause-group-header">
+
+                        <input
+                            type="text"
+                            class="category-title"
+                            value="Mano de obra"
+                        >
+
+                    </div>
+
+
+                    <div class="causes-container">
+                    </div>
+
+
+                    <div class="add-cause-box">
+
+                        <button
+                            type="button"
+                            class="add-cause"
+                            onclick="agregarCausa('mano')"
+                        >
+                            + AGREGAR CAUSA
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- MÉTODO -->
+
+                <div
+                    class="cause-group"
+                    data-category="metodo"
+                >
+
+                    <div class="cause-group-header">
+
+                        <input
+                            type="text"
+                            class="category-title"
+                            value="Método"
+                        >
+
+                    </div>
+
+
+                    <div class="causes-container">
+                    </div>
+
+
+                    <div class="add-cause-box">
+
+                        <button
+                            type="button"
+                            class="add-cause"
+                            onclick="agregarCausa('metodo')"
+                        >
+                            + AGREGAR CAUSA
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 EFECTO
+            ================================================== -->
+
+            <div class="effect-row">
+
+
+                <div class="spine">
+
+                    <div class="spine-line">
+                    </div>
+
+                    <div class="spine-arrow">
+                    </div>
+
+                </div>
+
+
+                <div class="effect-box">
+
+                    <label>
+                        NO CONFORMIDAD
+                    </label>
+
+
+                    <textarea
+                        id="noConformidad"
+                        placeholder="Describa la No Conformidad..."
+                    ></textarea>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 INFERIOR
+            ================================================== -->
+
+            <div class="cause-grid">
+
+
+                <!-- MEDIO AMBIENTE -->
+
+                <div
+                    class="cause-group"
+                    data-category="ambiente"
+                >
+
+                    <div class="cause-group-header">
+
+                        <input
+                            type="text"
+                            class="category-title"
+                            value="Medio Ambiente"
+                        >
+
+                    </div>
+
+
+                    <div class="causes-container">
+                    </div>
+
+
+                    <div class="add-cause-box">
+
+                        <button
+                            type="button"
+                            class="add-cause"
+                            onclick="agregarCausa('ambiente')"
+                        >
+                            + AGREGAR CAUSA
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- MÁQUINAS -->
+
+                <div
+                    class="cause-group"
+                    data-category="maquinas"
+                >
+
+                    <div class="cause-group-header">
+
+                        <input
+                            type="text"
+                            class="category-title"
+                            value="Máquinas"
+                        >
+
+                    </div>
+
+
+                    <div class="causes-container">
+                    </div>
+
+
+                    <div class="add-cause-box">
+
+                        <button
+                            type="button"
+                            class="add-cause"
+                            onclick="agregarCausa('maquinas')"
+                        >
+                            + AGREGAR CAUSA
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- OTROS -->
+
+                <div
+                    class="cause-group"
+                    data-category="otros"
+                >
+
+                    <div class="cause-group-header">
+
+                        <input
+                            type="text"
+                            class="category-title"
+                            value="Otros"
+                        >
+
+                    </div>
+
+
+                    <div class="causes-container">
+                    </div>
+
+
+                    <div class="add-cause-box">
+
+                        <button
+                            type="button"
+                            class="add-cause"
+                            onclick="agregarCausa('otros')"
+                        >
+                            + AGREGAR CAUSA
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+
+        <div class="actions">
+
+
+            <button
+                type="button"
+                class="btn btn-dark"
+                onclick="guardarFormulario(true)"
+            >
+                GUARDAR
+            </button>
+
+
+            <button
+                type="button"
+                class="btn btn-danger"
+                onclick="limpiarDiagrama()"
+            >
+                LIMPIAR DIAGRAMA
+            </button>
+
+
+        </div>
+
+
+        <div
+            class="message success"
+            id="mensajeDiagrama"
+        >
+            ✓ Diagrama guardado correctamente.
+        </div>
+
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     02 - PLAN DE ACCIÓN
+========================================================= -->
+
+<section
+    class="card"
+    id="plan"
+>
+
+
+    <div class="card-head">
+
+        <div class="card-number">
+            02
+        </div>
+
+
+        <div class="card-title">
+
+            <h3>
+                Plan de acción
+            </h3>
+
+            <p>
+                Registro y seguimiento de acciones correctivas.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="card-body">
+
+
+        <div class="info-box">
+
+            Registre las acciones necesarias para eliminar
+            las causas identificadas.
+
+            Cada acción deberá indicar responsable y fecha prevista
+            antes de finalizar el formulario.
+
+        </div>
+
+
+
+        <div class="table-wrapper">
+
+
+            <table>
+
+
+                <thead>
+
+                    <tr>
+
+                        <th style="width:25%;">
+                            Acción
+                        </th>
+
+                        <th style="width:14%;">
+                            Fecha prevista
+                        </th>
+
+                        <th style="width:18%;">
+                            Responsable
+                        </th>
+
+                        <th style="width:25%;">
+                            Comentarios
+                        </th>
+
+                        <th style="width:12%;">
+                            Elimina causa N°
+                        </th>
+
+                        <th style="width:55px;">
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="tablaAcciones">
+                </tbody>
+
+
+            </table>
+
+
+        </div>
+
+
+
+        <div class="actions">
+
+
+            <button
+                type="button"
+                class="btn btn-green"
+                onclick="agregarAccion()"
+            >
+                + AGREGAR ACCIÓN
+            </button>
+
+
+            <button
+                type="button"
+                class="btn btn-dark"
+                onclick="guardarFormulario(true)"
+            >
+                GUARDAR
+            </button>
+
+
+            <button
+                type="button"
+                class="btn btn-light"
+                onclick="window.print()"
+            >
+                IMPRIMIR / PDF
+            </button>
+
+
+            <button
+                type="button"
+                class="btn btn-danger"
+                onclick="limpiarPlan()"
+            >
+                LIMPIAR
+            </button>
+
+
+        </div>
+
+
+        <div
+            class="message success"
+            id="mensajePlan"
+        >
+            ✓ Plan de acción guardado correctamente.
+        </div>
+
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     03 - CIERRE
+========================================================= -->
+
+<section
+    class="card"
+    id="cierre"
+>
+
+
+    <div class="card-head">
+
+        <div class="card-number">
+            03
+        </div>
+
+
+        <div class="card-title">
+
+            <h3>
+                Cierre del formulario
+            </h3>
+
+            <p>
+                Validación y finalización.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="card-body">
+
+
+        <div
+            class="message error"
+            id="mensajeError"
+        >
+        </div>
+
+
+        <div class="actions">
+
+
+            <button
+                type="button"
+                class="btn btn-dark"
+                onclick="guardarFormulario(true)"
+            >
+                GUARDAR
+            </button>
+
+
+            <button
+                type="button"
+                class="btn btn-green"
+                id="btnFinalizar"
+                onclick="finalizarFormulario()"
+            >
+                FINALIZAR FORMULARIO
+            </button>
+
+
+            <button
+                type="button"
+                class="btn btn-warning"
+                id="btnEditar"
+                onclick="habilitarEdicion()"
+                style="display:none;"
+            >
+                HABILITAR EDICIÓN
+            </button>
+
+
+            <button
+                type="button"
+                class="btn btn-light"
+                onclick="window.print()"
+            >
+                IMPRIMIR / PDF
+            </button>
+
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+</div>
+
+</main>
+
+
+
+<script>
+
+/* =========================================================
+   CONFIGURACIÓN
+========================================================= */
+
+const STORAGE_KEY =
+    "naser_pgsn04_f7_causa_efecto";
+
+
+const categoriasIniciales = {
+
+    materiales:{
+        titulo:"Materiales",
+        causas:["",""]
+    },
+
+    mano:{
+        titulo:"Mano de obra",
+        causas:["",""]
+    },
+
+    metodo:{
+        titulo:"Método",
+        causas:["",""]
+    },
+
+    ambiente:{
+        titulo:"Medio Ambiente",
+        causas:["",""]
+    },
+
+    maquinas:{
+        titulo:"Máquinas",
+        causas:["",""]
+    },
+
+    otros:{
+        titulo:"Otros",
+        causas:["",""]
+    }
+
+};
+
+
+let datos =
+    crearDatosIniciales();
+
+
+/* =========================================================
+   DATOS INICIALES
+========================================================= */
+
+function crearDatosIniciales(){
+
+    return {
+
+        generales:{
+            fecha:"",
+            sector:"",
+            responsable:"",
+            numeroNC:""
+        },
+
+        noConformidad:"",
+
+        categorias:
+            JSON.parse(
+                JSON.stringify(
+                    categoriasIniciales
+                )
+            ),
+
+        acciones:[
+            crearAccionVacia(),
+            crearAccionVacia(),
+            crearAccionVacia()
+        ],
+
+        finalizado:false
+
+    };
+
+}
+
+
+function crearAccionVacia(){
+
+    return {
+
+        accion:"",
+        fecha:"",
+        responsable:"",
+        comentarios:"",
+        causa:""
+
+    };
+
+}
+
+
+/* =========================================================
+   CARGAR
+========================================================= */
+
+function cargarFormulario(){
+
+    const guardado =
+        localStorage.getItem(
+            STORAGE_KEY
+        );
+
+
+    if(guardado){
+
+        try{
+
+            const parsed =
+                JSON.parse(
+                    guardado
+                );
+
+
+            datos = {
+                ...crearDatosIniciales(),
+                ...parsed
+            };
+
+
+            datos.generales = {
+                ...crearDatosIniciales().generales,
+                ...(parsed.generales || {})
+            };
+
+
+            const categoriasBase =
+                crearDatosIniciales().categorias;
+
+
+            Object.keys(
+                categoriasBase
+            ).forEach(
+                categoria => {
+
+                    datos.categorias[categoria] = {
+                        ...categoriasBase[categoria],
+                        ...(
+                            parsed.categorias &&
+                            parsed.categorias[categoria]
+                            ? parsed.categorias[categoria]
+                            : {}
+                        )
+                    };
+
+                }
+            );
+
+        }
+        catch(error){
+
+            datos =
+                crearDatosIniciales();
+
+        }
+
+    }
+
+
+    if(
+        !Array.isArray(
+            datos.acciones
+        ) ||
+        datos.acciones.length === 0
+    ){
+
+        datos.acciones = [
+            crearAccionVacia()
+        ];
+
+    }
+
+
+    completarFormulario();
+
+    renderizarDiagrama();
+
+    renderizarAcciones();
+
+    actualizarEstadoFinalizado();
+
+}
+
+
+/* =========================================================
+   COMPLETAR CAMPOS
+========================================================= */
+
+function completarFormulario(){
+
+    document
+        .getElementById("fecha")
+        .value =
+            datos.generales.fecha || "";
+
+
+    document
+        .getElementById("sector")
+        .value =
+            datos.generales.sector || "";
+
+
+    document
+        .getElementById(
+            "responsableAnalisis"
+        )
+        .value =
+            datos.generales.responsable || "";
+
+
+    document
+        .getElementById("numeroNC")
+        .value =
+            datos.generales.numeroNC || "";
+
+
+    document
+        .getElementById(
+            "noConformidad"
+        )
+        .value =
+            datos.noConformidad || "";
+
+}
+
+
+/* =========================================================
+   RENDER DIAGRAMA
+========================================================= */
+
+function renderizarDiagrama(){
+
+    Object.keys(
+        categoriasIniciales
+    ).forEach(
+        categoria => {
+
+
+            const grupo =
+                document.querySelector(
+                    `[data-category="${categoria}"]`
+                );
+
+
+            if(!grupo){
+                return;
+            }
+
+
+            const titulo =
+                grupo.querySelector(
+                    ".category-title"
+                );
+
+
+            const contenedor =
+                grupo.querySelector(
+                    ".causes-container"
+                );
+
+
+            const catData =
+                datos.categorias[categoria];
+
+
+            titulo.value =
+                catData.titulo;
+
+
+            titulo.oninput =
+                function(){
+
+                    datos
+                        .categorias[categoria]
+                        .titulo =
+                            this.value;
+
+
+                    guardarFormulario();
+
+                };
+
+
+            contenedor.innerHTML =
+                "";
+
+
+            if(
+                !Array.isArray(
+                    catData.causas
+                ) ||
+                catData.causas.length === 0
+            ){
+
+                catData.causas =
+                    [""];
+
+            }
+
+
+            catData.causas.forEach(
+                (causa,index) => {
+
+
+                    const fila =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    fila.className =
+                        "cause-row";
+
+
+                    const input =
+                        document.createElement(
+                            "input"
+                        );
+
+
+                    input.type =
+                        "text";
+
+
+                    input.className =
+                        "cause-input";
+
+
+                    input.placeholder =
+                        `Causa ${index + 1}`;
+
+
+                    input.value =
+                        causa;
+
+
+                    input.addEventListener(
+                        "input",
+                        function(){
+
+                            datos
+                                .categorias[categoria]
+                                .causas[index] =
+                                    this.value;
+
+
+                            guardarFormulario();
+
+                        }
+                    );
+
+
+                    const boton =
+                        document.createElement(
+                            "button"
+                        );
+
+
+                    boton.type =
+                        "button";
+
+
+                    boton.className =
+                        "delete-cause";
+
+
+                    boton.textContent =
+                        "×";
+
+
+                    boton.title =
+                        "Eliminar causa";
+
+
+                    boton.onclick =
+                        function(){
+
+                            eliminarCausa(
+                                categoria,
+                                index
+                            );
+
+                        };
+
+
+                    fila.appendChild(
+                        input
+                    );
+
+
+                    fila.appendChild(
+                        boton
+                    );
+
+
+                    contenedor.appendChild(
+                        fila
+                    );
+
+                }
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   AGREGAR CAUSA
+========================================================= */
+
+function agregarCausa(categoria){
+
+    if(datos.finalizado){
+
+        mostrarError(
+            "El formulario está finalizado. Habilite la edición para realizar cambios."
+        );
+
+        return;
+
+    }
+
+
+    if(
+        !datos.categorias[categoria]
+    ){
+
+        return;
+
+    }
+
+
+    datos
+        .categorias[categoria]
+        .causas
+        .push("");
+
+
+    guardarFormulario();
+
+    renderizarDiagrama();
+
+
+    const grupo =
+        document.querySelector(
+            `[data-category="${categoria}"]`
+        );
+
+
+    const inputs =
+        grupo.querySelectorAll(
+            ".cause-input"
+        );
+
+
+    if(inputs.length){
+
+        inputs[
+            inputs.length - 1
+        ].focus();
+
+    }
+
+}
+
+
+/* =========================================================
+   ELIMINAR CAUSA
+========================================================= */
+
+function eliminarCausa(
+    categoria,
+    index
+){
+
+    if(datos.finalizado){
+
+        mostrarError(
+            "El formulario está finalizado."
+        );
+
+        return;
+
+    }
+
+
+    const causas =
+        datos
+            .categorias[categoria]
+            .causas;
+
+
+    if(
+        causas.length <= 1
+    ){
+
+        causas[0] =
+            "";
+
+    }
+    else{
+
+        const confirmar =
+            confirm(
+                "¿Desea eliminar esta causa?"
+            );
+
+
+        if(!confirmar){
+            return;
+        }
+
+
+        causas.splice(
+            index,
+            1
+        );
+
+    }
+
+
+    guardarFormulario();
+
+    renderizarDiagrama();
+
+}
+
+
+/* =========================================================
+   RENDER PLAN
+========================================================= */
+
+function renderizarAcciones(){
+
+    const tbody =
+        document.getElementById(
+            "tablaAcciones"
+        );
+
+
+    tbody.innerHTML =
+        "";
+
+
+    datos.acciones.forEach(
+        (item,index) => {
+
+
+            const fila =
+                document.createElement(
+                    "tr"
+                );
+
+
+            fila.innerHTML = `
+
+                <td>
+
+                    <textarea
+                        class="table-textarea"
+                        placeholder="Describa la acción"
+                    >${escaparTexto(item.accion)}</textarea>
+
+                </td>
+
+
+                <td>
+
+                    <input
+                        type="date"
+                        class="table-input"
+                        value="${escaparAtributo(item.fecha)}"
+                    >
+
+                </td>
+
+
+                <td>
+
+                    <input
+                        type="text"
+                        class="table-input"
+                        placeholder="Apellido y nombre"
+                        value="${escaparAtributo(item.responsable)}"
+                    >
+
+                </td>
+
+
+                <td>
+
+                    <textarea
+                        class="table-textarea"
+                        placeholder="Comentarios"
+                    >${escaparTexto(item.comentarios)}</textarea>
+
+                </td>
+
+
+                <td>
+
+                    <input
+                        type="text"
+                        class="table-input"
+                        placeholder="N°"
+                        value="${escaparAtributo(item.causa)}"
+                    >
+
+                </td>
+
+
+                <td>
+
+                    <button
+                        type="button"
+                        class="delete-action"
+                        title="Eliminar acción"
+                    >
+                        ×
+                    </button>
+
+                </td>
+
+            `;
+
+
+            const campos =
+                fila.querySelectorAll(
+                    ".table-input, .table-textarea"
+                );
+
+
+            campos[0].oninput =
+                function(){
+
+                    datos
+                        .acciones[index]
+                        .accion =
+                            this.value;
+
+
+                    guardarFormulario();
+
+                };
+
+
+            campos[1].oninput =
+                function(){
+
+                    datos
+                        .acciones[index]
+                        .fecha =
+                            this.value;
+
+
+                    guardarFormulario();
+
+                };
+
+
+            campos[2].oninput =
+                function(){
+
+                    datos
+                        .acciones[index]
+                        .responsable =
+                            this.value;
+
+
+                    guardarFormulario();
+
+                };
+
+
+            campos[3].oninput =
+                function(){
+
+                    datos
+                        .acciones[index]
+                        .comentarios =
+                            this.value;
+
+
+                    guardarFormulario();
+
+                };
+
+
+            campos[4].oninput =
+                function(){
+
+                    datos
+                        .acciones[index]
+                        .causa =
+                            this.value;
+
+
+                    guardarFormulario();
+
+                };
+
+
+            fila
+                .querySelector(
+                    ".delete-action"
+                )
+                .onclick =
+                function(){
+
+                    eliminarAccion(
+                        index
+                    );
+
+                };
+
+
+            tbody.appendChild(
+                fila
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   AGREGAR ACCIÓN
+========================================================= */
+
+function agregarAccion(){
+
+    if(datos.finalizado){
+
+        mostrarError(
+            "El formulario está finalizado."
+        );
+
+        return;
+
+    }
+
+
+    datos
+        .acciones
+        .push(
+            crearAccionVacia()
+        );
+
+
+    guardarFormulario();
+
+    renderizarAcciones();
+
+
+    const filas =
+        document.querySelectorAll(
+            "#tablaAcciones tr"
+        );
+
+
+    if(filas.length){
+
+        const ultima =
+            filas[
+                filas.length - 1
+            ];
+
+
+        const campo =
+            ultima.querySelector(
+                ".table-textarea"
+            );
+
+
+        if(campo){
+
+            campo.focus();
+
+        }
+
+    }
+
+}
+
+
+/* =========================================================
+   ELIMINAR ACCIÓN
+========================================================= */
+
+function eliminarAccion(index){
+
+    if(datos.finalizado){
+
+        mostrarError(
+            "El formulario está finalizado."
+        );
+
+        return;
+
+    }
+
+
+    const confirmar =
+        confirm(
+            "¿Desea eliminar esta acción?"
+        );
+
+
+    if(!confirmar){
+        return;
+    }
+
+
+    datos
+        .acciones
+        .splice(
+            index,
+            1
+        );
+
+
+    if(
+        datos.acciones.length === 0
+    ){
+
+        datos
+            .acciones
+            .push(
+                crearAccionVacia()
+            );
+
+    }
+
+
+    guardarFormulario();
+
+    renderizarAcciones();
+
+}
+
+
+/* =========================================================
+   LEER DATOS GENERALES
+========================================================= */
+
+function guardarGenerales(){
+
+    datos.generales.fecha =
+        document
+            .getElementById("fecha")
+            .value;
+
+
+    datos.generales.sector =
+        document
+            .getElementById("sector")
+            .value;
+
+
+    datos.generales.responsable =
+        document
+            .getElementById(
+                "responsableAnalisis"
+            )
+            .value;
+
+
+    datos.generales.numeroNC =
+        document
+            .getElementById(
+                "numeroNC"
+            )
+            .value;
+
+
+    datos.noConformidad =
+        document
+            .getElementById(
+                "noConformidad"
+            )
+            .value;
+
+}
+
+
+/* =========================================================
+   GUARDAR TODO
+========================================================= */
+
+function guardarFormulario(
+    mostrarMensaje = false
+){
+
+    guardarGenerales();
+
+
+    localStorage.setItem(
+
+        STORAGE_KEY,
+
+        JSON.stringify(
+            datos
+        )
+
+    );
+
+
+    if(mostrarMensaje){
+
+        mostrarExito();
+
+    }
+
+}
+
+
+/* =========================================================
+   VALIDAR
+========================================================= */
+
+function validarFormulario(){
+
+    guardarGenerales();
+
+
+    const errores =
+        [];
+
+
+/* =========================================================
+   CONDICIONAL: NO CONFORMIDAD
+========================================================= */
+
+    if(
+        datos
+            .noConformidad
+            .trim() === ""
+    ){
+
+        errores.push(
+            "Debe completar la descripción de la No Conformidad."
+        );
+
+    }
+
+
+/* =========================================================
+   CONDICIONAL: CAUSAS
+========================================================= */
+
+    let cantidadCausas =
+        0;
+
+
+    Object.values(
+        datos.categorias
+    ).forEach(
+        categoria => {
+
+
+            categoria.causas.forEach(
+                causa => {
+
+
+                    if(
+                        causa.trim() !== ""
+                    ){
+
+                        cantidadCausas++;
+
+                    }
+
+                }
+            );
+
+        }
+    );
+
+
+    if(
+        cantidadCausas === 0
+    ){
+
+        errores.push(
+            "Debe registrar al menos una causa."
+        );
+
+    }
+
+
+/* =========================================================
+   CONDICIONAL: ACCIONES
+========================================================= */
+
+    const accionesValidas =
+        datos
+            .acciones
+            .filter(
+                item =>
+                    item.accion.trim() !== ""
+            );
+
+
+    if(
+        accionesValidas.length === 0
+    ){
+
+        errores.push(
+            "Debe registrar al menos una acción."
+        );
+
+    }
+
+
+/* =========================================================
+   CONDICIONAL: RESPONSABLE / FECHA
+========================================================= */
+
+    datos
+        .acciones
+        .forEach(
+            (item,index) => {
+
+
+                if(
+                    item.accion.trim() !== ""
+                ){
+
+                    if(
+                        item.fecha.trim() === ""
+                    ){
+
+                        errores.push(
+                            `La acción ${index + 1} no tiene fecha prevista.`
+                        );
+
+                    }
+
+
+                    if(
+                        item.responsable.trim() === ""
+                    ){
+
+                        errores.push(
+                            `La acción ${index + 1} no tiene responsable.`
+                        );
+
+                    }
+
+                }
+
+            }
+        );
+
+
+    return errores;
+
+}
+
+
+/* =========================================================
+   FINALIZAR
+========================================================= */
+
+function finalizarFormulario(){
+
+    const errores =
+        validarFormulario();
+
+
+    if(
+        errores.length > 0
+    ){
+
+        mostrarError(
+            errores.join("<br>")
+        );
+
+        return;
+
+    }
+
+
+    const confirmar =
+        confirm(
+            "¿Confirma que desea finalizar el formulario? Los campos quedarán bloqueados."
+        );
+
+
+    if(!confirmar){
+        return;
+    }
+
+
+    datos.finalizado =
+        true;
+
+
+    guardarFormulario();
+
+
+    actualizarEstadoFinalizado();
+
+}
+
+
+/* =========================================================
+   HABILITAR EDICIÓN
+========================================================= */
+
+function habilitarEdicion(){
+
+    const confirmar =
+        confirm(
+            "¿Desea volver a habilitar la edición del formulario?"
+        );
+
+
+    if(!confirmar){
+        return;
+    }
+
+
+    datos.finalizado =
+        false;
+
+
+    guardarFormulario();
+
+
+    actualizarEstadoFinalizado();
+
+}
+
+
+/* =========================================================
+   BLOQUEAR / DESBLOQUEAR
+========================================================= */
+
+function actualizarEstadoFinalizado(){
+
+    const main =
+        document.getElementById(
+            "mainContent"
+        );
+
+
+    const badge =
+        document.getElementById(
+            "statusBadge"
+        );
+
+
+    const btnFinalizar =
+        document.getElementById(
+            "btnFinalizar"
+        );
+
+
+    const btnEditar =
+        document.getElementById(
+            "btnEditar"
+        );
+
+
+    if(datos.finalizado){
+
+        main.classList.add(
+            "locked"
+        );
+
+
+        badge.textContent =
+            "FINALIZADO";
+
+
+        badge.classList.add(
+            "finalizado"
+        );
+
+
+        btnFinalizar.style.display =
+            "none";
+
+
+        btnEditar.style.display =
+            "inline-block";
+
+
+        btnEditar.style.pointerEvents =
+            "auto";
+
+    }
+    else{
+
+        main.classList.remove(
+            "locked"
+        );
+
+
+        badge.textContent =
+            "EN EDICIÓN";
+
+
+        badge.classList.remove(
+            "finalizado"
+        );
+
+
+        btnFinalizar.style.display =
+            "inline-block";
+
+
+        btnEditar.style.display =
+            "none";
+
+    }
+
+}
+
+
+/* =========================================================
+   LIMPIAR DIAGRAMA
+========================================================= */
+
+function limpiarDiagrama(){
+
+    if(datos.finalizado){
+
+        mostrarError(
+            "El formulario está finalizado."
+        );
+
+        return;
+
+    }
+
+
+    const confirmar =
+        confirm(
+            "¿Desea limpiar el Diagrama Causa - Efecto?"
+        );
+
+
+    if(!confirmar){
+        return;
+    }
+
+
+    datos.categorias =
+        JSON.parse(
+            JSON.stringify(
+                categoriasIniciales
+            )
+        );
+
+
+    datos.noConformidad =
+        "";
+
+
+    document
+        .getElementById(
+            "noConformidad"
+        )
+        .value =
+            "";
+
+
+    guardarFormulario();
+
+    renderizarDiagrama();
+
+}
+
+
+/* =========================================================
+   LIMPIAR PLAN
+========================================================= */
+
+function limpiarPlan(){
+
+    if(datos.finalizado){
+
+        mostrarError(
+            "El formulario está finalizado."
+        );
+
+        return;
+
+    }
+
+
+    const confirmar =
+        confirm(
+            "¿Desea limpiar completamente el Plan de acción?"
+        );
+
+
+    if(!confirmar){
+        return;
+    }
+
+
+    datos.acciones = [
+
+        crearAccionVacia(),
+
+        crearAccionVacia(),
+
+        crearAccionVacia()
+
+    ];
+
+
+    guardarFormulario();
+
+    renderizarAcciones();
+
+}
+
+
+/* =========================================================
+   MENSAJES
+========================================================= */
+
+function mostrarExito(){
+
+    const mensajes = [
+
+        document.getElementById(
+            "mensajeDiagrama"
+        ),
+
+        document.getElementById(
+            "mensajePlan"
+        )
+
+    ];
+
+
+    mensajes.forEach(
+        mensaje => {
+
+            mensaje.style.display =
+                "block";
+
+        }
+    );
+
+
+    setTimeout(
+        function(){
+
+            mensajes.forEach(
+                mensaje => {
+
+                    mensaje.style.display =
+                        "none";
+
+                }
+            );
+
+        },
+
+        2200
+    );
+
+}
+
+
+/* =========================================================
+   ERROR
+========================================================= */
+
+function mostrarError(texto){
+
+    const mensaje =
+        document.getElementById(
+            "mensajeError"
+        );
+
+
+    mensaje.innerHTML =
+        "⚠ " + texto;
+
+
+    mensaje.style.display =
+        "block";
+
+
+    mensaje.scrollIntoView({
+
+        behavior:"smooth",
+
+        block:"center"
+
+    });
+
+
+    setTimeout(
+        function(){
+
+            mensaje.style.display =
+                "none";
+
+        },
+
+        6000
+    );
+
+}
+
+
+/* =========================================================
+   SEGURIDAD DE TEXTO
+========================================================= */
+
+function escaparTexto(valor){
+
+    if(
+        valor === null ||
+        valor === undefined
+    ){
+
+        return "";
+
+    }
+
+
+    return String(valor)
+
+        .replaceAll(
+            "&",
+            "&amp;"
+        )
+
+        .replaceAll(
+            "<",
+            "&lt;"
+        )
+
+        .replaceAll(
+            ">",
+            "&gt;"
+        );
+
+}
+
+
+function escaparAtributo(valor){
+
+    if(
+        valor === null ||
+        valor === undefined
+    ){
+
+        return "";
+
+    }
+
+
+    return String(valor)
+
+        .replaceAll(
+            "&",
+            "&amp;"
+        )
+
+        .replaceAll(
+            '"',
+            "&quot;"
+        )
+
+        .replaceAll(
+            "'",
+            "&#039;"
+        )
+
+        .replaceAll(
+            "<",
+            "&lt;"
+        )
+
+        .replaceAll(
+            ">",
+            "&gt;"
+        );
+
+}
+
+
+/* =========================================================
+   GUARDADO AUTOMÁTICO
+========================================================= */
+
+document.addEventListener(
+    "input",
+    function(event){
+
+        if(datos.finalizado){
+            return;
+        }
+
+
+        if(
+            event.target.id === "fecha" ||
+            event.target.id === "sector" ||
+            event.target.id === "responsableAnalisis" ||
+            event.target.id === "numeroNC" ||
+            event.target.id === "noConformidad"
+        ){
+
+            guardarFormulario();
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   INICIO
+========================================================= */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function(){
+
+        cargarFormulario();
+
+    }
+);
+
+</script>
+
+</body>
+</html>

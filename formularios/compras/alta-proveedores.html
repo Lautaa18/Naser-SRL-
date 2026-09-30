@@ -1,0 +1,2751 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>PGSN03-F3 | Alta de Proveedores</title>
+
+<style>
+
+/* ============================================================
+   NASER SRL
+   ALTA DE PROVEEDORES
+   PGSN03-F3
+============================================================ */
+
+:root{
+    --verde:#00a651;
+    --verde-hover:#008f46;
+    --negro:#101010;
+    --negro-2:#191919;
+    --gris-fondo:#f1f3f4;
+    --gris-borde:#d6dce1;
+    --gris-texto:#687078;
+    --blanco:#ffffff;
+    --rojo:#c91f2b;
+    --sidebar:280px;
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    font-family:Arial, Helvetica, sans-serif;
+    background:var(--gris-fondo);
+    color:#171717;
+}
+
+button,
+input,
+select,
+textarea{
+    font-family:inherit;
+}
+
+a{
+    text-decoration:none;
+    color:inherit;
+}
+
+
+/* ============================================================
+   SIDEBAR
+============================================================ */
+
+.sidebar{
+    position:fixed;
+    top:0;
+    left:0;
+    width:var(--sidebar);
+    height:100vh;
+    background:#0f0f0f;
+    color:white;
+    border-right:1px solid #292929;
+    display:flex;
+    flex-direction:column;
+    z-index:1000;
+}
+
+.sidebar-logo{
+    height:140px;
+    padding:34px 27px 25px;
+    border-bottom:1px solid #292929;
+}
+
+.sidebar-logo h1{
+    font-size:37px;
+    letter-spacing:2px;
+    font-weight:900;
+    line-height:1;
+}
+
+.sidebar-logo h1 span{
+    color:var(--verde);
+}
+
+.sidebar-logo p{
+    color:#999;
+    font-size:12px;
+    letter-spacing:1.4px;
+    margin-top:13px;
+    text-transform:uppercase;
+    line-height:1.2;
+}
+
+.sidebar-nav{
+    flex:1;
+    overflow-y:auto;
+    padding:25px 14px;
+}
+
+.sidebar-title{
+    font-size:11px;
+    letter-spacing:1.5px;
+    color:#6f6f6f;
+    font-weight:bold;
+    text-transform:uppercase;
+    margin:12px 15px;
+}
+
+.sidebar-link{
+    display:block;
+    padding:14px 16px;
+    margin-bottom:5px;
+    border-radius:7px;
+    color:#d1d1d1;
+    font-size:14px;
+    transition:.2s;
+}
+
+.sidebar-link:hover{
+    background:#1d1d1d;
+    color:white;
+}
+
+.sidebar-link.active{
+    background:var(--verde);
+    color:white;
+    font-weight:700;
+}
+
+.sidebar-footer{
+    padding:20px;
+    border-top:1px solid #2c2c2c;
+    color:#777;
+    font-size:11px;
+    line-height:1.4;
+}
+
+
+/* ============================================================
+   MAIN
+============================================================ */
+
+.main{
+    margin-left:var(--sidebar);
+    min-height:100vh;
+}
+
+
+/* ============================================================
+   TOP BAR
+============================================================ */
+
+.topbar{
+    height:78px;
+    background:white;
+    border-bottom:1px solid #d5dadd;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:0 30px 0 38px;
+    position:sticky;
+    top:0;
+    z-index:500;
+}
+
+.topbar h2{
+    font-size:18px;
+    margin-bottom:5px;
+}
+
+.topbar p{
+    color:#72808c;
+    font-size:12px;
+}
+
+.topbar-code{
+    text-align:right;
+}
+
+.topbar-code strong{
+    display:block;
+    color:var(--verde);
+    font-size:16px;
+}
+
+.topbar-code span{
+    display:block;
+    margin-top:5px;
+    font-size:11px;
+    color:#777;
+}
+
+.menu-mobile{
+    display:none;
+    width:42px;
+    height:42px;
+    background:#111;
+    color:white;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+    font-size:20px;
+}
+
+
+/* ============================================================
+   CONTENIDO
+============================================================ */
+
+.content{
+    padding:30px;
+    max-width:1600px;
+    margin:0 auto;
+}
+
+
+/* ============================================================
+   HERO
+============================================================ */
+
+.hero{
+    background:var(--negro);
+    border-radius:13px;
+    min-height:173px;
+    border-left:7px solid var(--verde);
+    color:white;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    padding:32px 32px;
+
+    margin-bottom:22px;
+
+    box-shadow:0 4px 15px rgba(0,0,0,.04);
+}
+
+.hero-label{
+    display:inline-block;
+    background:var(--verde);
+    padding:7px 13px;
+    border-radius:4px;
+    font-size:11px;
+    font-weight:800;
+    text-transform:uppercase;
+    margin-bottom:14px;
+}
+
+.hero h1{
+    font-size:30px;
+    margin-bottom:11px;
+}
+
+.hero p{
+    color:#c6c6c6;
+    font-size:13px;
+    line-height:1.6;
+    max-width:850px;
+}
+
+.hero-code{
+    flex-shrink:0;
+    min-width:195px;
+    background:#1c1c1c;
+    border:1px solid #333;
+    border-radius:9px;
+    text-align:center;
+    padding:20px;
+    margin-left:30px;
+}
+
+.hero-code strong{
+    font-size:20px;
+    display:block;
+}
+
+.hero-code span{
+    display:block;
+    color:#bdbdbd;
+    font-size:11px;
+    margin-top:9px;
+}
+
+
+/* ============================================================
+   PROGRESO
+============================================================ */
+
+.progress-card{
+    background:white;
+    border-radius:12px;
+    padding:21px 22px;
+    margin-bottom:22px;
+}
+
+.progress-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:12px;
+    font-size:13px;
+    font-weight:700;
+}
+
+.progress-value{
+    color:var(--verde);
+    font-size:16px;
+    font-weight:900;
+}
+
+.progress-track{
+    height:10px;
+    background:#e2e5e8;
+    border-radius:20px;
+    overflow:hidden;
+}
+
+.progress-bar{
+    height:100%;
+    width:0%;
+    background:var(--verde);
+    border-radius:20px;
+    transition:.3s ease;
+}
+
+
+/* ============================================================
+   FORMULARIO - SECCIONES
+============================================================ */
+
+.form-section{
+    background:white;
+    margin-bottom:22px;
+    border-radius:12px;
+    overflow:hidden;
+    box-shadow:0 3px 14px rgba(0,0,0,.035);
+}
+
+.section-header{
+    background:#101010;
+    color:white;
+    min-height:70px;
+    display:flex;
+    align-items:center;
+    gap:15px;
+    padding:15px 22px;
+}
+
+.section-number{
+    width:36px;
+    height:36px;
+    min-width:36px;
+    background:var(--verde);
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:900;
+    font-size:18px;
+}
+
+.section-header h2{
+    font-size:16px;
+    text-transform:uppercase;
+    letter-spacing:.2px;
+}
+
+.section-body{
+    padding:26px 25px;
+}
+
+
+/* ============================================================
+   CAMPOS
+============================================================ */
+
+.form-grid{
+    display:grid;
+    grid-template-columns:repeat(12,1fr);
+    gap:20px;
+}
+
+.field{
+    grid-column:span 4;
+}
+
+.field.col-3{
+    grid-column:span 3;
+}
+
+.field.col-4{
+    grid-column:span 4;
+}
+
+.field.col-6{
+    grid-column:span 6;
+}
+
+.field.col-8{
+    grid-column:span 8;
+}
+
+.field.col-12{
+    grid-column:span 12;
+}
+
+.field label{
+    display:block;
+    font-size:11px;
+    color:#515860;
+    font-weight:800;
+    margin-bottom:8px;
+    text-transform:uppercase;
+}
+
+.required{
+    color:var(--rojo);
+}
+
+.field input,
+.field select,
+.field textarea{
+    width:100%;
+    min-height:46px;
+    padding:11px 13px;
+
+    background:white;
+    border:1px solid #cfd6dc;
+    border-radius:6px;
+
+    color:#202020;
+    font-size:13px;
+
+    outline:none;
+
+    transition:.2s;
+}
+
+.field textarea{
+    resize:vertical;
+    min-height:90px;
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus{
+    border-color:var(--verde);
+    box-shadow:0 0 0 3px rgba(0,166,81,.10);
+}
+
+
+/* ============================================================
+   SUBSECCIONES
+============================================================ */
+
+.subsection{
+    border:1px solid #dce1e5;
+    border-radius:8px;
+    margin-bottom:18px;
+    overflow:hidden;
+}
+
+.subsection:last-child{
+    margin-bottom:0;
+}
+
+.subsection-title{
+    padding:13px 16px;
+    background:#f2f4f5;
+    border-bottom:1px solid #dde1e4;
+    font-size:12px;
+    font-weight:800;
+    text-transform:uppercase;
+}
+
+.subsection-content{
+    padding:18px;
+}
+
+
+/* ============================================================
+   OPCIONES TIPO X
+============================================================ */
+
+.options{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+}
+
+.option{
+    position:relative;
+}
+
+.option input{
+    position:absolute;
+    opacity:0;
+    pointer-events:none;
+}
+
+.option label{
+    min-height:42px;
+    padding:10px 14px;
+    background:white;
+    border:1px solid #ccd3d8;
+    border-radius:6px;
+
+    display:flex;
+    align-items:center;
+    gap:9px;
+
+    cursor:pointer;
+    font-size:12px;
+    font-weight:700;
+
+    transition:.2s;
+}
+
+.option label::before{
+    content:"";
+    width:16px;
+    height:16px;
+    border:2px solid #9ba2a8;
+    border-radius:3px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.option input:checked + label{
+    color:#00783b;
+    border-color:var(--verde);
+    background:#eaf8f0;
+}
+
+.option input:checked + label::before{
+    content:"×";
+    background:var(--verde);
+    border-color:var(--verde);
+    color:white;
+    font-size:16px;
+    font-weight:900;
+    line-height:12px;
+}
+
+
+/* ============================================================
+   DOCUMENTACIÓN
+============================================================ */
+
+.docs{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:12px;
+}
+
+.doc{
+    background:#f8f9fa;
+    border:1px solid #dce0e3;
+    border-radius:7px;
+    padding:15px 17px;
+    display:flex;
+    align-items:flex-start;
+    gap:12px;
+    cursor:pointer;
+}
+
+.doc:hover{
+    border-color:#aeb8be;
+}
+
+.doc input{
+    width:18px;
+    height:18px;
+    min-width:18px;
+    accent-color:var(--verde);
+}
+
+.doc-text strong{
+    display:block;
+    font-size:12px;
+    margin-bottom:3px;
+}
+
+.doc-text span{
+    color:#777;
+    font-size:11px;
+    line-height:1.4;
+}
+
+
+/* ============================================================
+   REQUISITOS
+============================================================ */
+
+.requirement{
+    border-left:4px solid var(--verde);
+    padding:15px 17px;
+    background:#f6f8f7;
+    border-radius:0 6px 6px 0;
+    margin-bottom:12px;
+    font-size:12px;
+    line-height:1.6;
+}
+
+.requirement:last-child{
+    margin-bottom:0;
+}
+
+.requirement strong{
+    color:#111;
+}
+
+
+/* ============================================================
+   INFO
+============================================================ */
+
+.info-box{
+    background:#f2f7f4;
+    border:1px solid #cce7d8;
+    border-left:4px solid var(--verde);
+    border-radius:6px;
+    padding:15px 17px;
+    margin-top:18px;
+    font-size:12px;
+    line-height:1.6;
+}
+
+
+/* ============================================================
+   BOTONES
+============================================================ */
+
+.actions{
+    background:white;
+    border-radius:12px;
+    padding:20px 22px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:15px;
+    margin-bottom:30px;
+}
+
+.actions-left{
+    color:#72777b;
+    font-size:11px;
+}
+
+.actions-buttons{
+    display:flex;
+    gap:10px;
+}
+
+.btn{
+    border:none;
+    min-height:43px;
+    padding:0 19px;
+    border-radius:6px;
+    cursor:pointer;
+
+    font-weight:800;
+    font-size:12px;
+
+    transition:.2s;
+}
+
+.btn-secondary{
+    background:#e5e7e9;
+    color:#252525;
+}
+
+.btn-secondary:hover{
+    background:#d5d8da;
+}
+
+.btn-dark{
+    background:#161616;
+    color:white;
+}
+
+.btn-dark:hover{
+    background:#292929;
+}
+
+.btn-green{
+    background:var(--verde);
+    color:white;
+}
+
+.btn-green:hover{
+    background:var(--verde-hover);
+}
+
+
+/* ============================================================
+   MENSAJE
+============================================================ */
+
+.status-message{
+    display:none;
+    margin-bottom:20px;
+    padding:15px 18px;
+    background:#e9f8f0;
+    color:#00783b;
+    border:1px solid #bce5cf;
+    border-left:5px solid var(--verde);
+    border-radius:7px;
+    font-size:12px;
+    font-weight:700;
+}
+
+
+/* ============================================================
+   OVERLAY MOBILE
+============================================================ */
+
+.overlay{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.55);
+    z-index:900;
+}
+
+.overlay.active{
+    display:block;
+}
+
+
+/* ============================================================
+   RESPONSIVE
+============================================================ */
+
+@media(max-width:1100px){
+
+    .sidebar{
+        transform:translateX(-100%);
+        transition:.3s;
+    }
+
+    .sidebar.active{
+        transform:translateX(0);
+    }
+
+    .main{
+        margin-left:0;
+    }
+
+    .menu-mobile{
+        display:flex;
+        align-items:center;
+        justify-content:center;
+    }
+
+    .topbar-left{
+        display:flex;
+        align-items:center;
+        gap:15px;
+    }
+
+}
+
+@media(max-width:850px){
+
+    .hero{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    .hero-code{
+        margin-left:0;
+        margin-top:20px;
+        width:100%;
+    }
+
+    .field,
+    .field.col-3,
+    .field.col-4,
+    .field.col-6,
+    .field.col-8{
+        grid-column:span 6;
+    }
+
+    .docs{
+        grid-template-columns:1fr;
+    }
+
+}
+
+@media(max-width:600px){
+
+    .content{
+        padding:15px;
+    }
+
+    .topbar{
+        padding:0 15px;
+    }
+
+    .topbar-code{
+        display:none;
+    }
+
+    .hero{
+        padding:25px 20px;
+    }
+
+    .hero h1{
+        font-size:23px;
+    }
+
+    .field,
+    .field.col-3,
+    .field.col-4,
+    .field.col-6,
+    .field.col-8,
+    .field.col-12{
+        grid-column:span 12;
+    }
+
+    .section-body{
+        padding:20px 16px;
+    }
+
+    .actions{
+        flex-direction:column;
+        align-items:stretch;
+    }
+
+    .actions-buttons{
+        flex-direction:column;
+    }
+
+    .btn{
+        width:100%;
+    }
+
+}
+
+</style>
+</head>
+
+
+<body>
+
+<!-- ============================================================
+     SIDEBAR
+============================================================ -->
+
+<aside class="sidebar" id="sidebar">
+
+    <div class="sidebar-logo">
+
+        <h1>
+            NASER<span>.</span>
+        </h1>
+
+        <p>
+            Sistema de Gestión<br>
+            Integrado
+        </p>
+
+    </div>
+
+
+    <nav class="sidebar-nav">
+
+        <div class="sidebar-title">
+            Gestión
+        </div>
+
+        <a href="../index.html" class="sidebar-link">
+            Inicio
+        </a>
+
+        <a href="../sectores.html" class="sidebar-link">
+            Sectores
+        </a>
+
+        <a href="#" class="sidebar-link active">
+            Alta de proveedores
+        </a>
+
+
+        <div class="sidebar-title">
+            Formulario
+        </div>
+
+        <a href="#datos-generales" class="sidebar-link">
+            1. Datos generales
+        </a>
+
+        <a href="#datos-bancarios" class="sidebar-link">
+            2. Datos bancarios
+        </a>
+
+        <a href="#situacion-impositiva" class="sidebar-link">
+            3. Situación impositiva
+        </a>
+
+        <a href="#retenciones" class="sidebar-link">
+            4. Retenciones
+        </a>
+
+        <a href="#documentacion" class="sidebar-link">
+            5. Documentación
+        </a>
+
+        <a href="#requisitos" class="sidebar-link">
+            6. Requisitos especiales
+        </a>
+
+    </nav>
+
+
+    <div class="sidebar-footer">
+
+        NASER SRL<br>
+        Sistema de Gestión Integrado
+
+    </div>
+
+</aside>
+
+
+<div class="overlay" id="overlay"></div>
+
+
+
+<!-- ============================================================
+     MAIN
+============================================================ -->
+
+<main class="main">
+
+
+<!-- TOPBAR -->
+
+<header class="topbar">
+
+    <div class="topbar-left">
+
+        <button
+            class="menu-mobile"
+            id="menuMobile"
+            type="button"
+        >
+            ☰
+        </button>
+
+        <div>
+
+            <h2>
+                Compras y Abastecimiento
+            </h2>
+
+            <p>
+                Registro y alta de proveedores
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="topbar-code">
+
+        <strong>
+            PGSN03-F3
+        </strong>
+
+        <span>
+            Rev.00 · Jun-25
+        </span>
+
+    </div>
+
+</header>
+
+
+
+<!-- ============================================================
+     CONTENIDO
+============================================================ -->
+
+<div class="content">
+
+
+<!-- HERO -->
+
+<section class="hero">
+
+    <div>
+
+        <span class="hero-label">
+            Compras y Abastecimiento
+        </span>
+
+        <h1>
+            Alta de Proveedores
+        </h1>
+
+        <p>
+            Registro de datos generales, información bancaria,
+            situación impositiva, retenciones y documentación
+            requerida para el alta de proveedores de NASER SRL.
+        </p>
+
+    </div>
+
+
+    <div class="hero-code">
+
+        <strong>
+            PGSN03-F3
+        </strong>
+
+        <span>
+            Rev.00 · Junio 2025
+        </span>
+
+    </div>
+
+</section>
+
+
+
+<!-- PROGRESO -->
+
+<section class="progress-card">
+
+    <div class="progress-header">
+
+        <span>
+            Completado del formulario
+        </span>
+
+        <span
+            class="progress-value"
+            id="progressValue"
+        >
+            0%
+        </span>
+
+    </div>
+
+    <div class="progress-track">
+
+        <div
+            class="progress-bar"
+            id="progressBar"
+        ></div>
+
+    </div>
+
+</section>
+
+
+
+<div
+    class="status-message"
+    id="statusMessage"
+></div>
+
+
+
+<form id="proveedorForm">
+
+
+<!-- ============================================================
+     1 DATOS GENERALES
+============================================================ -->
+
+<section
+    class="form-section"
+    id="datos-generales"
+>
+
+    <div class="section-header">
+
+        <div class="section-number">
+            1
+        </div>
+
+        <h2>
+            Datos Generales
+        </h2>
+
+    </div>
+
+
+    <div class="section-body">
+
+        <div class="form-grid">
+
+
+            <div class="field col-6">
+
+                <label>
+                    Razón Social
+                    <span class="required">*</span>
+                </label>
+
+                <input
+                    type="text"
+                    name="razonSocial"
+                    placeholder="Razón social"
+                    data-progress
+                >
+
+            </div>
+
+
+            <div class="field col-6">
+
+                <label>
+                    Nombre Comercial
+                </label>
+
+                <input
+                    type="text"
+                    name="nombreComercial"
+                    placeholder="Nombre comercial"
+                    data-progress
+                >
+
+            </div>
+
+
+            <div class="field col-4">
+
+                <label>
+                    CUIT
+                    <span class="required">*</span>
+                </label>
+
+                <input
+                    type="text"
+                    name="cuit"
+                    placeholder="Ej.: 30-12345678-9"
+                    data-progress
+                >
+
+            </div>
+
+
+            <div class="field col-4">
+
+                <label>
+                    Localidad
+                </label>
+
+                <input
+                    type="text"
+                    name="localidad"
+                    placeholder="Localidad"
+                    data-progress
+                >
+
+            </div>
+
+
+            <div class="field col-4">
+
+                <label>
+                    Código Postal
+                </label>
+
+                <input
+                    type="text"
+                    name="codigoPostal"
+                    placeholder="Código postal"
+                    data-progress
+                >
+
+            </div>
+
+
+            <div class="field col-6">
+
+                <label>
+                    Domicilio Legal
+                </label>
+
+                <input
+                    type="text"
+                    name="domicilioLegal"
+                    placeholder="Domicilio legal"
+                    data-progress
+                >
+
+            </div>
+
+
+            <div class="field col-6">
+
+                <label>
+                    Dirección Comercial
+                </label>
+
+                <input
+                    type="text"
+                    name="direccionComercial"
+                    placeholder="Dirección comercial"
+                    data-progress
+                >
+
+            </div>
+
+
+            <div class="field col-12">
+
+                <label>
+                    Actividad Principal
+                    <span class="required">*</span>
+                </label>
+
+                <input
+                    type="text"
+                    name="actividadPrincipal"
+                    placeholder="Actividad principal del proveedor"
+                    data-progress
+                >
+
+            </div>
+
+
+            <div class="field col-4">
+
+                <label>
+                    Contacto Compras
+                </label>
+
+                <input
+                    type="text"
+                    name="contactoCompras"
+                    placeholder="Apellido y nombre"
+                    data-progress
+                >
+
+            </div>
+
+
+            <div class="field col-4">
+
+                <label>
+                    Contacto Pagos
+                </label>
+
+                <input
+                    type="text"
+                    name="contactoPagos"
+                    placeholder="Apellido y nombre"
+                    data-progress
+                >
+
+            </div>
+
+
+            <div class="field col-4">
+
+                <label>
+                    Teléfonos
+                </label>
+
+                <input
+                    type="tel"
+                    name="telefonos"
+                    placeholder="Teléfono"
+                    data-progress
+                >
+
+            </div>
+
+
+            <div class="field col-6">
+
+                <label>
+                    Correo declarado para pagos
+                </label>
+
+                <input
+                    type="email"
+                    name="correoPagos"
+                    placeholder="correo@empresa.com"
+                    data-progress
+                >
+
+            </div>
+
+
+            <div class="field col-6">
+
+                <label>
+                    Contacto NASER SRL
+                </label>
+
+                <input
+                    type="email"
+                    value="administracion@gruponaser.com.ar"
+                    readonly
+                >
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- ============================================================
+     2 DATOS BANCARIOS
+============================================================ -->
+
+<section
+    class="form-section"
+    id="datos-bancarios"
+>
+
+    <div class="section-header">
+
+        <div class="section-number">
+            2
+        </div>
+
+        <h2>
+            Datos Bancarios
+        </h2>
+
+    </div>
+
+
+    <div class="section-body">
+
+        <div class="form-grid">
+
+            <div class="field col-6">
+
+                <label>
+                    CBU
+                </label>
+
+                <input
+                    type="text"
+                    name="cbu"
+                    maxlength="22"
+                    placeholder="22 dígitos"
+                    data-progress
+                >
+
+            </div>
+
+
+            <div class="field col-6">
+
+                <label>
+                    Banco
+                </label>
+
+                <input
+                    type="text"
+                    name="banco"
+                    placeholder="Entidad bancaria"
+                    data-progress
+                >
+
+            </div>
+
+
+            <div class="field col-6">
+
+                <label>
+                    Titular de la cuenta
+                </label>
+
+                <input
+                    type="text"
+                    name="titularCuenta"
+                    placeholder="Titular"
+                    data-progress
+                >
+
+            </div>
+
+
+            <div class="field col-6">
+
+                <label>
+                    Alias
+                </label>
+
+                <input
+                    type="text"
+                    name="alias"
+                    placeholder="Alias bancario"
+                    data-progress
+                >
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- ============================================================
+     3 SITUACIÓN IMPOSITIVA
+============================================================ -->
+
+<section
+    class="form-section"
+    id="situacion-impositiva"
+>
+
+    <div class="section-header">
+
+        <div class="section-number">
+            3
+        </div>
+
+        <h2>
+            Situación Impositiva
+        </h2>
+
+    </div>
+
+
+    <div class="section-body">
+
+
+        <!-- IVA -->
+
+        <div class="subsection">
+
+            <div class="subsection-title">
+                Situación IVA
+            </div>
+
+            <div class="subsection-content">
+
+                <div class="options">
+
+                    <div class="option">
+
+                        <input
+                            type="radio"
+                            name="iva"
+                            value="Responsable Inscripto"
+                            id="ivaRI"
+                            data-progress
+                        >
+
+                        <label for="ivaRI">
+                            Responsable Inscripto
+                        </label>
+
+                    </div>
+
+
+                    <div class="option">
+
+                        <input
+                            type="radio"
+                            name="iva"
+                            value="Monotributo"
+                            id="ivaMono"
+                            data-progress
+                        >
+
+                        <label for="ivaMono">
+                            Monotributo
+                        </label>
+
+                    </div>
+
+
+                    <div class="option">
+
+                        <input
+                            type="radio"
+                            name="iva"
+                            value="Exento"
+                            id="ivaExento"
+                            data-progress
+                        >
+
+                        <label for="ivaExento">
+                            Exento
+                        </label>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- IIBB -->
+
+        <div class="subsection">
+
+            <div class="subsection-title">
+                Situación Ingresos Brutos
+            </div>
+
+            <div class="subsection-content">
+
+                <div class="options">
+
+                    <div class="option">
+
+                        <input
+                            type="radio"
+                            name="iibb"
+                            value="Inscripto"
+                            id="iibb1"
+                            data-progress
+                        >
+
+                        <label for="iibb1">
+                            Inscripto
+                        </label>
+
+                    </div>
+
+
+                    <div class="option">
+
+                        <input
+                            type="radio"
+                            name="iibb"
+                            value="No Inscripto"
+                            id="iibb2"
+                            data-progress
+                        >
+
+                        <label for="iibb2">
+                            No Inscripto
+                        </label>
+
+                    </div>
+
+
+                    <div class="option">
+
+                        <input
+                            type="radio"
+                            name="iibb"
+                            value="Exento"
+                            id="iibb3"
+                            data-progress
+                        >
+
+                        <label for="iibb3">
+                            Exento
+                        </label>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    class="form-grid"
+                    style="margin-top:18px;"
+                >
+
+                    <div class="field col-6">
+
+                        <label>
+                            N° de inscripción
+                        </label>
+
+                        <input
+                            type="text"
+                            name="numeroIIBB"
+                            placeholder="Número de inscripción"
+                        >
+
+                    </div>
+
+
+                    <div class="field col-6">
+
+                        <label>
+                            Sede
+                        </label>
+
+                        <input
+                            type="text"
+                            name="sedeIIBB"
+                            placeholder="Sede"
+                        >
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- GANANCIAS -->
+
+        <div class="subsection">
+
+            <div class="subsection-title">
+                Impuesto a las Ganancias
+            </div>
+
+            <div class="subsection-content">
+
+                <div class="options">
+
+                    <div class="option">
+
+                        <input
+                            type="radio"
+                            name="ganancias"
+                            value="Inscripto"
+                            id="ganancias1"
+                            data-progress
+                        >
+
+                        <label for="ganancias1">
+                            Inscripto
+                        </label>
+
+                    </div>
+
+
+                    <div class="option">
+
+                        <input
+                            type="radio"
+                            name="ganancias"
+                            value="No Inscripto"
+                            id="ganancias2"
+                            data-progress
+                        >
+
+                        <label for="ganancias2">
+                            No Inscripto
+                        </label>
+
+                    </div>
+
+
+                    <div class="option">
+
+                        <input
+                            type="radio"
+                            name="ganancias"
+                            value="Exento"
+                            id="ganancias3"
+                            data-progress
+                        >
+
+                        <label for="ganancias3">
+                            Exento
+                        </label>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- ============================================================
+     4 RETENCIONES
+============================================================ -->
+
+<section
+    class="form-section"
+    id="retenciones"
+>
+
+    <div class="section-header">
+
+        <div class="section-number">
+            4
+        </div>
+
+        <h2>
+            Retenciones a Aplicar
+        </h2>
+
+    </div>
+
+
+    <div class="section-body">
+
+
+        <div class="subsection">
+
+            <div class="subsection-title">
+                Ganancias según actividad — Marcar con X
+            </div>
+
+            <div class="subsection-content">
+
+                <div class="options">
+
+
+                    <div class="option">
+
+                        <input
+                            type="checkbox"
+                            name="actividadGanancias"
+                            value="Compra/Venta Bienes Muebles y de Cambio"
+                            id="actividad1"
+                        >
+
+                        <label for="actividad1">
+                            Compra/Venta Bienes Muebles y de Cambio
+                        </label>
+
+                    </div>
+
+
+                    <div class="option">
+
+                        <input
+                            type="checkbox"
+                            name="actividadGanancias"
+                            value="Operaciones de Transporte de Carga"
+                            id="actividad2"
+                        >
+
+                        <label for="actividad2">
+                            Operaciones de Transporte de Carga
+                        </label>
+
+                    </div>
+
+
+                    <div class="option">
+
+                        <input
+                            type="checkbox"
+                            name="actividadGanancias"
+                            value="Locación, Obras y Servicios"
+                            id="actividad3"
+                        >
+
+                        <label for="actividad3">
+                            Locación, Obras y Servicios
+                        </label>
+
+                    </div>
+
+
+                    <div class="option">
+
+                        <input
+                            type="checkbox"
+                            name="actividadGanancias"
+                            value="Exento"
+                            id="actividad4"
+                        >
+
+                        <label for="actividad4">
+                            Exento — Adjuntar Certificado
+                        </label>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="subsection">
+
+            <div class="subsection-title">
+                Ingresos Brutos — Jurisdicciones sujetas a retención
+            </div>
+
+            <div class="subsection-content">
+
+                <div class="options">
+
+                    <div class="option">
+
+                        <input
+                            type="checkbox"
+                            name="jurisdiccion"
+                            value="Neuquén"
+                            id="neuquen"
+                        >
+
+                        <label for="neuquen">
+                            Neuquén
+                        </label>
+
+                    </div>
+
+
+                    <div class="option">
+
+                        <input
+                            type="checkbox"
+                            name="jurisdiccion"
+                            value="Río Negro"
+                            id="rioNegro"
+                        >
+
+                        <label for="rioNegro">
+                            Río Negro
+                        </label>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    class="form-grid"
+                    style="margin-top:18px;"
+                >
+
+                    <div class="field col-12">
+
+                        <label>
+                            Otros
+                        </label>
+
+                        <input
+                            type="text"
+                            name="otrasJurisdicciones"
+                            placeholder="Indicar otras jurisdicciones"
+                        >
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="form-grid">
+
+            <div class="field col-12">
+
+                <label>
+                    Otros — Indicar
+                </label>
+
+                <textarea
+                    name="otrasRetenciones"
+                    placeholder="Indicar otras retenciones a aplicar..."
+                ></textarea>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- ============================================================
+     5 DOCUMENTACIÓN
+============================================================ -->
+
+<section
+    class="form-section"
+    id="documentacion"
+>
+
+    <div class="section-header">
+
+        <div class="section-number">
+            5
+        </div>
+
+        <h2>
+            Documentación a Adjuntar
+        </h2>
+
+    </div>
+
+
+    <div class="section-body">
+
+        <div class="docs">
+
+
+            <label class="doc">
+
+                <input
+                    type="checkbox"
+                    name="documentacion"
+                    value="Constancia ARCA"
+                >
+
+                <span class="doc-text">
+
+                    <strong>
+                        Constancia de inscripción ARCA
+                    </strong>
+
+                    <span>
+                        Constancia de inscripción vigente.
+                    </span>
+
+                </span>
+
+            </label>
+
+
+
+            <label class="doc">
+
+                <input
+                    type="checkbox"
+                    name="documentacion"
+                    value="IIBB CM05"
+                >
+
+                <span class="doc-text">
+
+                    <strong>
+                        Constancia de inscripción en IIBB
+                    </strong>
+
+                    <span>
+                        Adjuntar CM 05 actualizado.
+                    </span>
+
+                </span>
+
+            </label>
+
+
+
+            <label class="doc">
+
+                <input
+                    type="checkbox"
+                    name="documentacion"
+                    value="Certificado no retención"
+                >
+
+                <span class="doc-text">
+
+                    <strong>
+                        Certificado de no retención
+                    </strong>
+
+                    <span>
+                        Cuando corresponda.
+                    </span>
+
+                </span>
+
+            </label>
+
+
+
+            <label class="doc">
+
+                <input
+                    type="checkbox"
+                    name="documentacion"
+                    value="Habilitaciones legales"
+                >
+
+                <span class="doc-text">
+
+                    <strong>
+                        Inscripciones o habilitaciones
+                    </strong>
+
+                    <span>
+                        Cuando sean requisitos legales.
+                    </span>
+
+                </span>
+
+            </label>
+
+
+
+            <label class="doc">
+
+                <input
+                    type="checkbox"
+                    name="documentacion"
+                    value="Certificación Izaje"
+                >
+
+                <span class="doc-text">
+
+                    <strong>
+                        Certificación de equipos e izaje
+                    </strong>
+
+                    <span>
+                        Para transporte DTM y/o actividades de izaje.
+                    </span>
+
+                </span>
+
+            </label>
+
+
+
+            <label class="doc">
+
+                <input
+                    type="checkbox"
+                    name="documentacion"
+                    value="Matrícula habilitante"
+                >
+
+                <span class="doc-text">
+
+                    <strong>
+                        Matrícula habilitante
+                    </strong>
+
+                    <span>
+                        Para proveedores de servicios profesionales.
+                    </span>
+
+                </span>
+
+            </label>
+
+
+
+            <label class="doc">
+
+                <input
+                    type="checkbox"
+                    name="documentacion"
+                    value="Residuos peligrosos"
+                >
+
+                <span class="doc-text">
+
+                    <strong>
+                        Habilitación de residuos peligrosos
+                    </strong>
+
+                    <span>
+                        Cuando corresponda por la actividad realizada.
+                    </span>
+
+                </span>
+
+            </label>
+
+
+
+            <label class="doc">
+
+                <input
+                    type="checkbox"
+                    name="documentacion"
+                    value="Certificados ISO"
+                >
+
+                <span class="doc-text">
+
+                    <strong>
+                        Certificados ISO
+                    </strong>
+
+                    <span>
+                        En caso de contar con certificaciones vigentes.
+                    </span>
+
+                </span>
+
+            </label>
+
+        </div>
+
+
+        <div class="info-box">
+
+            <strong>
+                Información:
+            </strong>
+
+            Las órdenes de pago y los certificados de retención
+            serán enviados al correo declarado por el proveedor
+            para pagos.
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- ============================================================
+     6 REQUISITOS
+============================================================ -->
+
+<section
+    class="form-section"
+    id="requisitos"
+>
+
+    <div class="section-header">
+
+        <div class="section-number">
+            6
+        </div>
+
+        <h2>
+            Requisitos Especiales
+        </h2>
+
+    </div>
+
+
+    <div class="section-body">
+
+
+        <div class="requirement">
+
+            <strong>
+                Generación, transporte o tratamiento de residuos peligrosos:
+            </strong>
+
+            deberá presentar la documentación correspondiente
+            y habilitaciones vigentes.
+
+        </div>
+
+
+        <div class="requirement">
+
+            <strong>
+                Servicios profesionales:
+            </strong>
+
+            deberá presentar matrícula profesional habilitante.
+
+        </div>
+
+
+        <div class="requirement">
+
+            <strong>
+                Transporte de cargas para DTM y/o izaje:
+            </strong>
+
+            deberá presentar certificación del equipo
+            y de los elementos de izaje.
+
+        </div>
+
+
+        <div class="requirement">
+
+            <strong>
+                Lavado de equipamiento con hidrocarburos:
+            </strong>
+
+            deberá presentar habilitación como generador
+            de residuos peligrosos.
+
+        </div>
+
+
+        <div class="requirement">
+
+            <strong>
+                Certificaciones ISO:
+            </strong>
+
+            en caso de contar con certificados ISO,
+            deberán adjuntarse al alta.
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+
+<!-- ============================================================
+     BOTONES
+============================================================ -->
+
+<section class="actions">
+
+    <div class="actions-left">
+
+        PGSN03-F3 · Rev.00 · Jun.25
+
+    </div>
+
+
+    <div class="actions-buttons">
+
+        <button
+            type="button"
+            class="btn btn-secondary"
+            onclick="limpiarFormulario()"
+        >
+            Limpiar
+        </button>
+
+
+        <button
+            type="button"
+            class="btn btn-dark"
+            onclick="guardarFormulario()"
+        >
+            Guardar
+        </button>
+
+
+        <button
+            type="submit"
+            class="btn btn-green"
+        >
+            Finalizar formulario
+        </button>
+
+    </div>
+
+</section>
+
+
+</form>
+
+</div>
+
+</main>
+
+
+
+<script>
+
+/* ============================================================
+   ELEMENTOS
+============================================================ */
+
+const form =
+    document.getElementById("proveedorForm");
+
+const progressBar =
+    document.getElementById("progressBar");
+
+const progressValue =
+    document.getElementById("progressValue");
+
+const statusMessage =
+    document.getElementById("statusMessage");
+
+const sidebar =
+    document.getElementById("sidebar");
+
+const overlay =
+    document.getElementById("overlay");
+
+const menuMobile =
+    document.getElementById("menuMobile");
+
+
+/* ============================================================
+   MENÚ MOBILE
+============================================================ */
+
+menuMobile.addEventListener("click", () => {
+
+    sidebar.classList.toggle("active");
+
+    overlay.classList.toggle("active");
+
+});
+
+
+overlay.addEventListener("click", () => {
+
+    sidebar.classList.remove("active");
+
+    overlay.classList.remove("active");
+
+});
+
+
+document
+    .querySelectorAll(".sidebar-link")
+    .forEach(link => {
+
+        link.addEventListener("click", () => {
+
+            if(window.innerWidth <= 1100){
+
+                sidebar.classList.remove("active");
+
+                overlay.classList.remove("active");
+
+            }
+
+        });
+
+    });
+
+
+/* ============================================================
+   PROGRESO
+============================================================ */
+
+function actualizarProgreso(){
+
+    /*
+        Se cuentan grupos importantes del formulario.
+        Los radio buttons cuentan como un solo campo por grupo.
+    */
+
+    const camposTexto = [
+        "razonSocial",
+        "nombreComercial",
+        "cuit",
+        "localidad",
+        "codigoPostal",
+        "domicilioLegal",
+        "direccionComercial",
+        "actividadPrincipal",
+        "contactoCompras",
+        "contactoPagos",
+        "telefonos",
+        "correoPagos",
+        "cbu",
+        "banco",
+        "titularCuenta",
+        "alias"
+    ];
+
+
+    let total =
+        camposTexto.length + 3;
+
+    let completos = 0;
+
+
+    camposTexto.forEach(nombre => {
+
+        const elemento =
+            form.querySelector(
+                `[name="${nombre}"]`
+            );
+
+        if(
+            elemento &&
+            elemento.value.trim() !== ""
+        ){
+
+            completos++;
+
+        }
+
+    });
+
+
+    if(
+        form.querySelector(
+            'input[name="iva"]:checked'
+        )
+    ){
+        completos++;
+    }
+
+
+    if(
+        form.querySelector(
+            'input[name="iibb"]:checked'
+        )
+    ){
+        completos++;
+    }
+
+
+    if(
+        form.querySelector(
+            'input[name="ganancias"]:checked'
+        )
+    ){
+        completos++;
+    }
+
+
+    const porcentaje =
+        Math.round(
+            (completos / total) * 100
+        );
+
+
+    progressBar.style.width =
+        porcentaje + "%";
+
+    progressValue.textContent =
+        porcentaje + "%";
+
+}
+
+
+/* ============================================================
+   EVENTOS DE PROGRESO
+============================================================ */
+
+form.addEventListener(
+    "input",
+    actualizarProgreso
+);
+
+form.addEventListener(
+    "change",
+    actualizarProgreso
+);
+
+
+/* ============================================================
+   EXTRAER DATOS DEL FORMULARIO
+============================================================ */
+
+function obtenerDatos(){
+
+    const datosFormulario =
+        new FormData(form);
+
+    const datos = {};
+
+
+    for(
+        const [clave, valor]
+        of datosFormulario.entries()
+    ){
+
+        if(datos[clave]){
+
+            if(
+                !Array.isArray(
+                    datos[clave]
+                )
+            ){
+
+                datos[clave] =
+                    [datos[clave]];
+
+            }
+
+            datos[clave].push(valor);
+
+        }
+        else{
+
+            datos[clave] = valor;
+
+        }
+
+    }
+
+
+    return datos;
+
+}
+
+
+/* ============================================================
+   GUARDAR
+============================================================ */
+
+function guardarFormulario(){
+
+    const datos =
+        obtenerDatos();
+
+
+    localStorage.setItem(
+        "NASER_PGSN03_F3",
+        JSON.stringify(datos)
+    );
+
+
+    mostrarEstado(
+        "Formulario guardado correctamente."
+    );
+
+}
+
+
+/* ============================================================
+   LIMPIAR
+============================================================ */
+
+function limpiarFormulario(){
+
+    const confirmar =
+        confirm(
+            "¿Desea limpiar toda la información del formulario?"
+        );
+
+
+    if(!confirmar){
+        return;
+    }
+
+
+    form.reset();
+
+
+    localStorage.removeItem(
+        "NASER_PGSN03_F3"
+    );
+
+
+    actualizarProgreso();
+
+
+    mostrarEstado(
+        "Formulario limpiado correctamente."
+    );
+
+}
+
+
+/* ============================================================
+   MOSTRAR ESTADO
+============================================================ */
+
+function mostrarEstado(texto){
+
+    statusMessage.textContent =
+        texto;
+
+    statusMessage.style.display =
+        "block";
+
+
+    setTimeout(() => {
+
+        statusMessage.style.display =
+            "none";
+
+    }, 4500);
+
+}
+
+
+/* ============================================================
+   FINALIZAR FORMULARIO
+============================================================ */
+
+form.addEventListener(
+    "submit",
+    function(event){
+
+        event.preventDefault();
+
+
+        const razonSocial =
+            form.razonSocial.value.trim();
+
+        const cuit =
+            form.cuit.value.trim();
+
+        const actividad =
+            form.actividadPrincipal.value.trim();
+
+
+        if(
+            !razonSocial ||
+            !cuit ||
+            !actividad
+        ){
+
+            alert(
+                "Debe completar Razón Social, CUIT y Actividad Principal antes de finalizar."
+            );
+
+            return;
+
+        }
+
+
+        guardarFormulario();
+
+
+        mostrarEstado(
+            "Formulario PGSN03-F3 finalizado correctamente."
+        );
+
+    }
+);
+
+
+/* ============================================================
+   RECUPERAR DATOS
+============================================================ */
+
+function recuperarFormulario(){
+
+    const guardado =
+        localStorage.getItem(
+            "NASER_PGSN03_F3"
+        );
+
+
+    if(!guardado){
+
+        actualizarProgreso();
+
+        return;
+
+    }
+
+
+    try{
+
+        const datos =
+            JSON.parse(guardado);
+
+
+        Object.keys(datos).forEach(
+            nombre => {
+
+                const elementos =
+                    form.querySelectorAll(
+                        `[name="${nombre}"]`
+                    );
+
+
+                elementos.forEach(
+                    elemento => {
+
+                        const valor =
+                            datos[nombre];
+
+
+                        if(
+                            elemento.type ===
+                            "checkbox" ||
+                            elemento.type ===
+                            "radio"
+                        ){
+
+                            if(
+                                Array.isArray(
+                                    valor
+                                )
+                            ){
+
+                                elemento.checked =
+                                    valor.includes(
+                                        elemento.value
+                                    );
+
+                            }
+                            else{
+
+                                elemento.checked =
+                                    elemento.value ===
+                                    valor;
+
+                            }
+
+                        }
+                        else{
+
+                            elemento.value =
+                                valor;
+
+                        }
+
+                    }
+                );
+
+            }
+        );
+
+
+        actualizarProgreso();
+
+    }
+    catch(error){
+
+        console.error(
+            "Error al recuperar el formulario:",
+            error
+        );
+
+    }
+
+}
+
+
+/* ============================================================
+   INICIO
+============================================================ */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    recuperarFormulario
+);
+
+</script>
+
+</body>
+</html>
