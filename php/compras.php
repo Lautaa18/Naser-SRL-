@@ -1,92 +1,19 @@
 <?php
 require __DIR__ . '/config/auth.php';
 requireLogin();
+verify_csrf(); // protege todos los formularios POST de esta pagina
 require __DIR__ . '/config/db.php';
 require __DIR__ . '/config/layout.php';
+require __DIR__ . '/config/modulo.php';
 
 $slug = 'compras';
-$st = $pdo->prepare('SELECT id,nombre,slug FROM sectores WHERE slug=? LIMIT 1');
-$st->execute([$slug]);
-$sector = $st->fetch();
-if (!$sector) { http_response_code(404); exit('Sector no encontrado.'); }
-$sid = (int)$sector['id'];
-if (!puedeVerSector($pdo,$sid)) { http_response_code(403); exit('No tenés acceso a este sector.'); }
-$canEdit = puedeEditarSector($pdo,$sid);
+[$sector, $sid, $canEdit] = cargarModulo($pdo, $slug);
 $uid = (int)($_SESSION['usuario_id'] ?? 0);
 $msg = ''; $err = '';
 
-// --- CREACIÓN Y MIGRACIÓN AUTOMÁTICA DE TABLAS ---
-try {
-    $pdo->exec("CREATE TABLE IF NOT EXISTS compras (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        sector_id INT NOT NULL,
-        codigo VARCHAR(30) NOT NULL,
-        sector VARCHAR(100),
-        descripcion TEXT NOT NULL,
-        cantidad INT DEFAULT 1,
-        prioridad ENUM('Normal','Urgente','Critico') DEFAULT 'Normal',
-        proveedor VARCHAR(150) DEFAULT 'Pendiente',
-        monto DECIMAL(12,2) DEFAULT 0.00,
-        moneda VARCHAR(5) DEFAULT 'ARS',
-        etapa INT DEFAULT 1,
-        estado_logistico VARCHAR(100) DEFAULT 'Pedido cargado',
-        creado_por INT,
-        actualizado_por INT,
-        fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP,
-        actualizado_en DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");
+// Las tablas de Compras se crean en config/schema_modulos.php
 
-    $pdo->exec("CREATE TABLE IF NOT EXISTS compras_documentos (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        compra_id INT NOT NULL,
-        etapa INT NOT NULL,
-        nombre_archivo VARCHAR(255) NOT NULL,
-        ruta_archivo VARCHAR(255) NOT NULL,
-        tipo_documento VARCHAR(100) DEFAULT 'Adjunto',
-        creado_por INT,
-        fecha_subida DATETIME DEFAULT CURRENT_TIMESTAMP
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");
 
-    $pdo->exec("CREATE TABLE IF NOT EXISTS compras_encuesta (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        compra_id INT NOT NULL,
-        calidad VARCHAR(50) NOT NULL,
-        estado_fisico VARCHAR(50) NOT NULL,
-        cumplimiento_entrega VARCHAR(50) NOT NULL,
-        observaciones TEXT,
-        creado_por INT,
-        fecha_registro DATETIME DEFAULT CURRENT_TIMESTAMP
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");
-
-    $pdo->exec("CREATE TABLE IF NOT EXISTS compras_formularios (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        sector_id INT NOT NULL,
-        codigo_form VARCHAR(100) NOT NULL,
-        proveedor_nombre VARCHAR(150),
-        solicitante VARCHAR(150),
-        fecha_documento DATE,
-        estado VARCHAR(50) DEFAULT 'en_edicion',
-        creado_por INT,
-        creado_en DATETIME DEFAULT CURRENT_TIMESTAMP
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");
-
-    @$pdo->exec("ALTER TABLE compras ADD COLUMN monto DECIMAL(12,2) DEFAULT 0.00 AFTER proveedor;");
-    @$pdo->exec("ALTER TABLE compras ADD COLUMN moneda VARCHAR(5) DEFAULT 'ARS' AFTER monto;");
-    @$pdo->exec("ALTER TABLE compras_encuesta ADD COLUMN fecha_registro DATETIME DEFAULT CURRENT_TIMESTAMP;");
-} catch (Throwable $e) {
-    // Continuar si las tablas o columnas ya existen
-}
-
-function auditModulo(PDO $pdo, int $uid, string $accion, string $detalle): void {
-    try {
-        $st = $pdo->prepare('INSERT INTO actividad(usuario_id,accion,detalle) VALUES(?,?,?)');
-        $st->execute([$uid, $accion, $detalle]);
-    } catch(Throwable $e) {}
-}
-
-function exigirEdicion(bool $canEdit): void {
-    if (!$canEdit) { http_response_code(403); exit('No tenés permiso para modificar este sector.'); }
-}
 
 $etapaNombre = [
     1 => '1. Pedido Cargado',
@@ -237,7 +164,8 @@ $formularios = $stForms->fetchAll();
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Gestión Integral de Compras | NASER SGI</title>
-<link rel="stylesheet" href="<?=app_url('/style.css')?>?v=20260930">
+<link rel="stylesheet" href="<?=asset('/style.css')?>">
+<link rel="stylesheet" href="<?=asset('/css/checklists.css')?>">
 <style>
 :root{--ng:#08783e;--nd:#164c2d;--ns:#edf7f1;--nl:#dfe7e1;--warn:#d97706;--danger:#dc2626;--info:#2563eb}
 .module-hero{position:relative;overflow:hidden;background:linear-gradient(125deg,#123f28,#08783e);color:#fff;border-radius:20px;padding:26px 28px;margin:0 0 20px;box-shadow:0 12px 30px rgba(20,70,40,.12)}
@@ -263,16 +191,6 @@ $formularios = $stForms->fetchAll();
 .badge-calidad{background:#dcfce7;color:#15803d;padding:3px 6px;border-radius:4px;font-weight:bold;font-size:11px}
 .badge-calidad-obs{background:#fef3c7;color:#b45309}
 .badge-calidad-bad{background:#fee2e2;color:#b91c1c}
-
-/* Estilos para Checklists y Formularios */
-.grid-forms{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-bottom:20px}
-.card-form{background:#fff;border:1px solid var(--nl);border-radius:14px;padding:16px;box-shadow:0 4px 12px rgba(0,0,0,0.03);display:flex;flex-direction:column;justify-content:space-between}
-.card-form h3{margin:0 0 6px;font-size:15px;color:var(--nd)}
-.card-form p{font-size:12px;color:#64748b;margin:0 0 14px}
-.status-pill{display:inline-block;padding:3px 8px;border-radius:12px;font-size:10px;font-weight:800;text-transform:uppercase}
-.status-en_edicion{background:#fef3c7;color:#92400e}
-.status-finalizado{background:#dcfce7;color:#166534}
-
 @media(max-width:900px){.module-grid{grid-template-columns:1fr 1fr}.flow{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:650px){.module-grid,.module-form{grid-template-columns:1fr}.module-form .full{grid-column:auto}.flow{grid-template-columns:repeat(2,1fr)}}
 </style>
@@ -444,7 +362,7 @@ $formularios = $stForms->fetchAll();
 <?php if($canEdit):?>
 <section class="module-card" id="gestion">
     <h3><?=$edit ? '✏ Editar Pedido de Compra: '.h($edit['codigo']) : '➕ Cargar Nuevo Pedido de Compra'?></h3>
-    <form method="post" enctype="multipart/form-data" class="module-form">
+    <form method="post" enctype="multipart/form-data" class="module-form"><?=csrf_field()?>
         <input type="hidden" name="accion" value="guardar">
         <input type="hidden" name="id" value="<?=h($edit['id']??'')?>">
         
@@ -550,7 +468,7 @@ $formularios = $stForms->fetchAll();
                 <?php if($canEdit):?>
                     <td class="module-actions">
                         <a class="btn secondary" href="?editar=<?=(int)$r['id']?>">Editar</a>
-                        <form method="post" onsubmit="return confirm('¿Confirma eliminar este pedido de compra?')">
+                        <form method="post" onsubmit="return confirm('¿Confirma eliminar este pedido de compra?')"><?=csrf_field()?>
                             <input type="hidden" name="accion" value="eliminar">
                             <input type="hidden" name="id" value="<?=(int)$r['id']?>">
                             <button class="btn secondary" style="color:var(--danger)">Eliminar</button>
@@ -567,7 +485,7 @@ $formularios = $stForms->fetchAll();
 <section class="module-card" style="margin-top:25px" id="documentos">
     <h3>📎 Gestor de Documentación y Adjuntos por Etapa</h3>
     <p>Subí archivos en PDF, Excel o Imagen para respaldar el flujo (Presupuestos, Facturas, Comprobantes de Pago, Remitos de Entrega).</p>
-    <form method="post" enctype="multipart/form-data" class="module-form">
+    <form method="post" enctype="multipart/form-data" class="module-form"><?=csrf_field()?>
         <input type="hidden" name="accion" value="documento_etapa">
         
         <label>Seleccionar Compra
@@ -639,7 +557,7 @@ $formularios = $stForms->fetchAll();
 <section class="module-card" style="margin-top:25px" id="encuesta">
     <h3>📋 Encuesta de Control de Calidad y Recepción de Producto</h3>
     <p>Completa este formulario una vez recibido el producto o servicio para evaluar al proveedor y cerrar el ciclo.</p>
-    <form method="post" class="module-form">
+    <form method="post" class="module-form"><?=csrf_field()?>
         <input type="hidden" name="accion" value="encuesta">
         
         <label class="full">Compra A Evaluar

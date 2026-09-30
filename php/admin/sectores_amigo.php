@@ -1,6 +1,7 @@
 <?php
 require __DIR__ . '/../config/auth.php';
 requireLogin();
+verify_csrf(); // protege todos los formularios POST de esta pagina
 
 // Verificar que solo los administradores accedan
 if (($_SESSION['rol'] ?? '') !== 'admin') {
@@ -42,9 +43,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $error = 'Error al crear el sector. Es posible que el nombre ya exista.';
             }
         } elseif ($action === 'editar' && $sectorId > 0) {
-            $stmt = $pdo->prepare('UPDATE sectores SET nombre = ?, slug = ?, orden = ? WHERE id = ?');
+            // El slug NO se cambia al editar: las paginas (rrhh.php, compras.php...) buscan el sector por slug
+            $stmt = $pdo->prepare('UPDATE sectores SET nombre = ?, orden = ? WHERE id = ?');
             try {
-                $stmt->execute([$nombre, $slug, $orden, $sectorId]);
+                $stmt->execute([$nombre, $orden, $sectorId]);
                 $mensaje = 'Sector actualizado correctamente.';
             } catch (PDOException $e) {
                 $error = 'Error al actualizar el sector.';
@@ -63,7 +65,7 @@ $sectores = $stmt->fetchAll();
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Administrar Sectores | NASER SGI</title>
-    <link rel="stylesheet" href="../../style.css">
+    <link rel="stylesheet" href="<?= asset('/style.css') ?>">
 </head>
 <body>
 
@@ -88,7 +90,7 @@ $sectores = $stmt->fetchAll();
         <div class="nav-separator"></div>
         <a class="nav-link" href="usuarios.php">Usuarios</a>
         <a class="nav-link" href="documentos.php">Administrar documentos</a>
-        <a class="nav-link active" href="sectores.php">Administrar sectores</a>
+        <a class="nav-link active" href="sectores_amigo.php">Administrar sectores</a>
 
         <div class="php-sidebar-user">
             <strong><?= htmlspecialchars($_SESSION['nombre'] ?? '') ?></strong>
@@ -121,7 +123,7 @@ $sectores = $stmt->fetchAll();
         <!-- FORMULARIO DE NUEVO SECTOR -->
         <article class="document-card" style="margin-bottom: 2rem;">
             <h3>Nuevo Sector</h3>
-            <form method="POST" action="sectores.php" style="display: flex; gap: 10px; flex-wrap: wrap; align-items: flex-end; margin-top: 10px;">
+            <form method="POST" action="sectores_amigo.php" style="display: flex; gap: 10px; flex-wrap: wrap; align-items: flex-end; margin-top: 10px;"><?=csrf_field()?>
                 <input type="hidden" name="action" value="crear">
                 
                 <div style="flex: 2; min-width: 200px;">

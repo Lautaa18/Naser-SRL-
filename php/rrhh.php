@@ -1,62 +1,25 @@
 <?php
 require __DIR__ . '/config/auth.php';
 requireLogin();
+verify_csrf(); // protege todos los formularios POST de esta pagina
 require __DIR__ . '/config/db.php';
 require __DIR__ . '/config/layout.php';
+require __DIR__ . '/config/modulo.php';
 
 $slug = 'rrhh';
-$st = $pdo->prepare('SELECT id,nombre,slug FROM sectores WHERE slug=? LIMIT 1');
-$st->execute([$slug]);
-$sector = $st->fetch();
-if (!$sector) { http_response_code(404); exit('Sector no encontrado.'); }
-$sid = (int)$sector['id'];
-if (!puedeVerSector($pdo,$sid)) { http_response_code(403); exit('No tenés acceso a este sector.'); }
-$canEdit = puedeEditarSector($pdo,$sid);
+[$sector, $sid, $canEdit] = cargarModulo($pdo, $slug);
 $uid = (int)($_SESSION['usuario_id'] ?? 0);
 $msg=''; $err='';
 
-function auditModulo(PDO $pdo,int $uid,string $accion,string $detalle): void {
-    try {
-        $st=$pdo->prepare('INSERT INTO actividad(usuario_id,accion,detalle) VALUES(?,?,?)');
-        $st->execute([$uid,$accion,$detalle]);
-    } catch(Throwable $e) {}
-}
-function exigirEdicion(bool $canEdit): void {
-    if(!$canEdit) { http_response_code(403); exit('No tenes permiso para modificar este sector.'); }
-}
 ?>
 <!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Gestión de Recursos Humanos | NASER SGI</title><link rel="stylesheet" href="<?=app_url('/style.css')?>?v=20260930">
+<title>Gestión de Recursos Humanos | NASER SGI</title><link rel="stylesheet" href="<?=asset('/style.css')?>">
+<link rel="stylesheet" href="<?=asset('/css/modules.css')?>">
+<link rel="stylesheet" href="<?=asset('/css/checklists.css')?>">
 <style>
-:root{--ng:#08783e;--nd:#164c2d;--ns:#edf7f1;--nl:#dfe7e1}
-.module-hero{position:relative;overflow:hidden;background:linear-gradient(125deg,#123f28,#08783e);color:#fff;border-radius:20px;padding:26px 28px;margin:0 0 20px;box-shadow:0 12px 30px rgba(20,70,40,.12)}
-.module-hero:after{content:"";position:absolute;width:220px;height:220px;border-radius:50%;right:-70px;top:-100px;background:rgba(255,255,255,.08)}
-.module-hero .eyebrow{color:#d8f3e2}.module-hero h1{margin:4px 0 7px;font-size:30px}.module-hero p{margin:0;color:#e9f7ee}
-.module-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 16px}.module-tabs a{padding:9px 14px;border:1px solid var(--nl);border-radius:999px;background:#fff;color:var(--nd);font-size:13px;font-weight:800;text-decoration:none}
-.module-permission{padding:11px 14px;border:1px solid var(--nl);background:#f7faf8;border-radius:12px;margin-bottom:18px;font-size:13px}
-.module-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px;margin:18px 0 24px}
-.module-card{background:#fff;border:1px solid var(--nl);border-radius:17px;padding:19px;box-shadow:0 5px 18px rgba(31,41,55,.045)}
-.module-card h3{margin:0 0 8px}.module-card .big{font-size:32px;line-height:1;font-weight:900;color:var(--ng);margin-top:9px}
-.module-toolbar{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin:25px 0 12px}.module-toolbar h2{margin:0}
-.module-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}.module-form .full{grid-column:1/-1}.module-form label{display:flex;flex-direction:column;gap:7px;font-size:12px;font-weight:800;color:#374151}
-.module-form input,.module-form select,.module-form textarea{width:100%;box-sizing:border-box;padding:11px 12px;border:1px solid #d6dfd8;border-radius:10px;background:#fbfdfb}.module-form textarea{min-height:82px}
-.table-wrapper{overflow:auto;border:1px solid var(--nl);border-radius:16px;background:#fff}.module-table{width:100%;border-collapse:collapse;min-width:760px}.module-table th,.module-table td{padding:12px 13px;border-bottom:1px solid #edf1ee;text-align:left;font-size:13px}.module-table th{background:#f1f7f3;color:#27583a;font-size:11px;text-transform:uppercase}.module-table tbody tr:hover{background:#fbfdfb}
-.module-actions{display:flex;gap:6px;flex-wrap:wrap}.module-note,.module-error{padding:13px 15px;border-radius:11px;margin:12px 0;font-weight:700;font-size:13px}.module-note{background:#eaf7ef;color:#176337}.module-error{background:#fff1f0;color:#9b231b}
-.flow{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin:15px 0 22px}.flow-step{background:#f2f7f3;border:1px solid #dce8df;border-radius:12px;padding:12px 8px;text-align:center;font-size:11px;font-weight:800;color:#315a3e}.flow-step b{display:block;font-size:17px;color:var(--ng);margin-bottom:4px}
-@media(max-width:900px){.module-grid{grid-template-columns:1fr 1fr}.flow{grid-template-columns:repeat(3,1fr)}}@media(max-width:650px){.module-grid,.module-form{grid-template-columns:1fr}.module-form .full{grid-column:auto}.flow{grid-template-columns:repeat(2,1fr)}}
-
 .calendar-wrap{background:#fff;border:1px solid var(--nl);border-radius:17px;padding:18px;margin:18px 0}
 .calendar-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:7px}.cal-head{text-align:center;font-size:11px;font-weight:900;color:#52705b;padding:7px}
 .cal-day{min-height:82px;border:1px solid #e6ece7;border-radius:10px;padding:7px;background:#fbfdfb}.cal-day.muted{opacity:.35}.cal-num{font-weight:900;font-size:12px}.cal-event{display:block;margin-top:5px;padding:4px 5px;border-radius:6px;background:#e9f6ee;color:#176337;font-size:9px;font-weight:800;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.cal-event.overdue{background:#fff0ef;color:#a62b22}.alert-list{display:grid;gap:9px}.alert-item{display:flex;justify-content:space-between;gap:12px;padding:11px;border-radius:10px;background:#f8faf8;border:1px solid #e5ebe6;font-size:12px}
-
-/* Estilos para Checklists y Formularios */
-.grid-forms{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-bottom:20px}
-.card-form{background:#fff;border:1px solid var(--nl);border-radius:14px;padding:16px;box-shadow:0 4px 12px rgba(0,0,0,0.03);display:flex;flex-direction:column;justify-content:space-between}
-.card-form h3{margin:0 0 6px;font-size:15px;color:var(--nd)}
-.card-form p{font-size:12px;color:#64748b;margin:0 0 14px}
-.status-pill{display:inline-block;padding:3px 8px;border-radius:12px;font-size:10px;font-weight:800;text-transform:uppercase}
-.status-en_edicion{background:#fef3c7;color:#92400e}
-.status-finalizado{background:#dcfce7;color:#166534}
 </style>
 </head>
 <body><div class="app"><?php sidebar($pdo,$slug); ?><main class="content">
@@ -106,22 +69,6 @@ $mes=(int)($_GET['mes']??date('n')); $anio=(int)($_GET['anio']??date('Y'));
 if($mes<1||$mes>12)$mes=(int)date('n'); if($anio<2020||$anio>2100)$anio=(int)date('Y');
 $primerDia=sprintf('%04d-%02d-01',$anio,$mes); $diasMes=(int)date('t',strtotime($primerDia)); $inicioSemana=(int)date('N',strtotime($primerDia));
 $eventosPorDia=[]; foreach($rows as $r){if(substr($r['fecha_vencimiento'],0,7)===sprintf('%04d-%02d',$anio,$mes)){$d=(int)substr($r['fecha_vencimiento'],8,2);$eventosPorDia[$d][]=$r;}}
-
-// Crea la tabla de checklists si todavia no existe (asi nadie tiene que importar SQL a mano)
-$pdo->exec("CREATE TABLE IF NOT EXISTS rrhh_formularios (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    sector_id INT NOT NULL,
-    codigo_form VARCHAR(100) NOT NULL,
-    empleado_nombre VARCHAR(150),
-    legajo VARCHAR(50),
-    fecha_documento DATE,
-    estado VARCHAR(50) DEFAULT 'en_edicion',
-    datos_json LONGTEXT,
-    creado_por INT,
-    actualizado_por INT,
-    creado_en DATETIME DEFAULT CURRENT_TIMESTAMP,
-    actualizado_en DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
 
 // Consultar Formularios / Checklists
 $stForms = $pdo->prepare('SELECT f.*, u.nombre AS creado_nombre FROM rrhh_formularios f LEFT JOIN usuarios u ON u.id = f.creado_por WHERE f.sector_id = ? ORDER BY f.id DESC');
@@ -273,7 +220,7 @@ $formularios = $stForms->fetchAll();
 <?php if($canEdit):?>
 <section class="module-card" id="gestion">
   <h3><?=$edit?'Modificar registro':'Nueva licencia / vencimiento'?></h3>
-  <form method="post" class="module-form">
+  <form method="post" class="module-form"><?=csrf_field()?>
     <input type="hidden" name="accion" value="guardar">
     <input type="hidden" name="id" value="<?=h($edit['id']??'')?>">
     <label>Empleado<input name="empleado_nombre" required value="<?=h($edit['empleado_nombre']??'')?>"></label>
@@ -362,7 +309,7 @@ $formularios = $stForms->fetchAll();
         <?php if($canEdit):?>
         <td class="module-actions">
           <a class="btn secondary" href="?editar=<?=(int)$r['id']?>">Editar</a>
-          <form method="post" onsubmit="return confirm('¿Eliminar este registro?')">
+          <form method="post" onsubmit="return confirm('¿Eliminar este registro?')"><?=csrf_field()?>
             <input type="hidden" name="accion" value="eliminar">
             <input type="hidden" name="id" value="<?=(int)$r['id']?>">
             <button class="btn secondary">Eliminar</button>

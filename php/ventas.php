@@ -1,6 +1,7 @@
 <?php
 require __DIR__ . '/config/auth.php';
 requireLogin();
+verify_csrf(); // protege todos los formularios POST de esta pagina
 require __DIR__ . '/config/db.php';
 require __DIR__ . '/config/layout.php';
 
@@ -416,7 +417,7 @@ if($canEdit && !empty($_GET['editar_precio'])){
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Ventas y Contratos | NASER SGI</title>
-<link rel="stylesheet" href="<?=app_url('/style.css')?>?v=20260930">
+<link rel="stylesheet" href="<?=asset('/style.css')?>">
 <style>
 :root{--vg:#15803d;--vd:#14532d;--vl:#e4ebe6;--vs:#f0fdf4;--vt:#1f2937;--vm:#6b7280}
 .sales-hero{position:relative;overflow:hidden;background:linear-gradient(125deg,#103c26,#15803d);color:#fff;border-radius:20px;padding:27px 29px;margin-bottom:20px;box-shadow:0 12px 30px rgba(20,70,40,.13)}
@@ -495,7 +496,7 @@ if($canEdit && !empty($_GET['editar_precio'])){
 <?php if($canEdit):?>
 <div class="sales-card">
 <h2><?=$editContrato?'Modificar cliente / contrato':'Nuevo cliente / contrato'?></h2>
-<form method="post" class="sales-form">
+<form method="post" class="sales-form"><?=csrf_field()?>
 <input type="hidden" name="accion" value="guardar_contrato">
 <input type="hidden" name="id" value="<?=h($editContrato['id']??'')?>">
 <label>Razón social<input name="razon_social" required value="<?=h($editContrato['razon_social']??'')?>"></label>
@@ -544,7 +545,7 @@ if($canEdit && !empty($_GET['editar_precio'])){
 <?php if($canEdit):?>
 <td class="sales-actions">
     <a class="btn secondary" href="?editar_contrato=<?=(int)$r['id']?>">Editar</a>
-    <form method="post" onsubmit="return confirm('¿Eliminar contrato?')">
+    <form method="post" onsubmit="return confirm('¿Eliminar contrato?')"><?=csrf_field()?>
         <input type="hidden" name="accion" value="eliminar_contrato">
         <input type="hidden" name="id" value="<?=(int)$r['id']?>">
         <button class="btn secondary">Eliminar</button>
@@ -565,7 +566,7 @@ if($canEdit && !empty($_GET['editar_precio'])){
 <?php if($canEdit):?>
 <div class="sales-card">
 <h2><?=$editPrecio?'Modificar tarifa':'Nueva tarifa'?></h2>
-<form method="post" class="sales-form">
+<form method="post" class="sales-form"><?=csrf_field()?>
 <input type="hidden" name="accion" value="guardar_precio">
 <input type="hidden" name="id" value="<?=h($editPrecio['id']??'')?>">
 <label class="full">Servicio<input name="servicio_nombre" required value="<?=h($editPrecio['servicio_nombre']??'')?>"></label>
@@ -615,7 +616,7 @@ if($canEdit && !empty($_GET['editar_precio'])){
 <?php if($canEdit):?>
 <td class="sales-actions">
     <a class="btn secondary" href="?editar_precio=<?=(int)$p['id']?>">Editar</a>
-    <form method="post">
+    <form method="post"><?=csrf_field()?>
         <input type="hidden" name="accion" value="eliminar_precio">
         <input type="hidden" name="id" value="<?=(int)$p['id']?>">
         <button class="btn secondary">Eliminar</button>
@@ -636,7 +637,7 @@ if($canEdit && !empty($_GET['editar_precio'])){
 <div class="sales-card">
 <h2>Registrar costo operativo</h2>
 <p>Compara el ingreso comercial estimado con los costos directos informados por Finanzas y Mantenimiento.</p>
-<form method="post" class="sales-form">
+<form method="post" class="sales-form"><?=csrf_field()?>
 <input type="hidden" name="accion" value="guardar_costo">
 <label class="full">Línea de servicio<input name="linea_servicio" required></label>
 <label>Ingreso diario USD<input type="number" step="0.01" name="ingreso_diario_usd" required></label>
@@ -679,7 +680,7 @@ if($canEdit && !empty($_GET['editar_precio'])){
 <?php if($canEdit):?>
 <div class="sales-card">
 <h2>Nueva cotización / licitación</h2>
-<form method="post" class="sales-form">
+<form method="post" class="sales-form"><?=csrf_field()?>
 <input type="hidden" name="accion" value="guardar_cotizacion">
 <label>Cliente
 <select name="cliente_id" required>
@@ -700,7 +701,7 @@ if($canEdit && !empty($_GET['editar_precio'])){
 
 <div class="sales-card">
 <h2>Subir presentación (Naser / Petroneu)</h2>
-<form method="post" enctype="multipart/form-data" class="sales-form">
+<form method="post" enctype="multipart/form-data" class="sales-form"><?=csrf_field()?>
 <input type="hidden" name="accion" value="subir_presentacion">
 <label class="full">Título<input name="titulo" required></label>
 <label>Empresa
@@ -734,7 +735,7 @@ if($canEdit && !empty($_GET['editar_precio'])){
 <td><a class="btn secondary" target="_blank" href="<?=h($url)?>">Abrir</a></td>
 <?php if($canEdit):?>
 <td>
-<form method="post">
+<form method="post"><?=csrf_field()?>
 <input type="hidden" name="accion" value="eliminar_presentacion">
 <input type="hidden" name="id" value="<?=(int)$p['id']?>">
 <button class="btn secondary">Eliminar</button>
@@ -754,7 +755,7 @@ if($canEdit && !empty($_GET['editar_precio'])){
 <?php if($canEdit):?>
 <div class="sales-card">
 <h2>Nuevo seguimiento comercial</h2>
-<form method="post" class="sales-form">
+<form method="post" class="sales-form"><?=csrf_field()?>
 <input type="hidden" name="accion" value="guardar_crm">
 <label>Cliente
 <select name="cliente_id" required>
@@ -801,7 +802,7 @@ if($canEdit && !empty($_GET['editar_precio'])){
 <td><?=h($r['responsable_naser'])?></td>
 <?php if($canEdit):?>
 <td>
-<form method="post">
+<form method="post"><?=csrf_field()?>
 <input type="hidden" name="accion" value="eliminar_crm">
 <input type="hidden" name="id" value="<?=(int)$r['id']?>">
 <button class="btn secondary">Eliminar</button>
@@ -865,7 +866,7 @@ if($canEdit && !empty($_GET['editar_precio'])){
 <?php if($canEdit):?>
 <div class="sales-card" id="modalCalendario" style="display:none; border-color: var(--vg);">
 <h3>Agregar comentario / alarma para la fecha: <span id="fechaSeleccionadaTexto"></span></h3>
-<form method="post" class="sales-form">
+<form method="post" class="sales-form"><?=csrf_field()?>
 <input type="hidden" name="accion" value="guardar_evento_calendario">
 <input type="hidden" name="fecha_alarma" id="inputFechaAlarma">
 <label>Título / Referencia<input name="titulo" required placeholder="Ej. Llamada cliente / Vencimiento de oferta"></label>
@@ -905,7 +906,7 @@ if($canEdit && !empty($_GET['editar_precio'])){
 <?php if($canEdit):?>
 <td>
 <?php if(!$a['leido']):?>
-<form method="post">
+<form method="post"><?=csrf_field()?>
 <input type="hidden" name="accion" value="marcar_leida">
 <input type="hidden" name="id" value="<?=(int)$a['id']?>">
 <button class="btn secondary">Marcar leída</button>
@@ -927,7 +928,7 @@ if($canEdit && !empty($_GET['editar_precio'])){
 <div class="sales-card">
 <h2>Mensaje entre sectores</h2>
 <p>Registra comunicaciones internas desde Ventas hacia otro sector del SGI.</p>
-<form method="post" class="sales-form">
+<form method="post" class="sales-form"><?=csrf_field()?>
 <input type="hidden" name="accion" value="enviar_mensaje">
 <label>Sector destino
 <select name="sector_destino" required>
