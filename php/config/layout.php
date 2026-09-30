@@ -6,7 +6,18 @@ function sidebar(PDO $pdo, string $active=''): void {
     $rol = $_SESSION['rol'] ?? '';
     $canDocs = puedeGestionarDocumentos($pdo);
 ?>
-<aside class="sidebar">
+<header class="mobile-bar">
+  <a class="mobile-brand" href="<?=app_url('/php/dashboard.php')?>"><img src="<?=app_url('/img/logo-naser.png')?>" alt="NASER - Ir al inicio"></a>
+  <button type="button" class="menu-toggle" aria-controls="menu-principal" aria-expanded="false" aria-label="Abrir menú">
+    <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    <span>Menú</span>
+  </button>
+</header>
+<div class="menu-backdrop" hidden></div>
+<aside class="sidebar" id="menu-principal">
+  <button type="button" class="menu-close" aria-label="Cerrar menú">
+    <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+  </button>
   <a class="brand-panel" href="<?=app_url('/php/dashboard.php')?>"><img src="<?=app_url('/img/logo-naser.png')?>" alt="NASER División Petróleo"></a>
   <nav class="side-nav">
     <a class="<?=$active==='inicio'?'active':''?>" href="<?=app_url('/php/dashboard.php')?>"><span>⌂</span> Inicio</a>
@@ -33,4 +44,23 @@ function sidebar(PDO $pdo, string $active=''): void {
   </nav>
   <div class="sidebar-user"><strong><?=h($_SESSION['nombre'] ?? '')?></strong><span><?=h($rol==='admin'?'Administrador':ucfirst($rol))?></span><a href="<?=app_url('/php/logout.php')?>">Cerrar sesión</a></div>
 </aside>
+<<<<<<< HEAD
+=======
+<script>
+(function(){
+  var body=document.body, btn=document.querySelector('.menu-toggle'),
+      closeBtn=document.querySelector('.menu-close'), backdrop=document.querySelector('.menu-backdrop'),
+      menu=document.getElementById('menu-principal');
+  if(!btn||!menu) return;
+  function abrir(){ body.classList.add('menu-abierto'); backdrop.hidden=false; btn.setAttribute('aria-expanded','true'); closeBtn.focus(); }
+  function cerrar(){ body.classList.remove('menu-abierto'); backdrop.hidden=true; btn.setAttribute('aria-expanded','false'); }
+  btn.addEventListener('click', abrir);
+  closeBtn.addEventListener('click', function(){ cerrar(); btn.focus(); });
+  backdrop.addEventListener('click', cerrar);
+  document.addEventListener('keydown', function(e){ if(e.key==='Escape' && body.classList.contains('menu-abierto')){ cerrar(); btn.focus(); } });
+  menu.addEventListener('click', function(e){ if(e.target.closest('a')) cerrar(); });
+  window.addEventListener('resize', function(){ if(window.innerWidth>900) cerrar(); });
+})();
+</script>
+>>>>>>> 0e380e2 (Cambios)
 <?php }

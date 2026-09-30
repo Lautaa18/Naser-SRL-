@@ -1,7 +1,117 @@
-services:
+MARIADB_DATABASE: ${DB_NAME}
+MARIADB_USER: ${DB_USER}
+MARIADB_PASSWORD: ${DB_PASS}
+MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASS}services:
+  db:
+    image: mariadb:11
+ services:
+
+  # ==========================================
+  # BASE DE DATOS - MARIADB
+  # ==========================================
   db:
     image: mariadb:11
     container_name: naser_db
+    restart: unless-stopped
+
+    environment:
+      MARIADB_DATABASE: ${DB_NAME}
+      MARIADB_USER: ${DB_USER}
+      MARIADB_PASSWORD: ${DB_PASS}
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASS}
+
+    volumes:
+      - naser_db_data:/var/lib/mysql
+
+    networks:
+      - naser_network
+
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "healthcheck.sh",
+          "--connect",
+          "--innodb_initialized"
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+
+  # ==========================================
+  # NASER - PHP / APACHE
+  # ==========================================
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    container_name: naser_web
+    restart: unless-stopped
+
+    depends_on:
+      db:
+        condition: service_healthy
+
+    environment:
+      DB_HOST: ${DB_HOST}
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASS: ${DB_PASS}
+      APP_BASE: ${APP_BASE}
+
+    ports:
+      - "8080:80"
+
+    volumes:
+      - ./:/var/www/html
+
+    networks:
+      - naser_network
+
+
+  # ==========================================
+  # PHPMYADMIN
+  # ==========================================
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: naser_phpmyadmin
+    restart: unless-stopped
+
+    depends_on:
+      db:
+        condition: service_healthy
+
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      PMA_USER: root
+      PMA_PASSWORD: ${DB_ROOT_PASS}
+
+    ports:
+      - "8081:80"
+
+    networks:
+      - naser_network
+
+
+# ==========================================
+# VOLUMENES
+# ==========================================
+volumes:
+  naser_db_data:
+    name: naser_db_data
+
+
+# ==========================================
+# RED INTERNA
+# ==========================================
+networks:
+  naser_network:
+    name: naser_network
+    driver: bridge   container_name: naser_db
     restart: unless-stopped
     environment:
       MARIADB_DATABASE: ${DB_NAME:-naser_sgi_prueba}
