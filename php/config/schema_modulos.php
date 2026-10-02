@@ -244,7 +244,7 @@ function naser_schema_modulos(PDO $pdo): void
 function naser_schema_sql(PDO $pdo): void
 {
     $dir = dirname(__DIR__, 2) . '/sql';
-    $orden = ['modulos_integrados', 'integracion_nativa', 'ajustes_solicitudes_reales', 'ventas_integracion', 'rrhh_formularios'];
+    $orden = ['modulos_integrados', 'integracion_nativa', 'ajustes_solicitudes_reales', 'ventas_integracion', 'rrhh_formularios', 'mensajes'];
     foreach ($orden as $nombre) {
         $archivo = $dir . '/' . $nombre . '.sql';
         if (!is_file($archivo)) continue;

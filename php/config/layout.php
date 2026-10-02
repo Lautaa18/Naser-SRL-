@@ -7,6 +7,8 @@ function sidebar(PDO $pdo, string $active=''): void {
     $canDocs = puedeGestionarDocumentos($pdo);
     tareasDiarias($pdo); // avisos de vencimientos (una vez por dia)
     $sinLeer = notificacionesSinLeer($pdo, (int)($_SESSION['usuario_id'] ?? 0));
+    require_once __DIR__ . '/mensajes.php';
+    $msgSinLeer = mensajesSinLeer($pdo, (int)($_SESSION['usuario_id'] ?? 0));
     $urlNotif = app_url('/php/notificaciones.php');
     $campana = '<a class="notif-bell" href="' . h($urlNotif) . '" title="Notificaciones" aria-label="Notificaciones' . ($sinLeer ? " ($sinLeer sin leer)" : '') . '"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M12 22a2.5 2.5 0 0 0 2.4-2h-4.8A2.5 2.5 0 0 0 12 22Zm7-6V11a7 7 0 0 0-5-6.7V3.5a2 2 0 1 0-4 0v.8A7 7 0 0 0 5 11v5l-2 2v1h18v-1l-2-2Z" fill="currentColor"/></svg>' . ($sinLeer ? '<b>' . ($sinLeer > 99 ? '99+' : $sinLeer) . '</b>' : '') . '</a>';
 ?>
@@ -30,6 +32,7 @@ function sidebar(PDO $pdo, string $active=''): void {
     <a class="<?=$active==='sgi'?'active':''?>" href="<?=app_url('/php/sgi.php')?>"><span>▦</span> SGI</a>
     <a class="<?=$active==='buscar'?'active':''?>" href="<?=app_url('/php/buscar.php')?>"><span>⌕</span> Buscar documentación</a>
     <a class="<?=$active==='formularios'?'active':''?>" href="<?=app_url('/php/formularios/index.php')?>"><span>✎</span> Formularios</a>
+    <a class="<?=$active==='mensajes'?'active':''?>" href="<?=app_url('/php/mensajes.php')?>"><span>✉</span> Mensajes<?= $msgSinLeer ? ' (' . (int)$msgSinLeer . ')' : '' ?></a>
     <?php if(puedeVerHabilitaciones($pdo)): ?><a class="<?=$active==='personal'?'active':''?>" href="<?=app_url('/php/personal.php')?>"><span>☺</span> Personal</a><?php endif; ?>
     <div class="nav-label">SECTORES</div>
     <?php foreach($sectores as $s): if($s['slug']==='sgi') continue; ?>
