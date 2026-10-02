@@ -40,6 +40,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             registrarActividad($pdo, 'aplicar_estructura', count($inf['creados']) . ' creados, ' . $inf['actualizados'] . ' actualizados');
             $txt = 'Estructura aplicada: ' . count($inf['creados']) . ' usuario(s) creado(s) y ' . $inf['actualizados'] . ' actualizado(s).';
             if ($inf['avisos']) $txt .= ' ' . implode(' ', $inf['avisos']);
+            $txt .= $inf['cambios']
+                ? ' Cambios de permisos: ' . implode(' | ', $inf['cambios']) . '.'
+                : ' Los permisos ya estaban como indica la estructura (no hubo cambios).';
             volver($txt, $inf['creados']);
         }
 

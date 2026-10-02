@@ -107,7 +107,7 @@ function aplicarEstructuraNaser(PDO $pdo, bool $enviarMails = false, bool $desac
     $e = estructuraNaser();
     $sectores = [];
     foreach ($pdo->query('SELECT id, slug FROM sectores')->fetchAll() as $s) $sectores[$s['slug']] = (int)$s['id'];
-    $informe = ['creados' => [], 'actualizados' => 0, 'avisos' => []];
+    $informe = ['creados' => [], 'actualizados' => 0, 'avisos' => [], 'cambios' => []];
 
     $pdo->beginTransaction();
     try {
@@ -172,9 +172,27 @@ function aplicarEstructuraNaser(PDO $pdo, bool $enviarMails = false, bool $desac
                 }
             }
         }
+        $slugDe = array_flip($sectores);
+        $nombreSector = [];
+        foreach ($pdo->query('SELECT id, nombre FROM sectores')->fetchAll() as $s) $nombreSector[(int)$s['id']] = $s['nombre'];
         foreach ($ids as $clave => $uid) {
+            // Roles que tenia antes, para informar que cambio
+            $antes = [];
+            $st = $pdo->prepare('SELECT sector_id, rol_sector FROM usuario_sector WHERE usuario_id = ?');
+            $st->execute([$uid]);
+            foreach ($st->fetchAll() as $r) $antes[$slugDe[(int)$r['sector_id']] ?? ''] = $r['rol_sector'];
+
             $pdo->prepare('DELETE FROM usuario_sector WHERE usuario_id = ?')->execute([$uid]);
             foreach ($deseado[$clave] ?? [] as $slug => $rol) asignarRolSector($pdo, $uid, $sectores[$slug], $rol);
+
+            $dif = [];
+            foreach ($deseado[$clave] ?? [] as $slug => $rol) {
+                if (($antes[$slug] ?? null) !== $rol) $dif[] = '+ ' . ($nombreSector[$sectores[$slug]] ?? $slug) . ' (' . $rol . ')';
+            }
+            foreach ($antes as $slug => $rol) {
+                if (!isset($deseado[$clave][$slug])) $dif[] = '- ' . ($nombreSector[$sectores[$slug] ?? 0] ?? $slug);
+            }
+            if ($dif) $informe['cambios'][] = $e['personas'][$clave][0] . ': ' . implode(', ', $dif);
         }
 
         // 5) Personal operativo con mail corporativo => usuario "operador" de su sector (Personal cargado desde el Excel)
