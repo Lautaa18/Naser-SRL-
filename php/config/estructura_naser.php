@@ -71,6 +71,7 @@ function estructuraNaser(): array {
             'finanzas' => ['noelia', 'carina', 'victor', 'ariel.costallat', 'osvaldo', 'ariel.ibanez'],
             'rrhh'     => ['noelia', 'carina', 'victor', 'ariel.costallat', 'osvaldo', 'ariel.ibanez'],
             'ventas'   => ['noelia', 'carina', 'victor', 'ariel.costallat', 'osvaldo', 'ariel.ibanez'],
+            'operaciones' => ['victor'],   // Gerencia puede mirar Operaciones (sector restringido)
         ],
 
         // Sectores que SOLO ven sus integrantes (el resto de los sectores los ven todos)
