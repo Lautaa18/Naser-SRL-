@@ -68,6 +68,19 @@ services:
     ports:
       - "127.0.0.1:8025:8025"
 
+  # Acceso desde internet con HTTPS (Cloudflare Tunnel). No abre puertos en el router.
+  # Se activa solo cuando en .env esta TUNNEL_TOKEN:  docker compose --profile tunnel up -d
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: naser_tunnel
+    restart: unless-stopped
+    profiles: ["tunnel"]
+    command: tunnel --no-autoupdate run
+    environment:
+      TUNNEL_TOKEN: ${TUNNEL_TOKEN:-}
+    depends_on:
+      - web
+
   # Copias de seguridad automaticas: base de datos todos los dias y uploads los domingos (en ./backups)
   backup:
     image: mariadb:11
