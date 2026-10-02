@@ -2,3 +2,11 @@ Options -Indexes
 <FilesMatch "\.(php|phtml|phar|cgi|pl|py|sh)$">
   Require all denied
 </FilesMatch>
+
+# Los archivos NO se sirven directo: pasan por php/descargar.php, que exige estar logueado
+# y respeta los permisos por sector (el SGI lo ve cualquier usuario logueado).
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{REQUEST_URI} ^(.*)/uploads/
+  RewriteRule ^(.+)$ %1/php/descargar.php?f=$1 [L,QSA,B]
+</IfModule>

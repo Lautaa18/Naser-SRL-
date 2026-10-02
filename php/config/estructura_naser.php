@@ -56,7 +56,7 @@ function estructuraNaser(): array {
             'mantenimiento' => ['juan', 'silvio', 'ariel.costallat'],
             'hseq'          => ['cintia', 'ariel.costallat'],
             'operaciones'   => ['andres.belizon', 'juan', 'ariel.costallat'],
-            'sgi'           => ['ariel.costallat'],
+            'sgi'           => ['victor', 'ariel.costallat'],   // SGI: ven todos; solo Gerencia (Bonfils y Costallat) carga y edita documentos
         ],
 
         // Operadores: ven y completan formularios
