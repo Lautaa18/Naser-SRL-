@@ -10,6 +10,10 @@ $uid = (int)$_SESSION['usuario_id'];
 $sectores = sectoresInfo($pdo);                       // id => datos
 $mios = array_map('intval', array_keys(misRolesSector($pdo)));
 $puedoComoSector = esAdmin() ? array_keys($sectores) : $mios;   // desde que sector puedo escribir
+// Primero los sectores donde soy responsable u operador (el sector "propio"), despues los de solo lectura
+$pesoRol = ['responsable' => 0, 'operador' => 1, 'observador' => 2];
+$misRoles = misRolesSector($pdo);
+usort($puedoComoSector, fn($x, $y) => ($pesoRol[$misRoles[$x] ?? ''] ?? 3) <=> ($pesoRol[$misRoles[$y] ?? ''] ?? 3));
 $msg = $_SESSION['flash_msg_mensajes'] ?? ''; $err = '';
 unset($_SESSION['flash_msg_mensajes']);
 
