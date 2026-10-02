@@ -235,3 +235,31 @@ function naser_schema_modulos(PDO $pdo): void
         CONSTRAINT fk_hab_emp FOREIGN KEY (empleado_id) REFERENCES empleados(id) ON DELETE CASCADE
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
 }
+
+/**
+ * Aplica los archivos de /sql (RRHH, Finanzas, Ventas...) de forma automatica.
+ * Son scripts "CREATE TABLE IF NOT EXISTS" / "ADD COLUMN IF NOT EXISTS", asi que se pueden repetir sin romper nada.
+ * Antes habia que importarlos a mano, y en una instalacion nueva fallaban RRHH, Finanzas y Ventas.
+ */
+function naser_schema_sql(PDO $pdo): void
+{
+    $dir = dirname(__DIR__, 2) . '/sql';
+    $orden = ['modulos_integrados', 'integracion_nativa', 'ajustes_solicitudes_reales', 'ventas_integracion', 'rrhh_formularios'];
+    foreach ($orden as $nombre) {
+        $archivo = $dir . '/' . $nombre . '.sql';
+        if (!is_file($archivo)) continue;
+        $lineas = array_filter(
+            preg_split('/\r\n|\r|\n/', (string)file_get_contents($archivo)),
+            fn($l) => !preg_match('/^\s*--/', $l)
+        );
+        foreach (explode(';', implode("\n", $lineas)) as $sentencia) {
+            $sentencia = trim($sentencia);
+            if ($sentencia === '') continue;
+            try {
+                $pdo->exec($sentencia);
+            } catch (Throwable $e) {
+                error_log('[NASER] sql/' . $nombre . '.sql: ' . $e->getMessage());
+            }
+        }
+    }
+}

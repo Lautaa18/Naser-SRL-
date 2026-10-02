@@ -2,7 +2,7 @@
 require_once __DIR__ . '/schema_modulos.php';
 
 // Cambiar este numero cada vez que se agregan tablas/columnas en schema_modulos.php
-const NASER_SCHEMA_VERSION = '2026.10.02-1';
+const NASER_SCHEMA_VERSION = '2026.10.02-2';
 
 function hasColumn(PDO $pdo, string $table, string $column): bool
 {
@@ -1009,6 +1009,8 @@ function naser_bootstrap(PDO $pdo): void
 
     // Tablas de los modulos (Compras, RRHH, login...)
     naser_schema_modulos($pdo);
+    // Tablas de RRHH, Finanzas y Ventas (archivos de /sql)
+    naser_schema_sql($pdo);
 
     $pdo->prepare("INSERT INTO sistema_config (clave, valor) VALUES ('schema_version', ?) ON DUPLICATE KEY UPDATE valor = VALUES(valor)")
         ->execute([NASER_SCHEMA_VERSION]);

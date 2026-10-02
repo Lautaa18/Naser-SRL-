@@ -3,7 +3,7 @@ require __DIR__.'/../config/auth.php';requireLogin();require __DIR__.'/../config
 verify_csrf();
 $msg='';$err='';$uploads=dirname(__DIR__,2).'/uploads/';if(!is_dir($uploads))mkdir($uploads,0775,true);
 $sectores=sectoresEditables($pdo);if(!$sectores){http_response_code(403);exit('No tenés sectores habilitados para editar.');}
-$sectorIds=array_map(fn($s)=>(int)$s['id'],$sectores);$sid=(int)($_REQUEST['sector_id']??$sectorIds[0]);if(!in_array($sid,$sectorIds,true))$sid=$sectorIds[0];
+$sectorIds=array_map(fn($s)=>(int)$s['id'],$sectores);$sid=(int)($_REQUEST['sector_id']??$sectorIds[0]);if(!in_array($sid,$sectorIds,true)){if($_SERVER['REQUEST_METHOD']==='POST'){http_response_code(403);exit('No tenés permiso para cargar documentos en ese sector.');}$sid=$sectorIds[0];}
 
 function cleanFolderName(string $s): string {$s=trim(str_replace('\\','/',$s),'/ ');$s=preg_replace('/[^\pL\pN _().-]+/u','_',$s);return mb_substr(trim($s),0,160);}
 function findOrCreateFolder(PDO $pdo,int $sid,string $name,?int $parent): int {$name=cleanFolderName($name);if($name==='')throw new RuntimeException('Nombre de carpeta vacío.');if($parent===null){$st=$pdo->prepare('SELECT id FROM carpetas WHERE sector_id=? AND nombre=? AND carpeta_padre_id IS NULL LIMIT 1');$st->execute([$sid,$name]);}else{$st=$pdo->prepare('SELECT id FROM carpetas WHERE sector_id=? AND nombre=? AND carpeta_padre_id=? LIMIT 1');$st->execute([$sid,$name,$parent]);}$id=$st->fetchColumn();if($id){$pdo->prepare('UPDATE carpetas SET activa=1 WHERE id=?')->execute([$id]);return(int)$id;}$pdo->prepare('INSERT INTO carpetas(sector_id,nombre,carpeta_padre_id,orden,activa) VALUES(?,?,?,?,1)')->execute([$sid,$name,$parent,999]);return(int)$pdo->lastInsertId();}
