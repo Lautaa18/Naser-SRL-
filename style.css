@@ -1,3 +1,4 @@
+
 :root{
   --green:#08783f;--green-2:#0b8f4b;--green-soft:#edf8f2;--green-dark:#06552f;
   --ink:#12211b;--muted:#68766f;--line:#dfe8e3;--bg:#f4f7f5;--white:#fff;
@@ -164,7 +165,13 @@
   .app .cal-event,.app .calendar-event-tag{font-size:10px;padding:3px 4px}
   .app .alert-item{flex-direction:column;gap:6px;font-size:14px}
 }
-
+.calendar-cell.empty {
+    background: #fdfdfd;
+    border: 1px dashed #e2e8f0;
+    min-height: 95px;
+    opacity: 0.3;
+    pointer-events: none;
+}
 /* ---------- Celulares chicos: todo a una columna ---------- */
 @media (max-width:560px){
   .stats,.sgi-stats{grid-template-columns:repeat(2,minmax(0,1fr))}
