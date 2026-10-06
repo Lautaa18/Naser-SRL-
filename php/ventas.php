@@ -453,6 +453,13 @@ if($canEdit && !empty($_GET['editar_precio'])){
 .calendar-cell.empty { background: #fafafa; cursor: default; border: none; }
 .calendar-date-num { font-weight: bold; font-size: 12px; color: var(--vt); }
 .calendar-event-tag { font-size: 10px; padding: 2px 4px; background: #e0f2fe; color: #0369a1; border-radius: 4px; margin-top: 4px; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cal-toolbar{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;margin:14px 0 4px}
+.cal-titulo{min-width:170px;text-align:center;font-size:16px;color:var(--vd)}
+.calendar-cell{min-height:92px;display:flex;flex-direction:column;gap:2px;overflow:hidden}
+.calendar-cell.other{background:#f6f8f7;border-color:#edf1ee}.calendar-cell.other .calendar-date-num{color:#a9b6af;font-weight:600}
+.calendar-cell.weekend:not(.other){background:#fbfdfb}
+.calendar-cell.today{border:2px solid var(--vg);background:var(--vs)}.calendar-cell.today .calendar-date-num{color:#fff;background:var(--vg);display:inline-block;min-width:20px;text-align:center;border-radius:999px;padding:1px 5px}
+.calendar-event-tag.warn{background:#fff1e6;color:#b45309}.calendar-event-more{font-size:10px;color:#6b7c73;font-weight:700;margin-top:2px}
 </style>
 </head>
 <body>
@@ -825,43 +832,21 @@ if($canEdit && !empty($_GET['editar_precio'])){
 <h2>Calendario interactivo comercial</h2>
 <p>Haz clic en cualquier día para registrar comentarios, recordatorios o alarmas para clientes y contratos.</p>
 
-<div class="calendar-grid">
-    <div class="calendar-day-head">Dom</div>
-    <div class="calendar-day-head">Lun</div>
-    <div class="calendar-day-head">Mar</div>
-    <div class="calendar-day-head">Mié</div>
-    <div class="calendar-day-head">Jue</div>
-    <div class="calendar-day-head">Vie</div>
-    <div class="calendar-day-head">Sáb</div>
-
-    <?php
-    $year = date('Y');
-    $month = date('m');
-    $firstDay = mktime(0, 0, 0, $month, 1, $year);
-    $daysInMonth = date('t', $firstDay);
-    $dayOfWeek = date('w', $firstDay);
-
-    // Días vacíos al inicio
-    for ($i = 0; $i < $dayOfWeek; $i++) {
-        echo '<div class="calendar-cell empty"></div>';
-    }
-
-    // Días del mes
-    for ($d = 1; $d <= $daysInMonth; $d++) {
-        $currentDate = sprintf('%04d-%02d-%02d', $year, $month, $d);
-        
-        // Buscar eventos o alarmas creadas para este día
-        $eventosDia = array_filter($alertas, fn($a) => substr($a['created_at'], 0, 10) === $currentDate);
-
-        echo '<div class="calendar-cell" onclick="abrirModalCalendario(\''.$currentDate.'\')">';
-        echo '<div class="calendar-date-num">'.$d.'</div>';
-        foreach ($eventosDia as $ev) {
-            echo '<span class="calendar-event-tag" title="'.h($ev['mensaje']).'">📌 '.h($ev['titulo']).'</span>';
-        }
-        echo '</div>';
-    }
-    ?>
+<div class="cal-toolbar">
+    <button type="button" class="btn secondary small" onclick="calMover(-1)">&larr; Anterior</button>
+    <strong id="calTitulo" class="cal-titulo"></strong>
+    <button type="button" class="btn secondary small" onclick="calMover(1)">Siguiente &rarr;</button>
+    <button type="button" class="btn primary small" onclick="calHoy()">Hoy</button>
 </div>
+<div class="calendar-grid" id="calGrid"></div>
+<?php
+$calEventos=[];
+foreach($alertas as $a){
+    $f=substr($a['created_at'],0,10);
+    $calEventos[$f][]=['t'=>$a['titulo'],'m'=>$a['mensaje'],'k'=>$a['tipo_alerta']];
+}
+?>
+<script>window.CAL_EVENTOS=<?=json_encode($calEventos,JSON_HEX_TAG|JSON_HEX_AMP|JSON_HEX_APOS|JSON_HEX_QUOT|JSON_UNESCAPED_UNICODE)?>;</script>
 </div>
 
 <!-- Modal / Formulario de Registro para el Calendario -->
@@ -1027,6 +1012,46 @@ function abrirModalCalendario(fecha) {
     modal.style.display = 'block';
     modal.scrollIntoView({ behavior: 'smooth' });
 }
+
+/* ===== Calendario: semanas completas, sin huecos ===== */
+(function(){
+    const MESES=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+    const DIAS=['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+    const hoy=new Date();
+    let cur=new Date(hoy.getFullYear(),hoy.getMonth(),1);
+    const pad=n=>String(n).padStart(2,'0');
+    const iso=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+    function render(){
+        const grid=document.getElementById('calGrid');
+        if(!grid) return;
+        grid.innerHTML='';
+        document.getElementById('calTitulo').textContent=MESES[cur.getMonth()]+' '+cur.getFullYear();
+        DIAS.forEach(n=>{const h=document.createElement('div');h.className='calendar-day-head';h.textContent=n;grid.appendChild(h);});
+        const inicio=new Date(cur.getFullYear(),cur.getMonth(),1-cur.getDay());
+        const ultimo=new Date(cur.getFullYear(),cur.getMonth()+1,0);
+        const total=Math.ceil((cur.getDay()+ultimo.getDate())/7)*7;
+        const hoyIso=iso(hoy);
+        for(let i=0;i<total;i++){
+            const d=new Date(inicio.getFullYear(),inicio.getMonth(),inicio.getDate()+i);
+            const f=iso(d);
+            const c=document.createElement('div');
+            c.className='calendar-cell'+(d.getMonth()!==cur.getMonth()?' other':'')+(f===hoyIso?' today':'')+((d.getDay()===0||d.getDay()===6)?' weekend':'');
+            c.onclick=()=>abrirModalCalendario(f);
+            const n=document.createElement('div');n.className='calendar-date-num';n.textContent=d.getDate();c.appendChild(n);
+            const evs=(window.CAL_EVENTOS||{})[f]||[];
+            evs.slice(0,3).forEach(ev=>{
+                const t=document.createElement('span');
+                t.className='calendar-event-tag'+(ev.k==='Alerta'||ev.k==='Vencimiento'?' warn':'');
+                t.title=ev.m;t.textContent='📌 '+ev.t;c.appendChild(t);
+            });
+            if(evs.length>3){const m=document.createElement('span');m.className='calendar-event-more';m.textContent='+'+(evs.length-3)+' más';c.appendChild(m);}
+            grid.appendChild(c);
+        }
+    }
+    window.calMover=function(n){cur=new Date(cur.getFullYear(),cur.getMonth()+n,1);render();};
+    window.calHoy=function(){cur=new Date(hoy.getFullYear(),hoy.getMonth(),1);render();};
+    render();
+})();
 </script>
 </body>
 </html>
