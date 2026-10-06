@@ -1,0 +1,19 @@
+# HTTPS automatico (Let's Encrypt) para NASER SGI.
+# Se activa con:  docker compose --profile https up -d
+# Requiere: DNS de SITE_DOMAIN apuntando a la IP publica de la empresa y el router
+# redirigiendo los puertos 80 y 443 hacia este servidor.
+{$SITE_DOMAIN:sgi.gruponaser.com.ar} {
+	encode gzip
+	header {
+		X-Content-Type-Options nosniff
+		Referrer-Policy strict-origin-when-cross-origin
+		-Server
+	}
+	# Caddy agrega X-Forwarded-Proto/For solo: auth.php ya los usa para la cookie Secure
+	reverse_proxy web:80 {
+		transport http {
+			read_timeout 900s
+			write_timeout 900s
+		}
+	}
+}

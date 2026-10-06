@@ -81,6 +81,26 @@ services:
     depends_on:
       - web
 
+  # HTTPS publico con certificado automatico (Let's Encrypt). Atiende los puertos 80 y 443.
+  # Se activa con:  docker compose --profile https up -d
+  # En el router: 80 -> 80 y 443 -> 443 hacia este servidor. El 8080 queda solo para la red interna.
+  caddy:
+    image: caddy:2
+    container_name: naser_caddy
+    restart: unless-stopped
+    profiles: ["https"]
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      SITE_DOMAIN: ${SITE_DOMAIN:-sgi.gruponaser.com.ar}
+    volumes:
+      - ./docker/Caddyfile:/etc/caddy/Caddyfile:ro
+      - naser_caddy_data:/data
+      - naser_caddy_config:/config
+    depends_on:
+      - web
+
   # Copias de seguridad automaticas: base de datos todos los dias y uploads los domingos (en ./backups)
   backup:
     image: mariadb:11
@@ -104,3 +124,5 @@ services:
 
 volumes:
   naser_db_data:
+  naser_caddy_data:
+  naser_caddy_config:
