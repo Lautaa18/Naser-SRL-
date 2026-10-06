@@ -45,7 +45,6 @@ function ventasExigirEdicion(bool $canEdit): void {
     }
 }
 
-// 1. REPARACIÓN / MEJORA: Acepta 'En Proceso'
 function normalizarEstadoContrato(string $v): string {
     return in_array($v, ['Activo', 'En Proceso', 'Licitación', 'Finalizado'], true) ? $v : 'Activo';
 }
@@ -80,8 +79,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $numero = trim($_POST['numero_contrato'] ?? '');
             $servicio = trim($_POST['servicio_operativo'] ?? '');
             $monto = (float)($_POST['monto_estimado_usd'] ?? 0);
-            $inicio = $_POST['fecha_inicio'] ?: null;
-            $fin = $_POST['fecha_fin'] ?: null;
+            $inicio = ($_POST['fecha_inicio'] ?? '') ?: null;
+            $fin = ($_POST['fecha_fin'] ?? '') ?: null;
             $estado = normalizarEstadoContrato($_POST['estado'] ?? 'Activo');
             $obs = trim($_POST['observaciones'] ?? '');
 
@@ -269,7 +268,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $clienteId=(int)($_POST['cliente_id']??0);
             $oportunidad=trim($_POST['oportunidad_servicio']??'');
             $etapa=trim($_POST['etapa_pipeline']??'Prospecto');
-            $fecha=$_POST['fecha_ultimo_contacto']?:date('Y-m-d');
+            $fecha=($_POST['fecha_ultimo_contacto']??'')?:date('Y-m-d');
             $proxima=trim($_POST['proxima_accion']??'');
             $responsable=trim($_POST['responsable_naser']??($_SESSION['nombre']??''));
 
@@ -294,46 +293,83 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         /* =====================================================
-           6. CALENDARIO INTERACTIVO, COMENTARIOS Y ALARMAS
+           6. CALENDARIO INTERACTIVO & ALERTAS COMPLETO (CRUD)
            ===================================================== */
-        if ($accion === 'guardar_alerta' || $accion === 'guardar_evento_calendario') {
+        if ($accion === 'guardar_evento_calendario') {
+            $id = (int)($_POST['evento_id'] ?? 0);
             $titulo = trim($_POST['titulo'] ?? '');
             $mensaje = trim($_POST['mensaje'] ?? '');
             $tipo = trim($_POST['tipo_alerta'] ?? 'Aviso');
-            $fechaAlarma = $_POST['fecha_alarma'] ?? date('Y-m-d');
+            $fechaAlarma = trim($_POST['fecha_alarma'] ?? '');
+            $horaAlarma = substr(trim($_POST['hora_alarma'] ?? '09:00'), 0, 5);
+            $leido = !empty($_POST['leido']) ? 1 : 0;
+
+            if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $fechaAlarma)) $fechaAlarma = date('Y-m-d');
+            if (!preg_match('/^\d{2}:\d{2}$/', $horaAlarma)) $horaAlarma = '09:00';
 
             if (!in_array($tipo, ['Alerta', 'Aviso', 'Finanzas', 'Vencimiento'], true)) $tipo = 'Aviso';
-            if ($titulo === '' || $mensaje === '') throw new RuntimeException('Completá título y mensaje/comentario.');
+            if ($titulo === '') throw new RuntimeException('Ingresá un título o referencia.');
 
-            $st = $pdo->prepare('INSERT INTO ventas_notificaciones
-                (sector_id,titulo,mensaje,tipo_alerta,leido,creado_por,created_at)
-                VALUES(?,?,?,?,0,?,?)');
-            $st->execute([$sid, $titulo, $mensaje . " (Fecha asignada: $fechaAlarma)", $tipo, $uid, $fechaAlarma . ' ' . date('H:i:s')]);
+            $timestamp = $fechaAlarma . ' ' . $horaAlarma . ':00';
+            $detalleMensaje = $mensaje;
 
-            ventasAudit($pdo, $uid, 'ventas_alerta', "$titulo ($fechaAlarma)");
-            $msg = 'Comentario / Alarma agregada al calendario correctamente.';
+            if ($id > 0) {
+                $st = $pdo->prepare('UPDATE ventas_notificaciones 
+                    SET titulo=?, mensaje=?, tipo_alerta=?, created_at=?, leido=?
+                    WHERE id=? AND sector_id=?');
+                $st->execute([$titulo, $detalleMensaje, $tipo, $timestamp, $leido, $id, $sid]);
+                ventasAudit($pdo, $uid, 'ventas_alerta_editar', "$titulo (#$id)");
+                $msg = 'Evento / Alerta actualizado correctamente.';
+            } else {
+                $st = $pdo->prepare('INSERT INTO ventas_notificaciones
+                    (sector_id,titulo,mensaje,tipo_alerta,leido,creado_por,created_at)
+                    VALUES(?,?,?,?,?,?,?)');
+                $st->execute([$sid, $titulo, $detalleMensaje, $tipo, $leido, $uid, $timestamp]);
+                ventasAudit($pdo, $uid, 'ventas_alerta_crear', "$titulo ($fechaAlarma)");
+                $msg = 'Evento / Alarma agendado correctamente en el calendario.';
+            }
+        }
+
+        if ($accion === 'eliminar_evento_calendario') {
+            $id = (int)($_POST['id'] ?? 0);
+            $pdo->prepare('DELETE FROM ventas_notificaciones WHERE id=? AND sector_id=?')->execute([$id, $sid]);
+            ventasAudit($pdo, $uid, 'ventas_alerta_eliminar', "Alerta #$id");
+            $msg = 'Evento / Alarma eliminado del calendario.';
         }
 
         if ($accion === 'marcar_leida') {
             $id=(int)($_POST['id']??0);
             $pdo->prepare('UPDATE ventas_notificaciones SET leido=1 WHERE id=? AND sector_id=?')->execute([$id,$sid]);
-            $msg='Notificación marcada como leída.';
+            $msg='Notificación marcada como completada/leída.';
         }
 
-        if ($accion === 'enviar_mensaje') {
-            $destino=trim($_POST['sector_destino']??'');
-            $asunto=trim($_POST['asunto']??'');
-            $mensaje=trim($_POST['mensaje_texto']??'');
+        /* =====================================================
+           COTIZACIONES / LICITACIONES
+           ===================================================== */
+        if ($accion === 'guardar_cotizacion') {
+            $clienteId = (int)($_POST['cliente_id'] ?? 0);
+            $codigo = trim($_POST['codigo_cotizacion'] ?? '');
+            $montoCot = (float)($_POST['monto_usd'] ?? 0);
+            $estadoCot = normalizarEstadoCotizacion($_POST['estado_kpi'] ?? 'En Estudio');
+            $fPres = ($_POST['fecha_presentacion'] ?? '') ?: date('Y-m-d');
+            $fResol = ($_POST['fecha_resolucion'] ?? '') ?: null;
 
-            if($destino==='' || $asunto==='' || $mensaje==='') throw new RuntimeException('Completá destino, asunto y mensaje.');
+            if (!$clienteId || $codigo === '') throw new RuntimeException('Seleccioná cliente e ingresá el código de cotización.');
 
-            $st=$pdo->prepare('INSERT INTO ventas_mensajes
-                (sector_id,sector_emisor,sector_destino,asunto,mensaje_texto,creado_por)
-                VALUES(?,?,?,?,?,?)');
-            $st->execute([$sid,'Ventas',$destino,$asunto,$mensaje,$uid]);
+            $st = $pdo->prepare('INSERT INTO ventas_cotizaciones
+                (sector_id,cliente_id,codigo_cotizacion,monto_usd,estado_kpi,fecha_presentacion,fecha_resolucion,creado_por,actualizado_por)
+                VALUES(?,?,?,?,?,?,?,?,?)');
+            $st->execute([$sid,$clienteId,$codigo,$montoCot,$estadoCot,$fPres,$fResol,$uid,$uid]);
 
-            ventasAudit($pdo,$uid,'ventas_mensaje',"$destino - $asunto");
-            $msg='Mensaje registrado para el sector '.$destino.'.';
+            ventasAudit($pdo,$uid,'ventas_cotizacion',$codigo);
+            $msg = 'Cotización registrada.';
+        }
+
+        if ($accion === 'eliminar_cotizacion') {
+            $id = (int)($_POST['id'] ?? 0);
+            $pdo->prepare('DELETE FROM ventas_cotizaciones WHERE id=? AND sector_id=?')->execute([$id,$sid]);
+            ventasAudit($pdo,$uid,'ventas_cotizacion_eliminar',"Cotización #$id");
+            $msg = 'Cotización eliminada.';
         }
 
     } catch (Throwable $e) {
@@ -379,15 +415,9 @@ $crm=$pdo->prepare('SELECT cr.*,cl.razon_social FROM ventas_crm cr JOIN ventas_c
 $crm->execute([$sid]);
 $crm=$crm->fetchAll();
 
-$alertas=$pdo->prepare('SELECT * FROM ventas_notificaciones WHERE sector_id=? ORDER BY created_at DESC,id DESC LIMIT 50');
+$alertas=$pdo->prepare('SELECT * FROM ventas_notificaciones WHERE sector_id=? ORDER BY created_at DESC,id DESC LIMIT 150');
 $alertas->execute([$sid]);
 $alertas=$alertas->fetchAll();
-
-$mensajes=$pdo->prepare('SELECT * FROM ventas_mensajes WHERE sector_id=? ORDER BY fecha_envio DESC,id DESC LIMIT 50');
-$mensajes->execute([$sid]);
-$mensajes=$mensajes->fetchAll();
-
-$sectores=$pdo->query('SELECT nombre FROM sectores ORDER BY orden,nombre')->fetchAll(PDO::FETCH_COLUMN);
 
 /* KPI */
 $totalCot=count($cotizaciones);
@@ -399,6 +429,14 @@ $licitacion=count(array_filter($contratos,fn($r)=>$r['estado']==='Licitación'))
 $finalizados=count(array_filter($contratos,fn($r)=>$r['estado']==='Finalizado'));
 $ticketPromedio=$precios ? array_sum(array_map(fn($r)=>(float)$r['ticket_promedio_tipo_usd'],$precios))/count($precios) : 0;
 $noLeidas=count(array_filter($alertas,fn($r)=>(int)$r['leido']===0));
+
+/* PARÁMETROS DEL CALENDARIO SANITIZADOS */
+$calMes = isset($_GET['mes']) ? (int)$_GET['mes'] : (int)date('m');
+$calAnio = isset($_GET['anio']) ? (int)$_GET['anio'] : (int)date('Y');
+
+if ($calMes < 1) { $calMes = 12; $calAnio--; }
+if ($calMes > 12) { $calMes = 1; $calAnio++; }
+if ($calAnio < 1970 || $calAnio > 2099) { $calAnio = (int)date('Y'); }
 
 $editContrato=null;
 if($canEdit && !empty($_GET['editar_contrato'])){
@@ -446,20 +484,29 @@ if($canEdit && !empty($_GET['editar_precio'])){
 .permission{padding:10px 13px;border:1px solid var(--vl);background:#f8faf8;border-radius:11px;font-size:12px;margin-bottom:16px}
 
 /* Estilos de Calendario Interactivo */
-.calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin-top: 15px; }
-.calendar-day-head { text-align: center; font-weight: bold; font-size: 11px; padding: 6px; background: #f1f7f3; color: #27583a; border-radius: 6px; }
-.calendar-cell { border: 1px solid var(--vl); min-height: 80px; border-radius: 8px; padding: 6px; background: #fff; cursor: pointer; transition: background 0.2s; }
-.calendar-cell:hover { background: var(--vs); border-color: var(--vg); }
-.calendar-cell.empty { background: #fafafa; cursor: default; border: none; }
-.calendar-date-num { font-weight: bold; font-size: 12px; color: var(--vt); }
-.calendar-event-tag { font-size: 10px; padding: 2px 4px; background: #e0f2fe; color: #0369a1; border-radius: 4px; margin-top: 4px; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.cal-toolbar{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;margin:14px 0 4px}
-.cal-titulo{min-width:170px;text-align:center;font-size:16px;color:var(--vd)}
-.calendar-cell{min-height:92px;display:flex;flex-direction:column;gap:2px;overflow:hidden}
-.calendar-cell.other{background:#f6f8f7;border-color:#edf1ee}.calendar-cell.other .calendar-date-num{color:#a9b6af;font-weight:600}
-.calendar-cell.weekend:not(.other){background:#fbfdfb}
-.calendar-cell.today{border:2px solid var(--vg);background:var(--vs)}.calendar-cell.today .calendar-date-num{color:#fff;background:var(--vg);display:inline-block;min-width:20px;text-align:center;border-radius:999px;padding:1px 5px}
-.calendar-event-tag.warn{background:#fff1e6;color:#b45309}.calendar-event-more{font-size:10px;color:#6b7c73;font-weight:700;margin-top:2px}
+.calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; background: #f8faf8; padding: 10px 15px; border-radius: 12px; border: 1px solid var(--vl); }
+.calendar-header h3 { margin: 0; font-size: 18px; color: var(--vd); }
+.calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+.calendar-day-head { text-align: center; font-weight: bold; font-size: 11px; padding: 8px; background: #f1f7f3; color: #27583a; border-radius: 6px; text-transform: uppercase; }
+.calendar-cell { border: 1px solid var(--vl); min-height: 95px; border-radius: 10px; padding: 8px; background: #fff; cursor: pointer; transition: all 0.2s; position: relative; display: flex; flex-direction: column; justify-content: space-between; }
+.calendar-cell:hover { background: var(--vs); border-color: var(--vg); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+.calendar-cell.today { background: #f0fdf4; border: 2px solid var(--vg); }
+.calendar-cell.other { background: #f6f8f7; border-color: #edf1ee; }
+.calendar-cell.other .calendar-date-num { color: #a9b6af; font-weight: 600; }
+.calendar-cell.other .calendar-event-tag { opacity: .75; }
+.calendar-cell.empty { background: #fdfdfd; cursor: default; border: 1px dashed #e2e8f0; min-height: 95px; opacity: 0.3; box-shadow: none; pointer-events: none; }
+.calendar-date-num { font-weight: 800; font-size: 13px; color: var(--vt); }
+.calendar-events-container { margin-top: 4px; display: flex; flex-direction: column; gap: 3px; max-height: 60px; overflow-y: auto; }
+.calendar-event-tag { font-size: 10px; padding: 3px 6px; border-radius: 5px; font-weight: 700; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.calendar-event-tag.Alerta { background: #fee2e2; color: #991b1b; }
+.calendar-event-tag.Aviso { background: #e0f2fe; color: #0369a1; }
+.calendar-event-tag.Vencimiento { background: #fef3c7; color: #92400e; }
+.calendar-event-tag.Finanzas { background: #dcfce7; color: #166534; }
+.calendar-event-tag.leido { opacity: 0.5; text-decoration: line-through; }
+
+/* Modal y detalle de día */
+.day-detail-box { background: #f9fafb; border: 1px solid var(--vl); border-radius: 12px; padding: 15px; margin-top: 15px; }
+.day-event-card { background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 10px 12px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
 </style>
 </head>
 <body>
@@ -489,15 +536,14 @@ if($canEdit && !empty($_GET['editar_precio'])){
 </section>
 
 <div class="sales-tabs">
-<button class="active" onclick="tabVentas('contratos',this)">1. Clientes y Contratos</button>
-<button onclick="tabVentas('precios',this)">2. Precios y Ticket</button>
-<button onclick="tabVentas('costos',this)">3. Costos Operativos</button>
-<button onclick="tabVentas('presentaciones',this)">4. Presentaciones Naser & Petroneu</button>
-<button onclick="tabVentas('crm',this)">5. CRM Interactivo</button>
-<button onclick="tabVentas('calendario',this)">6. Calendario & Alarmas</button>
-<button onclick="tabVentas('alertas',this)">7. Avisos (<span class="pill danger"><?=$noLeidas?></span>)</button>
-<button onclick="tabVentas('mensajes',this)">8. Mensajes</button>
-<button onclick="tabVentas('formularios',this)">9. Formularios</button>
+<button type="button" data-tab="contratos" class="active" onclick="tabVentas('contratos')">Clientes y Contratos</button>
+<button type="button" data-tab="precios" onclick="tabVentas('precios')">Precios y Ticket</button>
+<button type="button" data-tab="costos" onclick="tabVentas('costos')">Costos Operativos</button>
+<button type="button" data-tab="presentaciones" onclick="tabVentas('presentaciones')">Presentaciones Naser &amp; Petroneu</button>
+<button type="button" data-tab="crm" onclick="tabVentas('crm')">CRM Interactivo</button>
+<button type="button" data-tab="calendario" onclick="tabVentas('calendario')">Calendario &amp; Alarmas</button>
+<button type="button" data-tab="alertas" onclick="tabVentas('alertas')">Avisos <span class="pill danger"><?=$noLeidas?></span></button>
+<button type="button" data-tab="formularios" onclick="tabVentas('formularios')">Formularios</button>
 </div>
 
 <!-- 1. CONTRATOS (ACTIVOS, EN PROCESO, FINALIZADOS) -->
@@ -527,7 +573,7 @@ if($canEdit && !empty($_GET['editar_precio'])){
 <label>Fecha inicio<input type="date" name="fecha_inicio" value="<?=h($editContrato['fecha_inicio']??'')?>"></label>
 <label>Fecha fin<input type="date" name="fecha_fin" value="<?=h($editContrato['fecha_fin']??'')?>"></label>
 <label class="full">Observaciones<textarea name="observaciones"><?=h($editContrato['observaciones']??'')?></textarea></label>
-<div class="full"><button class="btn primary">Guardar</button><?php if($editContrato):?> <a class="btn secondary" href="<?=app_url('/php/ventas.php')?>">Cancelar</a><?php endif;?></div>
+<div class="full"><button class="btn primary">Guardar</button><?php if($editContrato):?> <a class="btn secondary" href="<?=app_url('/php/ventas.php')?>?tab=contratos">Cancelar</a><?php endif;?></div>
 </form>
 </div>
 <?php endif;?>
@@ -553,7 +599,7 @@ if($canEdit && !empty($_GET['editar_precio'])){
 <td><?=h($r['actualizado_nombre']??'Sistema')?></td>
 <?php if($canEdit):?>
 <td class="sales-actions">
-    <a class="btn secondary" href="?editar_contrato=<?=(int)$r['id']?>">Editar</a>
+    <a class="btn secondary" href="?tab=contratos&editar_contrato=<?=(int)$r['id']?>">Editar</a>
     <form method="post" onsubmit="return confirm('¿Eliminar contrato?')"><?=csrf_field()?>
         <input type="hidden" name="accion" value="eliminar_contrato">
         <input type="hidden" name="id" value="<?=(int)$r['id']?>">
@@ -624,7 +670,7 @@ if($canEdit && !empty($_GET['editar_precio'])){
 <td><?=h($p['actualizado_nombre']??'Sistema')?></td>
 <?php if($canEdit):?>
 <td class="sales-actions">
-    <a class="btn secondary" href="?editar_precio=<?=(int)$p['id']?>">Editar</a>
+    <a class="btn secondary" href="?tab=precios&editar_precio=<?=(int)$p['id']?>">Editar</a>
     <form method="post"><?=csrf_field()?>
         <input type="hidden" name="accion" value="eliminar_precio">
         <input type="hidden" name="id" value="<?=(int)$p['id']?>">
@@ -728,6 +774,36 @@ if($canEdit && !empty($_GET['editar_precio'])){
 </section>
 
 <div class="sales-card">
+<h2>Cotizaciones y licitaciones</h2>
+<div class="sales-table-wrap">
+<table class="sales-table">
+<thead><tr><th>Código</th><th>Cliente</th><th>Monto</th><th>Estado</th><th>Presentación</th><th>Resolución</th><?php if($canEdit):?><th></th><?php endif;?></tr></thead>
+<tbody>
+<?php foreach($cotizaciones as $co):?>
+<tr>
+<td><?=h($co['codigo_cotizacion'])?></td>
+<td><?=h($co['razon_social'])?></td>
+<td>USD <?=number_format((float)$co['monto_usd'],2,',','.')?></td>
+<td><span class="pill <?=$co['estado_kpi']==='Ganada'?'':($co['estado_kpi']==='No Adjudicada'?'danger':'warn')?>"><?=h($co['estado_kpi'])?></span></td>
+<td><?=h($co['fecha_presentacion']??'')?></td>
+<td><?=h($co['fecha_resolucion']??'')?></td>
+<?php if($canEdit):?>
+<td>
+<form method="post" onsubmit="return confirm('¿Eliminar cotización?')"><?=csrf_field()?>
+<input type="hidden" name="accion" value="eliminar_cotizacion">
+<input type="hidden" name="id" value="<?=(int)$co['id']?>">
+<button class="btn secondary">Eliminar</button>
+</form>
+</td>
+<?php endif;?>
+</tr>
+<?php endforeach;?>
+</tbody>
+</table>
+</div>
+</div>
+
+<div class="sales-card">
 <h2>Presentaciones corporativas (Dossiers Naser & Petroneu)</h2>
 <div class="sales-table-wrap">
 <table class="sales-table">
@@ -826,53 +902,111 @@ if($canEdit && !empty($_GET['editar_precio'])){
 </div>
 </section>
 
-<!-- 6. CALENDARIO INTERACTIVO (DÍAS, COMENTARIOS Y ALARMAS) -->
+<!-- 6. CALENDARIO INTERACTIVO & ALERTAS COMPLETO -->
 <section id="tab-calendario" class="sales-tab">
 <div class="sales-card">
-<h2>Calendario interactivo comercial</h2>
-<p>Haz clic en cualquier día para registrar comentarios, recordatorios o alarmas para clientes y contratos.</p>
+    <?php
+    $mesesNombres = [1=>'Enero', 2=>'Febrero', 3=>'Marzo', 4=>'Abril', 5=>'Mayo', 6=>'Junio', 7=>'Julio', 8=>'Agosto', 9=>'Septiembre', 10=>'Octubre', 11=>'Noviembre', 12=>'Diciembre'];
+    $prevMes = $calMes - 1; $prevAnio = $calAnio;
+    if ($prevMes < 1) { $prevMes = 12; $prevAnio--; }
+    $nextMes = $calMes + 1; $nextAnio = $calAnio;
+    if ($nextMes > 12) { $nextMes = 1; $nextAnio++; }
+    ?>
+    <div class="calendar-header">
+        <a class="btn secondary" href="?tab=calendario&mes=<?=$prevMes?>&anio=<?=$prevAnio?>">◀ Mes Anterior</a>
+        <h3>🗓️ <?=$mesesNombres[$calMes]?> <?=$calAnio?></h3>
+        <a class="btn secondary" href="?tab=calendario&mes=<?=$nextMes?>&anio=<?=$nextAnio?>">Mes Siguiente ▶</a>
+    </div>
 
-<div class="cal-toolbar">
-    <button type="button" class="btn secondary small" onclick="calMover(-1)">&larr; Anterior</button>
-    <strong id="calTitulo" class="cal-titulo"></strong>
-    <button type="button" class="btn secondary small" onclick="calMover(1)">Siguiente &rarr;</button>
-    <button type="button" class="btn primary small" onclick="calHoy()">Hoy</button>
-</div>
-<div class="calendar-grid" id="calGrid"></div>
-<?php
-$calEventos=[];
-foreach($alertas as $a){
-    $f=substr($a['created_at'],0,10);
-    $calEventos[$f][]=['t'=>$a['titulo'],'m'=>$a['mensaje'],'k'=>$a['tipo_alerta']];
-}
-?>
-<script>window.CAL_EVENTOS=<?=json_encode($calEventos,JSON_HEX_TAG|JSON_HEX_AMP|JSON_HEX_APOS|JSON_HEX_QUOT|JSON_UNESCAPED_UNICODE)?>;</script>
+    <div class="calendar-grid">
+        <div class="calendar-day-head">Dom</div>
+        <div class="calendar-day-head">Lun</div>
+        <div class="calendar-day-head">Mar</div>
+        <div class="calendar-day-head">Mié</div>
+        <div class="calendar-day-head">Jue</div>
+        <div class="calendar-day-head">Vie</div>
+        <div class="calendar-day-head">Sáb</div>
+
+        <?php
+        // CÁLCULO PRECISO Y CORREGIDO DEL DÍA DE LA SEMANA
+        $firstDayStr = sprintf('%04d-%02d-01', $calAnio, $calMes);
+        $daysInMonth = (int)date('t', strtotime($firstDayStr));
+        $dayOfWeek   = (int)date('w', strtotime($firstDayStr)); // 0 (Domingo) a 6 (Sábado)
+        $hoyStr      = date('Y-m-d');
+
+        // Semanas completas: los huecos se rellenan con días del mes anterior / siguiente (en gris)
+        $totalCeldas = (int)ceil(($dayOfWeek + $daysInMonth) / 7) * 7;
+        for ($i = 0; $i < $totalCeldas; $i++) {
+            $ts          = mktime(0, 0, 0, $calMes, 1 - $dayOfWeek + $i, $calAnio);
+            $currentDate = date('Y-m-d', $ts);
+            $d           = (int)date('j', $ts);
+            $otroMes     = ((int)date('n', $ts) !== $calMes);
+            $isToday     = ($currentDate === $hoyStr);
+
+            // Eventos agendados para este día
+            $eventosDia = array_filter($alertas, fn($a) => substr($a['created_at'], 0, 10) === $currentDate);
+
+            echo '<div class="calendar-cell '.($isToday ? 'today' : '').($otroMes ? ' other' : '').'" onclick="abrirModalCalendario(\''.$currentDate.'\')">';
+            echo '<div><span class="calendar-date-num">'.$d.'</span>'.($isToday ? ' <small style="color:var(--vg);font-weight:bold">(Hoy)</small>' : '').'</div>';
+
+            echo '<div class="calendar-events-container">';
+            foreach ($eventosDia as $ev) {
+                $claseTipo = h($ev['tipo_alerta']);
+                $esLeida   = (int)$ev['leido'] === 1 ? 'leido' : '';
+                echo '<span class="calendar-event-tag '.$claseTipo.' '.$esLeida.'" title="'.h($ev['mensaje']).'">📌 '.h($ev['titulo']).'</span>';
+            }
+            echo '</div>';
+
+            echo '</div>';
+        }
+        ?>
+    </div>
 </div>
 
-<!-- Modal / Formulario de Registro para el Calendario -->
-<?php if($canEdit):?>
+<!-- Panel / Modal de Vista de Eventos del Día -->
 <div class="sales-card" id="modalCalendario" style="display:none; border-color: var(--vg);">
-<h3>Agregar comentario / alarma para la fecha: <span id="fechaSeleccionadaTexto"></span></h3>
-<form method="post" class="sales-form"><?=csrf_field()?>
-<input type="hidden" name="accion" value="guardar_evento_calendario">
-<input type="hidden" name="fecha_alarma" id="inputFechaAlarma">
-<label>Título / Referencia<input name="titulo" required placeholder="Ej. Llamada cliente / Vencimiento de oferta"></label>
-<label>Tipo de Alarma
-<select name="tipo_alerta">
-<option>Aviso</option>
-<option>Alerta</option>
-<option>Vencimiento</option>
-<option>Finanzas</option>
-</select>
-</label>
-<label class="full">Comentarios u observaciones<textarea name="mensaje" required placeholder="Ingresar detalles para este día..."></textarea></label>
-<div class="full">
-<button class="btn primary">Guardar en Calendario</button>
-<button type="button" class="btn secondary" onclick="document.getElementById('modalCalendario').style.display='none'">Cancelar</button>
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+        <h3 style="margin:0;">📅 Eventos y Tareas para el Día: <span id="fechaSeleccionadaTexto"></span></h3>
+        <button type="button" class="btn secondary" onclick="cerrarCalendarioModal()">Cerrar ✖</button>
+    </div>
+
+    <!-- Contenedor con lista de eventos guardados para ese día -->
+    <div id="listaEventosDia"></div>
+
+    <?php if($canEdit):?>
+    <hr style="border:0; border-top:1px solid var(--vl); margin:15px 0;">
+    <h4 id="tituloFormModal" style="margin-top:0;">➕ Agregar Nuevo Evento / Alarma</h4>
+    
+    <form method="post" class="sales-form" id="formCalendario"><?=csrf_field()?>
+        <input type="hidden" name="accion" value="guardar_evento_calendario">
+        <input type="hidden" name="evento_id" id="inputEventoId" value="0">
+        <input type="hidden" name="fecha_alarma" id="inputFechaAlarma">
+        
+        <label>Título / Referencia<input name="titulo" id="inputTitulo" required placeholder="Ej. Reunión Cliente / Vencimiento Cotización"></label>
+        <label>Tipo
+            <select name="tipo_alerta" id="selectTipo">
+                <option value="Aviso">Aviso</option>
+                <option value="Alerta">Alerta Urgencia</option>
+                <option value="Vencimiento">Vencimiento Oferta</option>
+                <option value="Finanzas">Pago / Finanzas</option>
+            </select>
+        </label>
+        <label>Hora<input type="time" name="hora_alarma" id="inputHora" value="09:00"></label>
+        <label>Estado
+            <select name="leido" id="selectEstado">
+                <option value="0">Pendiente</option>
+                <option value="1">Completado / Leído</option>
+            </select>
+        </label>
+        <label class="full">Detalles u Observaciones<textarea name="mensaje" id="inputMensaje" placeholder="Escribí aquí los detalles del evento..."></textarea></label>
+        
+        <div class="full" style="display:flex; gap:8px;">
+            <button class="btn primary" id="btnSubmitModal">Guardar en Calendario</button>
+            <button type="button" class="btn secondary" onclick="resetFormCalendario()">Limpiar Formulario</button>
+        </div>
+    </form>
+    <?php endif;?>
 </div>
-</form>
-</div>
-<?php endif;?>
 </section>
 
 <!-- 7. ALERTAS -->
@@ -881,69 +1015,31 @@ foreach($alertas as $a){
 <h2>Alertas y Avisos Registrados</h2>
 <div class="sales-table-wrap">
 <table class="sales-table">
-<thead><tr><th>Fecha / Hora</th><th>Tipo</th><th>Título</th><th>Mensaje</th><th>Estado</th><?php if($canEdit):?><th></th><?php endif;?></tr></thead>
+<thead><tr><th>Fecha / Hora</th><th>Tipo</th><th>Título</th><th>Mensaje</th><th>Estado</th><?php if($canEdit):?><th>Acciones</th><?php endif;?></tr></thead>
 <tbody>
 <?php foreach($alertas as $a):?>
 <tr>
 <td><?=h($a['created_at'])?></td>
-<td><span class="pill"><?=$a['tipo_alerta']?></span></td>
+<td><span class="pill <?=h($a['tipo_alerta'])=='Alerta'?'danger':(h($a['tipo_alerta'])=='Vencimiento'?'warn':'')?>"><?=h($a['tipo_alerta'])?></span></td>
 <td><?=h($a['titulo'])?></td>
 <td><?=h($a['mensaje'])?></td>
-<td><?=$a['leido']?'Leída':'Pendiente'?></td>
+<td><?=$a['leido']?'<span class="pill">Completada / Leída</span>':'<span class="pill warn">Pendiente</span>'?></td>
 <?php if($canEdit):?>
-<td>
+<td class="sales-actions">
 <?php if(!$a['leido']):?>
 <form method="post"><?=csrf_field()?>
 <input type="hidden" name="accion" value="marcar_leida">
 <input type="hidden" name="id" value="<?=(int)$a['id']?>">
-<button class="btn secondary">Marcar leída</button>
+<button class="btn secondary">Marcar completada</button>
 </form>
 <?php endif;?>
+<form method="post" onsubmit="return confirm('¿Eliminar evento?')"><?=csrf_field()?>
+<input type="hidden" name="accion" value="eliminar_evento_calendario">
+<input type="hidden" name="id" value="<?=(int)$a['id']?>">
+<button class="btn secondary">Eliminar</button>
+</form>
 </td>
 <?php endif;?>
-</tr>
-<?php endforeach;?>
-</tbody>
-</table>
-</div>
-</div>
-</section>
-
-<!-- 8. MENSAJES -->
-<section id="tab-mensajes" class="sales-tab">
-<?php if($canEdit):?>
-<div class="sales-card">
-<h2>Mensaje entre sectores</h2>
-<p>Registra comunicaciones internas desde Ventas hacia otro sector del SGI.</p>
-<form method="post" class="sales-form"><?=csrf_field()?>
-<input type="hidden" name="accion" value="enviar_mensaje">
-<label>Sector destino
-<select name="sector_destino" required>
-<option value="">Seleccionar...</option>
-<?php foreach($sectores as $sec): if(mb_strtolower($sec)!=='ventas'):?>
-<option><?=h($sec)?></option>
-<?php endif; endforeach;?>
-</select>
-</label>
-<label>Asunto<input name="asunto" required></label>
-<label class="full">Mensaje<textarea name="mensaje_texto" required></textarea></label>
-<div><button class="btn primary">Registrar mensaje</button></div>
-</form>
-</div>
-<?php endif;?>
-
-<div class="sales-card">
-<h2>Historial de comunicaciones</h2>
-<div class="sales-table-wrap">
-<table class="sales-table">
-<thead><tr><th>Fecha</th><th>Destino</th><th>Asunto</th><th>Mensaje</th></tr></thead>
-<tbody>
-<?php foreach($mensajes as $m):?>
-<tr>
-<td><?=h($m['fecha_envio'])?></td>
-<td><?=h($m['sector_destino'])?></td>
-<td><?=h($m['asunto'])?></td>
-<td><?=h($m['mensaje_texto'])?></td>
 </tr>
 <?php endforeach;?>
 </tbody>
@@ -961,13 +1057,30 @@ foreach($alertas as $a){
 </div>
 
 <script>
-function tabVentas(id,btn){
-    document.querySelectorAll('.sales-tab').forEach(x=>x.classList.remove('active'));
-    document.querySelectorAll('.sales-tabs button').forEach(x=>x.classList.remove('active'));
-    const el=document.getElementById('tab-'+id);
-    if(el) el.classList.add('active');
-    if(btn) btn.classList.add('active');
+const listaAlertasJS = <?=json_encode($alertas, JSON_HEX_TAG|JSON_HEX_AMP|JSON_HEX_APOS|JSON_HEX_QUOT)?>;
+const puedeEditar = <?=json_encode($canEdit)?>;
+
+function escHtml(t){
+    return String(t ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
+
+function tabVentas(id){
+    const el=document.getElementById('tab-'+id);
+    if(!el) return;
+    document.querySelectorAll('.sales-tab').forEach(x=>x.classList.remove('active'));
+    document.querySelectorAll('.sales-tabs button').forEach(x=>x.classList.toggle('active',x.dataset.tab===id));
+    el.classList.add('active');
+    try{
+        const u=new URL(window.location.href);
+        u.searchParams.set('tab',id);
+        window.history.replaceState(null,'',u.toString());
+    }catch(e){}
+}
+
+(function(){
+    const t=new URLSearchParams(window.location.search).get('tab');
+    if(t) tabVentas(t);
+})();
 
 function calcTicket(){
     const tarifa=parseFloat(document.getElementById('calcTarifa')?.value||0);
@@ -1004,54 +1117,90 @@ function filtrarTablaCrm() {
     }
 }
 
+/* FUNCIONES DE CALENDARIO */
 function abrirModalCalendario(fecha) {
     const modal = document.getElementById('modalCalendario');
     if (!modal) return;
+    
     document.getElementById('fechaSeleccionadaTexto').textContent = fecha;
-    document.getElementById('inputFechaAlarma').value = fecha;
+    if (document.getElementById('inputFechaAlarma')) {
+        document.getElementById('inputFechaAlarma').value = fecha;
+    }
+    
+    const csrfEl = document.querySelector('#formCalendario input[type=hidden]');
+    const csrfHidden = csrfEl ? `<input type="hidden" name="${escHtml(csrfEl.name)}" value="${escHtml(csrfEl.value)}">` : '';
+
+    const eventos = listaAlertasJS.filter(a => a.created_at && a.created_at.substring(0, 10) === fecha);
+    const contenedor = document.getElementById('listaEventosDia');
+    
+    if (eventos.length === 0) {
+        contenedor.innerHTML = '<p style="color:var(--vm); font-style:italic;">No hay eventos ni alarmas agendados para este día.</p>';
+    } else {
+        let html = '<div style="display:flex; flex-direction:column; gap:8px;">';
+        eventos.forEach(ev => {
+            const hora = ev.created_at.substring(11, 16);
+            const estaLeido = parseInt(ev.leido) === 1;
+            html += `
+                <div class="day-event-card">
+                    <div>
+                        <strong style="${estaLeido ? 'text-decoration:line-through; opacity:0.6;' : ''}">${escHtml(ev.titulo)}</strong>
+                        <span class="pill ${escHtml(ev.tipo_alerta)}">${escHtml(ev.tipo_alerta)}</span>
+                        <small>🕒 ${hora}</small>
+                        <p style="margin:4px 0 0 0; font-size:12px; color:#4b5563;">${escHtml(ev.mensaje) || 'Sin detalles'}</p>
+                    </div>
+                    <div style="display:flex; gap:6px;">
+                        ${puedeEditar ? `
+                            <button class="btn secondary" onclick="cargarEventoParaEditar(${ev.id})">✏️ Editar</button>
+                            <form method="post" style="display:inline;" onsubmit="return confirm('¿Eliminar este evento?')">
+                                ${csrfHidden}
+                                <input type="hidden" name="accion" value="eliminar_evento_calendario">
+                                <input type="hidden" name="id" value="${ev.id}">
+                                <button class="btn secondary">🗑️</button>
+                            </form>
+                        ` : ''}
+                    </div>
+                </div>
+            `;
+        });
+        html += '</div>';
+        contenedor.innerHTML = html;
+    }
+
+    resetFormCalendario();
     modal.style.display = 'block';
     modal.scrollIntoView({ behavior: 'smooth' });
 }
 
-/* ===== Calendario: semanas completas, sin huecos ===== */
-(function(){
-    const MESES=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
-    const DIAS=['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
-    const hoy=new Date();
-    let cur=new Date(hoy.getFullYear(),hoy.getMonth(),1);
-    const pad=n=>String(n).padStart(2,'0');
-    const iso=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
-    function render(){
-        const grid=document.getElementById('calGrid');
-        if(!grid) return;
-        grid.innerHTML='';
-        document.getElementById('calTitulo').textContent=MESES[cur.getMonth()]+' '+cur.getFullYear();
-        DIAS.forEach(n=>{const h=document.createElement('div');h.className='calendar-day-head';h.textContent=n;grid.appendChild(h);});
-        const inicio=new Date(cur.getFullYear(),cur.getMonth(),1-cur.getDay());
-        const ultimo=new Date(cur.getFullYear(),cur.getMonth()+1,0);
-        const total=Math.ceil((cur.getDay()+ultimo.getDate())/7)*7;
-        const hoyIso=iso(hoy);
-        for(let i=0;i<total;i++){
-            const d=new Date(inicio.getFullYear(),inicio.getMonth(),inicio.getDate()+i);
-            const f=iso(d);
-            const c=document.createElement('div');
-            c.className='calendar-cell'+(d.getMonth()!==cur.getMonth()?' other':'')+(f===hoyIso?' today':'')+((d.getDay()===0||d.getDay()===6)?' weekend':'');
-            c.onclick=()=>abrirModalCalendario(f);
-            const n=document.createElement('div');n.className='calendar-date-num';n.textContent=d.getDate();c.appendChild(n);
-            const evs=(window.CAL_EVENTOS||{})[f]||[];
-            evs.slice(0,3).forEach(ev=>{
-                const t=document.createElement('span');
-                t.className='calendar-event-tag'+(ev.k==='Alerta'||ev.k==='Vencimiento'?' warn':'');
-                t.title=ev.m;t.textContent='📌 '+ev.t;c.appendChild(t);
-            });
-            if(evs.length>3){const m=document.createElement('span');m.className='calendar-event-more';m.textContent='+'+(evs.length-3)+' más';c.appendChild(m);}
-            grid.appendChild(c);
-        }
-    }
-    window.calMover=function(n){cur=new Date(cur.getFullYear(),cur.getMonth()+n,1);render();};
-    window.calHoy=function(){cur=new Date(hoy.getFullYear(),hoy.getMonth(),1);render();};
-    render();
-})();
+function cargarEventoParaEditar(id) {
+    const ev = listaAlertasJS.find(a => parseInt(a.id) === parseInt(id));
+    if (!ev) return;
+
+    document.getElementById('tituloFormModal').textContent = '✏️ Modificar Evento #' + ev.id;
+    document.getElementById('inputEventoId').value = ev.id;
+    document.getElementById('inputTitulo').value = ev.titulo;
+    document.getElementById('selectTipo').value = ev.tipo_alerta;
+    document.getElementById('inputHora').value = ev.created_at.substring(11, 16);
+    document.getElementById('selectEstado').value = ev.leido;
+    document.getElementById('inputMensaje').value = ev.mensaje;
+    document.getElementById('btnSubmitModal').textContent = 'Actualizar Evento';
+}
+
+function resetFormCalendario() {
+    if (!document.getElementById('formCalendario')) return;
+    document.getElementById('tituloFormModal').textContent = '➕ Agregar Nuevo Evento / Alarma';
+    document.getElementById('inputEventoId').value = '0';
+    document.getElementById('inputTitulo').value = '';
+    document.getElementById('selectTipo').value = 'Aviso';
+    document.getElementById('inputHora').value = '09:00';
+    document.getElementById('selectEstado').value = '0';
+    document.getElementById('inputMensaje').value = '';
+    document.getElementById('btnSubmitModal').textContent = 'Guardar en Calendario';
+}
+
+function cerrarCalendarioModal() {
+    const modal = document.getElementById('modalCalendario');
+    if (modal) modal.style.display = 'none';
+}
 </script>
 </body>
 </html>
