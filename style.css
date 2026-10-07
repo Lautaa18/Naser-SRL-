@@ -272,3 +272,14 @@
 .fleet-image img{object-fit:contain;padding:14px 12px}
 .fleet-image img[src*="trabajador"]{padding:10px 0 0;object-position:center bottom}
 .asset-hero>img{background:#fff}
+
+/* Campanita flotante (PC): siempre visible arriba a la derecha. En celular se usa la de la barra superior. */
+.notif-bell--float{position:fixed;top:14px;right:24px;z-index:40;width:46px;height:46px;border-radius:50%;background:#fff;border:1px solid var(--line);box-shadow:0 6px 18px rgba(22,56,40,.16)}
+.notif-bell--float svg{width:23px;height:23px}
+.notif-bell--float:hover{background:var(--green-soft);transform:translateY(-1px)}
+.notif-bell--float.tiene-nuevas{border-color:#e7a29c;animation:notif-pulso 2.4s ease-in-out infinite}
+.notif-bell--float b{top:-4px;right:-5px}
+@keyframes notif-pulso{0%,100%{box-shadow:0 6px 18px rgba(22,56,40,.16),0 0 0 0 rgba(217,45,32,.35)}50%{box-shadow:0 6px 18px rgba(22,56,40,.16),0 0 0 9px rgba(217,45,32,0)}}
+@media (prefers-reduced-motion:reduce){.notif-bell--float.tiene-nuevas{animation:none}}
+@media (min-width:901px){.content{padding-top:66px}}
+@media (max-width:900px){.notif-bell--float{display:none}}
