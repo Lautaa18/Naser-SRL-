@@ -1,0 +1,29 @@
+/* ==========================================================
+   Mejoras para celular DENTRO de los formularios (se carga en php/formularios/render.php).
+   No cambia nada en pantallas grandes.
+   ========================================================== */
+@media (max-width: 700px) {
+  /* 16 px evita que el iPhone agrande la pantalla al tocar un campo; 44 px de alto es comodo para el dedo */
+  input:not([type=checkbox]):not([type=radio]):not([type=file]):not([type=range]):not([type=hidden]),
+  select, textarea {
+    font-size: 16px !important;
+    min-height: 44px;
+  }
+  textarea { min-height: 88px; }
+  input[type=checkbox], input[type=radio] { width: 22px; height: 22px; }
+  button, .btn { min-height: 44px; }
+
+  /* En tablas anchas los campos necesitan un minimo para poder escribir */
+  td input:not([type=checkbox]):not([type=radio]):not([type=file]):not([type=hidden]),
+  td select, td textarea { min-width: 120px; }
+
+  /* Las tablas se deslizan de costado: sombra en el borde que avisa que hay mas */
+  .table-wrapper, .table-wrap {
+    -webkit-overflow-scrolling: touch;
+    background:
+      linear-gradient(to right, #fff 30%, rgba(255,255,255,0)) left center / 40px 100% no-repeat local,
+      linear-gradient(to left,  #fff 30%, rgba(255,255,255,0)) right center / 40px 100% no-repeat local,
+      radial-gradient(farthest-side at 0 50%,   rgba(0,0,0,.22), rgba(0,0,0,0)) left center  / 14px 100% no-repeat scroll,
+      radial-gradient(farthest-side at 100% 50%, rgba(0,0,0,.22), rgba(0,0,0,0)) right center / 14px 100% no-repeat scroll;
+  }
+}

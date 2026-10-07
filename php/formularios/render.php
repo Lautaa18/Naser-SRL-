@@ -63,6 +63,7 @@ window.__NASER_FORM__ = $cfg;
 })();
 </script>
 HTML;
+$head .= "\n<link rel=\"stylesheet\" href=\"" . h(asset('/css/form-movil.css')) . "\">";
 $bridge = '<script src="' . h(asset('/js/naser-form-bridge.js')) . '"></script>';
 
 if (preg_match('/<head[^>]*>/i', $html, $m, PREG_OFFSET_CAPTURE)) {
