@@ -267,3 +267,8 @@
 .cred-box{background:#fffdf3;border:1px solid #f1e3a7;border-radius:12px;padding:14px;margin:12px 0}
 .cred-box table{min-width:0}
 @media(max-width:900px){.panel-grid{grid-template-columns:1fr}.fx-toolbar{position:static}}
+/* Tarjetas de flota: las ilustraciones se muestran completas y centradas, sobre fondo blanco, sin recortar */
+.fleet-image{background:#fff;display:flex;align-items:center;justify-content:center}
+.fleet-image img{object-fit:contain;padding:14px 12px}
+.fleet-image img[src*="trabajador"]{padding:10px 0 0;object-position:center bottom}
+.asset-hero>img{background:#fff}
