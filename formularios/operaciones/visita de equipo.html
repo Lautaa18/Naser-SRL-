@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NASER | Visita a Equipos</title>
+
+<style>
+:root{
+    --green:#009b49;
+    --dark-green:#007a3a;
+    --light-green:#e8f6ee;
+    --bg:#f2f3f5;
+    --border:#d9dde3;
+    --text:#15191e;
+    --muted:#69717c;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+    font-family:Arial,Helvetica,sans-serif;
+    background:var(--bg);
+    color:var(--text);
+}
+button,input,textarea{font:inherit}
+
+.sidebar{
+    position:fixed;
+    inset:0 auto 0 0;
+    width:260px;
+    background:#101010;
+    color:white;
+}
+.brand{
+    height:100px;
+    display:flex;
+    align-items:center;
+    padding:0 28px;
+    border-bottom:1px solid #292929;
+    font-size:30px;
+    font-weight:900;
+    letter-spacing:4px;
+}
+.side-label{
+    padding:25px 25px 12px;
+    color:#818b97;
+    font-size:11px;
+    letter-spacing:1px;
+}
+.nav-link{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    min-height:48px;
+    padding:0 20px;
+    color:#eee;
+    text-decoration:none;
+    background:#191919;
+    border-left:4px solid var(--green);
+    font-size:13px;
+}
+.nav-number{color:#00bd5a;font-weight:800}
+.main{margin-left:260px}
+
+.topbar{
+    min-height:76px;
+    padding:16px 28px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:14px;
+    background:white;
+    border-bottom:1px solid var(--border);
+}
+.breadcrumb{font-size:13px;color:var(--muted)}
+.badges{display:flex;gap:8px;flex-wrap:wrap}
+.badge{
+    padding:9px 12px;
+    border-radius:8px;
+    font-size:11px;
+    font-weight:800;
+}
+.badge-state{background:#eef0f2;color:#59616c}
+.badge-code{background:var(--light-green);color:var(--dark-green)}
+.page{padding:28px}
+
+.hero{
+    position:relative;
+    overflow:hidden;
+    padding:32px 36px;
+    min-height:160px;
+    border-radius:14px;
+    background:linear-gradient(110deg,#101010,#202020);
+    color:white;
+}
+.hero::after{
+    content:"";
+    position:absolute;
+    width:260px;
+    height:260px;
+    right:-70px;
+    top:-115px;
+    border-radius:50%;
+    background:rgba(0,155,73,.18);
+}
+.hero-content{position:relative;z-index:1}
+.kicker{
+    margin-bottom:11px;
+    color:#00c65e;
+    font-size:11px;
+    font-weight:800;
+    letter-spacing:2px;
+}
+.hero h1{font-size:30px;margin-bottom:10px}
+.hero p{font-size:13px;line-height:1.6;color:#e6e8eb}
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:12px;
+    margin:20px 0;
+}
+.stat{
+    padding:15px 18px;
+    background:white;
+    border:1px solid var(--border);
+    border-radius:10px;
+}
+.stat-label{
+    display:block;
+    margin-bottom:7px;
+    color:var(--muted);
+    font-size:10px;
+    font-weight:700;
+    text-transform:uppercase;
+}
+.stat-value{font-size:24px;font-weight:900}
+.green{color:var(--green)}
+
+.card{
+    margin-bottom:20px;
+    overflow:hidden;
+    background:white;
+    border:1px solid var(--border);
+    border-radius:13px;
+    box-shadow:0 6px 22px rgba(16,24,40,.05);
+}
+.card-header{
+    display:flex;
+    align-items:center;
+    gap:13px;
+    padding:18px 22px;
+    border-bottom:1px solid var(--border);
+}
+.card-number{
+    display:grid;
+    place-items:center;
+    width:42px;
+    height:42px;
+    flex-shrink:0;
+    border-radius:8px;
+    background:#111;
+    color:#00c45e;
+    font-weight:900;
+}
+.card-header h2{font-size:17px;margin-bottom:4px}
+.card-header p{font-size:12px;color:var(--muted)}
+.card-body{padding:20px}
+
+.info{
+    padding:14px 17px;
+    margin-bottom:16px;
+    border:1px solid var(--border);
+    border-left:4px solid var(--green);
+    border-radius:8px;
+    background:#fafbfc;
+    color:#59616c;
+    font-size:12px;
+    line-height:1.6;
+}
+.info strong{color:var(--dark-green)}
+.toolbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    margin-bottom:14px;
+}
+.toolbar p{font-size:12px;color:var(--muted)}
+
+.table-wrap{
+    overflow:auto;
+    max-height:650px;
+    border:1px solid #aeb5bc;
+    border-radius:8px;
+}
+.visit-table{
+    width:100%;
+    min-width:1200px;
+    table-layout:fixed;
+    border-collapse:separate;
+    border-spacing:0;
+}
+.visit-table th{
+    position:sticky;
+    top:0;
+    z-index:3;
+    padding:11px 7px;
+    background:#c9e1bb;
+    color:#111;
+    border-right:1px solid #222;
+    border-bottom:2px solid #222;
+    text-align:center;
+    font-size:10px;
+    line-height:1.4;
+}
+.visit-table td{
+    height:39px;
+    padding:5px;
+    background:white;
+    border-right:1px solid #222;
+    border-bottom:1px solid #222;
+}
+.visit-table tbody tr:nth-child(even) td{background:#fafbfc}
+.visit-table tbody tr:hover td{background:#f1f8f4}
+.visit-table th:last-child,.visit-table td:last-child{border-right:0}
+.visit-table tbody tr:last-child td{border-bottom:0}
+.visit-table th:nth-child(1){width:130px}
+.visit-table th:nth-child(2){width:130px}
+.visit-table th:nth-child(3){width:190px}
+.visit-table th:nth-child(4){width:110px}
+.visit-table th:nth-child(5){width:140px}
+.visit-table th:nth-child(6),.visit-table th:nth-child(7){width:120px}
+.visit-table th:nth-child(8){width:190px}
+.visit-table th:nth-child(9){width:220px}
+.visit-table th:last-child{width:56px}
+
+.cell-input{
+    display:block;
+    width:100%;
+    min-width:0;
+    padding:7px 6px;
+    border:1px solid transparent;
+    border-radius:5px;
+    background:transparent;
+    color:var(--text);
+    font-size:11px;
+}
+.cell-input:focus{
+    outline:none;
+    border-color:var(--green);
+    background:white;
+    box-shadow:0 0 0 2px rgba(0,155,73,.08);
+}
+textarea.cell-input{height:30px;resize:vertical}
+.remove-button{
+    display:block;
+    width:28px;
+    height:28px;
+    margin:auto;
+    border:0;
+    border-radius:5px;
+    background:#fff0f1;
+    color:#bd2636;
+    font-size:19px;
+    cursor:pointer;
+}
+.remove-button:hover{background:#ffe0e4}
+
+.footer{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:14px;
+}
+.status{font-size:11px;color:var(--muted);line-height:1.5}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+.btn{
+    min-height:38px;
+    padding:9px 13px;
+    border:0;
+    border-radius:7px;
+    font-size:11px;
+    font-weight:800;
+    cursor:pointer;
+}
+.btn-green{background:var(--green);color:white}
+.btn-green:hover{background:var(--dark-green)}
+.btn-dark{background:#181818;color:white}
+.btn-light{background:#e9ecef;color:#4a525d}
+button:focus-visible,a:focus-visible{
+    outline:3px solid var(--green);
+    outline-offset:3px;
+}
+.print-heading,.print-value{display:none}
+
+@media(max-width:900px){
+    .sidebar{width:210px}
+    .main{margin-left:210px}
+    .page{padding:18px}
+}
+@media(max-width:700px){
+    .sidebar{position:relative;width:100%}
+    .brand{height:68px;font-size:25px}
+    .side-label{padding:12px 18px 8px}
+    .nav-link{min-height:40px}
+    .main{margin-left:0}
+    .topbar{padding:15px;align-items:flex-start;flex-direction:column}
+    .page{padding:13px}
+    .hero{padding:24px 20px}
+    .hero h1{font-size:25px}
+    .stats{gap:7px}
+    .stat{padding:11px}
+    .stat-label{font-size:9px}
+    .stat-value{font-size:20px}
+    .card-body{padding:13px}
+    .card-header{padding:15px}
+    .toolbar{align-items:flex-start;flex-direction:column}
+    .footer{align-items:stretch;flex-direction:column}
+    .actions .btn{flex:1}
+}
+
+@media print{
+    @page{size:A4 landscape;margin:10mm}
+    body{background:white;color:#111}
+    .sidebar,.topbar,.hero,.stats,.info,.toolbar,.footer,.remove-button{
+        display:none!important;
+    }
+    .main{margin:0}
+    .page{padding:0}
+    .print-heading{
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        gap:12px;
+        padding:9px 12px;
+        margin-bottom:10px;
+        border:1px solid #111;
+    }
+    .print-heading strong{font-size:18px}
+    .print-heading h1{font-size:14px}
+    .print-heading span{font-size:9px;text-align:right}
+    .card{
+        margin:0;
+        border:0;
+        border-radius:0;
+        box-shadow:none;
+        overflow:visible;
+    }
+    .card-header{display:none}
+    .card-body{padding:0}
+    .table-wrap{
+        max-height:none;
+        overflow:visible;
+        border:0;
+        border-radius:0;
+    }
+    .visit-table{
+        min-width:0;
+        width:100%;
+        border-collapse:collapse;
+        table-layout:fixed;
+    }
+    .visit-table thead{display:table-header-group}
+    .visit-table th{
+        position:static;
+        padding:7px 3px;
+        border:1px solid #111;
+        background:#c9e1bb!important;
+        font-size:8px;
+    }
+    .visit-table td{
+        height:24px;
+        padding:3px;
+        border:1px solid #111;
+        background:white!important;
+    }
+    .visit-table th:last-child,.visit-table td:last-child{display:none}
+    .cell-input{display:none}
+    .print-value{
+        display:block;
+        min-height:14px;
+        font-size:8px;
+        white-space:pre-wrap;
+        overflow-wrap:anywhere;
+    }
+    .visit-table tr{break-inside:avoid}
+}
+</style>
+</head>
+
+<body>
+<aside class="sidebar">
+    <div class="brand">NASER</div>
+    <div class="side-label">DOCUMENTO</div>
+
+    <a href="#visitas" class="nav-link">
+        <span class="nav-number">01</span>
+        <span>Visita a equipos</span>
+    </a>
+</aside>
+
+<main class="main">
+    <header class="topbar">
+        <div class="breadcrumb">NASER / Operaciones / Visita a Equipos</div>
+
+        <div class="badges">
+            <span class="badge badge-state" id="badgeEstado">EN EDICIÓN</span>
+            <span class="badge badge-code">POSN08-F3 · Rev.00 Sep.25</span>
+        </div>
+    </header>
+
+    <div class="page">
+        <div class="print-heading">
+            <strong>NASER</strong>
+            <h1>VISITA A EQUIPOS</h1>
+            <span>POSN08-F3<br>Rev.00 Sep.25</span>
+        </div>
+
+        <section class="hero">
+            <div class="hero-content">
+                <div class="kicker">REGISTRO DE INGRESOS</div>
+                <h1>Visita a Equipos</h1>
+                <p>
+                    Registro de visitantes, equipos, horarios y motivos
+                    de ingreso a los pozos.
+                </p>
+            </div>
+        </section>
+
+        <div class="stats">
+            <div class="stat">
+                <span class="stat-label">Filas disponibles</span>
+                <span class="stat-value" id="totalFilas">0</span>
+            </div>
+            <div class="stat">
+                <span class="stat-label">Visitas registradas</span>
+                <span class="stat-value green" id="visitasRegistradas">0</span>
+            </div>
+            <div class="stat">
+                <span class="stat-label">Visitas con salida</span>
+                <span class="stat-value" id="visitasSalida">0</span>
+            </div>
+        </div>
+
+        <form id="formulario" autocomplete="off">
+            <section class="card" id="visitas">
+                <div class="card-header">
+                    <span class="card-number">01</span>
+                    <div>
+                        <h2>Registro de visitas</h2>
+                        <p>Complete los datos de cada persona y su visita.</p>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="info">
+                        Cada renglón corresponde a una visita.
+                        Puede <strong>editar los campos, agregar registros
+                        o eliminar filas</strong>. El borrador se guarda
+                        automáticamente en este navegador.
+                    </div>
+
+                    <div class="toolbar">
+                        <p>Complete fecha, equipo, visitante, horarios y motivo.</p>
+                        <button type="button" class="btn btn-green" id="agregar">
+                            + Agregar visita
+                        </button>
+                    </div>
+
+                    <div class="table-wrap">
+                        <table class="visit-table" aria-label="Registro de visitas a equipos">
+                            <thead>
+                                <tr>
+                                    <th scope="col">FECHA</th>
+                                    <th scope="col">EQUIPO</th>
+                                    <th scope="col">NOMBRE Y APELLIDO</th>
+                                    <th scope="col">DNI</th>
+                                    <th scope="col">POZO</th>
+                                    <th scope="col">HS ENTRADA</th>
+                                    <th scope="col">HS SALIDA</th>
+                                    <th scope="col">MOTIVO DE VISITA</th>
+                                    <th scope="col">OBSERVACIONES</th>
+                                    <th scope="col">ACCIÓN</th>
+                                </tr>
+                            </thead>
+                            <tbody id="filas"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <div class="footer">
+                <p class="status" id="estado" role="status" aria-live="polite">
+                    El borrador se guarda en este navegador.
+                </p>
+
+                <div class="actions">
+                    <button type="button" class="btn btn-light" id="limpiar">
+                        Limpiar
+                    </button>
+                    <button type="button" class="btn btn-light" id="descargar">
+                        Descargar datos
+                    </button>
+                    <button type="button" class="btn btn-dark" id="imprimir">
+                        Imprimir / PDF
+                    </button>
+                    <button type="button" class="btn btn-green" id="guardar">
+                        Guardar borrador
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</main>
+
+<script>
+"use strict";
+
+const STORAGE_KEY = "NASER_POSN08_F3_V1";
+const INITIAL_ROWS = 25;
+
+const fields = [
+    {id:"fecha",label:"Fecha",type:"date"},
+    {id:"equipo",label:"Equipo",type:"text"},
+    {id:"nombre",label:"Nombre y apellido",type:"text"},
+    {id:"dni",label:"DNI",type:"text"},
+    {id:"pozo",label:"Pozo",type:"text"},
+    {id:"entrada",label:"Hs entrada",type:"time"},
+    {id:"salida",label:"Hs salida",type:"time"},
+    {id:"motivo",label:"Motivo de visita",type:"text"},
+    {id:"observaciones",label:"Observaciones",type:"text"}
+];
+
+const form = document.getElementById("formulario");
+const tbody = document.getElementById("filas");
+const status = document.getElementById("estado");
+const badge = document.getElementById("badgeEstado");
+let saveTimer;
+
+/* Agrega una fila editable */
+function addVisit(data = {}, focus = false){
+    const row = document.createElement("tr");
+
+    fields.forEach(field => {
+        const cell = document.createElement("td");
+        const input = document.createElement("input");
+        input.type = field.type;
+        input.className = "cell-input";
+        input.dataset.field = field.id;
+        input.setAttribute("aria-label",field.label);
+        input.value = typeof data[field.id] === "string" ? data[field.id] : "";
+
+        const printValue = document.createElement("span");
+        printValue.className = "print-value";
+
+        cell.append(input,printValue);
+        row.appendChild(cell);
+    });
+
+    const actionCell = document.createElement("td");
+    const remove = document.createElement("button");
+    remove.type = "button";
+    remove.className = "remove-button";
+    remove.textContent = "×";
+    remove.title = "Eliminar visita";
+    remove.setAttribute("aria-label","Eliminar visita");
+
+    remove.addEventListener("click",() => {
+        if(!confirm("¿Desea eliminar esta visita?")) return;
+
+        const nextRow = row.nextElementSibling || row.previousElementSibling;
+        row.remove();
+        markChanged();
+
+        if(nextRow){
+            nextRow.querySelector("input").focus();
+        }else{
+            document.getElementById("agregar").focus();
+        }
+    });
+
+    actionCell.appendChild(remove);
+    row.appendChild(actionCell);
+    tbody.appendChild(row);
+
+    if(focus){
+        row.querySelector("input").focus();
+    }
+}
+
+function createBlankRows(){
+    tbody.replaceChildren();
+
+    for(let i = 0; i < INITIAL_ROWS; i++){
+        addVisit();
+    }
+}
+
+function readVisits(){
+    return [...tbody.rows].map(row => {
+        const visit = {};
+
+        row.querySelectorAll("[data-field]").forEach(input => {
+            visit[input.dataset.field] = input.value;
+        });
+
+        return visit;
+    });
+}
+
+function updateCounters(){
+    const visits = readVisits();
+
+    const registered = visits.filter(visit =>
+        Object.values(visit).some(value => value.trim() !== "")
+    );
+
+    const withExit = visits.filter(visit =>
+        visit.salida.trim() !== ""
+    );
+
+    document.getElementById("totalFilas").textContent = visits.length;
+    document.getElementById("visitasRegistradas").textContent = registered.length;
+    document.getElementById("visitasSalida").textContent = withExit.length;
+}
+
+function getData(){
+    return {
+        codigo:"POSN08-F3",
+        revision:"Rev.00 Sep.25",
+        guardadoEn:new Date().toISOString(),
+        visitas:readVisits()
+    };
+}
+
+function save(manual = false){
+    try{
+        localStorage.setItem(STORAGE_KEY,JSON.stringify(getData()));
+        badge.textContent = "BORRADOR GUARDADO";
+        status.textContent =
+            (manual ? "Borrador guardado. " : "Guardado automático. ") +
+            "Guardado en este navegador · " +
+            new Date().toLocaleTimeString("es-AR");
+    }catch(error){
+        badge.textContent = "SIN GUARDAR";
+        status.textContent =
+            "No se pudo guardar en este navegador. Descargue los datos para conservarlos.";
+    }
+}
+
+function markChanged(){
+    updateCounters();
+    badge.textContent = "EN EDICIÓN";
+    status.textContent = "Cambios pendientes de guardar…";
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(() => save(),600);
+}
+
+function restore(){
+    try{
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if(!saved) return false;
+
+        const data = JSON.parse(saved);
+
+        if(
+            !data ||
+            data.codigo !== "POSN08-F3" ||
+            !Array.isArray(data.visitas)
+        ){
+            throw new Error("Borrador inválido");
+        }
+
+        tbody.replaceChildren();
+        data.visitas.forEach(visit => addVisit(visit));
+
+        badge.textContent = "BORRADOR RECUPERADO";
+        status.textContent = "Se recuperó el borrador guardado en este navegador.";
+        return true;
+    }catch(error){
+        status.textContent =
+            "No se pudo recuperar el borrador. Puede iniciar un registro nuevo.";
+        return false;
+    }
+}
+
+function preparePrint(){
+    tbody.querySelectorAll("tr").forEach(row => {
+        row.querySelectorAll("td").forEach(cell => {
+            const input = cell.querySelector("input");
+            const printed = cell.querySelector(".print-value");
+
+            if(!input || !printed) return;
+
+            if(input.type === "date" && input.value){
+                const [year,month,day] = input.value.split("-");
+                printed.textContent = `${day}/${month}/${year}`;
+            }else{
+                printed.textContent = input.value;
+            }
+        });
+    });
+}
+
+document.getElementById("agregar").addEventListener("click",() => {
+    addVisit({},true);
+    markChanged();
+});
+
+document.getElementById("guardar").addEventListener("click",() => {
+    clearTimeout(saveTimer);
+    save(true);
+});
+
+document.getElementById("descargar").addEventListener("click",() => {
+    const file = new Blob(
+        [JSON.stringify(getData(),null,2)],
+        {type:"application/json;charset=utf-8"}
+    );
+
+    const url = URL.createObjectURL(file);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "NASER-POSN08-F3-Visitas.json";
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+
+    setTimeout(() => URL.revokeObjectURL(url),1000);
+    status.textContent = "Se descargaron los datos de las visitas.";
+});
+
+window.addEventListener("beforeprint",preparePrint);
+
+document.getElementById("imprimir").addEventListener("click",() => {
+    clearTimeout(saveTimer);
+    save();
+    preparePrint();
+    window.print();
+});
+
+document.getElementById("limpiar").addEventListener("click",() => {
+    if(!confirm("¿Borrar el borrador y comenzar un registro nuevo?")) return;
+
+    clearTimeout(saveTimer);
+
+    try{
+        localStorage.removeItem(STORAGE_KEY);
+    }catch(error){
+        status.textContent =
+            "No se pudo borrar el borrador. Los datos no fueron modificados.";
+        return;
+    }
+
+    createBlankRows();
+    updateCounters();
+    badge.textContent = "EN EDICIÓN";
+    status.textContent = "Registro nuevo. Los contadores están en cero.";
+});
+
+form.addEventListener("input",markChanged);
+
+document.querySelectorAll(".nav-link").forEach(link => {
+    link.addEventListener("click",() => {
+        document.querySelectorAll(".nav-link").forEach(item => {
+            item.classList.toggle("active",item === link);
+        });
+    });
+});
+
+/* Inicio: filas vacías y contadores en cero si no hay borrador */
+if(!restore()){
+    createBlankRows();
+}
+updateCounters();
+</script>
+</body>
+</html>

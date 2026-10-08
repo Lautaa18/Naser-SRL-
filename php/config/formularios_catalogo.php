@@ -50,6 +50,18 @@ function formulariosCatalogo(): array {
         ['ventas-propuesta-economica', 'ventas', 'ventas/propuesta-economica.html', 'Propuesta Económica de Servicio', 'PGSN11-F2'],
 
         ['operaciones-control-slickline','operaciones','operaciones/control-slickline.html','Control Operativo Slickline', 'SGI-OP-SLK-001'],
+        ['operaciones-montaje-well-testing','operaciones','Operaciones/Check List de Montaje de Equipo de Well Testing.html','Check List de Montaje de Equipo de Well Testing', 'POSN03-F2'],
+        ['operaciones-evaluacion-riesgos','operaciones','Operaciones/Evaluacion de riesgo y operativos.html','Evaluación de Riesgos Operativos', 'POSN04-F5'],
+        ['operaciones-ingreso-egreso-locacion','operaciones','Operaciones/INGRESO Y EGRESO DE LOCACION.html','Ingreso y Egreso de Locación', 'PGSN12-F1'],
+        ['operaciones-listado-operaciones','operaciones','Operaciones/listado de operaciones.html','Listado de Operaciones', 'POSN08-F2'],
+        ['operaciones-planificacion-semanal','operaciones','Operaciones/Planificacion semanal.html','Planificación Semanal', 'POSN04-F1'],
+        ['operaciones-propuesta-economica','operaciones','Operaciones/PROPUESTA ECONOMICA DE SERVICIO.html','Propuesta Económica de Servicio', 'PGSN11-F2'],
+        ['operaciones-control-generador','operaciones','Operaciones/REGISTRO DE CONTROL DE GENERADOR.html','Registro de Control de Generador', 'POSN03-F4'],
+        ['operaciones-supervision-well-testing','operaciones','Operaciones/REGISTRO DE SUPERVISION DE SERVICIO DE WELL TESTING.html','Registro de Supervisión de Servicio de Well Testing', 'POSN03-F1'],
+        ['operaciones-relevamiento-datos','operaciones','Operaciones/RELEVAMIENTO MANUAL DE DATOS.html','Relevamiento Manual de Datos', 'POSN03-F3'],
+        ['operaciones-remito','operaciones','Operaciones/Remito naser.html','Remito NASER', 'POSN04-F4'],
+        ['operaciones-tren-herramientas','operaciones','Operaciones/tren de herramienta.html','Tren de Herramientas de Slick Line', 'POSN04-F3'],
+        ['operaciones-visita-equipos','operaciones','Operaciones/visita de equipo.html','Visita a Equipos', 'POSN08-F3'],
     ];
     $cat = [];
     foreach ($lista as [$codigo, $sector, $archivo, $titulo, $sgi]) {
@@ -105,8 +117,14 @@ function formulariosPanel(PDO $pdo, string $slug): void {
     if (!$sector) return;
     $sid = (int)$sector['id'];
     $forms = formulariosDeSector($slug);
-    $st = $pdo->prepare("SELECT r.*, u.nombre AS autor FROM formularios_registros r LEFT JOIN usuarios u ON u.id = r.creado_por WHERE r.sector_id = ? ORDER BY r.actualizado_en DESC LIMIT 8");
-    $st->execute([$sid]);
+    $params = [$sid];
+    $filtroBorradores = '';
+    if (!esAdmin() && !puedeEditarSector($pdo, $sid)) {
+        $filtroBorradores = " AND (r.estado <> 'borrador' OR r.creado_por = ?)";
+        $params[] = (int)($_SESSION['usuario_id'] ?? 0);
+    }
+    $st = $pdo->prepare("SELECT r.*, u.nombre AS autor FROM formularios_registros r LEFT JOIN usuarios u ON u.id = r.creado_por WHERE r.sector_id = ?$filtroBorradores ORDER BY r.actualizado_en DESC LIMIT 8");
+    $st->execute($params);
     $ultimos = $st->fetchAll();
     $cat = formulariosCatalogo();
     $pend = $pdo->prepare("SELECT COUNT(*) FROM formularios_registros WHERE sector_id = ? AND estado = 'enviado'");

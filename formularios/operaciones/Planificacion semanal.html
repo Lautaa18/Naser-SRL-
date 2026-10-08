@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NASER | Planificación Semanal</title>
+
+<style>
+:root{
+    --green:#009b49;
+    --green-dark:#007a3a;
+    --green-light:#e8f6ee;
+    --bg:#f2f3f5;
+    --border:#d9dde3;
+    --text:#15191e;
+    --muted:#69717c;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+    font-family:Arial,Helvetica,sans-serif;
+    background:var(--bg);
+    color:var(--text);
+}
+button,input,textarea{font:inherit}
+
+/* MENÚ LATERAL */
+.sidebar{
+    position:fixed;
+    inset:0 auto 0 0;
+    width:280px;
+    background:#101010;
+    color:#fff;
+}
+.brand{
+    display:flex;
+    align-items:center;
+    height:120px;
+    padding:0 34px;
+    border-bottom:1px solid #292929;
+    font-size:34px;
+    font-weight:900;
+    letter-spacing:4px;
+}
+.sidebar-label{
+    padding:28px 30px 14px;
+    color:#818b97;
+    font-size:12px;
+    letter-spacing:1.2px;
+}
+.nav-link{
+    display:flex;
+    align-items:center;
+    gap:15px;
+    min-height:58px;
+    padding:0 26px;
+    background:#191919;
+    border-left:4px solid var(--green);
+    color:#fff;
+    text-decoration:none;
+}
+.nav-number{color:#00bd5a;font-size:18px;font-weight:800}
+.main{margin-left:280px}
+
+/* ENCABEZADO */
+.topbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:20px;
+    min-height:90px;
+    padding:20px 35px;
+    background:#fff;
+    border-bottom:1px solid var(--border);
+}
+.breadcrumb{color:var(--muted);font-size:14px}
+.badges{display:flex;gap:10px;flex-wrap:wrap}
+.badge{
+    padding:10px 15px;
+    border-radius:8px;
+    font-size:12px;
+    font-weight:800;
+}
+.badge-state{background:#eef0f2;color:#59616c}
+.badge-code{background:var(--green-light);color:var(--green-dark)}
+.page{padding:35px}
+.hero{
+    position:relative;
+    overflow:hidden;
+    padding:40px 42px;
+    min-height:195px;
+    background:linear-gradient(110deg,#101010,#202020);
+    color:#fff;
+    border-radius:15px;
+}
+.hero::after{
+    content:"";
+    position:absolute;
+    right:-80px;
+    top:-135px;
+    width:310px;
+    height:310px;
+    border-radius:50%;
+    background:rgba(0,155,73,.18);
+}
+.hero-content{position:relative;z-index:1}
+.kicker{
+    margin-bottom:14px;
+    color:#00c65e;
+    font-size:12px;
+    font-weight:800;
+    letter-spacing:2px;
+}
+.hero h1{font-size:34px;margin-bottom:15px}
+.hero p{font-size:14px;line-height:1.7;color:#e6e8eb}
+
+/* INDICADORES */
+.stats{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:14px;
+    margin:24px 0;
+}
+.stat{
+    padding:20px;
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:11px;
+}
+.stat-label{
+    display:block;
+    margin-bottom:10px;
+    color:var(--muted);
+    font-size:11px;
+    font-weight:700;
+    text-transform:uppercase;
+}
+.stat-value{font-size:28px;font-weight:900}
+.green{color:var(--green)}
+
+/* DOCUMENTO */
+.document{
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:14px;
+    overflow:hidden;
+    margin-bottom:24px;
+    box-shadow:0 8px 28px rgba(16,24,40,.05);
+    scroll-margin-top:20px;
+}
+.document-header{
+    display:flex;
+    align-items:center;
+    gap:17px;
+    padding:23px 27px;
+    border-bottom:1px solid var(--border);
+}
+.document-number{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:50px;
+    height:50px;
+    flex-shrink:0;
+    border-radius:9px;
+    background:#111;
+    color:#00c45e;
+    font-size:18px;
+    font-weight:900;
+}
+.document-header h2{font-size:20px;margin-bottom:5px}
+.document-header p{font-size:13px;color:var(--muted)}
+.document-body{padding:27px}
+.week-grid{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:18px;
+    margin-bottom:22px;
+}
+.field{display:flex;flex-direction:column;gap:8px;min-width:0}
+.field label{
+    font-size:11px;
+    font-weight:700;
+    color:#59616c;
+    text-transform:uppercase;
+}
+.field input,.field textarea{
+    width:100%;
+    padding:11px 12px;
+    border:1px solid #d4d9df;
+    border-radius:7px;
+    background:#fff;
+    color:var(--text);
+    font-size:13px;
+}
+.field textarea{
+    min-height:78px;
+    resize:vertical;
+    line-height:1.5;
+}
+.field input:focus,.field textarea:focus{
+    outline:none;
+    border-color:var(--green);
+    box-shadow:0 0 0 3px rgba(0,155,73,.1);
+}
+.info{
+    padding:18px 20px;
+    margin-bottom:22px;
+    background:#fafbfc;
+    border:1px solid var(--border);
+    border-left:4px solid var(--green);
+    border-radius:8px;
+    color:#59616c;
+    font-size:13px;
+    line-height:1.7;
+}
+.info strong{color:var(--green-dark)}
+.toolbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:15px;
+    margin-bottom:20px;
+}
+.toolbar p{font-size:13px;color:var(--muted)}
+
+/* TARJETAS DE EQUIPOS */
+.equipment-grid{
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:18px;
+}
+.equipment{
+    border:1px solid var(--border);
+    border-radius:11px;
+    overflow:hidden;
+    min-width:0;
+}
+.equipment-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    padding:15px 18px;
+    background:#151515;
+    border-bottom:3px solid var(--green);
+    color:#fff;
+}
+.equipment-header h3{font-size:14px}
+.equipment-body{display:grid;gap:16px;padding:18px}
+.delete{
+    width:30px;
+    height:30px;
+    border:0;
+    border-radius:6px;
+    background:#fff0f1;
+    color:#c52335;
+    cursor:pointer;
+    font-size:20px;
+}
+.delete:hover{background:#ffe0e4}
+.empty{
+    grid-column:1/-1;
+    padding:35px;
+    text-align:center;
+    border:1px dashed var(--border);
+    border-radius:10px;
+    font-size:14px;
+    color:var(--muted);
+}
+.instruction{
+    margin-top:22px;
+    padding:16px 18px;
+    border:1px solid #cde7d7;
+    border-radius:8px;
+    background:var(--green-light);
+    color:var(--green-dark);
+    font-size:13px;
+    line-height:1.6;
+}
+
+/* ACCIONES */
+.footer{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:18px;
+}
+.status{font-size:12px;color:var(--muted);line-height:1.6}
+.actions{display:flex;gap:9px;flex-wrap:wrap}
+.btn{
+    min-height:42px;
+    padding:10px 16px;
+    border:0;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:12px;
+    font-weight:800;
+}
+.btn-green{background:var(--green);color:#fff}
+.btn-green:hover{background:var(--green-dark)}
+.btn-dark{background:#181818;color:#fff}
+.btn-light{background:#e9ecef;color:#4a525d}
+button:focus-visible,a:focus-visible{
+    outline:3px solid var(--green);
+    outline-offset:3px;
+}
+.print-heading,.print-value,.print-plan{display:none}
+
+/* ADAPTACIÓN A PANTALLAS */
+@media(max-width:1300px){
+    .equipment-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:1000px){
+    .sidebar{width:230px}
+    .main{margin-left:230px}
+    .page{padding:25px}
+}
+@media(max-width:800px){
+    .sidebar{position:relative;width:100%}
+    .brand{height:80px;font-size:28px}
+    .sidebar-label{padding-top:15px}
+    .nav-link{min-height:45px;margin-bottom:15px}
+    .main{margin-left:0}
+    .topbar{padding:18px;flex-direction:column;align-items:flex-start}
+    .page{padding:18px}
+    .hero{padding:28px 23px;min-height:170px}
+    .hero h1{font-size:27px}
+    .stats{gap:10px}
+    .stat{padding:14px}
+    .stat-label{font-size:10px}
+    .stat-value{font-size:24px}
+    .document-header{padding:20px 16px}
+    .document-body{padding:16px}
+    .equipment-grid,.week-grid{grid-template-columns:1fr}
+    .toolbar{flex-direction:column;align-items:flex-start}
+    .footer{flex-direction:column;align-items:stretch}
+    .actions .btn{flex:1}
+}
+
+/* IMPRESIÓN CON LA DISTRIBUCIÓN DEL FORMULARIO ORIGINAL */
+@media print{
+    @page{size:A4 landscape;margin:10mm}
+    body{background:#fff}
+    .sidebar,.topbar,.hero,.stats,.footer,.toolbar,.info,
+    .document-header,.equipment-grid{
+        display:none!important;
+    }
+    .main{margin:0}
+    .page,.document-body{padding:0}
+    .print-heading{
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        padding:10px;
+        border:2px solid #111;
+        margin-bottom:10px;
+        gap:15px;
+    }
+    .print-heading strong{font-size:18px}
+    .print-heading h1{font-size:13px}
+    .print-heading span{font-size:9px}
+    .document{
+        border:0;
+        border-radius:0;
+        box-shadow:none;
+        overflow:visible;
+        margin:0;
+    }
+    .week-grid{margin-bottom:12px;gap:12px}
+    .field label{font-size:8px}
+    .field input,.field textarea{display:none}
+    .print-value{
+        display:block;
+        min-height:13px;
+        font-size:9px;
+        white-space:pre-wrap;
+        overflow-wrap:anywhere;
+        line-height:1.4;
+    }
+    .print-plan{display:block}
+    .print-table{
+        width:100%;
+        table-layout:fixed;
+        border-collapse:collapse;
+        margin-bottom:12px;
+        break-inside:avoid;
+    }
+    .print-table th{
+        padding:5px 3px;
+        border:1px solid #111;
+        background:#c9e1bb;
+        color:#111;
+        text-align:center;
+        font-size:8px;
+    }
+    .print-table td{
+        padding:6px 4px;
+        border:1px solid #111;
+        min-height:20px;
+        vertical-align:top;
+        font-size:9px;
+        line-height:1.4;
+        white-space:pre-wrap;
+        overflow-wrap:anywhere;
+    }
+    .instruction{
+        margin-top:12px;
+        padding:7px;
+        border:1px solid #111;
+        border-radius:0;
+        background:#fff;
+        color:#111;
+        font-size:9px;
+    }
+}
+</style>
+</head>
+
+<body>
+<aside class="sidebar">
+    <div class="brand">NASER</div>
+    <div class="sidebar-label">DOCUMENTO</div>
+
+    <a href="#planificacion" class="nav-link">
+        <span class="nav-number">01</span>
+        <span>Planificación semanal</span>
+    </a>
+</aside>
+
+<main class="main">
+    <header class="topbar">
+        <div class="breadcrumb">
+            NASER / Operaciones / Planificación Semanal
+        </div>
+
+        <div class="badges">
+            <span class="badge badge-state" id="badgeEstado">
+                EN EDICIÓN
+            </span>
+            <span class="badge badge-code">
+                POSN04-F1 · Rev.02 Ago.25
+            </span>
+        </div>
+    </header>
+
+    <div class="page">
+        <div class="print-heading">
+            <strong>NASER</strong>
+            <h1>PLANIFICACIÓN SEMANAL</h1>
+            <span>POSN04-F1<br>Rev.02 Ago.25</span>
+        </div>
+
+        <section class="hero">
+            <div class="hero-content">
+                <div class="kicker">PLANIFICACIÓN DE OPERACIONES</div>
+                <h1>Planificación Semanal</h1>
+                <p>
+                    Asignación de equipos, unidades, recursos de izaje y personal.
+                </p>
+            </div>
+        </section>
+
+        <div class="stats">
+            <div class="stat">
+                <span class="stat-label">Equipos disponibles</span>
+                <span class="stat-value" id="totalEquipos">0</span>
+            </div>
+
+            <div class="stat">
+                <span class="stat-label">Equipos con datos</span>
+                <span class="stat-value green" id="equiposCargados">0</span>
+            </div>
+
+            <div class="stat">
+                <span class="stat-label">Equipos con supervisor</span>
+                <span class="stat-value" id="supervisores">0</span>
+            </div>
+        </div>
+
+        <form id="formulario" autocomplete="off">
+            <section class="document" id="planificacion">
+                <div class="document-header">
+                    <span class="document-number">01</span>
+                    <div>
+                        <h2>Planificación de equipos y personal</h2>
+                        <p>Edite las asignaciones y agregue o elimine equipos.</p>
+                    </div>
+                </div>
+
+                <div class="document-body">
+                    <div class="week-grid">
+                        <div class="field">
+                            <label for="desde">Semana desde</label>
+                            <input type="date" id="desde">
+                            <span class="print-value"></span>
+                        </div>
+
+                        <div class="field">
+                            <label for="hasta">Semana hasta</label>
+                            <input type="date" id="hasta">
+                            <span class="print-value"></span>
+                        </div>
+                    </div>
+
+                    <div class="info">
+                        Complete <strong>equipo, unidad liviana, equipo de izaje,
+                        supervisor, operador y ayudantes</strong>.
+                        Puede ingresar varios nombres o referencias en cada campo.
+                    </div>
+
+                    <div class="toolbar">
+                        <p>Distribución semanal de recursos y tripulaciones.</p>
+
+                        <button type="button" class="btn btn-green" id="agregar">
+                            + Agregar equipo
+                        </button>
+                    </div>
+
+                    <div class="equipment-grid" id="equipos"></div>
+
+                    <div class="print-plan" id="planImpresion"></div>
+
+                    <p class="instruction">
+                        <strong>
+                            Todas las tripulaciones deben salir desde base
+                            a los diferentes equipos, tanto los días lunes
+                            como los feriados.
+                        </strong>
+                    </p>
+                </div>
+            </section>
+
+            <div class="footer">
+                <p class="status" id="estado" role="status" aria-live="polite">
+                    Documento en edición. El borrador se guarda en este navegador.
+                </p>
+
+                <div class="actions">
+                    <button type="button" class="btn btn-light" id="limpiar">
+                        Limpiar
+                    </button>
+
+                    <button type="button" class="btn btn-light" id="descargar">
+                        Descargar datos
+                    </button>
+
+                    <button type="button" class="btn btn-dark" id="imprimir">
+                        Imprimir / PDF
+                    </button>
+
+                    <button type="button" class="btn btn-green" id="guardar">
+                        Guardar borrador
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</main>
+
+<script>
+"use strict";
+
+const CLAVE = "NASER_POSN04_F1_V1";
+const EQUIPOS_INICIALES = 8;
+
+const campos = [
+    ["equipo","Equipo"],
+    ["unidadLiviana","Unidad liviana"],
+    ["equipoIzaje","Equipo de izaje"],
+    ["supervisor","Supervisor"],
+    ["operador","Operador"],
+    ["ayudantes","Ayudantes"]
+];
+
+const formulario = document.getElementById("formulario");
+const contenedor = document.getElementById("equipos");
+const estado = document.getElementById("estado");
+const badge = document.getElementById("badgeEstado");
+
+let temporizador;
+let secuencia = 0;
+
+/* AGREGAR EQUIPO */
+function agregarEquipo(datos = {}, enfocar = false){
+    contenedor.querySelector(".empty")?.remove();
+
+    const tarjeta = document.createElement("article");
+    tarjeta.className = "equipment";
+
+    const identificador = ++secuencia;
+
+    const encabezado = document.createElement("div");
+    encabezado.className = "equipment-header";
+
+    const titulo = document.createElement("h3");
+
+    const eliminar = document.createElement("button");
+    eliminar.type = "button";
+    eliminar.className = "delete";
+    eliminar.textContent = "×";
+    eliminar.title = "Eliminar equipo";
+
+    const cuerpo = document.createElement("div");
+    cuerpo.className = "equipment-body";
+
+    campos.forEach(([nombre,etiqueta]) => {
+        const grupo = document.createElement("div");
+        grupo.className = "field";
+
+        const label = document.createElement("label");
+        label.textContent = etiqueta;
+        label.htmlFor = "equipo_" + identificador + "_" + nombre;
+
+        const campo = document.createElement(
+            nombre === "equipo" || nombre === "ayudantes"
+                ? "textarea"
+                : "input"
+        );
+
+        if(campo.tagName === "INPUT"){
+            campo.type = "text";
+        }else{
+            campo.rows = 2;
+        }
+
+        campo.id = label.htmlFor;
+        campo.dataset.campo = nombre;
+        campo.value = typeof datos[nombre] === "string"
+            ? datos[nombre]
+            : "";
+
+        grupo.append(label,campo);
+        cuerpo.appendChild(grupo);
+    });
+
+    eliminar.addEventListener("click",() => {
+        if(!confirm("¿Desea eliminar este equipo y sus asignaciones?")){
+            return;
+        }
+
+        const destino =
+            tarjeta.nextElementSibling || tarjeta.previousElementSibling;
+
+        tarjeta.remove();
+        marcarCambio();
+
+        if(destino?.classList.contains("equipment")){
+            destino.querySelector("[data-campo]").focus();
+        }else{
+            document.getElementById("agregar").focus();
+        }
+    });
+
+    encabezado.append(titulo,eliminar);
+    tarjeta.append(encabezado,cuerpo);
+    contenedor.appendChild(tarjeta);
+
+    actualizarIndicadores();
+
+    if(enfocar){
+        tarjeta.querySelector("[data-campo]").focus();
+    }
+}
+
+/* OCHO EQUIPOS INICIALES */
+function crearEquiposIniciales(){
+    contenedor.replaceChildren();
+
+    for(let i = 0; i < EQUIPOS_INICIALES; i++){
+        agregarEquipo();
+    }
+}
+
+/* OBTENER ASIGNACIONES */
+function obtenerEquipos(){
+    return [...contenedor.querySelectorAll(".equipment")].map(tarjeta => {
+        const datos = {};
+
+        tarjeta.querySelectorAll("[data-campo]").forEach(campo => {
+            datos[campo.dataset.campo] = campo.value;
+        });
+
+        return datos;
+    });
+}
+
+function obtenerDatos(){
+    return {
+        codigo:"POSN04-F1",
+        revision:"Rev.02 Ago.25",
+        guardadoEn:new Date().toISOString(),
+        semanaDesde:document.getElementById("desde").value,
+        semanaHasta:document.getElementById("hasta").value,
+        equipos:obtenerEquipos()
+    };
+}
+
+/* INDICADORES */
+function actualizarIndicadores(){
+    const tarjetas = [...contenedor.querySelectorAll(".equipment")];
+    const equipos = obtenerEquipos();
+
+    tarjetas.forEach((tarjeta,indice) => {
+        tarjeta.querySelector("h3").textContent = "Equipo " + (indice + 1);
+
+        tarjeta.querySelector(".delete").setAttribute(
+            "aria-label",
+            "Eliminar equipo " + (indice + 1)
+        );
+    });
+
+    document.getElementById("totalEquipos").textContent = equipos.length;
+
+    document.getElementById("equiposCargados").textContent =
+        equipos.filter(equipo =>
+            Object.values(equipo).some(valor => valor.trim())
+        ).length;
+
+    document.getElementById("supervisores").textContent =
+        equipos.filter(equipo => equipo.supervisor.trim()).length;
+
+    if(!tarjetas.length && !contenedor.querySelector(".empty")){
+        const mensaje = document.createElement("p");
+        mensaje.className = "empty";
+        mensaje.textContent =
+            "No hay equipos. Use Agregar equipo para comenzar.";
+
+        contenedor.appendChild(mensaje);
+    }
+}
+
+/* GUARDADO */
+function guardar(manual = false){
+    try{
+        localStorage.setItem(CLAVE,JSON.stringify(obtenerDatos()));
+
+        badge.textContent = "BORRADOR GUARDADO";
+        estado.textContent =
+            (manual ? "Borrador guardado. " : "Guardado automático. ") +
+            "Datos almacenados en este navegador · " +
+            new Date().toLocaleTimeString("es-AR");
+    }catch(error){
+        badge.textContent = "SIN GUARDAR";
+        estado.textContent =
+            "No se pudo guardar en este navegador. Descargue los datos para conservarlos.";
+    }
+}
+
+function marcarCambio(){
+    actualizarIndicadores();
+
+    badge.textContent = "EN EDICIÓN";
+    estado.textContent = "Cambios pendientes de guardar…";
+
+    clearTimeout(temporizador);
+    temporizador = setTimeout(() => guardar(),600);
+}
+
+formulario.addEventListener("input",marcarCambio);
+
+formulario.addEventListener("submit",evento => {
+    evento.preventDefault();
+    clearTimeout(temporizador);
+    guardar(true);
+});
+
+document.getElementById("agregar").addEventListener("click",() => {
+    agregarEquipo({},true);
+    marcarCambio();
+});
+
+document.getElementById("guardar").addEventListener("click",() => {
+    clearTimeout(temporizador);
+    guardar(true);
+});
+
+/* RECUPERAR BORRADOR */
+function recuperar(){
+    try{
+        const raw = localStorage.getItem(CLAVE);
+        if(!raw) return false;
+
+        const datos = JSON.parse(raw);
+
+        if(
+            !datos ||
+            datos.codigo !== "POSN04-F1" ||
+            !Array.isArray(datos.equipos) ||
+            !datos.equipos.every(equipo =>
+                equipo !== null &&
+                typeof equipo === "object" &&
+                !Array.isArray(equipo)
+            )
+        ){
+            throw new Error("Borrador inválido");
+        }
+
+        document.getElementById("desde").value =
+            typeof datos.semanaDesde === "string" ? datos.semanaDesde : "";
+
+        document.getElementById("hasta").value =
+            typeof datos.semanaHasta === "string" ? datos.semanaHasta : "";
+
+        contenedor.replaceChildren();
+
+        datos.equipos.forEach(equipo => agregarEquipo(equipo));
+
+        badge.textContent = "BORRADOR RECUPERADO";
+        estado.textContent =
+            "Se recuperó el borrador guardado en este navegador.";
+
+        return true;
+    }catch(error){
+        estado.textContent =
+            "No se pudo recuperar el borrador. Puede completar la planificación y descargar los datos.";
+
+        return false;
+    }
+}
+
+/* DESCARGAR DATOS */
+document.getElementById("descargar").addEventListener("click",() => {
+    const archivo = new Blob(
+        [JSON.stringify(obtenerDatos(),null,2)],
+        {type:"application/json;charset=utf-8"}
+    );
+
+    const url = URL.createObjectURL(archivo);
+    const enlace = document.createElement("a");
+
+    enlace.href = url;
+    enlace.download = "NASER-POSN04-F1.json";
+
+    document.body.appendChild(enlace);
+    enlace.click();
+    enlace.remove();
+
+    setTimeout(() => URL.revokeObjectURL(url),1000);
+
+    estado.textContent = "Se descargaron los datos de la planificación.";
+});
+
+/* IMPRESIÓN EN COLUMNAS COMO EL FORMULARIO ORIGINAL */
+function prepararImpresion(){
+    document.querySelectorAll(".week-grid .field").forEach(grupo => {
+        const campo = grupo.querySelector("input");
+        const texto = grupo.querySelector(".print-value");
+
+        if(campo.value){
+            const [anio,mes,dia] = campo.value.split("-");
+            texto.textContent = dia + "/" + mes + "/" + anio;
+        }else{
+            texto.textContent = "";
+        }
+    });
+
+    const destino = document.getElementById("planImpresion");
+    const equipos = obtenerEquipos();
+
+    destino.replaceChildren();
+
+    /* Hasta ocho equipos por tabla para mantener la legibilidad. */
+    for(let inicio = 0; inicio < equipos.length; inicio += 8){
+        const grupo = equipos.slice(inicio,inicio + 8);
+        const tabla = document.createElement("table");
+        tabla.className = "print-table";
+
+        const cuerpoTabla = document.createElement("tbody");
+
+        campos.forEach(([nombre,etiqueta]) => {
+            const filaTitulos = document.createElement("tr");
+            const filaDatos = document.createElement("tr");
+
+            grupo.forEach(equipo => {
+                const titulo = document.createElement("th");
+                titulo.scope = "col";
+                titulo.textContent = etiqueta.toUpperCase();
+
+                const celda = document.createElement("td");
+                celda.textContent = equipo[nombre] || "";
+
+                filaTitulos.appendChild(titulo);
+                filaDatos.appendChild(celda);
+            });
+
+            cuerpoTabla.append(filaTitulos,filaDatos);
+        });
+
+        tabla.appendChild(cuerpoTabla);
+        destino.appendChild(tabla);
+    }
+}
+
+window.addEventListener("beforeprint",prepararImpresion);
+
+document.getElementById("imprimir").addEventListener("click",() => {
+    clearTimeout(temporizador);
+    guardar();
+    prepararImpresion();
+    window.print();
+});
+
+/* LIMPIAR */
+document.getElementById("limpiar").addEventListener("click",() => {
+    if(!confirm("¿Desea borrar el borrador y limpiar toda la planificación?")){
+        return;
+    }
+
+    clearTimeout(temporizador);
+
+    try{
+        localStorage.removeItem(CLAVE);
+    }catch(error){
+        estado.textContent =
+            "No se pudo borrar el borrador. Los campos no fueron modificados.";
+
+        return;
+    }
+
+    formulario.reset();
+    crearEquiposIniciales();
+    actualizarIndicadores();
+
+    badge.textContent = "EN EDICIÓN";
+    estado.textContent = "Planificación limpia. Documento en edición.";
+});
+
+/* INICIO */
+if(!recuperar()){
+    crearEquiposIniciales();
+}
+
+actualizarIndicadores();
+</script>
+</body>
+</html>

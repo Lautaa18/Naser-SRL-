@@ -2037,6 +2037,7 @@ function renderTabla(){
                     "tr"
                 );
 
+            fila.dataset.naserRow = registro.uid;
 
             fila.innerHTML = `
 
@@ -2326,6 +2327,12 @@ function renderTabla(){
 
             `;
 
+
+            fila.querySelectorAll("input,select,textarea").forEach(campo => {
+                const accion = campo.getAttribute("oninput") || campo.getAttribute("onchange") || "";
+                const nombre = accion.match(/actualizar\(\s*'[^']+'\s*,\s*'([^']+)'/);
+                campo.dataset.naserField = nombre ? nombre[1] : campo.closest("td").className;
+            });
 
             tbody.appendChild(
                 fila

@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NASER | Check List de Montaje de Well Testing</title>
+
+<style>
+:root{
+    --green:#009b49;
+    --green-dark:#007a3a;
+    --green-light:#e8f6ee;
+    --black:#101010;
+    --bg:#f2f3f5;
+    --border:#d9dde3;
+    --text:#15191e;
+    --muted:#69717c;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+    font-family:Arial,Helvetica,sans-serif;
+    background:var(--bg);
+    color:var(--text);
+}
+button,input,textarea{font:inherit}
+.sidebar{
+    position:fixed;
+    inset:0 auto 0 0;
+    width:300px;
+    background:#101010;
+    color:#fff;
+    border-right:1px solid #292929;
+}
+.brand{
+    height:120px;
+    display:flex;
+    align-items:center;
+    padding:0 34px;
+    border-bottom:1px solid #292929;
+    font-size:34px;
+    font-weight:900;
+    letter-spacing:4px;
+}
+.sidebar-section{padding:28px 0}
+.sidebar-label{
+    padding:0 30px 14px;
+    color:#818b97;
+    font-size:12px;
+    letter-spacing:1.2px;
+}
+.nav-link{
+    display:flex;
+    align-items:center;
+    gap:15px;
+    min-height:58px;
+    padding:0 26px;
+    color:#e6e6e6;
+    text-decoration:none;
+    border-left:4px solid transparent;
+}
+.nav-link:hover{background:#181818}
+.nav-link.active{
+    background:#191919;
+    border-left-color:var(--green);
+}
+.nav-number{
+    color:#00bd5a;
+    font-weight:800;
+    font-size:18px;
+}
+.main{margin-left:300px}
+.topbar{
+    min-height:90px;
+    padding:20px 35px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:20px;
+    background:#fff;
+    border-bottom:1px solid var(--border);
+}
+.breadcrumb{font-size:14px;color:var(--muted)}
+.top-actions{display:flex;gap:10px;flex-wrap:wrap}
+.badge{
+    padding:10px 15px;
+    border-radius:8px;
+    font-size:12px;
+    font-weight:800;
+}
+.badge-edit{background:#eef0f2;color:#59616c}
+.badge-document{
+    background:var(--green-light);
+    color:var(--green-dark);
+}
+.page{padding:35px}
+.hero{
+    position:relative;
+    overflow:hidden;
+    min-height:195px;
+    display:flex;
+    align-items:center;
+    padding:38px 42px;
+    border-radius:15px;
+    background:linear-gradient(110deg,#101010,#202020);
+    color:#fff;
+}
+.hero::after{
+    content:"";
+    position:absolute;
+    width:310px;
+    height:310px;
+    right:-90px;
+    top:-135px;
+    border-radius:50%;
+    background:rgba(0,155,73,.18);
+}
+.hero-content{position:relative;z-index:1}
+.hero-kicker{
+    color:#00c65e;
+    font-size:12px;
+    font-weight:800;
+    letter-spacing:2px;
+    margin-bottom:14px;
+}
+.hero h1{
+    font-size:34px;
+    line-height:1.2;
+    margin-bottom:15px;
+}
+.hero p{
+    font-size:14px;
+    line-height:1.7;
+    color:#e6e8eb;
+}
+.stats{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:14px;
+    margin:24px 0;
+}
+.stat{
+    padding:20px;
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:11px;
+}
+.stat-label{
+    display:block;
+    color:var(--muted);
+    font-size:11px;
+    font-weight:700;
+    text-transform:uppercase;
+    margin-bottom:10px;
+}
+.stat-value{font-size:28px;font-weight:900}
+.green{color:var(--green)}
+.document-card{
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:14px;
+    margin-bottom:24px;
+    overflow:hidden;
+    box-shadow:0 8px 28px rgba(16,24,40,.05);
+    scroll-margin-top:20px;
+}
+.document-header{
+    display:flex;
+    align-items:center;
+    gap:17px;
+    padding:23px 27px;
+    border-bottom:1px solid var(--border);
+}
+.document-number{
+    width:50px;
+    height:50px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-shrink:0;
+    background:#111;
+    color:#00c45e;
+    font-size:18px;
+    font-weight:900;
+    border-radius:9px;
+}
+.document-title h2{font-size:20px;margin-bottom:5px}
+.document-title p{font-size:13px;color:var(--muted)}
+.document-body{padding:27px}
+.form-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:18px;
+}
+.field{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    min-width:0;
+}
+.field label{
+    color:#59616c;
+    font-size:11px;
+    font-weight:700;
+    text-transform:uppercase;
+    line-height:1.5;
+}
+.field input{
+    width:100%;
+    padding:11px 12px;
+    background:#fff;
+    color:var(--text);
+    border:1px solid #d4d9df;
+    border-radius:7px;
+    font-size:13px;
+}
+.field input:focus,.table-input:focus{
+    outline:none;
+    border-color:var(--green);
+    box-shadow:0 0 0 3px rgba(0,155,73,.1);
+}
+.info{
+    padding:18px 20px;
+    margin-bottom:23px;
+    border:1px solid var(--border);
+    border-left:4px solid var(--green);
+    border-radius:8px;
+    background:#fafbfc;
+    color:#59616c;
+    font-size:13px;
+    line-height:1.7;
+}
+.info strong{color:var(--green-dark)}
+.toolbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:14px;
+    margin-bottom:18px;
+}
+.toolbar p{font-size:13px;color:var(--muted)}
+.table-container{
+    overflow-x:auto;
+    border:1px solid var(--border);
+    border-radius:10px;
+}
+.data-table{
+    width:100%;
+    min-width:850px;
+    border-collapse:collapse;
+    table-layout:fixed;
+}
+.data-table thead{background:#151515;color:#fff}
+.data-table th{
+    padding:16px 10px;
+    font-size:11px;
+    text-align:left;
+    line-height:1.5;
+    border-bottom:3px solid var(--green);
+}
+.data-table td{
+    padding:9px;
+    border-bottom:1px solid var(--border);
+    vertical-align:top;
+}
+.data-table tbody tr:nth-child(even){background:#fafbfc}
+.data-table tbody tr:hover{background:#f4faf6}
+.data-table tbody tr:last-child td{border-bottom:0}
+.col-hoja{width:8%}
+.col-item{width:10%}
+.col-identificacion{width:32%}
+.col-precinto{width:15%}
+.col-serie{width:15%}
+.col-resultado{width:15%}
+.col-action{width:5%}
+.table-input{
+    display:block;
+    width:100%;
+    padding:9px;
+    border:1px solid #d4d9df;
+    border-radius:6px;
+    background:#fff;
+    color:var(--text);
+    font-size:12px;
+}
+textarea.table-input{
+    min-height:38px;
+    resize:vertical;
+    line-height:1.5;
+}
+.delete-btn{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:30px;
+    height:34px;
+    margin:auto;
+    border:0;
+    border-radius:6px;
+    background:#fff0f1;
+    color:#c52335;
+    cursor:pointer;
+    font-size:20px;
+}
+.delete-btn:hover{background:#ffe0e4}
+.footer{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:18px;
+}
+.status{
+    font-size:12px;
+    color:var(--muted);
+    line-height:1.7;
+}
+.actions{display:flex;gap:9px;flex-wrap:wrap}
+.btn{
+    border:0;
+    border-radius:8px;
+    min-height:42px;
+    padding:10px 16px;
+    font-size:12px;
+    font-weight:800;
+    cursor:pointer;
+}
+.btn-green{background:var(--green);color:#fff}
+.btn-green:hover{background:var(--green-dark)}
+.btn-dark{background:#181818;color:#fff}
+.btn-light{background:#e9ecef;color:#4a525d}
+button:focus-visible,a:focus-visible{
+    outline:3px solid var(--green);
+    outline-offset:3px;
+}
+.print-heading{display:none}
+.print-value{display:none}
+
+@media(max-width:1200px){
+    .sidebar{width:250px}
+    .main{margin-left:250px}
+    .form-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:800px){
+    .sidebar{position:relative;width:100%}
+    .brand{height:80px;font-size:28px}
+    .sidebar-section{
+        display:flex;
+        flex-wrap:wrap;
+        padding:15px 0;
+    }
+    .sidebar-label{width:100%}
+    .nav-link{
+        min-height:45px;
+        padding:0 15px;
+        font-size:13px;
+    }
+    .main{margin-left:0}
+    .topbar{
+        padding:18px;
+        align-items:flex-start;
+        flex-direction:column;
+    }
+    .page{padding:18px}
+    .hero{padding:28px 23px}
+    .hero h1{font-size:26px}
+    .stats{gap:10px}
+    .stat{padding:14px}
+    .stat-label{font-size:10px}
+    .stat-value{font-size:24px}
+    .document-header{padding:20px 16px}
+    .document-title h2{font-size:18px}
+    .document-body{padding:16px}
+    .form-grid{grid-template-columns:1fr}
+    .toolbar{align-items:flex-start;flex-direction:column}
+    .footer{align-items:stretch;flex-direction:column}
+    .actions .btn{flex:1}
+}
+
+@media print{
+    @page{size:A4 portrait;margin:10mm}
+    body{background:#fff}
+    .sidebar,.topbar,.hero,.stats,.footer,
+    .info,.toolbar,.col-action,.action-cell{
+        display:none!important;
+    }
+    .main{margin:0}
+    .page,.document-body{padding:0}
+    .print-heading{
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        gap:12px;
+        border:2px solid #111;
+        padding:12px;
+        margin-bottom:12px;
+    }
+    .print-heading strong{font-size:18px}
+    .print-heading h1{
+        font-size:12px;
+        text-align:center;
+        line-height:1.5;
+    }
+    .print-heading span{
+        font-size:9px;
+        white-space:nowrap;
+    }
+    .document-card{
+        border:0;
+        border-radius:0;
+        box-shadow:none;
+        margin-bottom:12px;
+        overflow:visible;
+    }
+    .document-header{
+        padding:6px 0;
+        border-bottom:1px solid #111;
+    }
+    .document-number{display:none}
+    .document-title h2{font-size:11px;margin:0}
+    .document-title p{display:none}
+    .form-grid{
+        grid-template-columns:repeat(3,1fr);
+        gap:8px;
+        padding:10px 0;
+    }
+    .field label{font-size:8px}
+    .field input{
+        padding:4px;
+        font-size:10px;
+        border-radius:0;
+    }
+    .table-container{
+        overflow:visible;
+        border:0;
+        border-radius:0;
+    }
+    .data-table{
+        min-width:0;
+        width:100%;
+        font-size:9px;
+    }
+    .data-table thead{display:table-header-group}
+    .data-table th{
+        color:#111;
+        background:#fff;
+        padding:6px 4px;
+        font-size:8px;
+        border:1px solid #111;
+    }
+    .data-table td{
+        border:1px solid #111;
+        padding:4px;
+    }
+    .data-table tbody tr:last-child td{
+        border-bottom:1px solid #111;
+    }
+    .data-table tr{break-inside:avoid}
+    .data-table .table-input{display:none}
+    .print-value{
+        display:block;
+        min-height:13px;
+        white-space:pre-wrap;
+        overflow-wrap:anywhere;
+        font-size:9px;
+        line-height:1.4;
+    }
+}
+</style>
+</head>
+
+<body>
+<aside class="sidebar">
+    <div class="brand">NASER</div>
+
+    <nav class="sidebar-section" aria-label="Secciones del documento">
+        <div class="sidebar-label">DOCUMENTO</div>
+
+        <a href="#datos" class="nav-link active">
+            <span class="nav-number">01</span>
+            <span>Datos del servicio</span>
+        </a>
+
+        <a href="#montaje" class="nav-link">
+            <span class="nav-number">02</span>
+            <span>Check List de montaje</span>
+        </a>
+    </nav>
+</aside>
+
+<main class="main">
+    <header class="topbar">
+        <div class="breadcrumb">
+            NASER / Well Testing / Check List de Montaje
+        </div>
+
+        <div class="top-actions">
+            <span class="badge badge-edit" id="badgeEstado">
+                EN EDICIÓN
+            </span>
+            <span class="badge badge-document">
+                POSN03-F2 · Rev.01 06/25
+            </span>
+        </div>
+    </header>
+
+    <div class="page">
+        <div class="print-heading">
+            <strong>NASER</strong>
+            <h1>CHECK LIST DE MONTAJE DE EQUIPO DE WELL TESTING</h1>
+            <span>POSN03-F2<br>Rev.01 06/25</span>
+        </div>
+
+        <section class="hero">
+            <div class="hero-content">
+                <div class="hero-kicker">CONTROL DE MONTAJE</div>
+                <h1>Check List de Montaje de Equipo de Well Testing</h1>
+                <p>
+                    Registro de identificación de los elementos,
+                    precintos, números de serie y resultados del control.
+                </p>
+            </div>
+        </section>
+
+        <div class="stats">
+            <div class="stat">
+                <span class="stat-label">Filas disponibles</span>
+                <span class="stat-value" id="statFilas">0</span>
+            </div>
+
+            <div class="stat">
+                <span class="stat-label">Elementos registrados</span>
+                <span class="stat-value green" id="statElementos">0</span>
+            </div>
+
+            <div class="stat">
+                <span class="stat-label">Resultados registrados</span>
+                <span class="stat-value" id="statResultados">0</span>
+            </div>
+        </div>
+
+        <form id="formulario" autocomplete="off">
+            <section class="document-card" id="datos">
+                <div class="document-header">
+                    <span class="document-number">01</span>
+                    <div class="document-title">
+                        <h2>Datos del servicio</h2>
+                        <p>Identificación del servicio y personal interviniente.</p>
+                    </div>
+                </div>
+
+                <div class="document-body">
+                    <div class="form-grid">
+                        <div class="field">
+                            <label for="fecha">Fecha</label>
+                            <input type="date" id="fecha" name="fecha">
+                        </div>
+
+                        <div class="field">
+                            <label for="cliente">Cliente</label>
+                            <input type="text" id="cliente" name="cliente">
+                        </div>
+
+                        <div class="field">
+                            <label for="pozo">Pozo</label>
+                            <input type="text" id="pozo" name="pozo">
+                        </div>
+
+                        <div class="field">
+                            <label for="operador">Operador</label>
+                            <input type="text" id="operador" name="operador">
+                        </div>
+
+                        <div class="field">
+                            <label for="ayudante">Ayudante</label>
+                            <input type="text" id="ayudante" name="ayudante">
+                        </div>
+
+                        <div class="field">
+                            <label for="supervisor">Supervisor</label>
+                            <input type="text" id="supervisor" name="supervisor">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="document-card" id="montaje">
+                <div class="document-header">
+                    <span class="document-number">02</span>
+                    <div class="document-title">
+                        <h2>Check List de montaje</h2>
+                        <p>Identificación y resultado de cada elemento controlado.</p>
+                    </div>
+                </div>
+
+                <div class="document-body">
+                    <div class="info">
+                        Complete <strong>Hoja, Ítem, Identificación,
+                        Precinto, N° de serie y Resultado</strong>.
+                        En identificación, registre el largo en metros
+                        y PT en PSI cuando corresponda.
+                    </div>
+
+                    <div class="toolbar">
+                        <p>Agregue las filas necesarias para registrar el equipo.</p>
+                        <button type="button" class="btn btn-green" id="agregar">
+                            + Agregar fila
+                        </button>
+                    </div>
+
+                    <div class="table-container">
+                        <table class="data-table" aria-label="Check List de montaje">
+                            <thead>
+                                <tr>
+                                    <th class="col-hoja" scope="col">HOJA</th>
+                                    <th class="col-item" scope="col">ÍTEM</th>
+                                    <th class="col-identificacion" scope="col">
+                                        IDENTIFICACIÓN · Largo (m) · PT (PSI)
+                                    </th>
+                                    <th class="col-precinto" scope="col">PRECINTO</th>
+                                    <th class="col-serie" scope="col">N° DE SERIE</th>
+                                    <th class="col-resultado" scope="col">RESULTADO</th>
+                                    <th class="col-action" scope="col">
+                                        <span aria-label="Acciones">×</span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody id="filas"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <div class="footer">
+                <p class="status" id="estado" role="status" aria-live="polite">
+                    Documento en edición. El borrador se guarda en este navegador.
+                </p>
+
+                <div class="actions">
+                    <button type="button" class="btn btn-light" id="limpiar">
+                        Limpiar
+                    </button>
+                    <button type="button" class="btn btn-light" id="descargar">
+                        Descargar datos
+                    </button>
+                    <button type="button" class="btn btn-dark" id="imprimir">
+                        Imprimir / PDF
+                    </button>
+                    <button type="button" class="btn btn-green" id="guardar">
+                        Guardar borrador
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</main>
+
+<script>
+"use strict";
+
+const CLAVE = "NASER_POSN03_F2_V1";
+const FILAS_INICIALES = 10;
+
+const camposFila = [
+    ["hoja","Hoja"],
+    ["item","Ítem"],
+    ["identificacion","Identificación, largo en metros y PT en PSI"],
+    ["precinto","Precinto"],
+    ["serie","Número de serie"],
+    ["resultado","Resultado"]
+];
+
+const camposCabecera = [
+    "fecha","cliente","pozo",
+    "operador","ayudante","supervisor"
+];
+
+const formulario = document.getElementById("formulario");
+const cuerpoTabla = document.getElementById("filas");
+const estado = document.getElementById("estado");
+const badge = document.getElementById("badgeEstado");
+
+let temporizador;
+
+/* CREAR FILAS */
+function agregarFila(datos = {}, enfocar = false){
+    const fila = document.createElement("tr");
+
+    camposFila.forEach(([nombre,etiqueta]) => {
+        const celda = document.createElement("td");
+
+        const campo = document.createElement(
+            nombre === "identificacion" || nombre === "resultado"
+                ? "textarea"
+                : "input"
+        );
+
+        if(campo.tagName === "INPUT"){
+            campo.type = "text";
+        }else{
+            campo.rows = 1;
+        }
+
+        campo.className = "table-input";
+        campo.dataset.campo = nombre;
+        campo.setAttribute("aria-label",etiqueta);
+
+        campo.value = typeof datos[nombre] === "string"
+            ? datos[nombre]
+            : "";
+
+        const valorImpresion = document.createElement("span");
+        valorImpresion.className = "print-value";
+
+        celda.append(campo,valorImpresion);
+        fila.appendChild(celda);
+    });
+
+    const celdaAccion = document.createElement("td");
+    celdaAccion.className = "action-cell";
+
+    const eliminar = document.createElement("button");
+    eliminar.type = "button";
+    eliminar.className = "delete-btn";
+    eliminar.textContent = "×";
+    eliminar.setAttribute("aria-label","Eliminar fila");
+    eliminar.title = "Eliminar fila";
+
+    eliminar.addEventListener("click",() => {
+        const tieneDatos = [...fila.querySelectorAll("[data-campo]")]
+            .some(campo => campo.value.trim());
+
+        if(tieneDatos && !confirm("¿Desea eliminar esta fila y sus datos?")){
+            return;
+        }
+
+        fila.remove();
+        marcarCambio();
+    });
+
+    celdaAccion.appendChild(eliminar);
+    fila.appendChild(celdaAccion);
+    cuerpoTabla.appendChild(fila);
+
+    actualizarIndicadores();
+
+    if(enfocar){
+        fila.querySelector("[data-campo]").focus();
+    }
+}
+
+/* OBTENER DATOS */
+function obtenerFilas(){
+    return [...cuerpoTabla.rows].map(fila => {
+        const datos = {};
+
+        fila.querySelectorAll("[data-campo]").forEach(campo => {
+            datos[campo.dataset.campo] = campo.value;
+        });
+
+        return datos;
+    });
+}
+
+function obtenerDatos(){
+    const cabecera = {};
+
+    camposCabecera.forEach(nombre => {
+        cabecera[nombre] = document.getElementById(nombre).value;
+    });
+
+    return {
+        codigo:"POSN03-F2",
+        revision:"Rev.01 06/25",
+        guardadoEn:new Date().toISOString(),
+        cabecera,
+        filas:obtenerFilas()
+    };
+}
+
+/* INDICADORES */
+function actualizarIndicadores(){
+    const filas = obtenerFilas();
+
+    const registradas = filas.filter(fila =>
+        Object.values(fila).some(valor => valor.trim())
+    );
+
+    const resultados = filas.filter(fila =>
+        fila.resultado.trim()
+    );
+
+    document.getElementById("statFilas").textContent = filas.length;
+    document.getElementById("statElementos").textContent = registradas.length;
+    document.getElementById("statResultados").textContent = resultados.length;
+}
+
+/* GUARDADO */
+function guardar(manual = false){
+    try{
+        localStorage.setItem(CLAVE,JSON.stringify(obtenerDatos()));
+
+        badge.textContent = "BORRADOR GUARDADO";
+        estado.textContent =
+            (manual ? "Borrador guardado. " : "Guardado automático. ") +
+            "Datos almacenados en este navegador · " +
+            new Date().toLocaleTimeString("es-AR");
+    }catch(error){
+        badge.textContent = "SIN GUARDAR";
+        estado.textContent =
+            "No se pudo guardar en este navegador. Descargue los datos para conservarlos.";
+    }
+}
+
+function marcarCambio(){
+    actualizarIndicadores();
+
+    badge.textContent = "EN EDICIÓN";
+    estado.textContent = "Cambios pendientes de guardar…";
+
+    clearTimeout(temporizador);
+    temporizador = setTimeout(() => guardar(),600);
+}
+
+formulario.addEventListener("input",marcarCambio);
+
+document.getElementById("agregar").addEventListener("click",() => {
+    agregarFila({},true);
+    marcarCambio();
+});
+
+document.getElementById("guardar").addEventListener("click",() => {
+    clearTimeout(temporizador);
+    guardar(true);
+});
+
+/* RECUPERAR BORRADOR */
+function iniciar(){
+    let recuperado = false;
+
+    try{
+        const raw = localStorage.getItem(CLAVE);
+
+        if(raw){
+            const datos = JSON.parse(raw);
+
+            if(
+                datos.codigo !== "POSN03-F2" ||
+                !datos.cabecera ||
+                typeof datos.cabecera !== "object" ||
+                !Array.isArray(datos.filas) ||
+                !datos.filas.every(fila =>
+                    fila !== null &&
+                    typeof fila === "object" &&
+                    !Array.isArray(fila)
+                )
+            ){
+                throw new Error("Borrador inválido");
+            }
+
+            camposCabecera.forEach(nombre => {
+                const valor = datos.cabecera[nombre];
+
+                document.getElementById(nombre).value =
+                    typeof valor === "string" ? valor : "";
+            });
+
+            datos.filas.forEach(fila => agregarFila(fila));
+
+            recuperado = true;
+            badge.textContent = "BORRADOR RECUPERADO";
+            estado.textContent =
+                "Se recuperó el borrador guardado en este navegador.";
+        }
+    }catch(error){
+        estado.textContent =
+            "No se pudo recuperar el borrador. Puede completar el formulario y descargar los datos.";
+    }
+
+    if(!recuperado){
+        for(let i = 0; i < FILAS_INICIALES; i++){
+            agregarFila();
+        }
+    }
+
+    actualizarIndicadores();
+}
+
+/* DESCARGAR DATOS */
+document.getElementById("descargar").addEventListener("click",() => {
+    const contenido = JSON.stringify(obtenerDatos(),null,2);
+    const archivo = new Blob([contenido],{
+        type:"application/json;charset=utf-8"
+    });
+
+    const url = URL.createObjectURL(archivo);
+    const enlace = document.createElement("a");
+
+    enlace.href = url;
+    enlace.download = "NASER-POSN03-F2.json";
+
+    document.body.appendChild(enlace);
+    enlace.click();
+    enlace.remove();
+
+    setTimeout(() => URL.revokeObjectURL(url),1000);
+
+    estado.textContent = "Se descargaron los datos del Check List.";
+});
+
+/* IMPRESIÓN: MOSTRAR EL TEXTO COMPLETO DE CADA CELDA */
+function prepararImpresion(){
+    cuerpoTabla.querySelectorAll("td").forEach(celda => {
+        const campo = celda.querySelector("[data-campo]");
+        const texto = celda.querySelector(".print-value");
+
+        if(campo && texto){
+            texto.textContent = campo.value;
+        }
+    });
+}
+
+window.addEventListener("beforeprint",prepararImpresion);
+
+document.getElementById("imprimir").addEventListener("click",() => {
+    clearTimeout(temporizador);
+    guardar();
+    prepararImpresion();
+    window.print();
+});
+
+/* LIMPIAR */
+document.getElementById("limpiar").addEventListener("click",() => {
+    if(!confirm("¿Desea borrar el borrador y limpiar todo el Check List?")){
+        return;
+    }
+
+    clearTimeout(temporizador);
+
+    try{
+        localStorage.removeItem(CLAVE);
+    }catch(error){
+        estado.textContent =
+            "No se pudo borrar el borrador del navegador. Los campos no fueron modificados.";
+        return;
+    }
+
+    formulario.reset();
+    cuerpoTabla.replaceChildren();
+
+    for(let i = 0; i < FILAS_INICIALES; i++){
+        agregarFila();
+    }
+
+    actualizarIndicadores();
+
+    badge.textContent = "EN EDICIÓN";
+    estado.textContent = "Formulario limpio. Documento en edición.";
+});
+
+/* NAVEGACIÓN */
+document.querySelectorAll(".nav-link").forEach(enlace => {
+    enlace.addEventListener("click",() => {
+        document.querySelectorAll(".nav-link").forEach(item => {
+            item.classList.toggle("active",item === enlace);
+        });
+    });
+});
+
+iniciar();
+</script>
+</body>
+</html>

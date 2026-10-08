@@ -122,24 +122,25 @@ $accionesHist = ['creado' => 'Creó el formulario', 'guardado' => 'Guardó cambi
   var msg = document.getElementById('fxMsg');
   var dirty = document.getElementById('fxDirty');
   var refInput = document.getElementById('fxReferencia');
-  var ocupado = false, reqs = {}, reqN = 0;
+  var ocupado = false, reqs = {}, reqN = 0, revision = 0;
 
   function aviso(texto, tipo){ msg.textContent = texto; msg.className = 'fx-msg ' + (tipo || 'ok'); if (tipo !== 'err') setTimeout(function(){ if (msg.textContent === texto) msg.className = 'fx-msg'; }, 5000); }
 
   window.addEventListener('message', function(e){
     if (e.origin !== window.location.origin || e.source !== frame.contentWindow || !e.data) return;
     var d = e.data;
-    if (d.type === 'naser:height') frame.style.height = Math.max(600, d.height + 20) + 'px';
-    else if (d.type === 'naser:dirty' && puedeEditar) dirty.hidden = false;
+    if (d.type === 'naser:height' && Number.isFinite(d.height)) frame.style.height = Math.max(300, d.height + 16) + 'px';
+    else if (d.type === 'naser:dirty' && puedeEditar) { revision++; dirty.hidden = false; }
     else if (d.type === 'naser:collected' && reqs[d.reqId]) { reqs[d.reqId](d); delete reqs[d.reqId]; }
     else if (d.type === 'naser:save-request' && puedeEditar) accion('guardar');
   });
+  refInput.addEventListener('input', function(){ if (puedeEditar) { revision++; dirty.hidden = false; } });
   window.addEventListener('beforeunload', function(e){ if (!dirty.hidden) { e.preventDefault(); e.returnValue = ''; } });
 
-  function recolectar(){
+  function recolectar(validar){
     return new Promise(function(ok, mal){
       var n = ++reqN; reqs[n] = ok;
-      frame.contentWindow.postMessage({ type: 'naser:collect', reqId: n }, window.location.origin);
+      frame.contentWindow.postMessage({ type: 'naser:collect', reqId: n, validate: !!validar }, window.location.origin);
       setTimeout(function(){ if (reqs[n]) { delete reqs[n]; mal(new Error('El formulario no respondió. Recargá la página.')); } }, 5000);
     });
   }
@@ -174,18 +175,36 @@ $accionesHist = ['creado' => 'Creó el formulario', 'guardado' => 'Guardó cambi
       if (nombre === 'rechazar') { var c2 = await pedirComentario('Rechazar formulario', 'Indicá qué hay que corregir. Se le avisará a quien lo cargó.', true); if (c2 === null) return; if (!c2) { aviso('Escribí el motivo del rechazo.', 'err'); return; } payload.comentario = c2; }
       if (nombre === 'reabrir' && !confirm('¿Reabrir el formulario? Vuelve a borrador y se puede modificar.')) return;
       if (nombre === 'eliminar' && !confirm('¿Eliminar este formulario? No se puede deshacer.')) return;
+      ocupado = true; document.body.classList.add('fx-busy');
+      var revisionGuardada = revision;
       if (nombre === 'guardar' || nombre === 'enviar') {
-        var d = await recolectar();
+        var d = await recolectar(nombre === 'enviar');
+        if (d.valid === false) { aviso('Completá los campos obligatorios y corregí los datos indicados antes de enviar.', 'err'); return; }
         payload.datos = d.fields; payload.storage = d.storage;
         if (!refInput.value.trim() && d.sugerencia) refInput.value = d.sugerencia;
         payload.referencia = refInput.value.trim();
       }
-      ocupado = true; document.body.classList.add('fx-busy');
       var j = await enviarApi(payload);
-      dirty.hidden = true;
+      dirty.hidden = revision !== revisionGuardada;
       if (j.redirect) { window.location.href = j.redirect; return; }
       var nuevo = !id; id = j.id;
-      if (nombre === 'guardar' && !nuevo) { aviso('✔ ' + j.mensaje); return; }
+      if (nombre === 'guardar') {
+        history.replaceState(null, '', location.pathname + '?id=' + id);
+        var estadoEl = document.getElementById('fxEstado');
+        estadoEl.textContent = j.estado_label; estadoEl.className = 'fx-estado fx-' + j.estado;
+        if (nuevo) {
+          var numero = document.createElement('small'); numero.textContent = ' #' + id;
+          document.querySelector('.fx-head h1').appendChild(numero);
+          ['duplicar', 'eliminar'].forEach(function(a){
+            if (a === 'eliminar' && !j.permisos.eliminar) return;
+            var btn = document.createElement('button'); btn.type = 'button';
+            btn.className = 'btn ' + (a === 'eliminar' ? 'danger' : 'secondary');
+            btn.dataset.accion = a; btn.textContent = a === 'eliminar' ? 'Eliminar' : 'Duplicar';
+            document.querySelector('.fx-toolbar-side').appendChild(btn);
+          });
+        }
+        aviso('✔ ' + j.mensaje); return;
+      }
       aviso('✔ ' + j.mensaje);
       setTimeout(function(){ window.location.href = <?=json_encode(app_url('/php/formularios/llenar.php'))?> + '?id=' + id + '&ok=' + encodeURIComponent(j.mensaje); }, nuevo && nombre === 'guardar' ? 200 : 600);
     } catch (err) {

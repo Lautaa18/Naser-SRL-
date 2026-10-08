@@ -34,8 +34,29 @@ $archivo = rutaFormulario($form);
 if (!is_file($archivo)) { http_response_code(404); exit('Falta el archivo del formulario: ' . h($form['archivo'])); }
 $html = file_get_contents($archivo);
 
+// El estado de edición lo administra el sistema, incluso al reabrir o duplicar.
+if (!$readonly && is_array($storage)) {
+    foreach ($storage as $key => $value) {
+        $native = is_string($value) ? json_decode($value, true) : null;
+        if (!is_array($native)) continue;
+        foreach (['locked', 'finalized', 'finalizado'] as $flag) {
+            if (isset($native[$flag]) && is_bool($native[$flag])) $native[$flag] = false;
+        }
+        $storage[$key] = json_encode($native, JSON_UNESCAPED_UNICODE);
+    }
+}
+$html = preg_replace_callback('/<body\b([^>]*)>/i', static function ($m) {
+    $attributes = $m[1];
+    if (preg_match('/\bclass\s*=\s*([\'"])(.*?)\1/is', $attributes)) {
+        $attributes = preg_replace('/\bclass\s*=\s*([\'"])(.*?)\1/is', 'class="naser-embedded $2"', $attributes, 1);
+    } else {
+        $attributes .= ' class="naser-embedded"';
+    }
+    return '<body' . $attributes . '>';
+}, $html, 1);
+
 $J = JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE;
-$cfg = json_encode(['readonly' => $readonly, 'fields' => $fields], $J);
+$cfg = json_encode(['readonly' => $readonly, 'fields' => $fields, 'hasNativeStorage' => (bool)(array)$storage], $J);
 $sto = json_encode($storage, $J);
 
 // Se reemplaza el localStorage del navegador por uno en memoria: asi cada registro
@@ -44,6 +65,12 @@ $head = <<<HTML
 <script>
 window.__NASER_FORM__ = $cfg;
 (function(){
+  // El contenedor avisa sobre cambios sin guardar; evitar avisos locales duplicados.
+  var listen = window.addEventListener;
+  window.addEventListener = function(type, listener, options){
+    if (type !== 'beforeunload') return listen.call(this, type, listener, options);
+  };
+  Object.defineProperty(window, 'onbeforeunload', { configurable: true, get: function(){ return null; }, set: function(){} });
   function crear(inicial){
     var d = {}; for (var k in (inicial||{})) if (Object.prototype.hasOwnProperty.call(inicial,k)) d[k] = String(inicial[k]);
     return {
@@ -64,12 +91,18 @@ window.__NASER_FORM__ = $cfg;
 </script>
 HTML;
 $bridge = '<script src="' . h(asset('/js/naser-form-bridge.js')) . '"></script>';
+$responsive = '<link rel="stylesheet" href="' . h(asset('/css/formularios-responsive.css')) . '">';
 
 if (preg_match('/<head[^>]*>/i', $html, $m, PREG_OFFSET_CAPTURE)) {
     $pos = $m[0][1] + strlen($m[0][0]);
     $html = substr($html, 0, $pos) . "\n" . $head . "\n" . substr($html, $pos);
 } else {
     $html = $head . $html;
+}
+if (stripos($html, '</head>') !== false) {
+    $html = str_ireplace('</head>', $responsive . "\n</head>", $html);
+} else {
+    $html = $responsive . $html;
 }
 if (stripos($html, '</body>') !== false) {
     $pos = strripos($html, '</body>');

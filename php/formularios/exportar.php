@@ -13,8 +13,13 @@ if ($sector) { $where[] = 'r.sector_id = ?'; $params[] = (int)$sector['id']; }
 else { $where[] = $visiblesIds ? 'r.sector_id IN (' . implode(',', $visiblesIds) . ')' : '0'; }
 if (($f = (string)($_GET['f'] ?? '')) !== '') { $where[] = 'r.formulario = ?'; $params[] = $f; }
 if (in_array($e = (string)($_GET['estado'] ?? ''), ['borrador', 'enviado', 'aprobado', 'rechazado'], true)) { $where[] = 'r.estado = ?'; $params[] = $e; }
-if (($q = trim((string)($_GET['q'] ?? ''))) !== '') { $where[] = 'r.referencia LIKE ?'; $params[] = "%$q%"; }
+if (($q = trim((string)($_GET['q'] ?? ''))) !== '') { $where[] = '(r.referencia LIKE ? OR r.id = ?)'; $params[] = "%$q%"; $params[] = (int)$q; }
 if (($_GET['vista'] ?? '') === 'mios') { $where[] = 'r.creado_por = ?'; $params[] = $uid; }
+if (($_GET['vista'] ?? '') === 'aprobar') {
+    $aprobables = array_values(array_filter($visiblesIds, fn($id) => puedeAprobarSector($pdo, $id)));
+    $where[] = "r.estado = 'enviado'";
+    $where[] = $aprobables ? 'r.sector_id IN (' . implode(',', $aprobables) . ')' : '0';
+}
 if (!esAdmin()) {
     $gest = array_values(array_filter($visiblesIds, fn($id) => puedeEditarSector($pdo, $id)));
     $where[] = "(r.estado <> 'borrador' OR r.creado_por = $uid" . ($gest ? ' OR r.sector_id IN (' . implode(',', $gest) . ')' : '') . ')';

@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>NASER | POSN08-F2 · Listado de operaciones</title>
+
+  <style>
+    :root {
+      --green: #009b49;
+      --bg: #f2f3f5;
+      --border: #d9dde3;
+      --muted: #69717c;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: #15191e;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    button,
+    input,
+    textarea {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .sidebar {
+      position: fixed;
+      inset: 0 auto 0 0;
+      width: 250px;
+      background: #101010;
+      color: white;
+      padding: 32px 24px;
+    }
+
+    .brand {
+      font-size: 34px;
+      font-weight: 900;
+      border-bottom: 1px solid #333;
+      padding-bottom: 28px;
+    }
+
+    .sidebar p {
+      color: #aaa;
+      font-size: 12px;
+      letter-spacing: 1px;
+    }
+
+    .sidebar a {
+      display: block;
+      color: white;
+      text-decoration: none;
+      padding: 18px 12px;
+      background: #202020;
+      border-left: 4px solid var(--green);
+    }
+
+    main {
+      margin-left: 250px;
+      padding: 32px;
+    }
+
+    .top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .eyebrow {
+      color: var(--green);
+      font-weight: bold;
+      font-size: 12px;
+      letter-spacing: 1px;
+    }
+
+    h1 {
+      margin: 8px 0;
+      font-size: 30px;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .badge {
+      background: #e8f6ee;
+      color: #007a3a;
+      padding: 10px 16px;
+      border-radius: 6px;
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 24px 0;
+    }
+
+    button {
+      border: 1px solid var(--border);
+      background: white;
+      border-radius: 6px;
+      padding: 11px 16px;
+    }
+
+    .primary {
+      background: var(--green);
+      color: white;
+      border-color: var(--green);
+    }
+
+    button:hover {
+      filter: brightness(.95);
+    }
+
+    button:focus-visible,
+    input:focus-visible,
+    textarea:focus-visible {
+      outline: 2px solid var(--green);
+      outline-offset: 2px;
+    }
+
+    .sheet {
+      background: white;
+      padding: 20px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      box-shadow: 0 8px 28px #1018280f;
+    }
+
+    .scroll {
+      overflow: auto;
+    }
+
+    .document {
+      min-width: 1500px;
+    }
+
+    .document-header {
+      display: grid;
+      grid-template-columns: 176px 1fr 130px;
+      border: 2px solid black;
+      border-bottom: 0;
+      height: 64px;
+      text-align: center;
+      align-items: stretch;
+    }
+
+    .document-header > div {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 6px;
+    }
+
+    .document-header > div + div {
+      border-left: 2px solid black;
+    }
+
+    .logo {
+      max-width: 115px;
+      max-height: 50px;
+      object-fit: contain;
+    }
+
+    .reference {
+      flex-direction: column;
+      gap: 5px;
+      font-size: 12px;
+    }
+
+    .document-title {
+      font-size: 14px;
+      font-weight: normal;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+
+    th,
+    td {
+      border: 1px solid black;
+      text-align: center;
+    }
+
+    th {
+      background: #c6deb3;
+      font-size: 11px;
+      font-weight: normal;
+      height: 26px;
+    }
+
+    td {
+      padding: 0;
+      height: 32px;
+    }
+
+    td input,
+    td textarea {
+      border: 0;
+      background: transparent;
+      width: 100%;
+      min-width: 0;
+      padding: 5px 3px;
+      font-size: 11px;
+      border-radius: 0;
+      color: inherit;
+    }
+
+    td textarea {
+      height: 32px;
+      resize: vertical;
+      display: block;
+    }
+
+    td:focus-within {
+      background: #effaf4;
+    }
+
+    .status {
+      min-height: 22px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .note {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    #printSheet {
+      display: none;
+    }
+
+    @media (max-width: 900px) {
+      .sidebar {
+        position: static;
+        width: auto;
+        padding: 16px 20px;
+      }
+
+      .brand {
+        padding: 0;
+        border: 0;
+        font-size: 24px;
+      }
+
+      .sidebar p,
+      .sidebar a {
+        display: none;
+      }
+
+      main {
+        margin: 0;
+        padding: 20px;
+      }
+
+      .top {
+        align-items: flex-start;
+      }
+
+      h1 {
+        font-size: 24px;
+      }
+
+      .sheet {
+        padding: 10px;
+      }
+    }
+
+    @page {
+      size: A4 landscape;
+      margin: 7mm;
+    }
+
+    @media print {
+      body {
+        background: white;
+      }
+
+      .sidebar,
+      .top,
+      .toolbar,
+      .status,
+      .note,
+      #editorSheet {
+        display: none !important;
+      }
+
+      main {
+        margin: 0;
+        padding: 0;
+      }
+
+      .sheet {
+        padding: 0;
+        border: 0;
+        box-shadow: none;
+        border-radius: 0;
+      }
+
+      #printSheet {
+        display: block;
+      }
+
+      .document {
+        min-width: 0;
+      }
+
+      .document-header {
+        height: 12mm;
+        grid-template-columns: 33mm 1fr 23mm;
+      }
+
+      .logo {
+        max-height: 10mm;
+        max-width: 25mm;
+      }
+
+      .document-title {
+        font-size: 8pt;
+      }
+
+      .reference {
+        font-size: 7pt;
+        gap: 2px;
+      }
+
+      th {
+        font-size: 6.5pt;
+        height: 4mm;
+        print-color-adjust: exact;
+        -webkit-print-color-adjust: exact;
+      }
+
+      td {
+        font-size: 6.5pt;
+        height: 3.8mm;
+        padding: 1px 2px;
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+      }
+
+      thead {
+        display: table-header-group;
+      }
+
+      tr {
+        break-inside: avoid;
+      }
+
+      th,
+      td {
+        border: 1px solid black;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <aside class="sidebar">
+    <div class="brand">NASER</div>
+    <p>DIVISIÓN PETRÓLEO · OPERACIONES</p>
+    <a href="#listado">Listado de operaciones</a>
+  </aside>
+
+  <main id="listado">
+    <header class="top">
+      <div>
+        <div class="eyebrow">GESTIÓN OPERATIVA</div>
+        <h1>Listado de operaciones</h1>
+        <p class="muted">
+          Registro de actividades y servicios de campo.
+        </p>
+      </div>
+
+      <span class="badge">POSN08-F2</span>
+    </header>
+
+    <div class="toolbar">
+      <button type="button" class="primary" id="save">
+        Guardar formulario
+      </button>
+
+      <button type="button" id="add">
+        Agregar fila
+      </button>
+
+      <button type="button" id="print">
+        Imprimir / PDF
+      </button>
+
+      <button type="button" id="export">
+        Exportar datos
+      </button>
+
+      <button type="button" id="clear">
+        Limpiar formulario
+      </button>
+    </div>
+
+    <p
+      class="status"
+      id="status"
+      role="status"
+      aria-live="polite"
+    >
+      Listo para completar.
+    </p>
+
+    <section class="sheet" id="editorSheet">
+      <div
+        class="scroll"
+        role="region"
+        aria-label="Planilla editable de operaciones"
+        tabindex="0"
+      >
+        <div class="document">
+          <div class="document-header">
+            <div>
+              <img
+                class="logo"
+                src="../../img/logo-naser.png"
+                alt="Naser División Petróleo"
+              >
+            </div>
+
+            <div class="document-title">
+              LISTADO DE OPERACIONES
+            </div>
+
+            <div class="reference">
+              <span>POSN08-F2</span>
+              <span>Rev.00 Sep. 25</span>
+            </div>
+          </div>
+
+          <table id="operations">
+            <colgroup>
+              <col span="4" style="width:5.9%">
+              <col span="4" style="width:5.9%">
+              <col span="2" style="width:5.9%">
+              <col style="width:5.9%">
+              <col style="width:7.4%">
+              <col style="width:9.9%">
+              <col style="width:11%">
+              <col style="width:7.9%">
+            </colgroup>
+
+            <thead>
+              <tr>
+                <th>Fecha</th>
+                <th>Equipo</th>
+                <th>Operador</th>
+                <th>Pozo</th>
+                <th colspan="4">Tareas</th>
+                <th colspan="2">Servicios Adicionales</th>
+                <th>ECP</th>
+                <th>Equipo de Izaje</th>
+                <th>Estado de Operación</th>
+                <th>Herramientas en Pesca</th>
+                <th>Observaciones</th>
+              </tr>
+            </thead>
+
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section
+      class="sheet"
+      id="printSheet"
+      aria-label="Versión para impresión"
+    ></section>
+
+    <p class="note">
+      Guardado en este navegador. Usá «Exportar datos» para conservar
+      una copia. Para generar un PDF, seleccioná esa opción en la
+      ventana de impresión.
+    </p>
+  </main>
+
+  <script>
+    'use strict';
+
+    const STORAGE_KEY = 'NASER_POSN08_F2';
+
+    const columns = [
+      ['fecha', 'Fecha'],
+      ['equipo', 'Equipo'],
+      ['operador', 'Operador'],
+      ['pozo', 'Pozo'],
+      ['tarea1', 'Tarea 1'],
+      ['tarea2', 'Tarea 2'],
+      ['tarea3', 'Tarea 3'],
+      ['tarea4', 'Tarea 4'],
+      ['servicio1', 'Servicio adicional 1'],
+      ['servicio2', 'Servicio adicional 2'],
+      ['ecp', 'ECP'],
+      ['equipo_izaje', 'Equipo de izaje'],
+      ['estado_operacion', 'Estado de operación'],
+      ['herramientas_pesca', 'Herramientas en pesca'],
+      ['observaciones', 'Observaciones']
+    ];
+
+    const tbody = document.querySelector('#operations tbody');
+    const status = document.getElementById('status');
+
+    function addRow(values = {}) {
+      const row = document.createElement('tr');
+      const index = tbody.rows.length;
+
+      columns.forEach(([key, label]) => {
+        const cell = document.createElement('td');
+
+        const field = document.createElement(
+          key === 'fecha' ? 'input' : 'textarea'
+        );
+
+        if (key === 'fecha') {
+          field.type = 'date';
+        }
+
+        field.id = `op_${index}_${key}`;
+        field.name = field.id;
+        field.dataset.key = key;
+
+        field.setAttribute(
+          'aria-label',
+          `${label}, fila ${index + 1}`
+        );
+
+        field.value = (
+          typeof values[key] === 'string'
+            ? values[key]
+            : ''
+        );
+
+        cell.appendChild(field);
+        row.appendChild(cell);
+      });
+
+      tbody.appendChild(row);
+    }
+
+    function obtenerDatos() {
+      return {
+        codigo: 'POSN08-F2',
+        revision: 'Rev.00 Sep. 25',
+
+        operaciones: Array.from(tbody.rows, row => {
+          const fields = row.querySelectorAll('input,textarea');
+
+          return Object.fromEntries(
+            Array.from(fields, field => [
+              field.dataset.key,
+              field.value
+            ])
+          );
+        })
+      };
+    }
+
+    function guardarFormulario() {
+      try {
+        localStorage.setItem(
+          STORAGE_KEY,
+          JSON.stringify(obtenerDatos())
+        );
+
+        status.textContent = (
+          'Cambios guardados en este navegador.'
+        );
+
+        return true;
+      } catch (error) {
+        status.textContent = (
+          'No se pudo guardar. Exportá los datos para conservarlos.'
+        );
+
+        return false;
+      }
+    }
+
+    function load() {
+      let rows = [];
+
+      try {
+        const stored = localStorage.getItem(STORAGE_KEY);
+
+        if (stored) {
+          const data = JSON.parse(stored);
+
+          if (!Array.isArray(data.operaciones)) {
+            throw new Error('Datos inválidos');
+          }
+
+          rows = data.operaciones;
+          status.textContent = 'Formulario recuperado.';
+        }
+      } catch (error) {
+        status.textContent = (
+          'No se pudo recuperar el guardado anterior. ' +
+          'Podés completar una nueva planilla.'
+        );
+      }
+
+      for (let i = 0; i < Math.max(44, rows.length); i++) {
+        const values = (
+          rows[i] && typeof rows[i] === 'object'
+            ? rows[i]
+            : {}
+        );
+
+        addRow(values);
+      }
+    }
+
+    function buildPrint() {
+      const documentCopy = document
+        .querySelector('#editorSheet .document')
+        .cloneNode(true);
+
+      documentCopy
+        .querySelector('table')
+        .removeAttribute('id');
+
+      documentCopy
+        .querySelectorAll('input,textarea')
+        .forEach(field => {
+          let value = field.value;
+
+          if (
+            field.dataset.key === 'fecha' &&
+            /^\d{4}-\d{2}-\d{2}$/.test(value)
+          ) {
+            const [year, month, day] = value.split('-');
+            value = `${day}/${month}/${year}`;
+          }
+
+          field.parentNode.textContent = value;
+        });
+
+      document
+        .getElementById('printSheet')
+        .replaceChildren(documentCopy);
+    }
+
+    document
+      .getElementById('save')
+      .addEventListener('click', guardarFormulario);
+
+    document
+      .getElementById('add')
+      .addEventListener('click', () => {
+        addRow();
+
+        status.textContent = (
+          'Fila agregada. Cambios pendientes de guardar.'
+        );
+
+        tbody.lastElementChild
+          .querySelector('input')
+          .focus();
+      });
+
+    tbody.addEventListener('input', () => {
+      status.textContent = 'Cambios pendientes de guardar.';
+    });
+
+    document
+      .getElementById('print')
+      .addEventListener('click', () => {
+        buildPrint();
+        window.print();
+      });
+
+    window.addEventListener('beforeprint', buildPrint);
+
+    document
+      .getElementById('export')
+      .addEventListener('click', () => {
+        const data = JSON.stringify(obtenerDatos(), null, 2);
+
+        const blob = new Blob(
+          [data],
+          { type: 'application/json;charset=utf-8' }
+        );
+
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+
+        link.href = url;
+        link.download = 'NASER-POSN08-F2.json';
+        link.click();
+
+        setTimeout(() => {
+          URL.revokeObjectURL(url);
+        }, 1000);
+
+        status.textContent = 'Copia de datos exportada.';
+      });
+
+    document
+      .getElementById('clear')
+      .addEventListener('click', () => {
+        const confirmed = confirm(
+          '¿Limpiar todos los datos de esta planilla ' +
+          'y su guardado local?'
+        );
+
+        if (!confirmed) {
+          return;
+        }
+
+        try {
+          localStorage.removeItem(STORAGE_KEY);
+        } catch (error) {
+          status.textContent = (
+            'No se pudo eliminar el guardado local. ' +
+            'La planilla se conserva.'
+          );
+
+          return;
+        }
+
+        tbody.replaceChildren();
+
+        for (let i = 0; i < 44; i++) {
+          addRow();
+        }
+
+        status.textContent = 'Formulario limpio.';
+      });
+
+    load();
+  </script>
+</body>
+</html>

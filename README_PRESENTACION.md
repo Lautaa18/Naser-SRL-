@@ -130,12 +130,14 @@ La conexión de base también se maneja por variables `DB_HOST`, `DB_NAME`, `DB_
 ## Formularios digitales, permisos y avisos (actualización 01/10/2026)
 
 ### Formularios
-- Los HTML originales están en `formularios/<sector>/` y se registran en `php/config/formularios_catalogo.php` (37 formularios: HSEQ, RRHH, Compras, Ventas y Operaciones).
+- Los HTML originales están en `formularios/<sector>/` y se registran en `php/config/formularios_catalogo.php` (49 formularios: HSEQ, RRHH, Compras, Ventas y Operaciones).
 - Se completan desde **Formularios** (menú) o desde la página de cada sector. Todo se guarda en la tabla `formularios_registros` (campos + estado interno del formulario) con historial en `formularios_historial`.
 - Circuito: **Borrador → Enviado (pendiente de aprobación) → Aprobado / Rechazado**. Al enviar, los responsables del sector reciben aviso en la campanita y por mail. Al aprobar o rechazar, se avisa a quien lo cargó.
 - Los botones propios de cada formulario (Guardar, Finalizar, Agregar...) también guardan en la base.
 - Exportar a Excel: botón en la lista de formularios (filtrando por un formulario se exportan todos sus campos).
 - Para sumar un formulario nuevo: copiar el HTML a `formularios/<sector>/` y agregar una línea en el catálogo.
+- Operaciones incluye los 12 documentos nuevos. Las imágenes de Inicio abren los formularios relacionados con cada recurso; los accesos para completar y consultar respetan los permisos de cada usuario.
+- Los formularios usan `css/formularios-responsive.css` al abrirse dentro del sistema: misma información en computadora y celular, campos adaptados y tablas con desplazamiento local. El diseño de impresión se conserva.
 
 ### Permisos
 - **Super usuario** (rol admin): ve, edita y aprueba todo; administra y elimina usuarios.

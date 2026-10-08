@@ -101,7 +101,7 @@ $qs = fn(array $extra) => '?' . http_build_query(array_filter(array_merge(['sect
     <thead><tr><th>#</th><th>Formulario</th><?php if (!$sector): ?><th>Sector</th><?php endif; ?><th>Referencia</th><th>Estado</th><th>Cargado por</th><th>Actualizado</th><th>Revisión</th><th></th></tr></thead>
     <tbody>
     <?php if (!$registros): ?>
-      <tr><td colspan="9" class="muted" style="text-align:center;padding:22px">No hay formularios cargados con estos filtros.</td></tr>
+      <tr><td colspan="<?= $sector ? 8 : 9 ?>" class="muted" style="text-align:center;padding:22px">No hay formularios cargados con estos filtros.</td></tr>
     <?php endif; ?>
     <?php foreach ($registros as $r): $f = $cat[$r['formulario']] ?? null; ?>
       <tr>

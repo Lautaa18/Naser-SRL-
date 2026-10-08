@@ -1,0 +1,4644 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>NASER | PGSN12-F1 - Ingreso y Egreso de Locación</title>
+
+<style>
+
+/* =========================================================
+   NASER SRL
+   PGSN12-F1 - INGRESO Y EGRESO DE LOCACIÓN
+   Rev.02 Ago 26
+   ========================================================= */
+
+:root{
+    --naser:#009b49;
+    --naser-dark:#00773a;
+    --naser-soft:#eaf7f0;
+
+    --black:#111111;
+    --black-soft:#191919;
+
+    --white:#ffffff;
+
+    --gray-bg:#f1f3f4;
+    --gray-100:#f7f7f7;
+    --gray-200:#e3e6e8;
+    --gray-300:#cfd3d6;
+    --gray-500:#777d82;
+    --gray-700:#42474b;
+
+    --danger:#c52c2c;
+
+    --sidebar-width:290px;
+
+    --radius:14px;
+    --shadow:0 5px 18px rgba(0,0,0,.08);
+}
+
+
+/* =========================================================
+   RESET
+   ========================================================= */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    min-height:100vh;
+    background:var(--gray-bg);
+    color:#202326;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+button,
+input,
+select,
+textarea{
+    font:inherit;
+}
+
+button{
+    cursor:pointer;
+}
+
+
+/* =========================================================
+   SIDEBAR
+   ========================================================= */
+
+.sidebar{
+    position:fixed;
+    left:0;
+    top:0;
+
+    width:var(--sidebar-width);
+    height:100vh;
+
+    background:#0d0d0d;
+    color:#fff;
+
+    z-index:1000;
+
+    display:flex;
+    flex-direction:column;
+
+    border-right:1px solid #242424;
+}
+
+.brand{
+    padding:30px 27px 24px;
+    border-bottom:1px solid #282828;
+}
+
+.brand-logo{
+    color:var(--naser);
+    font-size:36px;
+    font-weight:900;
+    letter-spacing:2px;
+}
+
+.brand-subtitle{
+    margin-top:4px;
+
+    color:#888;
+    font-size:10px;
+    font-weight:700;
+    letter-spacing:1.6px;
+}
+
+.doc-box{
+    margin:20px;
+
+    padding:14px 15px;
+
+    background:#171717;
+    border:1px solid #292929;
+    border-left:4px solid var(--naser);
+
+    border-radius:10px;
+}
+
+.doc-box span{
+    display:block;
+
+    color:#777;
+    font-size:9px;
+    font-weight:900;
+    letter-spacing:1.2px;
+
+    margin-bottom:5px;
+}
+
+.doc-box strong{
+    display:block;
+    font-size:15px;
+}
+
+.doc-box small{
+    display:block;
+    margin-top:4px;
+
+    color:#989898;
+    font-size:10px;
+}
+
+.side-nav{
+    list-style:none;
+    padding:10px 14px 20px;
+
+    flex:1;
+    overflow-y:auto;
+}
+
+.side-nav li{
+    margin-bottom:6px;
+}
+
+.side-nav a{
+    text-decoration:none;
+    color:#bdbdbd;
+
+    display:flex;
+    align-items:center;
+    gap:10px;
+
+    padding:11px 13px;
+
+    border-radius:9px;
+
+    font-size:12px;
+    font-weight:700;
+
+    transition:.2s;
+}
+
+.side-nav a:hover{
+    background:#1b1b1b;
+    color:white;
+}
+
+.nav-number{
+    width:28px;
+    height:28px;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    border:1px solid #3c3c3c;
+    border-radius:50%;
+
+    color:var(--naser);
+    font-size:10px;
+    font-weight:900;
+
+    flex:none;
+}
+
+.sidebar-footer{
+    border-top:1px solid #292929;
+    padding:18px 20px;
+
+    color:#676767;
+    font-size:10px;
+    line-height:1.5;
+}
+
+
+/* =========================================================
+   MAIN
+   ========================================================= */
+
+.main{
+    margin-left:var(--sidebar-width);
+    min-height:100vh;
+}
+
+
+/* =========================================================
+   TOPBAR
+   ========================================================= */
+
+.topbar{
+    height:75px;
+
+    position:sticky;
+    top:0;
+
+    z-index:900;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    padding:0 30px;
+
+    background:#fff;
+    border-bottom:1px solid var(--gray-200);
+}
+
+.topbar-left{
+    display:flex;
+    align-items:center;
+    gap:14px;
+}
+
+.menu-btn{
+    display:none;
+
+    width:40px;
+    height:40px;
+
+    border:none;
+    border-radius:8px;
+
+    background:#f0f0f0;
+
+    font-size:20px;
+}
+
+.breadcrumb{
+    color:#777;
+    font-size:12px;
+}
+
+.breadcrumb strong{
+    color:#1d1d1d;
+}
+
+.topbar-right{
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
+
+.badge{
+    padding:8px 11px;
+
+    border-radius:20px;
+
+    font-size:10px;
+    font-weight:900;
+}
+
+.badge-code{
+    background:#111;
+    color:#fff;
+}
+
+.badge-status{
+    color:#007138;
+    background:#e8f7ef;
+
+    border:1px solid #c7ebd8;
+}
+
+.badge-status.finished{
+    background:#111;
+    color:#fff;
+    border-color:#111;
+}
+
+
+/* =========================================================
+   CONTENT
+   ========================================================= */
+
+.content{
+    max-width:1600px;
+    margin:auto;
+    padding:30px;
+}
+
+
+/* =========================================================
+   HERO
+   ========================================================= */
+
+.hero{
+    margin-bottom:22px;
+
+    overflow:hidden;
+
+    background:#101010;
+    color:white;
+
+    border-radius:16px;
+    border-left:6px solid var(--naser);
+
+    box-shadow:var(--shadow);
+}
+
+.hero-inner{
+    padding:28px 30px;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    gap:25px;
+}
+
+.hero-label{
+    margin-bottom:8px;
+
+    color:var(--naser);
+
+    font-size:11px;
+    font-weight:900;
+    letter-spacing:1.8px;
+}
+
+.hero h1{
+    font-size:29px;
+    line-height:1.15;
+
+    margin-bottom:8px;
+}
+
+.hero p{
+    max-width:850px;
+
+    color:#a4a4a4;
+
+    font-size:13px;
+    line-height:1.6;
+}
+
+.hero-code{
+    min-width:180px;
+    text-align:right;
+}
+
+.hero-code span{
+    display:block;
+
+    color:#777;
+    font-size:9px;
+    font-weight:900;
+    letter-spacing:1px;
+}
+
+.hero-code strong{
+    display:block;
+
+    margin-top:4px;
+
+    font-size:20px;
+}
+
+.hero-code small{
+    color:#999;
+    font-size:10px;
+}
+
+
+/* =========================================================
+   PROGRESO
+   ========================================================= */
+
+.progress-card{
+    margin-bottom:22px;
+
+    padding:17px 20px;
+
+    display:grid;
+    grid-template-columns:1fr auto;
+
+    gap:15px;
+
+    background:#fff;
+
+    border-radius:var(--radius);
+
+    box-shadow:var(--shadow);
+}
+
+.progress-info{
+    display:flex;
+    justify-content:space-between;
+
+    margin-bottom:8px;
+}
+
+.progress-info strong{
+    font-size:12px;
+}
+
+.progress-info span{
+    color:#787878;
+    font-size:11px;
+}
+
+.progress-track{
+    height:8px;
+
+    overflow:hidden;
+
+    background:#e6e7e8;
+
+    border-radius:20px;
+}
+
+.progress-bar{
+    width:0;
+    height:100%;
+
+    background:var(--naser);
+
+    border-radius:20px;
+
+    transition:.3s;
+}
+
+.progress-percent{
+    display:flex;
+    align-items:center;
+
+    color:var(--naser);
+
+    font-size:21px;
+    font-weight:900;
+}
+
+
+/* =========================================================
+   SECCIONES
+   ========================================================= */
+
+.section{
+    margin-bottom:22px;
+
+    overflow:hidden;
+
+    background:#fff;
+
+    border-radius:var(--radius);
+
+    box-shadow:var(--shadow);
+}
+
+.section-header{
+    padding:15px 20px;
+
+    display:flex;
+    align-items:center;
+    gap:12px;
+
+    background:#151515;
+    color:#fff;
+}
+
+.section-number{
+    width:31px;
+    height:31px;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    background:var(--naser);
+
+    border-radius:50%;
+
+    font-size:11px;
+    font-weight:900;
+
+    flex:none;
+}
+
+.section-title h2{
+    font-size:14px;
+}
+
+.section-title p{
+    margin-top:2px;
+
+    color:#8e8e8e;
+
+    font-size:10px;
+}
+
+.section-body{
+    padding:22px;
+}
+
+
+/* =========================================================
+   FORMULARIOS
+   ========================================================= */
+
+.form-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+
+    gap:16px;
+}
+
+.form-grid.two{
+    grid-template-columns:repeat(2,1fr);
+}
+
+.form-group{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+}
+
+.form-group.full{
+    grid-column:1/-1;
+}
+
+.form-group label{
+    color:#4e5458;
+
+    font-size:10px;
+    font-weight:900;
+
+    text-transform:uppercase;
+    letter-spacing:.4px;
+}
+
+.required{
+    color:var(--naser);
+}
+
+input,
+select,
+textarea{
+    width:100%;
+
+    padding:11px 12px;
+
+    background:#fff;
+
+    border:1px solid #ccd0d3;
+    border-radius:8px;
+
+    outline:none;
+
+    transition:.2s;
+}
+
+input:focus,
+select:focus,
+textarea:focus{
+    border-color:var(--naser);
+
+    box-shadow:
+        0 0 0 3px rgba(0,155,73,.10);
+}
+
+textarea{
+    min-height:140px;
+    resize:vertical;
+}
+
+.invalid{
+    border-color:var(--danger)!important;
+    background:#fff7f7!important;
+}
+
+
+/* =========================================================
+   DOBLE COLUMNA INGRESO / EGRESO
+   ========================================================= */
+
+.dual-layout{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+
+    gap:22px;
+}
+
+.operation-panel{
+    border:1px solid #d7dadd;
+
+    border-radius:12px;
+
+    overflow:hidden;
+
+    background:#fff;
+}
+
+.operation-title{
+    padding:13px 16px;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    background:#f4f4f4;
+
+    border-bottom:1px solid #d6d6d6;
+    border-left:4px solid var(--naser);
+}
+
+.operation-title strong{
+    font-size:12px;
+}
+
+.operation-title span{
+    color:#777;
+
+    font-size:9px;
+    font-weight:900;
+    letter-spacing:.7px;
+}
+
+.operation-body{
+    padding:18px;
+}
+
+
+/* =========================================================
+   ESQUEMA
+   ========================================================= */
+
+.scheme-wrapper{
+    margin-top:20px;
+}
+
+.small-title{
+    margin-bottom:10px;
+
+    font-size:10px;
+    font-weight:900;
+
+    text-transform:uppercase;
+    letter-spacing:.5px;
+}
+
+.scheme-box{
+    position:relative;
+
+    min-height:310px;
+
+    padding:18px;
+
+    display:grid;
+    grid-template-columns:1fr 160px;
+
+    align-items:center;
+    gap:20px;
+
+    background:#fafafa;
+
+    border:1px solid #d6d8da;
+    border-radius:10px;
+}
+
+
+/* =========================================================
+   ÁRBOL / ARMADURA GRÁFICA
+   ========================================================= */
+
+.tree{
+    position:relative;
+
+    width:210px;
+    height:250px;
+
+    margin:auto;
+}
+
+.tree-line-v{
+    position:absolute;
+
+    left:102px;
+    top:20px;
+
+    width:6px;
+    height:205px;
+
+    background:#777;
+
+    border-radius:4px;
+}
+
+.tree-line-h{
+    position:absolute;
+
+    left:28px;
+    top:75px;
+
+    width:155px;
+    height:6px;
+
+    background:#777;
+
+    border-radius:4px;
+}
+
+.tree-line-h.second{
+    top:135px;
+    left:51px;
+    width:108px;
+}
+
+.tree-box{
+    position:absolute;
+
+    width:32px;
+    height:28px;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    background:#f0f0f0;
+
+    border:2px solid #676767;
+    border-radius:4px;
+
+    font-size:8px;
+    font-weight:bold;
+}
+
+.tree-box.center-top{
+    left:89px;
+    top:6px;
+}
+
+.tree-box.center-one{
+    left:89px;
+    top:60px;
+}
+
+.tree-box.left{
+    left:12px;
+    top:64px;
+}
+
+.tree-box.right{
+    right:10px;
+    top:64px;
+}
+
+.tree-box.center-two{
+    left:89px;
+    top:120px;
+}
+
+.tree-box.lower{
+    left:89px;
+    top:172px;
+}
+
+.tree-base{
+    position:absolute;
+
+    left:55px;
+    bottom:0;
+
+    width:100px;
+    height:33px;
+
+    background:#dedede;
+
+    border:2px solid #737373;
+
+    clip-path:polygon(
+        15% 0,
+        85% 0,
+        100% 100%,
+        0 100%
+    );
+}
+
+
+/* =========================================================
+   LEYENDA ESQUEMA
+   ========================================================= */
+
+.scheme-legend{
+    border:1px solid #d3d5d7;
+    border-radius:8px;
+
+    overflow:hidden;
+
+    background:white;
+}
+
+.legend-title{
+    padding:9px;
+
+    background:#111;
+    color:white;
+
+    font-size:9px;
+    font-weight:900;
+
+    text-align:center;
+}
+
+.legend-item{
+    padding:8px 10px;
+
+    display:flex;
+    align-items:center;
+    gap:8px;
+
+    border-bottom:1px solid #eee;
+
+    font-size:9px;
+}
+
+.legend-item:last-child{
+    border-bottom:none;
+}
+
+.legend-code{
+    width:22px;
+    height:22px;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    background:var(--naser);
+    color:white;
+
+    border-radius:4px;
+
+    font-size:9px;
+    font-weight:900;
+}
+
+
+/* =========================================================
+   ESTADOS DEL ESQUEMA
+   ========================================================= */
+
+.scheme-statuses{
+    margin-top:14px;
+
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+
+    gap:8px;
+}
+
+.scheme-status{
+    display:flex;
+    align-items:center;
+    gap:6px;
+}
+
+.scheme-status label{
+    min-width:75px;
+
+    color:#555;
+
+    font-size:9px;
+    font-weight:bold;
+}
+
+.scheme-status select{
+    padding:7px;
+
+    font-size:10px;
+}
+
+
+/* =========================================================
+   CHECKLIST
+   ========================================================= */
+
+.checklist-block{
+    margin-top:20px;
+
+    border:1px solid #d6d8da;
+
+    border-radius:9px;
+
+    overflow:hidden;
+}
+
+.checklist-title{
+    padding:11px 13px;
+
+    background:#d7d7d7;
+
+    color:#111;
+
+    font-size:10px;
+    font-weight:900;
+
+    text-align:center;
+    text-transform:uppercase;
+}
+
+.check-table{
+    width:100%;
+
+    border-collapse:collapse;
+}
+
+.check-table th{
+    padding:9px;
+
+    background:#efefef;
+
+    border-bottom:1px solid #cfcfcf;
+    border-right:1px solid #d6d6d6;
+
+    font-size:9px;
+    text-transform:uppercase;
+}
+
+.check-table th:first-child{
+    text-align:left;
+}
+
+.check-table td{
+    padding:7px;
+
+    border-bottom:1px solid #e1e1e1;
+    border-right:1px solid #e5e5e5;
+
+    font-size:9px;
+}
+
+.check-table tr:last-child td{
+    border-bottom:none;
+}
+
+.check-table td.choice{
+    width:70px;
+
+    padding:4px;
+
+    text-align:center;
+}
+
+.check-table input[type="radio"]{
+    width:16px;
+    height:16px;
+
+    cursor:pointer;
+
+    accent-color:var(--naser);
+}
+
+
+/* =========================================================
+   DRAWING CANVAS
+   ========================================================= */
+
+.drawing-block{
+    margin-top:20px;
+}
+
+.canvas-header{
+    padding:10px 12px;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    background:#dadada;
+
+    border-radius:7px 7px 0 0;
+}
+
+.canvas-header strong{
+    font-size:9px;
+    text-transform:uppercase;
+}
+
+.canvas-tools{
+    display:flex;
+    gap:5px;
+}
+
+.canvas-button{
+    padding:5px 8px;
+
+    border:none;
+    border-radius:5px;
+
+    background:#111;
+    color:white;
+
+    font-size:8px;
+    font-weight:bold;
+}
+
+.location-map{
+    position:relative;
+
+    min-height:230px;
+
+    overflow:hidden;
+
+    background:#fff;
+
+    border:2px solid #86bb62;
+    border-top:none;
+
+    border-radius:0 0 7px 7px;
+}
+
+.location-map canvas{
+    position:absolute;
+
+    inset:0;
+
+    width:100%;
+    height:100%;
+
+    cursor:crosshair;
+}
+
+.map-entry{
+    position:absolute;
+
+    left:12px;
+    bottom:12px;
+
+    z-index:2;
+
+    padding:5px 8px;
+
+    background:#fff;
+
+    border:1px solid #ccc;
+
+    font-size:9px;
+    font-weight:bold;
+
+    pointer-events:none;
+}
+
+.map-entry::after{
+    content:"";
+
+    display:block;
+
+    width:45px;
+    height:15px;
+
+    margin-top:4px;
+
+    background:#5e9dd2;
+
+    clip-path:polygon(
+        0 20%,
+        65% 20%,
+        65% 0,
+        100% 50%,
+        65% 100%,
+        65% 80%,
+        0 80%
+    );
+}
+
+.map-flare{
+    position:absolute;
+
+    top:20px;
+    right:15px;
+
+    z-index:2;
+
+    padding:6px 8px;
+
+    background:white;
+
+    border:1px solid #ccc;
+
+    font-size:8px;
+    font-weight:bold;
+
+    pointer-events:none;
+}
+
+.map-flare::before{
+    content:"";
+
+    display:block;
+
+    width:50px;
+    height:16px;
+
+    margin-left:auto;
+    margin-bottom:4px;
+
+    background:#5e9dd2;
+
+    clip-path:polygon(
+        0 20%,
+        65% 20%,
+        65% 0,
+        100% 50%,
+        65% 100%,
+        65% 80%,
+        0 80%
+    );
+}
+
+
+/* =========================================================
+   FIRMAS
+   ========================================================= */
+
+.signatures{
+    margin-top:20px;
+
+    display:grid;
+    grid-template-columns:1fr 1fr;
+
+    gap:16px;
+}
+
+.signature-box{
+    padding:16px;
+
+    border:1px solid #d7dadd;
+    border-radius:9px;
+
+    background:#fafafa;
+}
+
+.signature-box strong{
+    display:block;
+
+    margin-bottom:13px;
+
+    font-size:10px;
+    text-transform:uppercase;
+}
+
+.signature-grid{
+    display:grid;
+    grid-template-columns:1fr;
+
+    gap:10px;
+}
+
+
+/* =========================================================
+   OBSERVACIONES
+   ========================================================= */
+
+.observations{
+    margin-top:20px;
+}
+
+.observations textarea{
+    min-height:150px;
+}
+
+
+/* =========================================================
+   ACCIONES
+   ========================================================= */
+
+.actions{
+    position:sticky;
+    bottom:0;
+
+    z-index:100;
+
+    padding:14px 0 5px;
+
+    display:flex;
+    justify-content:space-between;
+
+    gap:10px;
+
+    background:rgba(241,243,244,.95);
+    backdrop-filter:blur(8px);
+
+    border-top:1px solid #ddd;
+}
+
+.actions-left,
+.actions-right{
+    display:flex;
+    flex-wrap:wrap;
+
+    gap:8px;
+}
+
+.btn{
+    padding:11px 16px;
+
+    border:none;
+    border-radius:8px;
+
+    font-size:10px;
+    font-weight:900;
+
+    transition:.2s;
+}
+
+.btn-green{
+    background:var(--naser);
+    color:white;
+}
+
+.btn-green:hover{
+    background:var(--naser-dark);
+}
+
+.btn-dark{
+    background:#111;
+    color:white;
+}
+
+.btn-light{
+    background:#fff;
+    color:#333;
+
+    border:1px solid #d2d5d7;
+}
+
+.btn-danger{
+    background:#fff;
+    color:#a52727;
+
+    border:1px solid #e4c7c7;
+}
+
+
+/* =========================================================
+   TOAST
+   ========================================================= */
+
+.toast{
+    position:fixed;
+
+    right:25px;
+    bottom:25px;
+
+    z-index:3000;
+
+    min-width:260px;
+    max-width:420px;
+
+    padding:14px 16px;
+
+    transform:translateY(100px);
+
+    opacity:0;
+
+    background:#111;
+    color:white;
+
+    border-left:5px solid var(--naser);
+    border-radius:8px;
+
+    box-shadow:
+        0 10px 30px rgba(0,0,0,.25);
+
+    font-size:11px;
+    font-weight:bold;
+
+    transition:.3s;
+}
+
+.toast.show{
+    transform:translateY(0);
+    opacity:1;
+}
+
+.toast.error{
+    border-color:var(--danger);
+}
+
+
+/* =========================================================
+   FINALIZADO
+   ========================================================= */
+
+body.finalized input,
+body.finalized select,
+body.finalized textarea{
+    pointer-events:none;
+
+    background:#f2f2f2;
+}
+
+body.finalized canvas{
+    pointer-events:none;
+}
+
+body.finalized .canvas-button{
+    display:none;
+}
+
+
+/* =========================================================
+   MOBILE OVERLAY
+   ========================================================= */
+
+.overlay{
+    display:none;
+
+    position:fixed;
+
+    inset:0;
+
+    z-index:950;
+
+    background:rgba(0,0,0,.55);
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media(max-width:1150px){
+
+    .dual-layout{
+        grid-template-columns:1fr;
+    }
+
+}
+
+@media(max-width:1000px){
+
+    .sidebar{
+        transform:translateX(-100%);
+        transition:.3s;
+    }
+
+    .sidebar.open{
+        transform:translateX(0);
+    }
+
+    .overlay.show{
+        display:block;
+    }
+
+    .main{
+        margin-left:0;
+    }
+
+    .menu-btn{
+        display:block;
+    }
+
+}
+
+@media(max-width:750px){
+
+    .content{
+        padding:16px 10px;
+    }
+
+    .topbar{
+        padding:0 14px;
+    }
+
+    .badge-code{
+        display:none;
+    }
+
+    .hero-inner{
+        padding:22px 19px;
+
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    .hero h1{
+        font-size:22px;
+    }
+
+    .hero-code{
+        text-align:left;
+    }
+
+    .form-grid,
+    .form-grid.two{
+        grid-template-columns:1fr;
+    }
+
+    .scheme-box{
+        grid-template-columns:1fr;
+    }
+
+    .scheme-statuses{
+        grid-template-columns:1fr;
+    }
+
+    .signatures{
+        grid-template-columns:1fr;
+    }
+
+    .actions{
+        flex-direction:column;
+    }
+
+    .actions-left,
+    .actions-right{
+        width:100%;
+    }
+
+    .actions .btn{
+        flex:1;
+    }
+
+}
+
+
+/* =========================================================
+   PRINT / PDF
+   ========================================================= */
+
+@media print{
+
+    @page{
+        size:A4 landscape;
+        margin:7mm;
+    }
+
+    body{
+        background:white!important;
+    }
+
+    .sidebar,
+    .topbar,
+    .progress-card,
+    .actions,
+    .canvas-tools,
+    .toast{
+        display:none!important;
+    }
+
+    .main{
+        margin:0!important;
+    }
+
+    .content{
+        max-width:none;
+        padding:0;
+    }
+
+    .hero{
+        margin-bottom:8px;
+
+        box-shadow:none;
+
+        border:1px solid #222;
+        border-left:5px solid #009b49;
+    }
+
+    .hero-inner{
+        padding:12px 16px;
+    }
+
+    .hero h1{
+        font-size:20px;
+    }
+
+    .hero p{
+        display:none;
+    }
+
+    .section{
+        margin-bottom:8px;
+
+        box-shadow:none;
+
+        border:1px solid #aaa;
+
+        break-inside:avoid;
+    }
+
+    .section-header{
+        padding:9px 13px;
+
+        -webkit-print-color-adjust:exact;
+        print-color-adjust:exact;
+    }
+
+    .section-body{
+        padding:12px;
+    }
+
+    input,
+    select,
+    textarea{
+        border:none!important;
+        background:transparent!important;
+        box-shadow:none!important;
+    }
+
+    .dual-layout{
+        gap:10px;
+    }
+
+    .operation-body{
+        padding:10px;
+    }
+
+    .scheme-box{
+        min-height:250px;
+        padding:10px;
+    }
+
+    .check-table td{
+        padding:4px;
+    }
+
+    .location-map{
+        min-height:165px;
+    }
+
+}
+
+</style>
+</head>
+
+
+<body>
+
+<!-- =========================================================
+     SIDEBAR
+     ========================================================= -->
+
+<aside class="sidebar" id="sidebar">
+
+    <div class="brand">
+
+        <div class="brand-logo">
+            NASER
+        </div>
+
+        <div class="brand-subtitle">
+            SISTEMA DE GESTIÓN INTEGRADO
+        </div>
+
+    </div>
+
+
+    <div class="doc-box">
+
+        <span>DOCUMENTO</span>
+
+        <strong>
+            PGSN12-F1
+        </strong>
+
+        <small>
+            Rev.02 Ago 26
+        </small>
+
+    </div>
+
+
+    <ul class="side-nav">
+
+        <li>
+            <a href="#datos">
+
+                <span class="nav-number">
+                    01
+                </span>
+
+                Datos generales
+
+            </a>
+        </li>
+
+
+        <li>
+            <a href="#ingresoEgreso">
+
+                <span class="nav-number">
+                    02
+                </span>
+
+                Ingreso / Egreso
+
+            </a>
+        </li>
+
+
+        <li>
+            <a href="#checklists">
+
+                <span class="nav-number">
+                    03
+                </span>
+
+                Condiciones
+
+            </a>
+        </li>
+
+
+        <li>
+            <a href="#ubicacion">
+
+                <span class="nav-number">
+                    04
+                </span>
+
+                Ubicación de equipos
+
+            </a>
+        </li>
+
+
+        <li>
+            <a href="#firmas">
+
+                <span class="nav-number">
+                    05
+                </span>
+
+                Firmas y cierre
+
+            </a>
+        </li>
+
+    </ul>
+
+
+    <div class="sidebar-footer">
+
+        NASER SRL<br>
+        PGSN12-F1<br>
+        Registro digital SGI
+
+    </div>
+
+</aside>
+
+
+<div
+    class="overlay"
+    id="overlay">
+</div>
+
+
+<!-- =========================================================
+     MAIN
+     ========================================================= -->
+
+<main class="main">
+
+
+<header class="topbar">
+
+    <div class="topbar-left">
+
+        <button
+            class="menu-btn"
+            id="menuBtn">
+            ☰
+        </button>
+
+        <div class="breadcrumb">
+
+            SGI
+            &nbsp;/&nbsp;
+
+            <strong>
+                Ingreso y Egreso de Locación
+            </strong>
+
+        </div>
+
+    </div>
+
+
+    <div class="topbar-right">
+
+        <span
+            class="badge badge-status"
+            id="statusBadge">
+
+            EN EDICIÓN
+
+        </span>
+
+
+        <span class="badge badge-code">
+
+            PGSN12-F1
+
+        </span>
+
+    </div>
+
+</header>
+
+
+<div class="content">
+
+
+<!-- =========================================================
+     HERO
+     ========================================================= -->
+
+<section class="hero">
+
+    <div class="hero-inner">
+
+        <div>
+
+            <div class="hero-label">
+                NASER SRL
+            </div>
+
+            <h1>
+                Ingreso y Egreso de Locación
+            </h1>
+
+            <p>
+                Registro de las condiciones de ingreso y egreso
+                de locación, armadura de boca de pozo,
+                área de trabajo, equipos e instalaciones.
+            </p>
+
+        </div>
+
+
+        <div class="hero-code">
+
+            <span>
+                CÓDIGO
+            </span>
+
+            <strong>
+                PGSN12-F1
+            </strong>
+
+            <small>
+                Rev.02 Ago 26
+            </small>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     PROGRESO
+     ========================================================= -->
+
+<section class="progress-card">
+
+    <div>
+
+        <div class="progress-info">
+
+            <strong>
+                Avance del formulario
+            </strong>
+
+            <span id="progressText">
+                Complete los datos requeridos
+            </span>
+
+        </div>
+
+
+        <div class="progress-track">
+
+            <div
+                class="progress-bar"
+                id="progressBar">
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div
+        class="progress-percent"
+        id="progressPercent">
+
+        0%
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     01 DATOS GENERALES
+     ========================================================= -->
+
+<section
+    class="section"
+    id="datos">
+
+    <div class="section-header">
+
+        <div class="section-number">
+            01
+        </div>
+
+        <div class="section-title">
+
+            <h2>
+                Datos generales
+            </h2>
+
+            <p>
+                Identificación del trabajo y operador
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="section-body">
+
+        <div class="form-grid">
+
+            <div class="form-group">
+
+                <label>
+                    Pozo
+                    <span class="required">*</span>
+                </label>
+
+                <input
+                    type="text"
+                    id="pozo"
+                    placeholder="Identificación del pozo">
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Trabajo
+                    <span class="required">*</span>
+                </label>
+
+                <input
+                    type="text"
+                    id="trabajo"
+                    placeholder="Trabajo / servicio realizado">
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Operador
+                    <span class="required">*</span>
+                </label>
+
+                <input
+                    type="text"
+                    id="operador"
+                    placeholder="Operador">
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     02 INGRESO Y EGRESO
+     ========================================================= -->
+
+<section
+    class="section"
+    id="ingresoEgreso">
+
+    <div class="section-header">
+
+        <div class="section-number">
+            02
+        </div>
+
+        <div class="section-title">
+
+            <h2>
+                Ingreso y egreso de locación
+            </h2>
+
+            <p>
+                Datos de horario y esquema de armadura
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="section-body">
+
+        <div class="dual-layout">
+
+
+            <!-- =================================================
+                 INGRESO
+                 ================================================= -->
+
+            <div class="operation-panel">
+
+                <div class="operation-title">
+
+                    <strong>
+                        INGRESO
+                    </strong>
+
+                    <span>
+                        ANTES DE INTERVENCIÓN
+                    </span>
+
+                </div>
+
+
+                <div class="operation-body">
+
+
+                    <div class="form-grid two">
+
+                        <div class="form-group">
+
+                            <label>
+                                Fecha de ingreso
+                            </label>
+
+                            <input
+                                type="date"
+                                id="fechaIngreso">
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label>
+                                Hora de ingreso
+                            </label>
+
+                            <input
+                                type="time"
+                                id="horaIngreso">
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- ESQUEMA INGRESO -->
+
+                    <div class="scheme-wrapper">
+
+                        <div class="small-title">
+                            Completar esquema
+                        </div>
+
+
+                        <div class="scheme-box">
+
+                            <div>
+
+                                <div class="tree">
+
+                                    <div class="tree-line-v"></div>
+
+                                    <div class="tree-line-h"></div>
+
+                                    <div class="tree-line-h second"></div>
+
+
+                                    <div class="tree-box center-top">
+                                        V1
+                                    </div>
+
+                                    <div class="tree-box center-one">
+                                        V2
+                                    </div>
+
+                                    <div class="tree-box left">
+                                        V3
+                                    </div>
+
+                                    <div class="tree-box right">
+                                        V4
+                                    </div>
+
+                                    <div class="tree-box center-two">
+                                        V5
+                                    </div>
+
+                                    <div class="tree-box lower">
+                                        V6
+                                    </div>
+
+                                    <div class="tree-base"></div>
+
+                                </div>
+
+
+                                <div
+                                    class="scheme-statuses"
+                                    id="schemeIngreso">
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="scheme-legend">
+
+                                <div class="legend-title">
+                                    REFERENCIAS
+                                </div>
+
+
+                                <div class="legend-item">
+
+                                    <span class="legend-code">
+                                        X
+                                    </span>
+
+                                    NO TIENE
+
+                                </div>
+
+
+                                <div class="legend-item">
+
+                                    <span class="legend-code">
+                                        A
+                                    </span>
+
+                                    ABIERTA
+
+                                </div>
+
+
+                                <div class="legend-item">
+
+                                    <span class="legend-code">
+                                        C
+                                    </span>
+
+                                    CERRADA
+
+                                </div>
+
+
+                                <div class="legend-item">
+
+                                    <span class="legend-code">
+                                        T
+                                    </span>
+
+                                    TAPÓN
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 EGRESO
+                 ================================================= -->
+
+            <div class="operation-panel">
+
+                <div class="operation-title">
+
+                    <strong>
+                        EGRESO
+                    </strong>
+
+                    <span>
+                        DESPUÉS DE INTERVENCIÓN
+                    </span>
+
+                </div>
+
+
+                <div class="operation-body">
+
+
+                    <div class="form-grid two">
+
+                        <div class="form-group">
+
+                            <label>
+                                Fecha de egreso
+                            </label>
+
+                            <input
+                                type="date"
+                                id="fechaEgreso">
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label>
+                                Hora de egreso
+                            </label>
+
+                            <input
+                                type="time"
+                                id="horaEgreso">
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- ESQUEMA EGRESO -->
+
+                    <div class="scheme-wrapper">
+
+                        <div class="small-title">
+                            Completar esquema
+                        </div>
+
+
+                        <div class="scheme-box">
+
+                            <div>
+
+                                <div class="tree">
+
+                                    <div class="tree-line-v"></div>
+
+                                    <div class="tree-line-h"></div>
+
+                                    <div class="tree-line-h second"></div>
+
+
+                                    <div class="tree-box center-top">
+                                        V1
+                                    </div>
+
+                                    <div class="tree-box center-one">
+                                        V2
+                                    </div>
+
+                                    <div class="tree-box left">
+                                        V3
+                                    </div>
+
+                                    <div class="tree-box right">
+                                        V4
+                                    </div>
+
+                                    <div class="tree-box center-two">
+                                        V5
+                                    </div>
+
+                                    <div class="tree-box lower">
+                                        V6
+                                    </div>
+
+                                    <div class="tree-base"></div>
+
+                                </div>
+
+
+                                <div
+                                    class="scheme-statuses"
+                                    id="schemeEgreso">
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="scheme-legend">
+
+                                <div class="legend-title">
+                                    REFERENCIAS
+                                </div>
+
+
+                                <div class="legend-item">
+
+                                    <span class="legend-code">
+                                        X
+                                    </span>
+
+                                    NO TIENE
+
+                                </div>
+
+
+                                <div class="legend-item">
+
+                                    <span class="legend-code">
+                                        A
+                                    </span>
+
+                                    ABIERTA
+
+                                </div>
+
+
+                                <div class="legend-item">
+
+                                    <span class="legend-code">
+                                        C
+                                    </span>
+
+                                    CERRADA
+
+                                </div>
+
+
+                                <div class="legend-item">
+
+                                    <span class="legend-code">
+                                        T
+                                    </span>
+
+                                    TAPÓN
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     03 CONDICIONES
+     ========================================================= -->
+
+<section
+    class="section"
+    id="checklists">
+
+    <div class="section-header">
+
+        <div class="section-number">
+            03
+        </div>
+
+        <div class="section-title">
+
+            <h2>
+                Condiciones de intervención
+            </h2>
+
+            <p>
+                Control antes y después de intervención
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="section-body">
+
+        <div class="dual-layout">
+
+
+            <!-- INGRESO CHECKLIST -->
+
+            <div>
+
+                <div
+                    id="checkIngreso">
+                </div>
+
+            </div>
+
+
+            <!-- EGRESO CHECKLIST -->
+
+            <div>
+
+                <div
+                    id="checkEgreso">
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     04 UBICACIÓN EQUIPOS
+     ========================================================= -->
+
+<section
+    class="section"
+    id="ubicacion">
+
+    <div class="section-header">
+
+        <div class="section-number">
+            04
+        </div>
+
+        <div class="section-title">
+
+            <h2>
+                Ubicación de equipos e instalaciones
+            </h2>
+
+            <p>
+                Croquis de ingreso y egreso
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="section-body">
+
+        <div class="dual-layout">
+
+
+            <!-- CROQUIS INGRESO -->
+
+            <div>
+
+                <div class="drawing-block">
+
+                    <div class="canvas-header">
+
+                        <strong>
+                            Dibujar ubicación de equipos e instalaciones
+                            — Ingreso
+                        </strong>
+
+
+                        <div class="canvas-tools">
+
+                            <button
+                                class="canvas-button"
+                                type="button"
+                                onclick="clearCanvas('canvasIngreso')">
+
+                                LIMPIAR
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="location-map">
+
+                        <div class="map-entry">
+                            INGRESO
+                        </div>
+
+                        <div class="map-flare">
+                            FOSA DE QUEMA
+                        </div>
+
+                        <canvas
+                            id="canvasIngreso">
+                        </canvas>
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="observations">
+
+                    <div class="form-group">
+
+                        <label>
+                            Observaciones ingreso
+                        </label>
+
+                        <textarea
+                            id="observacionesIngreso"
+                            placeholder="Ingrese las observaciones correspondientes al ingreso...">
+                        </textarea>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- CROQUIS EGRESO -->
+
+            <div>
+
+                <div class="drawing-block">
+
+                    <div class="canvas-header">
+
+                        <strong>
+                            Dibujar ubicación de equipos e instalaciones
+                            — Egreso
+                        </strong>
+
+
+                        <div class="canvas-tools">
+
+                            <button
+                                class="canvas-button"
+                                type="button"
+                                onclick="clearCanvas('canvasEgreso')">
+
+                                LIMPIAR
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="location-map">
+
+                        <div class="map-entry">
+                            INGRESO
+                        </div>
+
+                        <div class="map-flare">
+                            FOSA DE QUEMA
+                        </div>
+
+                        <canvas
+                            id="canvasEgreso">
+                        </canvas>
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="observations">
+
+                    <div class="form-group">
+
+                        <label>
+                            Observaciones egreso
+                        </label>
+
+                        <textarea
+                            id="observacionesEgreso"
+                            placeholder="Ingrese las observaciones correspondientes al egreso...">
+                        </textarea>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     05 FIRMAS
+     ========================================================= -->
+
+<section
+    class="section"
+    id="firmas">
+
+    <div class="section-header">
+
+        <div class="section-number">
+            05
+        </div>
+
+        <div class="section-title">
+
+            <h2>
+                Responsables y firmas
+            </h2>
+
+            <p>
+                Registro de operadores y supervisión
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="section-body">
+
+        <div class="dual-layout">
+
+
+            <!-- FIRMAS INGRESO -->
+
+            <div>
+
+                <div class="small-title">
+                    Ingreso
+                </div>
+
+
+                <div class="signatures">
+
+
+                    <div class="signature-box">
+
+                        <strong>
+                            Operador NASER
+                        </strong>
+
+
+                        <div class="signature-grid">
+
+                            <div class="form-group">
+
+                                <label>
+                                    Nombre y apellido
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="operadorIngresoNombre">
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label>
+                                    Firma
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="operadorIngresoFirma"
+                                    placeholder="Firma / aclaración">
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label>
+                                    Fecha
+                                </label>
+
+                                <input
+                                    type="date"
+                                    id="operadorIngresoFecha">
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="signature-box">
+
+                        <strong>
+                            Supervisor NASER / Cliente
+                        </strong>
+
+
+                        <div class="signature-grid">
+
+                            <div class="form-group">
+
+                                <label>
+                                    Nombre y apellido
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="supervisorIngresoNombre">
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label>
+                                    Firma
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="supervisorIngresoFirma"
+                                    placeholder="Firma / aclaración">
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label>
+                                    Fecha
+                                </label>
+
+                                <input
+                                    type="date"
+                                    id="supervisorIngresoFecha">
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- FIRMAS EGRESO -->
+
+            <div>
+
+                <div class="small-title">
+                    Egreso
+                </div>
+
+
+                <div class="signatures">
+
+
+                    <div class="signature-box">
+
+                        <strong>
+                            Operador NASER
+                        </strong>
+
+
+                        <div class="signature-grid">
+
+                            <div class="form-group">
+
+                                <label>
+                                    Nombre y apellido
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="operadorEgresoNombre">
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label>
+                                    Firma
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="operadorEgresoFirma"
+                                    placeholder="Firma / aclaración">
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label>
+                                    Fecha
+                                </label>
+
+                                <input
+                                    type="date"
+                                    id="operadorEgresoFecha">
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="signature-box">
+
+                        <strong>
+                            Supervisor NASER / Cliente
+                        </strong>
+
+
+                        <div class="signature-grid">
+
+                            <div class="form-group">
+
+                                <label>
+                                    Nombre y apellido
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="supervisorEgresoNombre">
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label>
+                                    Firma
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="supervisorEgresoFirma"
+                                    placeholder="Firma / aclaración">
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label>
+                                    Fecha
+                                </label>
+
+                                <input
+                                    type="date"
+                                    id="supervisorEgresoFecha">
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     ACCIONES
+     ========================================================= -->
+
+<div class="actions">
+
+    <div class="actions-left">
+
+        <button
+            type="button"
+            class="btn btn-light"
+            id="clearBtn">
+
+            LIMPIAR
+
+        </button>
+
+
+        <button
+            type="button"
+            class="btn btn-dark"
+            id="printBtn">
+
+            IMPRIMIR / PDF
+
+        </button>
+
+    </div>
+
+
+    <div class="actions-right">
+
+        <button
+            type="button"
+            class="btn btn-light"
+            id="editBtn"
+            style="display:none">
+
+            HABILITAR EDICIÓN
+
+        </button>
+
+
+        <button
+            type="button"
+            class="btn btn-green"
+            id="saveBtn">
+
+            GUARDAR
+
+        </button>
+
+
+        <button
+            type="button"
+            class="btn btn-dark"
+            id="finishBtn">
+
+            FINALIZAR FORMULARIO
+
+        </button>
+
+    </div>
+
+</div>
+
+
+</div>
+
+</main>
+
+
+<div
+    class="toast"
+    id="toast">
+</div>
+
+
+
+<script>
+
+/* =========================================================
+   CONFIGURACIÓN
+   ========================================================= */
+
+const STORAGE_KEY =
+    "NASER_PGSN12_F1_INGRESO_EGRESO_LOCACION";
+
+let finalized = false;
+
+
+/* =========================================================
+   ITEMS ARMADURA BOCA DE POZO
+   ========================================================= */
+
+const armaduraItems = [
+
+    "TAPA SUPERIOR",
+
+    "BRIDAS LATERALES CON PORTA ORIFICIO",
+
+    "TRANSMISORES DE PRESIÓN",
+
+    "ARMADURA LIMPIA",
+
+    "ÁREA DE TRABAJO LIMPIA",
+
+    "PISADERA EN BUEN ESTADO",
+
+    "ANDAMIO COLOCADO Y LIMPIO",
+
+    "CERCO PERIMETRAL INSTALADO",
+
+    "VÁLVULAS EN BUEN ESTADO",
+
+    "VSS EN SERVICIO Y CALIBRADA",
+
+    "INSTALACIÓN DE RESGUARDOS EN VSS"
+
+];
+
+
+/* =========================================================
+   ITEMS LOCACIÓN
+   ========================================================= */
+
+const locacionItems = [
+
+    "LIMPIO DE BASURA",
+
+    "LIMPIO DE CONTAMINANTES",
+
+    "TRANSITABLE",
+
+    "C/ EQUIPO DE PERFORACIÓN / REPARACIÓN",
+
+    "CON COMPAÑÍAS OPERANDO",
+
+    "CONDICIÓN DE RIESGOS"
+
+];
+
+
+/* =========================================================
+   CREAR CHECKLIST
+   ========================================================= */
+
+function createChecklist(containerId, prefix){
+
+    const container =
+        document.getElementById(containerId);
+
+
+    let html = `
+
+        <div class="checklist-block">
+
+            <div class="checklist-title">
+
+                ${
+                    prefix === "ingreso"
+                    ? "Condiciones antes de intervención"
+                    : "Condiciones después de intervención"
+                }
+
+            </div>
+
+
+            <table class="check-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Armadura de boca de pozo
+                        </th>
+
+                        <th>
+                            Bueno
+                        </th>
+
+                        <th>
+                            Malo
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+    `;
+
+
+    armaduraItems.forEach((item,index) => {
+
+        const name =
+            `${prefix}_armadura_${index}`;
+
+        html += `
+
+            <tr>
+
+                <td>
+                    ${item}
+                </td>
+
+                <td class="choice">
+
+                    <input
+                        type="radio"
+                        name="${name}"
+                        value="BUENO">
+
+                </td>
+
+                <td class="choice">
+
+                    <input
+                        type="radio"
+                        name="${name}"
+                        value="MALO">
+
+                </td>
+
+            </tr>
+
+        `;
+
+    });
+
+
+    html += `
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+
+        <div class="checklist-block">
+
+            <div class="checklist-title">
+
+                Locación / Área de trabajo
+
+            </div>
+
+
+            <table class="check-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Locación / Área de trabajo
+                        </th>
+
+                        <th>
+                            Bueno
+                        </th>
+
+                        <th>
+                            Malo
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+    `;
+
+
+    locacionItems.forEach((item,index) => {
+
+        const name =
+            `${prefix}_locacion_${index}`;
+
+        html += `
+
+            <tr>
+
+                <td>
+                    ${item}
+                </td>
+
+                <td class="choice">
+
+                    <input
+                        type="radio"
+                        name="${name}"
+                        value="BUENO">
+
+                </td>
+
+                <td class="choice">
+
+                    <input
+                        type="radio"
+                        name="${name}"
+                        value="MALO">
+
+                </td>
+
+            </tr>
+
+        `;
+
+    });
+
+
+    html += `
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    `;
+
+
+    container.innerHTML = html;
+
+}
+
+
+/* =========================================================
+   CREAR ESTADOS DEL ESQUEMA
+   ========================================================= */
+
+function createScheme(containerId,prefix){
+
+    const container =
+        document.getElementById(containerId);
+
+
+    for(let i=1;i<=6;i++){
+
+        const div =
+            document.createElement("div");
+
+        div.className =
+            "scheme-status";
+
+
+        div.innerHTML = `
+
+            <label>
+                Válvula ${i}
+            </label>
+
+            <select
+                id="${prefix}Valvula${i}">
+
+                <option value="">
+                    Seleccionar
+                </option>
+
+                <option value="X">
+                    X - No tiene
+                </option>
+
+                <option value="A">
+                    A - Abierta
+                </option>
+
+                <option value="C">
+                    C - Cerrada
+                </option>
+
+                <option value="T">
+                    T - Tapón
+                </option>
+
+            </select>
+
+        `;
+
+
+        container.appendChild(div);
+
+    }
+
+}
+
+
+/* =========================================================
+   CANVAS
+   ========================================================= */
+
+const canvases = {};
+
+
+function setupCanvas(canvasId){
+
+    const canvas =
+        document.getElementById(canvasId);
+
+    const parent =
+        canvas.parentElement;
+
+    const ctx =
+        canvas.getContext("2d");
+
+
+    function resize(){
+
+        const backup =
+            canvas.toDataURL();
+
+
+        canvas.width =
+            parent.clientWidth;
+
+        canvas.height =
+            parent.clientHeight;
+
+
+        if(
+            backup &&
+            backup !== "data:,"
+        ){
+
+            const image =
+                new Image();
+
+            image.onload = () => {
+
+                ctx.drawImage(
+                    image,
+                    0,
+                    0,
+                    canvas.width,
+                    canvas.height
+                );
+
+            };
+
+            image.src = backup;
+
+        }
+
+    }
+
+
+    resize();
+
+
+    let drawing = false;
+
+
+    function position(event){
+
+        const rect =
+            canvas.getBoundingClientRect();
+
+
+        const source =
+            event.touches
+            ? event.touches[0]
+            : event;
+
+
+        return {
+
+            x:
+                (
+                    source.clientX -
+                    rect.left
+                )
+                *
+                (
+                    canvas.width /
+                    rect.width
+                ),
+
+            y:
+                (
+                    source.clientY -
+                    rect.top
+                )
+                *
+                (
+                    canvas.height /
+                    rect.height
+                )
+
+        };
+
+    }
+
+
+    function start(event){
+
+        if(finalized){
+            return;
+        }
+
+        drawing = true;
+
+        const pos =
+            position(event);
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            pos.x,
+            pos.y
+        );
+
+    }
+
+
+    function draw(event){
+
+        if(!drawing){
+            return;
+        }
+
+        event.preventDefault();
+
+        const pos =
+            position(event);
+
+        ctx.lineWidth = 2;
+
+        ctx.lineCap =
+            "round";
+
+        ctx.strokeStyle =
+            "#111";
+
+        ctx.lineTo(
+            pos.x,
+            pos.y
+        );
+
+        ctx.stroke();
+
+    }
+
+
+    function stop(){
+
+        if(!drawing){
+            return;
+        }
+
+        drawing = false;
+
+        saveData(false);
+
+    }
+
+
+    canvas.addEventListener(
+        "mousedown",
+        start
+    );
+
+    canvas.addEventListener(
+        "mousemove",
+        draw
+    );
+
+    window.addEventListener(
+        "mouseup",
+        stop
+    );
+
+
+    canvas.addEventListener(
+        "touchstart",
+        start,
+        {
+            passive:false
+        }
+    );
+
+    canvas.addEventListener(
+        "touchmove",
+        draw,
+        {
+            passive:false
+        }
+    );
+
+    canvas.addEventListener(
+        "touchend",
+        stop
+    );
+
+
+    canvases[canvasId] = {
+
+        canvas,
+        ctx,
+        resize
+
+    };
+
+}
+
+
+/* =========================================================
+   LIMPIAR CANVAS
+   ========================================================= */
+
+function clearCanvas(canvasId){
+
+    if(finalized){
+        return;
+    }
+
+
+    const item =
+        canvases[canvasId];
+
+
+    if(!item){
+        return;
+    }
+
+
+    item.ctx.clearRect(
+
+        0,
+        0,
+
+        item.canvas.width,
+        item.canvas.height
+
+    );
+
+
+    saveData(false);
+
+}
+
+
+/* =========================================================
+   GUARDAR CHECKLIST
+   ========================================================= */
+
+function getRadioData(){
+
+    const result = {};
+
+
+    document
+        .querySelectorAll(
+            'input[type="radio"]:checked'
+        )
+        .forEach(radio => {
+
+            result[radio.name] =
+                radio.value;
+
+        });
+
+
+    return result;
+
+}
+
+
+/* =========================================================
+   CARGAR CHECKLIST
+   ========================================================= */
+
+function restoreRadioData(data){
+
+    if(!data){
+        return;
+    }
+
+
+    Object
+        .entries(data)
+        .forEach(([name,value]) => {
+
+            const radio =
+                document.querySelector(
+
+                    `input[name="${name}"][value="${value}"]`
+
+                );
+
+
+            if(radio){
+                radio.checked = true;
+            }
+
+        });
+
+}
+
+
+/* =========================================================
+   LISTA DE INPUTS PRINCIPALES
+   ========================================================= */
+
+const fieldIds = [
+
+    "pozo",
+    "trabajo",
+    "operador",
+
+    "fechaIngreso",
+    "horaIngreso",
+
+    "fechaEgreso",
+    "horaEgreso",
+
+    "observacionesIngreso",
+    "observacionesEgreso",
+
+    "operadorIngresoNombre",
+    "operadorIngresoFirma",
+    "operadorIngresoFecha",
+
+    "supervisorIngresoNombre",
+    "supervisorIngresoFirma",
+    "supervisorIngresoFecha",
+
+    "operadorEgresoNombre",
+    "operadorEgresoFirma",
+    "operadorEgresoFecha",
+
+    "supervisorEgresoNombre",
+    "supervisorEgresoFirma",
+    "supervisorEgresoFecha"
+
+];
+
+
+/* =========================================================
+   OBTENER DATOS
+   ========================================================= */
+
+function getFormData(){
+
+    const fields = {};
+
+
+    fieldIds.forEach(id => {
+
+        const element =
+            document.getElementById(id);
+
+        fields[id] =
+            element
+            ? element.value
+            : "";
+
+    });
+
+
+    const schemes = {};
+
+
+    [
+        "ingreso",
+        "egreso"
+
+    ].forEach(prefix => {
+
+        schemes[prefix] = {};
+
+
+        for(let i=1;i<=6;i++){
+
+            const select =
+                document.getElementById(
+                    `${prefix}Valvula${i}`
+                );
+
+
+            schemes[prefix][
+                `valvula${i}`
+            ] =
+                select
+                ? select.value
+                : "";
+
+        }
+
+    });
+
+
+    let canvasIngreso = "";
+
+    let canvasEgreso = "";
+
+
+    if(canvases.canvasIngreso){
+
+        canvasIngreso =
+            canvases
+            .canvasIngreso
+            .canvas
+            .toDataURL();
+
+    }
+
+
+    if(canvases.canvasEgreso){
+
+        canvasEgreso =
+            canvases
+            .canvasEgreso
+            .canvas
+            .toDataURL();
+
+    }
+
+
+    return {
+
+        fields,
+
+        schemes,
+
+        radios:
+            getRadioData(),
+
+        canvasIngreso,
+
+        canvasEgreso,
+
+        finalized,
+
+        updatedAt:
+            new Date().toISOString()
+
+    };
+
+}
+
+
+/* =========================================================
+   GUARDAR
+   ========================================================= */
+
+function saveData(showMessage=true){
+
+    try{
+
+        localStorage.setItem(
+
+            STORAGE_KEY,
+
+            JSON.stringify(
+                getFormData()
+            )
+
+        );
+
+
+        if(showMessage){
+
+            showToast(
+                "Formulario guardado correctamente."
+            );
+
+        }
+
+    }
+    catch(error){
+
+        console.error(error);
+
+        showToast(
+            "No se pudo guardar el formulario.",
+            true
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   AUTOGUARDADO
+   ========================================================= */
+
+let saveTimer;
+
+
+function autoSave(){
+
+    if(finalized){
+        return;
+    }
+
+
+    clearTimeout(saveTimer);
+
+
+    saveTimer =
+        setTimeout(
+            () => {
+
+                saveData(false);
+
+            },
+            500
+        );
+
+}
+
+
+/* =========================================================
+   CARGAR DATOS
+   ========================================================= */
+
+function loadData(){
+
+    const saved =
+        localStorage.getItem(
+            STORAGE_KEY
+        );
+
+
+    if(!saved){
+        return;
+    }
+
+
+    try{
+
+        const data =
+            JSON.parse(saved);
+
+
+        if(data.fields){
+
+            Object
+                .entries(data.fields)
+                .forEach(([id,value]) => {
+
+                    const element =
+                        document.getElementById(id);
+
+
+                    if(element){
+
+                        element.value =
+                            value || "";
+
+                    }
+
+                });
+
+        }
+
+
+        if(data.schemes){
+
+            [
+                "ingreso",
+                "egreso"
+
+            ].forEach(prefix => {
+
+                if(
+                    !data.schemes[prefix]
+                ){
+                    return;
+                }
+
+
+                for(let i=1;i<=6;i++){
+
+                    const select =
+                        document.getElementById(
+                            `${prefix}Valvula${i}`
+                        );
+
+
+                    if(select){
+
+                        select.value =
+                            data
+                            .schemes[prefix][
+                                `valvula${i}`
+                            ] || "";
+
+                    }
+
+                }
+
+            });
+
+        }
+
+
+        restoreRadioData(
+            data.radios
+        );
+
+
+        restoreCanvas(
+            "canvasIngreso",
+            data.canvasIngreso
+        );
+
+
+        restoreCanvas(
+            "canvasEgreso",
+            data.canvasEgreso
+        );
+
+
+        finalized =
+            data.finalized === true;
+
+
+        applyFinalizedState();
+
+    }
+    catch(error){
+
+        console.error(error);
+
+    }
+
+}
+
+
+/* =========================================================
+   RESTAURAR CANVAS
+   ========================================================= */
+
+function restoreCanvas(canvasId,data){
+
+    if(
+        !data ||
+        data === "data:,"
+    ){
+        return;
+    }
+
+
+    const item =
+        canvases[canvasId];
+
+
+    if(!item){
+        return;
+    }
+
+
+    const image =
+        new Image();
+
+
+    image.onload = () => {
+
+        item.ctx.clearRect(
+            0,
+            0,
+            item.canvas.width,
+            item.canvas.height
+        );
+
+
+        item.ctx.drawImage(
+
+            image,
+
+            0,
+            0,
+
+            item.canvas.width,
+            item.canvas.height
+
+        );
+
+    };
+
+
+    image.src = data;
+
+}
+
+
+/* =========================================================
+   PROGRESO
+   ========================================================= */
+
+function updateProgress(){
+
+    let completed = 0;
+
+    const total = 7;
+
+
+    const pozo =
+        document.getElementById("pozo");
+
+    const trabajo =
+        document.getElementById("trabajo");
+
+    const operador =
+        document.getElementById("operador");
+
+    const fechaIngreso =
+        document.getElementById("fechaIngreso");
+
+    const horaIngreso =
+        document.getElementById("horaIngreso");
+
+    const fechaEgreso =
+        document.getElementById("fechaEgreso");
+
+    const horaEgreso =
+        document.getElementById("horaEgreso");
+
+
+    if(pozo.value.trim()){
+        completed++;
+    }
+
+    if(trabajo.value.trim()){
+        completed++;
+    }
+
+    if(operador.value.trim()){
+        completed++;
+    }
+
+    if(
+        fechaIngreso.value &&
+        horaIngreso.value
+    ){
+        completed++;
+    }
+
+    if(
+        fechaEgreso.value &&
+        horaEgreso.value
+    ){
+        completed++;
+    }
+
+
+    const ingresoChecks =
+        document.querySelectorAll(
+            'input[name^="ingreso_"]:checked'
+        ).length;
+
+
+    if(ingresoChecks > 0){
+        completed++;
+    }
+
+
+    const egresoChecks =
+        document.querySelectorAll(
+            'input[name^="egreso_"]:checked'
+        ).length;
+
+
+    if(egresoChecks > 0){
+        completed++;
+    }
+
+
+    const percent =
+        Math.round(
+            completed / total * 100
+        );
+
+
+    document
+        .getElementById(
+            "progressBar"
+        )
+        .style.width =
+            percent + "%";
+
+
+    document
+        .getElementById(
+            "progressPercent"
+        )
+        .textContent =
+            percent + "%";
+
+
+    const text =
+        document.getElementById(
+            "progressText"
+        );
+
+
+    if(percent === 100){
+
+        text.textContent =
+            "Formulario completo";
+
+    }
+    else if(percent >= 70){
+
+        text.textContent =
+            "Formulario casi completo";
+
+    }
+    else if(percent >= 40){
+
+        text.textContent =
+            "Formulario en desarrollo";
+
+    }
+    else{
+
+        text.textContent =
+            "Complete los datos requeridos";
+
+    }
+
+}
+
+
+/* =========================================================
+   VALIDACIÓN
+   ========================================================= */
+
+function validate(){
+
+    const required = [
+
+        "pozo",
+        "trabajo",
+        "operador"
+
+    ];
+
+
+    let valid = true;
+
+
+    required.forEach(id => {
+
+        const element =
+            document.getElementById(id);
+
+
+        element
+            .classList
+            .remove("invalid");
+
+
+        if(
+            !element.value.trim()
+        ){
+
+            element
+                .classList
+                .add("invalid");
+
+            valid = false;
+
+        }
+
+    });
+
+
+    if(!valid){
+
+        showToast(
+
+            "Complete Pozo, Trabajo y Operador antes de finalizar.",
+
+            true
+
+        );
+
+
+        document
+            .getElementById("datos")
+            .scrollIntoView({
+
+                behavior:"smooth",
+                block:"start"
+
+            });
+
+
+        return false;
+
+    }
+
+
+    return true;
+
+}
+
+
+/* =========================================================
+   FINALIZAR
+   ========================================================= */
+
+function finishForm(){
+
+    if(!validate()){
+        return;
+    }
+
+
+    const confirmed =
+        confirm(
+
+            "¿Desea finalizar el formulario PGSN12-F1?\n\n" +
+
+            "Una vez finalizado quedará bloqueado para evitar modificaciones accidentales."
+
+        );
+
+
+    if(!confirmed){
+        return;
+    }
+
+
+    finalized = true;
+
+
+    applyFinalizedState();
+
+
+    saveData(false);
+
+
+    showToast(
+        "Formulario finalizado correctamente."
+    );
+
+}
+
+
+/* =========================================================
+   ESTADO FINALIZADO
+   ========================================================= */
+
+function applyFinalizedState(){
+
+    const badge =
+        document.getElementById(
+            "statusBadge"
+        );
+
+
+    const saveBtn =
+        document.getElementById(
+            "saveBtn"
+        );
+
+
+    const finishBtn =
+        document.getElementById(
+            "finishBtn"
+        );
+
+
+    const editBtn =
+        document.getElementById(
+            "editBtn"
+        );
+
+
+    if(finalized){
+
+        document.body
+            .classList
+            .add("finalized");
+
+
+        badge.textContent =
+            "FINALIZADO";
+
+
+        badge.classList
+            .add("finished");
+
+
+        saveBtn.style.display =
+            "none";
+
+
+        finishBtn.style.display =
+            "none";
+
+
+        editBtn.style.display =
+            "inline-block";
+
+    }
+    else{
+
+        document.body
+            .classList
+            .remove("finalized");
+
+
+        badge.textContent =
+            "EN EDICIÓN";
+
+
+        badge.classList
+            .remove("finished");
+
+
+        saveBtn.style.display =
+            "inline-block";
+
+
+        finishBtn.style.display =
+            "inline-block";
+
+
+        editBtn.style.display =
+            "none";
+
+    }
+
+}
+
+
+/* =========================================================
+   LIMPIAR
+   ========================================================= */
+
+function clearForm(){
+
+    if(finalized){
+
+        showToast(
+
+            "Habilite la edición antes de limpiar el formulario.",
+
+            true
+
+        );
+
+        return;
+
+    }
+
+
+    const confirmed =
+        confirm(
+
+            "¿Desea borrar todos los datos del formulario?"
+
+        );
+
+
+    if(!confirmed){
+        return;
+    }
+
+
+    localStorage.removeItem(
+        STORAGE_KEY
+    );
+
+
+    location.reload();
+
+}
+
+
+/* =========================================================
+   TOAST
+   ========================================================= */
+
+let toastTimer;
+
+
+function showToast(
+    message,
+    error=false
+){
+
+    const toast =
+        document.getElementById(
+            "toast"
+        );
+
+
+    clearTimeout(
+        toastTimer
+    );
+
+
+    toast.textContent =
+        message;
+
+
+    toast.classList.toggle(
+        "error",
+        error
+    );
+
+
+    toast.classList.add(
+        "show"
+    );
+
+
+    toastTimer =
+        setTimeout(
+            () => {
+
+                toast.classList
+                    .remove("show");
+
+            },
+            3000
+        );
+
+}
+
+
+/* =========================================================
+   MENÚ MOBILE
+   ========================================================= */
+
+const sidebar =
+    document.getElementById(
+        "sidebar"
+    );
+
+
+const overlay =
+    document.getElementById(
+        "overlay"
+    );
+
+
+document
+    .getElementById(
+        "menuBtn"
+    )
+    .addEventListener(
+        "click",
+        () => {
+
+            sidebar
+                .classList
+                .toggle("open");
+
+
+            overlay
+                .classList
+                .toggle("show");
+
+        }
+    );
+
+
+overlay.addEventListener(
+    "click",
+    () => {
+
+        sidebar
+            .classList
+            .remove("open");
+
+
+        overlay
+            .classList
+            .remove("show");
+
+    }
+);
+
+
+/* =========================================================
+   INICIALIZACIÓN
+   ========================================================= */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    () => {
+
+        createScheme(
+            "schemeIngreso",
+            "ingreso"
+        );
+
+
+        createScheme(
+            "schemeEgreso",
+            "egreso"
+        );
+
+
+        createChecklist(
+            "checkIngreso",
+            "ingreso"
+        );
+
+
+        createChecklist(
+            "checkEgreso",
+            "egreso"
+        );
+
+
+        setupCanvas(
+            "canvasIngreso"
+        );
+
+
+        setupCanvas(
+            "canvasEgreso"
+        );
+
+
+        loadData();
+
+
+        updateProgress();
+
+
+        /* ===============================
+           AUTOGUARDADO
+           =============================== */
+
+        document
+            .querySelectorAll(
+                "input, select, textarea"
+            )
+            .forEach(element => {
+
+                element
+                    .addEventListener(
+                        "input",
+                        () => {
+
+                            updateProgress();
+                            autoSave();
+
+                        }
+                    );
+
+
+                element
+                    .addEventListener(
+                        "change",
+                        () => {
+
+                            updateProgress();
+                            autoSave();
+
+                        }
+                    );
+
+            });
+
+    }
+);
+
+
+/* =========================================================
+   BOTONES
+   ========================================================= */
+
+document
+    .getElementById(
+        "saveBtn"
+    )
+    .addEventListener(
+        "click",
+        () => {
+
+            saveData(true);
+
+        }
+    );
+
+
+document
+    .getElementById(
+        "finishBtn"
+    )
+    .addEventListener(
+        "click",
+        finishForm
+    );
+
+
+document
+    .getElementById(
+        "clearBtn"
+    )
+    .addEventListener(
+        "click",
+        clearForm
+    );
+
+
+document
+    .getElementById(
+        "printBtn"
+    )
+    .addEventListener(
+        "click",
+        () => {
+
+            window.print();
+
+        }
+    );
+
+
+document
+    .getElementById(
+        "editBtn"
+    )
+    .addEventListener(
+        "click",
+        () => {
+
+            const confirmed =
+                confirm(
+
+                    "¿Desea habilitar nuevamente la edición?"
+
+                );
+
+
+            if(!confirmed){
+                return;
+            }
+
+
+            finalized = false;
+
+
+            applyFinalizedState();
+
+
+            saveData(false);
+
+
+            showToast(
+                "Edición habilitada nuevamente."
+            );
+
+        }
+    );
+
+
+/* =========================================================
+   CTRL + S
+   ========================================================= */
+
+document.addEventListener(
+    "keydown",
+    event => {
+
+        if(
+            (
+                event.ctrlKey ||
+                event.metaKey
+            )
+            &&
+            event.key.toLowerCase()
+                === "s"
+        ){
+
+            event.preventDefault();
+
+            saveData(true);
+
+        }
+
+    }
+);
+
+</script>
+
+</body>
+</html>

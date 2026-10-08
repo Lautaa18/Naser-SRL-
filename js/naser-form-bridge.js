@@ -34,11 +34,14 @@
       else if (el.id) k = '#' + el.id;
       else if (el.name) k = '@' + el.name + (t === 'checkbox' ? ':' + el.value : '');
       else k = '~' + i;
+      var legacyKey = k;
+      var row = el.closest('[data-naser-row]');
+      if (row && el.dataset.naserField) k = 'row:' + row.dataset.naserRow + ':' + el.dataset.naserField;
       if (t !== 'radio') {
         if (usadas[k] !== undefined) { usadas[k]++; k = k + '|' + usadas[k]; }
         else usadas[k] = 0;
       }
-      return { el: el, key: k };
+      return { el: el, key: k, legacyKey: legacyKey };
     });
   }
 
@@ -63,15 +66,22 @@
   function aplicar(fields) {
     if (!fields) return;
     aplicando = true;
-    claves().forEach(function (c) {
-      if (!(c.key in fields)) return;
-      var el = c.el, t = (el.type || '').toLowerCase(), v = fields[c.key];
+    function aplicarCampo(c) {
+      var key = c.key;
+      if (!(key in fields)) {
+        if (cfg.hasNativeStorage || !(c.legacyKey in fields)) return;
+        key = c.legacyKey;
+      }
+      var el = c.el, t = (el.type || '').toLowerCase(), v = fields[key];
       if (t === 'radio') el.checked = (String(v) === el.value);
       else if (t === 'checkbox') el.checked = !!v;
       else if (el.tagName === 'SELECT' && el.multiple && Array.isArray(v)) Array.prototype.forEach.call(el.options, function (o) { o.selected = v.indexOf(o.value) >= 0; });
       else el.value = (v === null || v === undefined) ? '' : v;
       disparar(el);
-    });
+    }
+    // Los filtros pueden reconstruir la tabla: volver a obtener los campos de fila.
+    claves().filter(function(c){ return !c.el.closest('tbody'); }).forEach(aplicarCampo);
+    claves().filter(function(c){ return !!c.el.closest('tbody'); }).forEach(aplicarCampo);
     aplicando = false;
   }
 
@@ -95,27 +105,28 @@
   // Muchos formularios guardan su estado interno (listas, filas agregadas) solo cuando
   // se toca su boton "Guardar". Antes de leer los datos se llama a su funcion de guardado
   // (sin mostrar mensajes) para que no se pierda nada.
-  var FUNCIONES_GUARDADO = ['guardarFormulario', 'guardar', 'saveForm', 'guardarMinuta', 'guardarGenerales', 'saveLocal', 'saveInterview', 'saveData', 'saveChecklist', 'saveProfile', 'persist'];
+  var FUNCIONES_GUARDADO = ['guardarFormulario', 'guardar', 'save', 'saveDraft', 'saveForm', 'guardarMinuta', 'guardarGenerales', 'saveLocal', 'saveInterview', 'saveData', 'saveChecklist', 'saveProfile', 'persist'];
   function volcarEstadoPropio() {
     var a = window.alert, c = window.confirm;
     window.alert = function () {}; window.confirm = function () { return true; };
     try {
       FUNCIONES_GUARDADO.forEach(function (n) {
-        if (typeof window[n] === 'function') { try { window[n](); } catch (e) {} }
+        if (typeof window[n] === 'function') { try { window[n](false); } catch (e) {} }
       });
     } finally { window.alert = a; window.confirm = c; }
   }
 
-  var RE_ACCIONES = /(guardar|finalizar|limpiar|agregar|nuev|eliminar|borrar|quitar|editar|habilitar|cancelar ed|restablecer|importar)/i;
-
   function bloquear() {
-    campos().forEach(function (el) { el.disabled = true; });
+    document.querySelectorAll('input,select,textarea,fieldset').forEach(function (el) { el.disabled = true; });
     Array.prototype.forEach.call(document.querySelectorAll('button,[role="button"],input[type="button"],input[type="submit"]'), function (b) {
-      if (RE_ACCIONES.test(b.textContent || b.value || '')) { b.disabled = true; b.style.opacity = '.45'; b.style.pointerEvents = 'none'; }
+      if (!/imprimir|pdf|exportar|descargar/i.test(b.textContent || b.value || b.getAttribute('aria-label') || '')) { b.disabled = true; b.style.opacity = '.45'; b.style.pointerEvents = 'none'; }
     });
-    var st = document.createElement('style');
-    st.textContent = 'input:disabled,select:disabled,textarea:disabled{color:#1f2a24!important;-webkit-text-fill-color:#1f2a24;opacity:1!important;background:#f7f9f8!important;cursor:default}';
-    document.head.appendChild(st);
+    document.body.classList.add('naser-readonly');
+    if (!document.getElementById('naser-readonly-style')) {
+      var st = document.createElement('style'); st.id = 'naser-readonly-style';
+      st.textContent = 'input:disabled,select:disabled,textarea:disabled{color:#1f2a24!important;-webkit-text-fill-color:#1f2a24;opacity:1!important;background:#f7f9f8!important;cursor:default}.naser-readonly canvas{pointer-events:none!important}';
+      document.head.appendChild(st);
+    }
   }
 
   // Los botones propios del formulario (Guardar / Finalizar) tambien guardan en la base
@@ -124,8 +135,8 @@
     if (!b || cfg.readonly) return;
     var txt = (b.textContent || b.value || '').trim();
     // Guardar / Finalizar / Agregar / Eliminar filas del formulario => se guarda tambien en el sistema
-    if (/guardar|finalizar|agregar|a[ñn]adir|eliminar|quitar/i.test(txt) && !/limpiar/i.test(txt)) {
-      setTimeout(function () { post({ type: 'naser:save-request', finalizar: /finalizar/i.test(txt) }); }, 400);
+    if (/guardar|finalizar|agregar|a[ñn]adir|eliminar|quitar|limpiar|borrar|restablecer/i.test(txt)) {
+      setTimeout(function () { post({ type: 'naser:dirty' }); post({ type: 'naser:save-request' }); }, 400);
     }
   }, true);
 
@@ -134,12 +145,20 @@
   });
 
   window.addEventListener('message', function (e) {
-    if (e.origin !== parentOrigin || !e.data || typeof e.data !== 'object') return;
+    if (e.origin !== parentOrigin || e.source !== window.parent || !e.data || typeof e.data !== 'object') return;
     var d = e.data;
     if (d.type === 'naser:collect') {
+      if (d.validate) {
+        var invalid = campos().find(function (el) { return !el.disabled && el.willValidate && !el.checkValidity(); });
+        if (invalid) {
+          invalid.reportValidity();
+          post({ type: 'naser:collected', reqId: d.reqId, valid: false });
+          return;
+        }
+      }
       volcarEstadoPropio();
       var storage = (window.__naserLS && window.__naserLS.__dump) ? window.__naserLS.__dump() : {};
-      post({ type: 'naser:collected', reqId: d.reqId, fields: recolectar(), storage: storage, sugerencia: sugerencia() });
+      post({ type: 'naser:collected', reqId: d.reqId, valid: true, fields: recolectar(), storage: storage, sugerencia: sugerencia() });
     } else if (d.type === 'naser:print') {
       window.print();
     }
@@ -148,7 +167,8 @@
   // Altura del iframe
   var ultimaAltura = 0;
   function informarAltura() {
-    var h = Math.max(document.documentElement.scrollHeight, document.body ? document.body.scrollHeight : 0);
+    // Medir contenido, sin sumar nuevamente la altura del viewport del iframe.
+    var h = document.body ? Math.ceil(document.body.getBoundingClientRect().height) : 0;
     if (Math.abs(h - ultimaAltura) > 4) { ultimaAltura = h; post({ type: 'naser:height', height: h }); }
   }
 
@@ -156,9 +176,30 @@
     aplicar(cfg.fields || null);
     if (cfg.readonly) bloquear();
     informarAltura();
-    if (window.ResizeObserver) new ResizeObserver(informarAltura).observe(document.documentElement);
+    prepararTablas();
+    if (window.ResizeObserver) new ResizeObserver(informarAltura).observe(document.body);
+    if (window.MutationObserver) new MutationObserver(function (changes) {
+      if (!changes.some(function (change) { return change.addedNodes.length; })) return;
+      prepararTablas(); if (cfg.readonly) bloquear(); informarAltura();
+    }).observe(document.body, { childList: true, subtree: true });
     setInterval(informarAltura, 1200);
     post({ type: 'naser:ready' });
+  }
+
+  function prepararTablas() {
+    document.querySelectorAll('table').forEach(function (table) {
+      if (table.closest('.naser-table-scroll')) return;
+      var wrap = table.parentElement;
+      var overflow = window.getComputedStyle(wrap).overflowX;
+      if (!/auto|scroll/.test(overflow)) {
+        wrap = document.createElement('div');
+        table.parentNode.insertBefore(wrap, table); wrap.appendChild(table);
+      }
+      wrap.classList.add('naser-table-scroll');
+      wrap.setAttribute('role', 'region');
+      wrap.setAttribute('aria-label', table.getAttribute('aria-label') || 'Tabla del formulario: deslizá para ver todas las columnas');
+      wrap.tabIndex = 0;
+    });
   }
 
   if (document.readyState === 'complete') setTimeout(iniciar, 0);

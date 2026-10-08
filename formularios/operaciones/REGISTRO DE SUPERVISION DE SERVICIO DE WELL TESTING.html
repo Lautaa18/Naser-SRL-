@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NASER | Supervisión de Well Testing</title>
+
+<style>
+:root{
+    --green:#009b49;
+    --green-dark:#007a3a;
+    --green-light:#e8f6ee;
+    --black:#101010;
+    --bg:#f2f3f5;
+    --border:#d9dde3;
+    --text:#15191e;
+    --muted:#69717c;
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+    font-family:Arial,Helvetica,sans-serif;
+    background:var(--bg);
+    color:var(--text);
+}
+button,input,textarea,select{font:inherit}
+button,a,input,textarea,select{-webkit-tap-highlight-color:transparent}
+
+.sidebar{
+    position:fixed;
+    inset:0 auto 0 0;
+    width:300px;
+    background:#101010;
+    color:#fff;
+    border-right:1px solid #292929;
+}
+.brand{
+    height:120px;
+    display:flex;
+    align-items:center;
+    padding:0 34px;
+    border-bottom:1px solid #292929;
+    font-size:34px;
+    font-weight:900;
+    letter-spacing:4px;
+}
+.sidebar-section{padding:28px 0}
+.sidebar-label{
+    padding:0 30px 14px;
+    color:#818b97;
+    font-size:12px;
+    letter-spacing:1.2px;
+}
+.nav-link{
+    display:flex;
+    align-items:center;
+    gap:15px;
+    min-height:58px;
+    padding:0 26px;
+    color:#e6e6e6;
+    text-decoration:none;
+    border-left:4px solid transparent;
+}
+.nav-link:hover{background:#181818}
+.nav-link.active{background:#191919;border-left-color:var(--green)}
+.nav-number{color:#00bd5a;font-weight:800;font-size:18px}
+.main{margin-left:300px}
+
+.topbar{
+    min-height:90px;
+    padding:20px 35px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:20px;
+    background:#fff;
+    border-bottom:1px solid var(--border);
+}
+.breadcrumb{font-size:14px;color:var(--muted)}
+.top-actions{display:flex;gap:10px;flex-wrap:wrap}
+.badge{
+    padding:10px 15px;
+    border-radius:8px;
+    font-size:12px;
+    font-weight:800;
+}
+.badge-edit{background:#eef0f2;color:#59616c}
+.badge-document{background:var(--green-light);color:var(--green-dark)}
+
+.page{padding:35px}
+.hero{
+    position:relative;
+    overflow:hidden;
+    min-height:195px;
+    display:flex;
+    align-items:center;
+    padding:38px 42px;
+    border-radius:15px;
+    background:linear-gradient(110deg,#101010,#202020);
+    color:#fff;
+}
+.hero::after{
+    content:"";
+    position:absolute;
+    width:310px;
+    height:310px;
+    right:-90px;
+    top:-135px;
+    border-radius:50%;
+    background:rgba(0,155,73,.18);
+}
+.hero-content{position:relative;z-index:1}
+.hero-kicker{
+    color:#00c65e;
+    font-size:12px;
+    font-weight:800;
+    letter-spacing:2px;
+    margin-bottom:14px;
+}
+.hero h1{font-size:34px;line-height:1.2;margin-bottom:15px}
+.hero p{font-size:14px;line-height:1.7;color:#e6e8eb}
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:14px;
+    margin:24px 0;
+}
+.stat{
+    padding:20px;
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:11px;
+}
+.stat-label{
+    display:block;
+    color:var(--muted);
+    font-size:11px;
+    font-weight:700;
+    text-transform:uppercase;
+    margin-bottom:10px;
+}
+.stat-value{font-size:28px;font-weight:900}
+.green{color:var(--green)}
+.danger{color:#b42318}
+.progress{
+    height:6px;
+    margin-top:12px;
+    background:#e9ecef;
+    border-radius:5px;
+    overflow:hidden;
+}
+.progress span{display:block;height:100%;width:0;background:var(--green)}
+
+.document-card{
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:14px;
+    margin-bottom:24px;
+    overflow:hidden;
+    box-shadow:0 8px 28px rgba(16,24,40,.05);
+    scroll-margin-top:20px;
+}
+.document-header{
+    display:flex;
+    align-items:center;
+    gap:17px;
+    padding:23px 27px;
+    border-bottom:1px solid var(--border);
+}
+.document-number{
+    width:50px;
+    height:50px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-shrink:0;
+    background:#111;
+    color:#00c45e;
+    font-size:18px;
+    font-weight:900;
+    border-radius:9px;
+}
+.document-title h2{font-size:20px;margin-bottom:5px}
+.document-title p{font-size:13px;color:var(--muted)}
+.document-body{padding:27px}
+.form-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:18px;
+}
+.field{display:flex;flex-direction:column;gap:8px;min-width:0}
+.field.full{grid-column:1/-1}
+.field label{
+    color:#59616c;
+    font-size:11px;
+    font-weight:700;
+    text-transform:uppercase;
+    line-height:1.5;
+}
+.field input,.field textarea,.field select{
+    width:100%;
+    padding:11px 12px;
+    background:#fff;
+    color:var(--text);
+    border:1px solid #d4d9df;
+    border-radius:7px;
+    font-size:13px;
+}
+.field textarea{min-height:85px;resize:vertical}
+.field input:focus,.field textarea:focus,.field select:focus{
+    outline:none;
+    border-color:var(--green);
+    box-shadow:0 0 0 3px rgba(0,155,73,.1);
+}
+.info{
+    padding:18px 20px;
+    margin-bottom:23px;
+    border:1px solid var(--border);
+    border-left:4px solid var(--green);
+    border-radius:8px;
+    background:#fafbfc;
+    color:#59616c;
+    font-size:13px;
+    line-height:1.7;
+}
+.info strong{color:var(--green-dark)}
+
+.check-list{display:grid;gap:14px}
+.check{
+    border:1px solid var(--border);
+    border-radius:10px;
+    overflow:hidden;
+    break-inside:avoid;
+}
+.check-main{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:24px;
+    padding:18px 20px;
+}
+.check-text{flex:1;font-size:14px;line-height:1.6}
+.check-title{display:flex;gap:12px;font-weight:700}
+.item-number{color:var(--green);min-width:22px;font-size:12px;padding-top:2px}
+.check-note{
+    margin:10px 0 0 34px;
+    color:var(--muted);
+    font-size:12px;
+    line-height:1.7;
+}
+.choices{display:flex;gap:6px;flex-shrink:0}
+.choice{position:relative;cursor:pointer}
+.choice input{position:absolute;opacity:0;width:1px;height:1px}
+.choice span{
+    display:block;
+    padding:10px 12px;
+    border:1px solid var(--border);
+    border-radius:7px;
+    font-size:12px;
+    font-weight:700;
+    white-space:nowrap;
+}
+.choice input:checked+span{
+    background:var(--green-light);
+    border-color:var(--green);
+    color:var(--green-dark);
+}
+.choice.bad input:checked+span{background:#fef0ee;border-color:#b42318;color:#b42318}
+.choice.none input:checked+span{background:#eef0f2;border-color:#69717c;color:#404752}
+.choice input:focus-visible+span{outline:3px solid var(--green);outline-offset:3px}
+.check[data-result="Mal"]{border-left:4px solid #b42318}
+.check-extra{
+    padding:16px 20px;
+    border-top:1px solid var(--border);
+    background:#fafbfc;
+}
+.check-extra .form-grid{grid-template-columns:repeat(3,1fr)}
+.footer{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:18px;
+}
+.status{font-size:12px;color:var(--muted);line-height:1.7}
+.actions{display:flex;gap:9px;flex-wrap:wrap}
+.btn{
+    border:0;
+    border-radius:8px;
+    min-height:42px;
+    padding:10px 16px;
+    font-size:12px;
+    font-weight:800;
+    cursor:pointer;
+}
+.btn-green{background:var(--green);color:#fff}
+.btn-green:hover{background:var(--green-dark)}
+.btn-dark{background:#181818;color:#fff}
+.btn-light{background:#e9ecef;color:#4a525d}
+button:focus-visible,a:focus-visible{outline:3px solid var(--green);outline-offset:3px}
+.print-heading{display:none}
+
+@media(max-width:1200px){
+    .sidebar{width:250px}
+    .main{margin-left:250px}
+    .stats,.form-grid{grid-template-columns:repeat(2,1fr)}
+    .check-main{align-items:flex-start;flex-direction:column;gap:12px}
+}
+@media(max-width:800px){
+    .sidebar{position:relative;width:100%}
+    .brand{height:80px;font-size:28px}
+    .sidebar-section{display:flex;flex-wrap:wrap;padding:15px 0}
+    .sidebar-label{width:100%}
+    .nav-link{min-height:45px;padding:0 15px;font-size:13px}
+    .main{margin-left:0}
+    .topbar{padding:18px;align-items:flex-start;flex-direction:column}
+    .page{padding:18px}
+    .hero{padding:28px 23px}
+    .hero h1{font-size:26px}
+    .stats{gap:10px}
+    .stat{padding:15px}
+    .stat-value{font-size:24px}
+    .document-header{padding:20px 16px}
+    .document-title h2{font-size:18px}
+    .document-body{padding:16px}
+    .form-grid,.check-extra .form-grid{grid-template-columns:1fr}
+    .check-main{padding:16px}
+    .choices{flex-wrap:wrap}
+    .footer{align-items:stretch;flex-direction:column}
+    .actions .btn{flex:1}
+}
+@media print{
+    @page{size:A4;margin:10mm}
+    body{background:#fff}
+    .sidebar,.topbar,.hero,.stats,.footer,.info{display:none!important}
+    .main{margin:0}
+    .page,.document-body{padding:0}
+    .print-heading{
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        gap:12px;
+        border:2px solid #111;
+        padding:12px;
+        margin-bottom:12px;
+    }
+    .print-heading strong{font-size:18px}
+    .print-heading h1{font-size:13px;text-align:center}
+    .print-heading span{font-size:9px;white-space:nowrap}
+    .document-card{border:0;border-radius:0;box-shadow:none;margin-bottom:14px}
+    .document-header{padding:8px 0;border-bottom:2px solid #111}
+    .document-number{width:25px;height:25px;font-size:12px}
+    .document-title h2{font-size:13px}
+    .document-title p{display:none}
+    .form-grid{grid-template-columns:repeat(4,1fr);gap:8px;padding:10px 0}
+    .field label{font-size:8px}
+    .field input,.field textarea,.field select{
+        padding:4px;
+        font-size:10px;
+        border-radius:0;
+    }
+    .check-list{gap:0}
+    .check{border-radius:0;margin-top:-1px}
+    .check-main{flex-direction:row;align-items:center;padding:7px;gap:8px}
+    .check-text{font-size:10px}
+    .item-number,.check-note{font-size:9px}
+    .choice span{font-size:9px;padding:4px}
+    .choice input:checked+span{border:2px solid #111}
+    .choice input:checked+span::before{content:"✓ "}
+    .check-extra{padding:5px 8px;background:#fff}
+    .check-extra .form-grid{grid-template-columns:repeat(3,1fr);padding:0}
+    .field textarea{min-height:45px;resize:none}
+    .check[data-result="Mal"]{border-left:3px solid #111}
+}
+</style>
+</head>
+
+<body>
+<aside class="sidebar">
+    <div class="brand">NASER</div>
+    <nav class="sidebar-section" aria-label="Secciones del documento">
+        <div class="sidebar-label">DOCUMENTO</div>
+        <a href="#datos" class="nav-link active">
+            <span class="nav-number">01</span>
+            <span>Datos del servicio</span>
+        </a>
+        <a href="#operacion" class="nav-link">
+            <span class="nav-number">02</span>
+            <span>Operación del equipo</span>
+        </a>
+        <a href="#observaciones" class="nav-link">
+            <span class="nav-number">03</span>
+            <span>Observaciones</span>
+        </a>
+    </nav>
+</aside>
+
+<main class="main">
+    <header class="topbar">
+        <div class="breadcrumb">NASER / Well Testing / Registro de Supervisión</div>
+        <div class="top-actions">
+            <span class="badge badge-edit" id="badgeEstado">EN EDICIÓN</span>
+            <span class="badge badge-document">POSN03-F1 · Rev.01 Jun 2025</span>
+        </div>
+    </header>
+
+    <div class="page">
+        <div class="print-heading">
+            <strong>NASER</strong>
+            <h1>REGISTRO DE SUPERVISIÓN DE SERVICIO DE WELL TESTING</h1>
+            <span>POSN03-F1<br>Rev.01 Jun 2025</span>
+        </div>
+
+        <section class="hero">
+            <div class="hero-content">
+                <div class="hero-kicker">SUPERVISIÓN DE OPERACIONES</div>
+                <h1>Registro de Supervisión de Servicio de Well Testing</h1>
+                <p>Control de la operación del equipo, registro de constancias y seguimiento de las condiciones del servicio.</p>
+            </div>
+        </section>
+
+        <div class="stats">
+            <div class="stat">
+                <span class="stat-label">Controles completados</span>
+                <span class="stat-value" id="completed">0 / 23</span>
+                <div class="progress"><span id="progress"></span></div>
+            </div>
+            <div class="stat">
+                <span class="stat-label">Bien</span>
+                <span class="stat-value green" id="good">0</span>
+            </div>
+            <div class="stat">
+                <span class="stat-label">Mal</span>
+                <span class="stat-value danger" id="bad">0</span>
+            </div>
+            <div class="stat">
+                <span class="stat-label">No tiene</span>
+                <span class="stat-value" id="none">0</span>
+            </div>
+        </div>
+
+        <form id="supervision" autocomplete="off">
+            <section class="document-card" id="datos">
+                <div class="document-header">
+                    <span class="document-number">01</span>
+                    <div class="document-title">
+                        <h2>Datos del servicio</h2>
+                        <p>Personal, identificación del equipo y fecha de supervisión.</p>
+                    </div>
+                </div>
+
+                <div class="document-body">
+                    <div class="form-grid">
+                        <div class="field">
+                            <label for="operador">Operador</label>
+                            <input id="operador" name="operador" type="text">
+                        </div>
+                        <div class="field">
+                            <label for="ayudante">Ayudante</label>
+                            <input id="ayudante" name="ayudante" type="text">
+                        </div>
+                        <div class="field">
+                            <label for="supervisor">Supervisor</label>
+                            <input id="supervisor" name="supervisor" type="text">
+                        </div>
+                        <div class="field">
+                            <label for="fecha">Fecha</label>
+                            <input id="fecha" name="fecha" type="date">
+                        </div>
+                        <div class="field">
+                            <label for="hora">Hora</label>
+                            <input id="hora" name="hora" type="time">
+                        </div>
+                        <div class="field">
+                            <label for="separador">Separador</label>
+                            <input id="separador" name="separador" type="text">
+                        </div>
+                        <div class="field">
+                            <label for="pozo">Pozo</label>
+                            <input id="pozo" name="pozo" type="text">
+                        </div>
+                        <div class="field">
+                            <label for="inicio_control">H. Inicio Control</label>
+                            <input id="inicio_control" name="inicio_control" type="time">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="document-card" id="operacion">
+                <div class="document-header">
+                    <span class="document-number">02</span>
+                    <div class="document-title">
+                        <h2>Operación del equipo</h2>
+                        <p>Elementos a controlar durante la supervisión del servicio.</p>
+                    </div>
+                </div>
+
+                <div class="document-body">
+                    <div class="info">
+                        Seleccione una condición por control:
+                        <strong>Bien, Mal o No tiene.</strong>
+                        Complete las constancias y el detalle solicitado en cada elemento.
+                    </div>
+                    <div class="check-list" id="checkList"></div>
+                </div>
+            </section>
+
+            <section class="document-card" id="observaciones">
+                <div class="document-header">
+                    <span class="document-number">03</span>
+                    <div class="document-title">
+                        <h2>Observaciones</h2>
+                        <p>Comentarios y novedades de la supervisión.</p>
+                    </div>
+                </div>
+
+                <div class="document-body">
+                    <div class="field">
+                        <label for="observaciones_texto">Observaciones generales</label>
+                        <textarea
+                            name="observaciones"
+                            id="observaciones_texto"
+                            rows="5"
+                            placeholder="Registre las observaciones del servicio..."
+                        ></textarea>
+                    </div>
+                </div>
+            </section>
+
+            <div class="footer">
+                <p class="status" id="status" role="status" aria-live="polite">
+                    Documento en edición. El borrador se guarda en este navegador.
+                </p>
+                <div class="actions">
+                    <button type="button" class="btn btn-light" id="clear">Limpiar</button>
+                    <button type="button" class="btn btn-light" id="export">Descargar datos</button>
+                    <button type="button" class="btn btn-dark" id="print">Imprimir / PDF</button>
+                    <button type="button" class="btn btn-green" id="save">Guardar borrador</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</main>
+
+<script>
+"use strict";
+
+/* ELEMENTOS DEL FORMULARIO ORIGINAL */
+const controles = [
+    {
+        titulo:"Orden y limpieza de Separador"
+    },
+    {
+        titulo:"Estado de limpieza de locación"
+    },
+    {
+        titulo:"Pérdidas de fluidos en el separador / líneas de conexión"
+    },
+    {
+        titulo:"Muestra de puente de Agua. Constancia de cuándo y quién ejecutó la tarea",
+        tipo:"muestra"
+    },
+    {
+        titulo:"Muestra de puente de Condensado. Constancia de cuándo y quién ejecutó la tarea",
+        tipo:"muestra"
+    },
+    {
+        titulo:"Limpieza de Filtro puente de agua.",
+        tipo:"limpieza"
+    },
+    {
+        titulo:"Si hay presencia de sólidos, ¿figura en el ticket diario del equipo?",
+        tipo:"solidos"
+    },
+    {
+        titulo:"Limpieza filtro puente de condensado.",
+        tipo:"limpieza"
+    },
+    {
+        titulo:"Si hay presencia de sólidos, ¿figura en el ticket diario del equipo?",
+        tipo:"solidos"
+    },
+    {
+        titulo:"Chequeo de máximos y mínimos en histórico de FB103.",
+        tipo:"maximos"
+    },
+    {
+        titulo:"Chequeo de manifold de multi variable (que se vaya a cero la diferencial)"
+    },
+    {
+        titulo:"Chequeo de Factor Beta (diámetro de orificio de placa sobre diámetro puente de gas), si la placa orificio es acorde al caudal.",
+        nota:"Recordar que el factor Beta debe estar entre 0.2 y 0.6. De no ser así, ya sea por debajo del mínimo o por encima del máximo, esto debe estar asentado en el ticket del control de producción. Este dato, fuera de rango, se puede relevar desde el histórico del FB 103, según corresponda."
+    },
+    {
+        titulo:"Funcionamiento de válvulas de visor de nivel",
+        nota:"Visores de nivel o LG (Level Glass), secuencia de utilización de válvulas vinculantes al proceso y de visor a purga."
+    },
+    {
+        titulo:"Funcionamiento de válvulas de manifold de multivariable",
+        nota:"Válvulas de purga de Pulmones decantador de líquido hacia multi variable."
+    },
+    {
+        titulo:"Chequeo de caudales en caudalímetro de Agua. Tomar nota acumulado colocando fecha y hora",
+        tipo:"caudal"
+    },
+    {
+        titulo:"Chequeo de caudales en caudalímetro de condensado. Tomar nota acumulado colocando fecha y hora",
+        tipo:"caudal"
+    },
+    {
+        titulo:"Chequeo de correcta utilización de válvulas esféricas y neumáticas en puente de gas. En caso de haber algún desvío, ¿a qué se debe el mismo?",
+        tipo:"desvio"
+    },
+    {
+        titulo:"Chequeo de correcta utilización de válvulas esféricas y neumáticas en puente de agua. En caso de haber algún desvío, ¿a qué se debe el mismo?",
+        tipo:"desvio"
+    },
+    {
+        titulo:"Chequeo de correcta utilización de válvulas esféricas y neumáticas en puente de condensado. En caso de haber algún desvío, ¿a qué se debe el mismo?",
+        tipo:"desvio"
+    },
+    {
+        titulo:"Corroborar que los datos del Histórico de FB 103 sean coincidentes con los cargados en la planilla de control de producción."
+    },
+    {
+        titulo:"Carpeta con Certificados de Calibración de Instrumentación"
+    },
+    {
+        titulo:"Carpeta con Procedimientos vigentes, visible y en buen estado."
+    },
+    {
+        titulo:"Carpeta de Registros históricos de campo, visible y en buen estado."
+    }
+];
+
+const form = document.getElementById("supervision");
+const status = document.getElementById("status");
+const badge = document.getElementById("badgeEstado");
+const storageKey = "NASER_POSN03_F1_V1";
+let timer;
+
+/* CREACIÓN DE CAMPOS */
+function crearCampo(nombre, etiqueta, tipo = "text"){
+    const contenedor = document.createElement("div");
+    contenedor.className = "field";
+
+    const label = document.createElement("label");
+    label.htmlFor = nombre;
+    label.textContent = etiqueta;
+
+    let input;
+
+    if(tipo === "textarea"){
+        input = document.createElement("textarea");
+        input.rows = 2;
+        contenedor.classList.add("full");
+    }else if(tipo === "select"){
+        input = document.createElement("select");
+
+        [
+            ["","Seleccionar"],
+            ["Sí","Sí"],
+            ["No","No"]
+        ].forEach(([valor,texto]) => {
+            const option = document.createElement("option");
+            option.value = valor;
+            option.textContent = texto;
+            input.appendChild(option);
+        });
+    }else{
+        input = document.createElement("input");
+        input.type = tipo;
+    }
+
+    input.id = nombre;
+    input.name = nombre;
+    contenedor.append(label,input);
+    return contenedor;
+}
+
+/* CREACIÓN DE LOS 23 CONTROLES */
+function renderControles(){
+    const lista = document.getElementById("checkList");
+
+    controles.forEach((control,index) => {
+        const numero = index + 1;
+        const prefijo = "control_" + numero;
+
+        const card = document.createElement("article");
+        card.className = "check";
+        card.dataset.check = numero;
+
+        const principal = document.createElement("div");
+        principal.className = "check-main";
+
+        const texto = document.createElement("div");
+        texto.className = "check-text";
+
+        const titulo = document.createElement("div");
+        titulo.className = "check-title";
+        titulo.id = "title_" + numero;
+
+        const numeroElemento = document.createElement("span");
+        numeroElemento.className = "item-number";
+        numeroElemento.textContent = String(numero).padStart(2,"0");
+
+        const descripcion = document.createElement("span");
+        descripcion.textContent = control.titulo;
+
+        titulo.append(numeroElemento,descripcion);
+        texto.appendChild(titulo);
+
+        if(control.nota){
+            const nota = document.createElement("p");
+            nota.className = "check-note";
+            nota.textContent = control.nota;
+            texto.appendChild(nota);
+        }
+
+        const opciones = document.createElement("div");
+        opciones.className = "choices";
+        opciones.setAttribute("role","radiogroup");
+        opciones.setAttribute("aria-labelledby",titulo.id);
+
+        [
+            ["Bien",""],
+            ["Mal","bad"],
+            ["No tiene","none"]
+        ].forEach(([valor,clase]) => {
+            const label = document.createElement("label");
+            label.className = "choice" + (clase ? " " + clase : "");
+
+            const radio = document.createElement("input");
+            radio.type = "radio";
+            radio.name = prefijo + "_estado";
+            radio.value = valor;
+
+            const span = document.createElement("span");
+            span.textContent = valor;
+
+            label.append(radio,span);
+            opciones.appendChild(label);
+        });
+
+        principal.append(texto,opciones);
+        card.appendChild(principal);
+
+        if(control.tipo){
+            const extra = document.createElement("div");
+            extra.className = "check-extra";
+
+            const grid = document.createElement("div");
+            grid.className = "form-grid";
+
+            const agregar = (sufijo,label,tipo = "text") => {
+                grid.appendChild(crearCampo(prefijo + "_" + sufijo,label,tipo));
+            };
+
+            if(control.tipo === "muestra" || control.tipo === "limpieza"){
+                agregar("responsable","Quién ejecutó la tarea");
+                agregar("fecha","Cuándo: fecha","date");
+                agregar("hora","Cuándo: hora","time");
+            }
+
+            if(control.tipo === "limpieza"){
+                agregar("realizada","Se realizó","select");
+                agregar("motivo","Por qué");
+            }
+
+            if(control.tipo === "solidos"){
+                agregar("personal","Personal presente del cliente y de NASER");
+            }
+
+            if(control.tipo === "maximos"){
+                agregar("informado","En caso de haber llegado al máximo, ¿se informó?");
+            }
+
+            if(control.tipo === "caudal"){
+                agregar("acumulado","Acumulado (indicar unidad)");
+                agregar("fecha","Fecha","date");
+                agregar("hora","Hora","time");
+            }
+
+            if(control.tipo === "desvio"){
+                agregar("detalle","En caso de desvío, ¿a qué se debe?","textarea");
+            }
+
+            extra.appendChild(grid);
+            card.appendChild(extra);
+        }
+
+        lista.appendChild(card);
+    });
+}
+
+/* INDICADORES */
+function actualizarIndicadores(){
+    const seleccionados = [...form.querySelectorAll("input[type=radio]:checked")];
+    const total = controles.length;
+
+    document.getElementById("completed").textContent =
+        seleccionados.length + " / " + total;
+
+    document.getElementById("progress").style.width =
+        (seleccionados.length / total * 100) + "%";
+
+    [
+        ["good","Bien"],
+        ["bad","Mal"],
+        ["none","No tiene"]
+    ].forEach(([id,valor]) => {
+        document.getElementById(id).textContent =
+            seleccionados.filter(input => input.value === valor).length;
+    });
+
+    form.querySelectorAll("[data-check]").forEach(card => {
+        const seleccionado = card.querySelector("input[type=radio]:checked");
+        card.dataset.result = seleccionado ? seleccionado.value : "";
+    });
+}
+
+/* OBTENER Y GUARDAR DATOS */
+function obtenerDatos(){
+    return {
+        codigo:"POSN03-F1",
+        revision:"Rev.01 Jun 2025",
+        guardadoEn:new Date().toISOString(),
+        campos:Object.fromEntries(new FormData(form))
+    };
+}
+
+function guardar(manual = false){
+    try{
+        localStorage.setItem(storageKey,JSON.stringify(obtenerDatos()));
+        badge.textContent = "BORRADOR GUARDADO";
+        status.textContent =
+            (manual ? "Borrador guardado. " : "Guardado automático. ") +
+            "Datos almacenados en este navegador · " +
+            new Date().toLocaleTimeString("es-AR");
+    }catch(error){
+        badge.textContent = "SIN GUARDAR";
+        status.textContent =
+            "No se pudo guardar en este navegador. Descargue los datos para conservarlos.";
+    }
+}
+
+/* RECUPERAR BORRADOR */
+function recuperar(){
+    try{
+        const raw = localStorage.getItem(storageKey);
+        if(!raw) return;
+
+        const datos = JSON.parse(raw);
+
+        if(
+            datos.codigo !== "POSN03-F1" ||
+            !datos.campos ||
+            typeof datos.campos !== "object"
+        ){
+            throw new Error("Borrador inválido");
+        }
+
+        for(const campo of form.elements){
+            if(
+                !campo.name ||
+                !Object.prototype.hasOwnProperty.call(datos.campos,campo.name)
+            ){
+                continue;
+            }
+
+            const valor = datos.campos[campo.name];
+            if(typeof valor !== "string") continue;
+
+            if(campo.type === "radio"){
+                campo.checked = campo.value === valor;
+            }else{
+                campo.value = valor;
+            }
+        }
+
+        badge.textContent = "BORRADOR RECUPERADO";
+        status.textContent = "Se recuperó el borrador guardado en este navegador.";
+    }catch(error){
+        status.textContent =
+            "No se pudo recuperar el borrador. Puede completar el formulario y descargar los datos.";
+    }
+}
+
+/* GUARDADO AUTOMÁTICO */
+form.addEventListener("input",() => {
+    actualizarIndicadores();
+    badge.textContent = "EN EDICIÓN";
+    status.textContent = "Cambios pendientes de guardar…";
+
+    clearTimeout(timer);
+    timer = setTimeout(() => guardar(),600);
+});
+
+document.getElementById("save").addEventListener("click",() => {
+    clearTimeout(timer);
+    guardar(true);
+});
+
+/* IMPRESIÓN */
+document.getElementById("print").addEventListener("click",() => {
+    clearTimeout(timer);
+    guardar();
+    window.print();
+});
+
+/* DESCARGAR DATOS */
+document.getElementById("export").addEventListener("click",() => {
+    const contenido = JSON.stringify(obtenerDatos(),null,2);
+    const archivo = new Blob([contenido],{
+        type:"application/json;charset=utf-8"
+    });
+
+    const url = URL.createObjectURL(archivo);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "NASER-POSN03-F1.json";
+
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+
+    setTimeout(() => URL.revokeObjectURL(url),1000);
+    status.textContent = "Se descargaron los datos del registro.";
+});
+
+/* LIMPIAR FORMULARIO */
+document.getElementById("clear").addEventListener("click",() => {
+    if(!confirm("¿Desea borrar el borrador y limpiar todos los campos?")){
+        return;
+    }
+
+    clearTimeout(timer);
+
+    try{
+        localStorage.removeItem(storageKey);
+    }catch(error){
+        status.textContent =
+            "No se pudo borrar el borrador del navegador. Los campos no fueron modificados.";
+        return;
+    }
+
+    form.reset();
+    actualizarIndicadores();
+    badge.textContent = "EN EDICIÓN";
+    status.textContent = "Formulario limpio. Documento en edición.";
+});
+
+/* NAVEGACIÓN */
+document.querySelectorAll(".nav-link").forEach(link => {
+    link.addEventListener("click",() => {
+        document.querySelectorAll(".nav-link").forEach(item => {
+            item.classList.toggle("active",item === link);
+        });
+    });
+});
+
+/* INICIO */
+renderControles();
+recuperar();
+actualizarIndicadores();
+</script>
+</body>
+</html>

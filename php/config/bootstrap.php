@@ -2,7 +2,7 @@
 require_once __DIR__ . '/schema_modulos.php';
 
 // Cambiar este numero cada vez que se agregan tablas/columnas en schema_modulos.php
-const NASER_SCHEMA_VERSION = '2026.10.02-3';
+const NASER_SCHEMA_VERSION = '2026.10.07-1';
 
 function hasColumn(PDO $pdo, string $table, string $column): bool
 {
@@ -423,6 +423,25 @@ function naser_bootstrap(PDO $pdo): void
         DEFAULT CHARSET=utf8mb4
         COLLATE=utf8mb4_unicode_ci
     ");
+    // Ampliar el listado POSN08-F2 sin perder operaciones existentes.
+    $operationColumns = [
+        'fecha' => 'DATE NULL',
+        'equipo' => 'TEXT NULL',
+        'operador' => 'TEXT NULL',
+        'pozo' => 'TEXT NULL',
+        'tareas' => 'TEXT NULL',
+        'servicios_adicionales' => 'TEXT NULL',
+        'ecp' => 'TEXT NULL',
+        'equipo_izaje' => 'TEXT NULL',
+        'estado_operacion' => 'VARCHAR(40) NULL',
+        'herramientas_pesca' => 'TEXT NULL',
+        'observaciones' => 'TEXT NULL',
+    ];
+    foreach ($operationColumns as $column => $definition) {
+        if (!hasColumn($pdo, 'operaciones', $column)) {
+            $pdo->exec("ALTER TABLE operaciones ADD COLUMN `$column` $definition");
+        }
+    }
 
 
     /*

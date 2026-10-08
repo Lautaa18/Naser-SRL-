@@ -10,7 +10,8 @@ $uidD=(int)$_SESSION['usuario_id'];
 $aprobables=array_values(array_filter($ids,fn($i)=>puedeAprobarSector($pdo,$i)));
 $pendAprobar=[];
 if($aprobables){$st=$pdo->query("SELECT r.id,r.formulario,r.referencia,r.enviado_en,u.nombre autor FROM formularios_registros r LEFT JOIN usuarios u ON u.id=r.enviado_por WHERE r.estado='enviado' AND r.sector_id IN (".implode(',',$aprobables).") ORDER BY r.enviado_en LIMIT 8");$pendAprobar=$st->fetchAll();}
-$st=$pdo->prepare("SELECT id,formulario,referencia,estado,actualizado_en,comentario_revision FROM formularios_registros WHERE creado_por=? AND estado IN ('borrador','rechazado') ORDER BY estado='rechazado' DESC, actualizado_en DESC LIMIT 8");$st->execute([$uidD]);$misPendientes=$st->fetchAll();
+$misPendientes=[];
+if($ids){$ph=implode(',',array_fill(0,count($ids),'?'));$st=$pdo->prepare("SELECT id,formulario,referencia,estado,actualizado_en,comentario_revision FROM formularios_registros WHERE creado_por=? AND sector_id IN ($ph) AND estado IN ('borrador','rechazado') ORDER BY estado='rechazado' DESC, actualizado_en DESC LIMIT 8");$st->execute([$uidD,...$ids]);$misPendientes=$st->fetchAll();}
 $verHab=puedeVerHabilitaciones($pdo);
 $vencs=array_slice(array_values(array_filter(vencimientosProximos($pdo,30,$ids),fn($v)=>$v['origen']!=='emp'||$verHab)),0,10);
 $porSector=[];
@@ -19,10 +20,10 @@ $maxSector=max([1]+array_values($porSector));
 $totAprobados=0;if($ids){$totAprobados=(int)$pdo->query("SELECT COUNT(*) FROM formularios_registros WHERE estado='aprobado' AND sector_id IN (".implode(',',$ids).")")->fetchColumn();}
 $catD=formulariosCatalogo(); $infoD=sectoresInfo($pdo);
 $galeria=[
- ['Trabajador','trabajador-slickline.jpeg','equipos/trabajador.php','Personal operativo y documentación asociada'],
- ['Camión Slickline','Camion-Naser.png','equipos/camion-slickline.php','Unidad de Slickline, controles e inspecciones'],
- ['Unidad Liviana','Unidad-liviana.png','equipos/unidad-liviana.php','Documentación de vehículos livianos'],
- ['Hidrogrúa','Hidrogrua.jpeg','equipos/hidrogrua.php','Registros, inspecciones y documentación']
+ ['Trabajador','trabajador-slickline.jpeg','equipos/trabajador.php#formularios','Ingreso, entrega de EPP, formación y seguridad'],
+ ['Camión Slickline','Camion-Naser.png','equipos/camion-slickline.php#formularios','Control de Slickline, herramientas y registros operativos'],
+ ['Unidad Liviana','Unidad-liviana.png','equipos/unidad-liviana.php#formularios','Acceso a locación, riesgos y seguridad de los traslados'],
+ ['Hidrogrúa','Hidrogrua.jpeg','equipos/hidrogrua.php#formularios','Evaluación de riesgos, visitas de equipo y registros']
 ];
 ?><!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Panel principal | NASER SGI</title><link rel="stylesheet" href="<?=asset('/style.css')?>"></head><body><div class="app"><?php sidebar($pdo,'inicio');?><main class="content">
 <header class="topbar"><div><p class="eyebrow">SERVICIOS NASER SRL</p><h1>Panel principal</h1><p>Gestión centralizada de documentación, sectores y operaciones.</p></div><div class="top-actions"><span class="status"><i></i>Sistema activo</span><span class="user-chip"><?=h($_SESSION['nombre'])?></span></div></header>
@@ -47,7 +48,7 @@ $galeria=[
   </div>
 </section>
 
-<section class="fleet-panel"><div class="section-head"><div><p class="eyebrow">ACCESOS DIRECTOS</p><h2>Flota y equipamiento operativo</h2><p>Ingresá a las fichas de recursos para consultar documentación e información asociada.</p></div></div><div class="fleet-images"><?php foreach($galeria as [$titulo,$img,$url,$desc]):?><a class="fleet-card" href="<?=app_url('/php/'.$url)?>"><div class="fleet-image"><img src="<?=app_url('/img/'.$img)?>" alt="<?=h($titulo)?>"></div><div class="fleet-card-body"><h3><?=h($titulo)?></h3><p><?=h($desc)?></p><span>Ver módulo →</span></div></a><?php endforeach;?></div></section>
+<section class="fleet-panel"><div class="section-head"><div><p class="eyebrow">ACCESOS DIRECTOS</p><h2>Personal, flota y equipamiento</h2><p>Seleccioná una imagen para completar sus formularios o consultar registros y documentación.</p></div></div><div class="fleet-images"><?php foreach($galeria as [$titulo,$img,$url,$desc]):?><a class="fleet-card" href="<?=h(app_url('/php/'.$url))?>"><div class="fleet-image"><img src="<?=app_url('/img/'.$img)?>" alt="<?=h($titulo)?>" loading="lazy"></div><div class="fleet-card-body"><h3><?=h($titulo)?></h3><p><?=h($desc)?></p><span>Ver formularios →</span></div></a><?php endforeach;?></div></section>
 <section class="policy-panel"><p class="eyebrow">INFORMACIÓN GENERAL</p><h2>Política de Calidad, Ambiente, Seguridad y Salud</h2><p>El sistema concentra la información necesaria para acompañar las operaciones de Slickline, Well Testing y Flow Back, con foco en seguridad, calidad, ambiente y mejora continua.</p><div class="policy-grid"><span>✓ Mejora continua</span><span>✓ Cumplimiento legal y normativo</span><span>✓ Prevención de incidentes</span><span>✓ Trabajo seguro y saludable</span></div></section>
 <div class="section-head"><div><p class="eyebrow">GESTIÓN CENTRALIZADA</p><h2>Sectores habilitados</h2></div></div><section class="sector-grid"><?php foreach($sectores as $s):?><article class="sector-card"><div class="sector-code"><?=h(strtoupper(substr($s['nombre'],0,2)))?></div><h3><?=h($s['nombre'])?></h3><p>Carpetas, documentación y procedimientos del sector.</p><div class="card-links"><a href="<?=app_url('/php/sector.php?sector='.urlencode($s['slug']))?>">Abrir sector →</a></div></article><?php endforeach;?></section>
 </main></div></body></html>

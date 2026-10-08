@@ -1,0 +1,344 @@
+/* Adaptación compartida de los documentos dentro del sistema NASER.
+   Se carga después del estilo propio de cada formulario. Las reglas de
+   pantalla no alteran el diseño de impresión definido en cada documento. */
+@media screen {
+  html:has(body.naser-embedded) {
+    height: auto;
+    min-height: 0;
+  }
+
+  body.naser-embedded {
+    margin: 0;
+    min-width: 0;
+    min-height: 0;
+    height: auto;
+    background: #f4f6f5;
+    overflow-wrap: break-word;
+  }
+
+  body.naser-embedded,
+  body.naser-embedded * {
+    box-sizing: border-box;
+  }
+
+  body.naser-embedded :is(.sidebar, .sidebar-overlay, #sidebarOverlay, #overlay,
+    .menu-btn, .menu-toggle, .mobile-menu, .sidebar-toggle, #menuToggle, #menuBtn, #toggleSidebar) {
+    display: none !important;
+  }
+
+  body.naser-embedded :is(.app, .main, .main-content, #mainContent),
+  body.naser-embedded > main {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    min-height: 0;
+    height: auto;
+    margin-left: 0;
+  }
+
+  body.naser-embedded .app {
+    display: block;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  body.naser-embedded :is(.page, .content, .container, .contenedor) {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  body.naser-embedded .contenedor {
+    width: 100%;
+    margin: 0 auto;
+    padding: 24px;
+  }
+
+  body.naser-embedded :is(.topbar, .top, .hero, .hero-inner, .hero-left,
+    .section-header, .section-head, .section-heading, .card-header, .card-head,
+    .document-header, .content-header, .block-header, .toolbar, .table-tools,
+    .footer, .form-footer, .actions) {
+    min-width: 0;
+  }
+
+  body.naser-embedded :is(.hero-content, .hero-inner > *, .hero-left > *,
+    .topbar-left, .topbar-right, .document-title, .section-title, .card-title,
+    .check-text, .field, .campo, .form-group, .form-control) {
+    min-width: 0;
+  }
+
+  body.naser-embedded :is(.form-grid, .form-grid-2, .grid, .grid-2,
+    .grid-3, .grid-4, .general-grid, .context-grid, .evaluation-grid,
+    .inline-grid, .signature-grid, .signatures, .week-grid, .equipment-grid,
+    .summary-grid, .top-grid, .detail-inputs, .training-grid, .detail-grid) > * {
+    min-width: 0;
+  }
+
+  body.naser-embedded :is(.stats, .metrics, .summary-grid) > * {
+    min-width: 0;
+  }
+
+  body.naser-embedded :is(h1, h2, h3, p, .breadcrumb, .badge, .hero-code,
+    .document-code, .document-meta, .rev, .status) {
+    overflow-wrap: anywhere;
+  }
+
+  body.naser-embedded :is(.topbar, .top, .hero-inner, .hero-left,
+    .toolbar, .table-tools, .footer, .form-footer, .actions) {
+    flex-wrap: wrap;
+  }
+
+  body.naser-embedded :is(.hero-number, .card-number, .card-numero,
+    .card-num, .document-number, .section-number) {
+    flex-shrink: 0;
+  }
+
+  /* La anchura de las planillas se conserva dentro de una región local. */
+  body.naser-embedded :is(.naser-table-scroll, .table-wrap, .table-wrapper,
+    .table-container, .tabla-contenedor, .items-wrap, .material-wrap,
+    .eval-wrap, .scroll, .diagram-wrapper) {
+    min-width: 0;
+    max-width: 100%;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  body.naser-embedded .naser-table-scroll:focus-visible {
+    outline: 3px solid #08783e;
+    outline-offset: -3px;
+  }
+
+  body.naser-embedded :is(input, select, textarea) {
+    max-width: 100%;
+  }
+
+  /* Las opciones segmentadas mantienen el input accesible sin crear un
+     control invisible del ancho del viewport fuera de su grupo. */
+  body.naser-embedded .segmented {
+    position: relative;
+  }
+
+  body.naser-embedded .segmented input:is([type=radio], [type=checkbox]) {
+    width: 1px;
+    height: 1px;
+    min-width: 0;
+    min-height: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    clip-path: inset(50%);
+    overflow: hidden;
+  }
+
+  body.naser-embedded :is(input, select, textarea, button, a):focus-visible {
+    outline: 2px solid #08783e;
+    outline-offset: 2px;
+  }
+
+  body.naser-embedded :is(button, .btn, .file-button) {
+    touch-action: manipulation;
+    white-space: normal;
+  }
+
+  body.naser-embedded img {
+    max-width: 100%;
+  }
+}
+
+@media screen and (max-width: 900px) {
+  body.naser-embedded :is(.page, .content, .container, .contenedor) {
+    padding: 18px;
+  }
+
+  body.naser-embedded .topbar {
+    position: static;
+    padding: 16px 18px;
+  }
+
+  body.naser-embedded :is(.hero, .hero-inner) {
+    gap: 16px;
+  }
+
+  body.naser-embedded :is(.grid-3, .grid-4, .general-grid, .context-grid,
+    .evaluation-grid, .inline-grid) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  body.naser-embedded .client-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media screen and (max-width: 650px) {
+  body.naser-embedded :is(.page, .content, .container, .contenedor) {
+    padding: 12px;
+  }
+
+  body.naser-embedded > main:not(.main) {
+    padding: 16px;
+  }
+
+  body.naser-embedded :is(.topbar, .top) {
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  body.naser-embedded .hero {
+    padding: 24px 18px;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+
+  body.naser-embedded :is(.hero h1, .hero h2) {
+    font-size: clamp(22px, 6vw, 28px);
+    line-height: 1.2;
+  }
+
+  body.naser-embedded .stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  body.naser-embedded :is(.hero-code, .document-code, .badge, .rev) {
+    min-width: 0;
+    max-width: 100%;
+    white-space: normal;
+  }
+
+  body.naser-embedded :is(.document-body, .card-body, .section-body,
+    .section-content, .block-body) {
+    padding: 14px;
+  }
+
+  body.naser-embedded :is(.document-header, .card-header, .card-head,
+    .section-header, .section-heading, .block-header, .content-header) {
+    gap: 10px;
+    padding: 14px;
+  }
+
+  /* Los campos cambian de columnas, no de orden ni de función. */
+  body.naser-embedded :is(.form-grid, .form-grid-2, .grid, .grid-2,
+    .grid-3, .grid-4, .general-grid, .context-grid, .evaluation-grid,
+    .inline-grid, .signature-grid, .signatures, .week-grid, .equipment-grid,
+    .dual-layout, .cause-grid, .summary-grid, .iso-grid, .check-extra .form-grid) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  body.naser-embedded :is(.form-grid, .grid, .grid-2, .grid-3, .grid-4,
+    .general-grid, .context-grid, .evaluation-grid, .inline-grid) > *,
+  body.naser-embedded :is(.span2, .span3, .span4, .span-2, .span-3,
+    .col-2, .col-3, .col-4, .field.two, .form-group.full, .campo.full) {
+    grid-column: auto;
+  }
+
+  body.naser-embedded :is(.form-grid, .grid, .grid-2, .grid-3, .grid-4)
+    > [style*="grid-column"] {
+    grid-column: auto !important;
+  }
+
+  body.naser-embedded .signatures .signature {
+    border-right: 0;
+    border-bottom: 1px solid #333;
+  }
+
+  body.naser-embedded .signatures .signature:last-child {
+    border-bottom: 0;
+  }
+
+  body.naser-embedded :is(.toolbar, .table-tools, .footer, .form-footer) {
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  body.naser-embedded :is(.top-actions, .topbar-right, .actions,
+    .actions-left, .actions-right, .footer-buttons) {
+    max-width: 100%;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  body.naser-embedded :is(.actions, .footer-buttons) > .btn {
+    flex: 1 1 145px;
+  }
+
+  body.naser-embedded :is(button, .btn, .file-button, .choice,
+    .option-check, .checkbox-cell label) {
+    min-height: 44px;
+  }
+
+  body.naser-embedded .choice span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+  }
+
+  body.naser-embedded :is(.remove, .remove-btn, .delete-btn,
+    .row-actions button) {
+    min-width: 44px;
+    min-height: 44px;
+    width: auto;
+    height: auto;
+  }
+
+  body.naser-embedded input:not([type=checkbox]):not([type=radio]):not([type=hidden]),
+  body.naser-embedded select,
+  body.naser-embedded textarea {
+    min-height: 44px;
+    font-size: 16px;
+  }
+
+  body.naser-embedded :is(.field, .campo, .form-group) label {
+    font-size: 12px;
+    line-height: 1.4;
+  }
+
+  /* Bloques antiguos: sus selectores por ID necesitan igual especificidad. */
+  body.naser-embedded :is(#naser-check-ingreso, #naser-formacion-form,
+    #naser-epp-form, #naser-trabajadores) :is(.body, .panel) {
+    padding: 12px;
+  }
+
+  body.naser-embedded :is(#naser-check-ingreso, #naser-formacion-form,
+    #naser-epp-form, #naser-trabajadores) .hero {
+    padding: 22px 16px;
+  }
+
+  body.naser-embedded :is(#naser-check-ingreso, #naser-formacion-form,
+    #naser-epp-form, #naser-trabajadores) .hero h2 {
+    font-size: 24px;
+    line-height: 1.2;
+  }
+
+  body.naser-embedded :is(#naser-check-ingreso, #naser-formacion-form,
+    #naser-epp-form, #naser-trabajadores) :is(.top-grid, .grid, .check-row,
+    .detail-summary, .progress-wrap, .detail-inputs.two, .detail-inputs.three,
+    .company-box, .form-grid, .training-grid, .detail-grid, .toolbar, .mini) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  body.naser-embedded :is(#naser-check-ingreso, #naser-formacion-form,
+    #naser-epp-form, #naser-trabajadores) :is(.span2, .span4) {
+    grid-column: auto;
+  }
+
+  body.naser-embedded :is(#naser-check-ingreso, #naser-formacion-form,
+    #naser-epp-form, #naser-trabajadores) input:not([type=checkbox]):not([type=radio]):not([type=hidden]),
+  body.naser-embedded :is(#naser-check-ingreso, #naser-formacion-form,
+    #naser-epp-form, #naser-trabajadores) :is(select, textarea) {
+    min-height: 44px;
+    height: auto;
+    font-size: 16px;
+  }
+
+  body.naser-embedded :is(#naser-check-ingreso, #naser-formacion-form,
+    #naser-epp-form, #naser-trabajadores) button {
+    min-height: 44px;
+    white-space: normal;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.naser-embedded :is(.progress-bar, .sidebar) {
+    transition: none;
+  }
+}

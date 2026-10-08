@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NASER | Registro de Control de Generador</title>
+
+<style>
+:root{
+    --green:#009b49;
+    --green-dark:#007a3a;
+    --green-light:#e8f6ee;
+    --bg:#f2f3f5;
+    --border:#d9dde3;
+    --text:#15191e;
+    --muted:#69717c;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+    font-family:Arial,Helvetica,sans-serif;
+    background:var(--bg);
+    color:var(--text);
+}
+button,input,textarea{font:inherit}
+
+/* MENÚ */
+.sidebar{
+    position:fixed;
+    inset:0 auto 0 0;
+    width:280px;
+    background:#101010;
+    color:#fff;
+    border-right:1px solid #292929;
+}
+.brand{
+    height:120px;
+    display:flex;
+    align-items:center;
+    padding:0 34px;
+    border-bottom:1px solid #292929;
+    font-size:34px;
+    font-weight:900;
+    letter-spacing:4px;
+}
+.sidebar-section{padding:28px 0}
+.sidebar-label{
+    padding:0 30px 14px;
+    color:#818b97;
+    font-size:12px;
+    letter-spacing:1.2px;
+}
+.nav-link{
+    display:flex;
+    align-items:center;
+    gap:15px;
+    min-height:58px;
+    padding:0 26px;
+    color:#e6e6e6;
+    text-decoration:none;
+    border-left:4px solid transparent;
+}
+.nav-link.active{
+    background:#191919;
+    border-left-color:var(--green);
+}
+.nav-number{
+    color:#00bd5a;
+    font-weight:800;
+    font-size:18px;
+}
+.main{margin-left:280px}
+
+/* ENCABEZADO */
+.topbar{
+    min-height:90px;
+    padding:20px 35px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:20px;
+    background:#fff;
+    border-bottom:1px solid var(--border);
+}
+.breadcrumb{font-size:14px;color:var(--muted)}
+.top-actions{display:flex;gap:10px;flex-wrap:wrap}
+.badge{
+    padding:10px 15px;
+    border-radius:8px;
+    font-size:12px;
+    font-weight:800;
+}
+.badge-edit{background:#eef0f2;color:#59616c}
+.badge-document{
+    background:var(--green-light);
+    color:var(--green-dark);
+}
+.page{padding:35px}
+.hero{
+    position:relative;
+    overflow:hidden;
+    min-height:195px;
+    display:flex;
+    align-items:center;
+    padding:38px 42px;
+    border-radius:15px;
+    background:linear-gradient(110deg,#101010,#202020);
+    color:#fff;
+}
+.hero::after{
+    content:"";
+    position:absolute;
+    width:310px;
+    height:310px;
+    right:-90px;
+    top:-135px;
+    border-radius:50%;
+    background:rgba(0,155,73,.18);
+}
+.hero-content{position:relative;z-index:1}
+.hero-kicker{
+    color:#00c65e;
+    font-size:12px;
+    font-weight:800;
+    letter-spacing:2px;
+    margin-bottom:14px;
+}
+.hero h1{
+    font-size:34px;
+    line-height:1.2;
+    margin-bottom:15px;
+}
+.hero p{
+    font-size:14px;
+    line-height:1.7;
+    color:#e6e8eb;
+}
+
+/* INDICADORES */
+.stats{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:14px;
+    margin:24px 0;
+}
+.stat{
+    padding:20px;
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:11px;
+}
+.stat-label{
+    display:block;
+    color:var(--muted);
+    font-size:11px;
+    font-weight:700;
+    text-transform:uppercase;
+    margin-bottom:10px;
+}
+.stat-value{font-size:28px;font-weight:900}
+.green{color:var(--green)}
+
+/* DOCUMENTO */
+.document-card{
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:14px;
+    margin-bottom:24px;
+    overflow:hidden;
+    box-shadow:0 8px 28px rgba(16,24,40,.05);
+    scroll-margin-top:20px;
+}
+.document-header{
+    display:flex;
+    align-items:center;
+    gap:17px;
+    padding:23px 27px;
+    border-bottom:1px solid var(--border);
+}
+.document-number{
+    width:50px;
+    height:50px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-shrink:0;
+    background:#111;
+    color:#00c45e;
+    font-size:18px;
+    font-weight:900;
+    border-radius:9px;
+}
+.document-title h2{font-size:20px;margin-bottom:5px}
+.document-title p{font-size:13px;color:var(--muted)}
+.document-body{padding:27px}
+.info{
+    padding:18px 20px;
+    margin-bottom:20px;
+    border:1px solid var(--border);
+    border-left:4px solid var(--green);
+    border-radius:8px;
+    background:#fafbfc;
+    color:#59616c;
+    font-size:13px;
+    line-height:1.7;
+}
+.info strong{color:var(--green-dark)}
+.toolbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:15px;
+    margin-bottom:18px;
+}
+.toolbar p{
+    color:var(--muted);
+    font-size:13px;
+    line-height:1.6;
+}
+
+/* TABLA */
+.table-container{
+    overflow:auto;
+    max-height:740px;
+    border:1px solid var(--border);
+    border-radius:10px;
+}
+.data-table{
+    width:100%;
+    min-width:1550px;
+    table-layout:fixed;
+    border-collapse:separate;
+    border-spacing:0;
+}
+.data-table thead th{
+    position:sticky;
+    top:0;
+    z-index:3;
+    background:#151515;
+    color:#fff;
+    padding:16px 8px;
+    border-right:1px solid #343434;
+    border-bottom:3px solid var(--green);
+    text-align:center;
+    font-size:11px;
+    line-height:1.5;
+}
+.column-title{display:block;font-weight:800}
+.column-reference{
+    display:block;
+    margin-top:8px;
+    color:#6ee0a3;
+    font-size:12px;
+    font-weight:800;
+}
+.data-table td{
+    padding:8px;
+    border-right:1px solid var(--border);
+    border-bottom:1px solid var(--border);
+    background:#fff;
+    vertical-align:top;
+}
+.data-table tbody tr:nth-child(even) td{background:#fafbfc}
+.data-table tbody tr:hover td{background:#f1f8f4}
+.data-table th:last-child,.data-table td:last-child{border-right:0}
+.data-table tbody tr:last-child td{border-bottom:0}
+.table-input{
+    display:block;
+    width:100%;
+    min-width:0;
+    padding:10px 7px;
+    border:1px solid #d4d9df;
+    border-radius:6px;
+    background:#fff;
+    color:var(--text);
+    font-size:12px;
+}
+textarea.table-input{
+    min-height:39px;
+    resize:vertical;
+    line-height:1.5;
+}
+.table-input:focus{
+    outline:none;
+    border-color:var(--green);
+    box-shadow:0 0 0 3px rgba(0,155,73,.1);
+}
+.date-column{width:145px}
+.hours-column{width:150px}
+.filter-column{width:130px}
+.fluid-column{width:130px}
+.comments-column{width:230px}
+.signature-column{width:180px}
+.action-column{width:65px}
+.data-table .date-sticky{
+    position:sticky;
+    left:0;
+    z-index:2;
+    box-shadow:3px 0 5px rgba(0,0,0,.04);
+}
+.data-table thead .date-sticky{z-index:4}
+.delete-btn{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:32px;
+    height:36px;
+    margin:auto;
+    border:0;
+    border-radius:7px;
+    background:#fff0f1;
+    color:#c52335;
+    font-size:21px;
+    cursor:pointer;
+}
+.delete-btn:hover{background:#ffe0e4}
+.print-value{display:none}
+
+/* ACCIONES */
+.footer{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:18px;
+}
+.status{
+    font-size:12px;
+    color:var(--muted);
+    line-height:1.7;
+}
+.actions{display:flex;gap:9px;flex-wrap:wrap}
+.btn{
+    border:0;
+    border-radius:8px;
+    min-height:42px;
+    padding:10px 16px;
+    font-size:12px;
+    font-weight:800;
+    cursor:pointer;
+}
+.btn-green{background:var(--green);color:#fff}
+.btn-green:hover{background:var(--green-dark)}
+.btn-dark{background:#181818;color:#fff}
+.btn-light{background:#e9ecef;color:#4a525d}
+button:focus-visible,a:focus-visible,.table-container:focus-visible{
+    outline:3px solid var(--green);
+    outline-offset:3px;
+}
+.print-heading{display:none}
+
+@media(max-width:1200px){
+    .sidebar{width:240px}
+    .main{margin-left:240px}
+}
+@media(max-width:800px){
+    .sidebar{position:relative;width:100%}
+    .brand{height:80px;font-size:28px}
+    .sidebar-section{padding:15px 0}
+    .nav-link{min-height:45px;font-size:14px}
+    .main{margin-left:0}
+    .topbar{
+        padding:18px;
+        align-items:flex-start;
+        flex-direction:column;
+    }
+    .page{padding:18px}
+    .hero{padding:28px 23px}
+    .hero h1{font-size:26px}
+    .stats{gap:10px}
+    .stat{padding:14px}
+    .stat-label{font-size:10px}
+    .stat-value{font-size:24px}
+    .document-header{padding:20px 16px}
+    .document-title h2{font-size:18px}
+    .document-body{padding:16px}
+    .toolbar{
+        align-items:flex-start;
+        flex-direction:column;
+    }
+    .footer{align-items:stretch;flex-direction:column}
+    .actions .btn{flex:1}
+    .table-container{max-height:650px}
+}
+
+/* IMPRESIÓN */
+@media print{
+    @page{size:A4 landscape;margin:10mm}
+    body{background:#fff}
+    .sidebar,.topbar,.hero,.stats,.footer,
+    .info,.toolbar,.action-column,.action-cell{
+        display:none!important;
+    }
+    .main{margin:0}
+    .page,.document-body{padding:0}
+    .print-heading{
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        gap:12px;
+        border:2px solid #111;
+        padding:12px;
+        margin-bottom:12px;
+    }
+    .print-heading strong{font-size:20px}
+    .print-heading h1{font-size:14px;text-align:center}
+    .print-heading span{font-size:10px;white-space:nowrap}
+    .document-card{
+        border:0;
+        border-radius:0;
+        box-shadow:none;
+        margin:0;
+        overflow:visible;
+    }
+    .document-header{display:none}
+    .table-container{
+        max-height:none;
+        overflow:visible;
+        border:0;
+        border-radius:0;
+    }
+    .data-table{
+        min-width:0;
+        width:100%;
+        border-collapse:collapse;
+        font-size:9px;
+    }
+    .data-table thead{display:table-header-group}
+    .data-table thead th{
+        position:static;
+        padding:6px 3px;
+        border:1px solid #111;
+        background:#fff;
+        color:#111;
+        font-size:8px;
+    }
+    .column-reference{
+        color:#111;
+        font-size:8px;
+        margin-top:4px;
+    }
+    .data-table td{
+        border:1px solid #111;
+        padding:5px 3px;
+        background:#fff!important;
+        min-height:20px;
+    }
+    .data-table th:last-child,.data-table td:last-child{
+        border-right:1px solid #111;
+    }
+    .data-table tbody tr:last-child td{
+        border-bottom:1px solid #111;
+    }
+    .data-table .date-sticky{
+        position:static;
+        box-shadow:none;
+    }
+    .date-column{width:9%}
+    .hours-column{width:12%}
+    .filter-column{width:10%}
+    .fluid-column{width:9%}
+    .comments-column{width:13%}
+    .signature-column{width:8%}
+    .data-table tr{break-inside:avoid}
+    .table-input{display:none}
+    .print-value{
+        display:block;
+        min-height:13px;
+        font-size:9px;
+        white-space:pre-wrap;
+        overflow-wrap:anywhere;
+    }
+}
+</style>
+</head>
+
+<body>
+<aside class="sidebar">
+    <div class="brand">NASER</div>
+
+    <nav class="sidebar-section" aria-label="Secciones del documento">
+        <div class="sidebar-label">DOCUMENTO</div>
+        <a href="#registro" class="nav-link active">
+            <span class="nav-number">01</span>
+            <span>Control de generador</span>
+        </a>
+    </nav>
+</aside>
+
+<main class="main">
+    <header class="topbar">
+        <div class="breadcrumb">
+            NASER / Mantenimiento / Control de Generador
+        </div>
+
+        <div class="top-actions">
+            <span class="badge badge-edit" id="badgeEstado">
+                EN EDICIÓN
+            </span>
+            <span class="badge badge-document">
+                POSN03-F4 · Rev.01 Jun.25
+            </span>
+        </div>
+    </header>
+
+    <div class="page">
+        <div class="print-heading">
+            <strong>NASER</strong>
+            <h1>REGISTRO DE CONTROL DE GENERADOR</h1>
+            <span>POSN03-F4<br>Rev.01 Jun.25</span>
+        </div>
+
+        <section class="hero">
+            <div class="hero-content">
+                <div class="hero-kicker">CONTROL Y MANTENIMIENTO</div>
+                <h1>Registro de Control de Generador</h1>
+                <p>
+                    Registro de horas acumuladas, filtros, aceite,
+                    refrigerante, comentarios y firma del responsable.
+                </p>
+            </div>
+        </section>
+
+        <div class="stats">
+            <div class="stat">
+                <span class="stat-label">Filas disponibles</span>
+                <span class="stat-value" id="totalFilas">0</span>
+            </div>
+
+            <div class="stat">
+                <span class="stat-label">Registros cargados</span>
+                <span class="stat-value green" id="totalRegistros">0</span>
+            </div>
+
+            <div class="stat">
+                <span class="stat-label">Registros con firma</span>
+                <span class="stat-value" id="totalFirmas">0</span>
+            </div>
+        </div>
+
+        <form id="formulario" autocomplete="off">
+            <section class="document-card" id="registro">
+                <div class="document-header">
+                    <span class="document-number">01</span>
+                    <div class="document-title">
+                        <h2>Control de generador</h2>
+                        <p>Registro editable de las intervenciones realizadas.</p>
+                    </div>
+                </div>
+
+                <div class="document-body">
+                    <div class="info">
+                        Complete los datos de cada intervención.
+                        Puede <strong>editar cualquier campo, agregar registros
+                        y eliminar filas</strong>.
+                        En firma, ingrese el nombre o la referencia del responsable.
+                    </div>
+
+                    <div class="toolbar">
+                        <p>Referencias: LF3345 · FF5052 · FS1280 · Aceite 15W40.</p>
+
+                        <button type="button" class="btn btn-green" id="agregar">
+                            + Agregar registro
+                        </button>
+                    </div>
+
+                    <div
+                        class="table-container"
+                        tabindex="0"
+                        role="region"
+                        aria-label="Tabla de control de generador con desplazamiento horizontal"
+                    >
+                        <table class="data-table" aria-label="Registro de control de generador">
+                            <thead>
+                                <tr>
+                                    <th scope="col" class="date-column date-sticky">
+                                        <span class="column-title">FECHA</span>
+                                    </th>
+
+                                    <th scope="col" class="hours-column">
+                                        <span class="column-title">HORAS ACUMULADAS</span>
+                                    </th>
+
+                                    <th scope="col" class="filter-column">
+                                        <span class="column-title">FILTRO DE ACEITE</span>
+                                        <span class="column-reference">LF3345</span>
+                                    </th>
+
+                                    <th scope="col" class="filter-column">
+                                        <span class="column-title">FILTRO DE GAS OIL</span>
+                                        <span class="column-reference">FF5052</span>
+                                    </th>
+
+                                    <th scope="col" class="filter-column">
+                                        <span class="column-title">FILTRO DE GAS OIL</span>
+                                        <span class="column-reference">FS1280</span>
+                                    </th>
+
+                                    <th scope="col" class="filter-column">
+                                        <span class="column-title">FILTRO DE AIRE</span>
+                                    </th>
+
+                                    <th scope="col" class="fluid-column">
+                                        <span class="column-title">ACEITE</span>
+                                        <span class="column-reference">15W40</span>
+                                    </th>
+
+                                    <th scope="col" class="fluid-column">
+                                        <span class="column-title">REFRIGERANTE</span>
+                                    </th>
+
+                                    <th scope="col" class="comments-column">
+                                        <span class="column-title">COMENTARIOS</span>
+                                    </th>
+
+                                    <th scope="col" class="signature-column">
+                                        <span class="column-title">FIRMA</span>
+                                    </th>
+
+                                    <th scope="col" class="action-column">
+                                        Eliminar
+                                    </th>
+                                </tr>
+                            </thead>
+
+                            <tbody id="filas"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <div class="footer">
+                <p class="status" id="estado" role="status" aria-live="polite">
+                    Documento en edición. El borrador se guarda en este navegador.
+                </p>
+
+                <div class="actions">
+                    <button type="button" class="btn btn-light" id="limpiar">
+                        Limpiar
+                    </button>
+
+                    <button type="button" class="btn btn-light" id="descargar">
+                        Descargar datos
+                    </button>
+
+                    <button type="button" class="btn btn-dark" id="imprimir">
+                        Imprimir / PDF
+                    </button>
+
+                    <button type="button" class="btn btn-green" id="guardar">
+                        Guardar borrador
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</main>
+
+<script>
+"use strict";
+
+const CLAVE = "NASER_POSN03_F4_V1";
+const FILAS_INICIALES = 10;
+
+const columnas = [
+    {id:"fecha", etiqueta:"Fecha", tipo:"date"},
+    {id:"horas", etiqueta:"Horas acumuladas", tipo:"text", decimal:true},
+    {id:"filtroAceite", etiqueta:"Filtro de aceite LF3345", tipo:"text"},
+    {id:"filtroGasOilFF5052", etiqueta:"Filtro de gas oil FF5052", tipo:"text"},
+    {id:"filtroGasOilFS1280", etiqueta:"Filtro de gas oil FS1280", tipo:"text"},
+    {id:"filtroAire", etiqueta:"Filtro de aire", tipo:"text"},
+    {id:"aceite", etiqueta:"Aceite 15W40", tipo:"text"},
+    {id:"refrigerante", etiqueta:"Refrigerante", tipo:"text"},
+    {id:"comentarios", etiqueta:"Comentarios", tipo:"textarea"},
+    {id:"firma", etiqueta:"Firma: nombre o referencia del responsable", tipo:"text"}
+];
+
+const formulario = document.getElementById("formulario");
+const cuerpo = document.getElementById("filas");
+const estado = document.getElementById("estado");
+const badge = document.getElementById("badgeEstado");
+
+let temporizador;
+
+/* AGREGAR UNA FILA */
+function agregarFila(datos = {}, enfocar = false){
+    const fila = document.createElement("tr");
+
+    columnas.forEach(columna => {
+        const celda = document.createElement("td");
+
+        if(columna.id === "fecha"){
+            celda.className = "date-sticky";
+        }
+
+        const campo = document.createElement(
+            columna.tipo === "textarea" ? "textarea" : "input"
+        );
+
+        if(columna.tipo === "textarea"){
+            campo.rows = 1;
+        }else{
+            campo.type = columna.tipo;
+        }
+
+        if(columna.decimal){
+            campo.inputMode = "decimal";
+        }
+
+        campo.className = "table-input";
+        campo.dataset.campo = columna.id;
+        campo.setAttribute("aria-label",columna.etiqueta);
+
+        campo.value = typeof datos[columna.id] === "string"
+            ? datos[columna.id]
+            : "";
+
+        const impresion = document.createElement("span");
+        impresion.className = "print-value";
+
+        celda.append(campo,impresion);
+        fila.appendChild(celda);
+    });
+
+    const celdaAccion = document.createElement("td");
+    celdaAccion.className = "action-cell";
+
+    const eliminar = document.createElement("button");
+    eliminar.type = "button";
+    eliminar.className = "delete-btn";
+    eliminar.textContent = "×";
+    eliminar.title = "Eliminar registro";
+    eliminar.setAttribute("aria-label","Eliminar registro");
+
+    eliminar.addEventListener("click",() => {
+        if(!confirm("¿Desea eliminar este registro y sus datos?")){
+            return;
+        }
+
+        const destino = fila.nextElementSibling || fila.previousElementSibling;
+
+        fila.remove();
+        marcarCambio();
+
+        if(destino){
+            destino.querySelector("[data-campo]").focus();
+        }else{
+            document.getElementById("agregar").focus();
+        }
+    });
+
+    celdaAccion.appendChild(eliminar);
+    fila.appendChild(celdaAccion);
+    cuerpo.appendChild(fila);
+
+    if(enfocar){
+        fila.querySelector("[data-campo]").focus();
+    }
+}
+
+/* FILAS INICIALES */
+function crearFilasIniciales(){
+    cuerpo.replaceChildren();
+
+    for(let i = 0; i < FILAS_INICIALES; i++){
+        agregarFila();
+    }
+}
+
+/* OBTENER REGISTROS */
+function obtenerRegistros(){
+    return [...cuerpo.rows].map(fila => {
+        const datos = {};
+
+        fila.querySelectorAll("[data-campo]").forEach(campo => {
+            datos[campo.dataset.campo] = campo.value;
+        });
+
+        return datos;
+    });
+}
+
+function obtenerDatos(){
+    return {
+        codigo:"POSN03-F4",
+        revision:"Rev.01 Jun.25",
+        guardadoEn:new Date().toISOString(),
+        referencias:{
+            filtroAceite:"LF3345",
+            filtroGasOil1:"FF5052",
+            filtroGasOil2:"FS1280",
+            aceite:"15W40"
+        },
+        registros:obtenerRegistros()
+    };
+}
+
+/* INDICADORES */
+function actualizarIndicadores(){
+    const registros = obtenerRegistros();
+
+    const cargados = registros.filter(registro =>
+        Object.values(registro).some(valor => valor.trim() !== "")
+    );
+
+    const conFirma = registros.filter(registro =>
+        registro.firma.trim() !== ""
+    );
+
+    document.getElementById("totalFilas").textContent = registros.length;
+    document.getElementById("totalRegistros").textContent = cargados.length;
+    document.getElementById("totalFirmas").textContent = conFirma.length;
+}
+
+/* GUARDAR */
+function guardar(manual = false){
+    try{
+        localStorage.setItem(CLAVE,JSON.stringify(obtenerDatos()));
+
+        badge.textContent = "BORRADOR GUARDADO";
+        estado.textContent =
+            (manual ? "Borrador guardado. " : "Guardado automático. ") +
+            "Datos almacenados en este navegador · " +
+            new Date().toLocaleTimeString("es-AR");
+    }catch(error){
+        badge.textContent = "SIN GUARDAR";
+        estado.textContent =
+            "No se pudo guardar en este navegador. Descargue los datos para conservarlos.";
+    }
+}
+
+function marcarCambio(){
+    actualizarIndicadores();
+
+    badge.textContent = "EN EDICIÓN";
+    estado.textContent = "Cambios pendientes de guardar…";
+
+    clearTimeout(temporizador);
+    temporizador = setTimeout(() => guardar(),600);
+}
+
+formulario.addEventListener("input",marcarCambio);
+
+formulario.addEventListener("submit",evento => {
+    evento.preventDefault();
+    clearTimeout(temporizador);
+    guardar(true);
+});
+
+document.getElementById("agregar").addEventListener("click",() => {
+    agregarFila({},true);
+    marcarCambio();
+});
+
+document.getElementById("guardar").addEventListener("click",() => {
+    clearTimeout(temporizador);
+    guardar(true);
+});
+
+/* RECUPERAR BORRADOR */
+function recuperar(){
+    try{
+        const raw = localStorage.getItem(CLAVE);
+        if(!raw) return false;
+
+        const datos = JSON.parse(raw);
+
+        if(
+            !datos ||
+            datos.codigo !== "POSN03-F4" ||
+            !Array.isArray(datos.registros) ||
+            !datos.registros.every(registro =>
+                registro !== null &&
+                typeof registro === "object" &&
+                !Array.isArray(registro)
+            )
+        ){
+            throw new Error("Borrador inválido");
+        }
+
+        cuerpo.replaceChildren();
+        datos.registros.forEach(registro => agregarFila(registro));
+
+        badge.textContent = "BORRADOR RECUPERADO";
+        estado.textContent =
+            "Se recuperó el borrador guardado en este navegador.";
+
+        return true;
+    }catch(error){
+        estado.textContent =
+            "No se pudo recuperar el borrador. Puede completar el formulario y descargar los datos.";
+
+        return false;
+    }
+}
+
+/* DESCARGAR DATOS */
+document.getElementById("descargar").addEventListener("click",() => {
+    const archivo = new Blob(
+        [JSON.stringify(obtenerDatos(),null,2)],
+        {type:"application/json;charset=utf-8"}
+    );
+
+    const url = URL.createObjectURL(archivo);
+    const enlace = document.createElement("a");
+
+    enlace.href = url;
+    enlace.download = "NASER-POSN03-F4.json";
+
+    document.body.appendChild(enlace);
+    enlace.click();
+    enlace.remove();
+
+    setTimeout(() => URL.revokeObjectURL(url),1000);
+
+    estado.textContent = "Se descargaron los datos del control de generador.";
+});
+
+/* IMPRESIÓN */
+function prepararImpresion(){
+    cuerpo.querySelectorAll("td").forEach(celda => {
+        const campo = celda.querySelector("[data-campo]");
+        const texto = celda.querySelector(".print-value");
+
+        if(!campo || !texto) return;
+
+        if(campo.type === "date" && campo.value){
+            const [anio,mes,dia] = campo.value.split("-");
+            texto.textContent = dia + "/" + mes + "/" + anio;
+        }else{
+            texto.textContent = campo.value;
+        }
+    });
+}
+
+window.addEventListener("beforeprint",prepararImpresion);
+
+document.getElementById("imprimir").addEventListener("click",() => {
+    clearTimeout(temporizador);
+    guardar();
+    prepararImpresion();
+    window.print();
+});
+
+/* LIMPIAR */
+document.getElementById("limpiar").addEventListener("click",() => {
+    if(!confirm("¿Desea borrar el borrador y limpiar todo el registro?")){
+        return;
+    }
+
+    clearTimeout(temporizador);
+
+    try{
+        localStorage.removeItem(CLAVE);
+    }catch(error){
+        estado.textContent =
+            "No se pudo borrar el borrador del navegador. Los campos no fueron modificados.";
+        return;
+    }
+
+    crearFilasIniciales();
+    actualizarIndicadores();
+
+    badge.textContent = "EN EDICIÓN";
+    estado.textContent = "Formulario limpio. Documento en edición.";
+});
+
+/* INICIO */
+if(!recuperar()){
+    crearFilasIniciales();
+}
+
+actualizarIndicadores();
+</script>
+</body>
+</html>

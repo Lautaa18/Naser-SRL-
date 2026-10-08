@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NASER | Remito</title>
+
+<style>
+:root{
+    --green:#009b49;
+    --green-dark:#007a3a;
+    --green-light:#e8f6ee;
+    --bg:#f2f3f5;
+    --border:#d9dde3;
+    --text:#15191e;
+    --muted:#69717c;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+    font-family:Arial,Helvetica,sans-serif;
+    background:var(--bg);
+    color:var(--text);
+}
+button,input,textarea{font:inherit}
+
+.sidebar{
+    position:fixed;
+    inset:0 auto 0 0;
+    width:270px;
+    background:#101010;
+    color:#fff;
+}
+.brand{
+    height:110px;
+    display:flex;
+    align-items:center;
+    padding:0 30px;
+    border-bottom:1px solid #292929;
+    font-size:32px;
+    font-weight:900;
+    letter-spacing:4px;
+}
+.side-label{
+    padding:28px 30px 14px;
+    color:#818b97;
+    font-size:12px;
+    letter-spacing:1.2px;
+}
+.nav-link{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    min-height:55px;
+    padding:0 24px;
+    color:#fff;
+    text-decoration:none;
+    background:#191919;
+    border-left:4px solid var(--green);
+}
+.nav-number{color:#00bd5a;font-size:18px;font-weight:800}
+.main{margin-left:270px}
+.topbar{
+    min-height:82px;
+    padding:18px 30px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:15px;
+    background:#fff;
+    border-bottom:1px solid var(--border);
+}
+.breadcrumb{font-size:14px;color:var(--muted)}
+.badges{display:flex;gap:9px;flex-wrap:wrap}
+.badge{
+    padding:9px 13px;
+    border-radius:8px;
+    font-size:12px;
+    font-weight:800;
+}
+.badge-state{background:#eef0f2;color:#59616c}
+.badge-code{background:var(--green-light);color:var(--green-dark)}
+.page{padding:30px}
+.hero{
+    position:relative;
+    overflow:hidden;
+    padding:34px 38px;
+    min-height:170px;
+    border-radius:14px;
+    background:linear-gradient(110deg,#101010,#202020);
+    color:white;
+}
+.hero::after{
+    content:"";
+    position:absolute;
+    width:260px;
+    height:260px;
+    right:-70px;
+    top:-115px;
+    border-radius:50%;
+    background:rgba(0,155,73,.18);
+}
+.hero-content{position:relative;z-index:1}
+.kicker{
+    margin-bottom:12px;
+    color:#00c65e;
+    font-size:12px;
+    font-weight:800;
+    letter-spacing:2px;
+}
+.hero h1{font-size:32px;margin-bottom:12px}
+.hero p{font-size:14px;line-height:1.6;color:#e6e8eb}
+.stats{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:13px;
+    margin:20px 0;
+}
+.stat{
+    padding:16px 19px;
+    background:white;
+    border:1px solid var(--border);
+    border-radius:10px;
+}
+.stat-label{
+    display:block;
+    margin-bottom:8px;
+    color:var(--muted);
+    font-size:11px;
+    font-weight:700;
+    text-transform:uppercase;
+}
+.stat-value{font-size:25px;font-weight:900}
+.green{color:var(--green)}
+.card{
+    margin-bottom:22px;
+    overflow:hidden;
+    background:white;
+    border:1px solid var(--border);
+    border-radius:13px;
+    box-shadow:0 7px 24px rgba(16,24,40,.05);
+}
+.card-header{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    padding:19px 23px;
+    border-bottom:1px solid var(--border);
+}
+.card-number{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:44px;
+    height:44px;
+    flex-shrink:0;
+    border-radius:8px;
+    background:#111;
+    color:#00c45e;
+    font-size:16px;
+    font-weight:900;
+}
+.card-header h2{font-size:18px;margin-bottom:4px}
+.card-header p{font-size:12px;color:var(--muted)}
+.card-body{padding:22px}
+.info{
+    margin-bottom:18px;
+    padding:15px 18px;
+    border:1px solid var(--border);
+    border-left:4px solid var(--green);
+    border-radius:8px;
+    background:#fafbfc;
+    color:#59616c;
+    font-size:13px;
+    line-height:1.6;
+}
+.info strong{color:var(--green-dark)}
+.grid{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:14px;
+}
+.field{display:flex;flex-direction:column;gap:6px;min-width:0}
+.field label{
+    color:#59616c;
+    font-size:10px;
+    font-weight:800;
+    text-transform:uppercase;
+}
+.field input,.field textarea{
+    width:100%;
+    padding:10px 11px;
+    border:1px solid #d4d9df;
+    border-radius:7px;
+    background:white;
+    color:var(--text);
+    font-size:13px;
+}
+.field textarea{min-height:65px;resize:vertical}
+.field input:focus,.field textarea:focus,.item-input:focus{
+    outline:none;
+    border-color:var(--green);
+    box-shadow:0 0 0 3px rgba(0,155,73,.09);
+}
+.full{grid-column:1/-1}
+.toolbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:12px;
+    margin-bottom:14px;
+}
+.toolbar p{font-size:12px;color:var(--muted)}
+.items-wrap{overflow:auto;border:1px solid var(--border);border-radius:9px}
+.items{
+    width:100%;
+    min-width:600px;
+    border-collapse:collapse;
+    table-layout:fixed;
+}
+.items th{
+    padding:11px;
+    background:#151515;
+    color:white;
+    border-bottom:3px solid var(--green);
+    text-align:left;
+    font-size:11px;
+}
+.items td{padding:6px;border-bottom:1px solid var(--border)}
+.items tr:last-child td{border-bottom:0}
+.items tbody tr:nth-child(even){background:#fafbfc}
+.items tbody tr:hover{background:#f1f8f4}
+.items th:first-child{width:145px}
+.items th:last-child{width:60px}
+.item-input{
+    width:100%;
+    padding:8px;
+    border:1px solid #d4d9df;
+    border-radius:6px;
+    font-size:12px;
+}
+.item-input.detail{min-height:36px;resize:vertical}
+.remove{
+    width:30px;
+    height:32px;
+    display:block;
+    margin:auto;
+    border:0;
+    border-radius:6px;
+    background:#fff0f1;
+    color:#c52335;
+    cursor:pointer;
+    font-size:20px;
+}
+.remove:hover{background:#ffe0e4}
+.signatures{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    margin-top:35px;
+    border:1px solid #333;
+}
+.signature{
+    display:flex;
+    min-height:95px;
+    flex-direction:column;
+    justify-content:space-between;
+    padding:10px;
+    border-right:1px solid #333;
+    text-align:center;
+    font-size:12px;
+}
+.signature:last-child{border-right:0}
+.signature input{
+    width:100%;
+    border:0;
+    border-bottom:1px solid #999;
+    outline:none;
+    text-align:center;
+    padding:5px;
+    background:transparent;
+}
+.footer{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:15px;
+}
+.status{font-size:12px;color:var(--muted);line-height:1.6}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+.btn{
+    min-height:40px;
+    padding:9px 14px;
+    border:0;
+    border-radius:7px;
+    cursor:pointer;
+    font-size:12px;
+    font-weight:800;
+}
+.btn-green{background:var(--green);color:white}
+.btn-green:hover{background:var(--green-dark)}
+.btn-dark{background:#181818;color:white}
+.btn-light{background:#e9ecef;color:#4a525d}
+button:focus-visible,a:focus-visible{
+    outline:3px solid var(--green);
+    outline-offset:3px;
+}
+.print-heading,.print-value{display:none}
+
+@media(max-width:1000px){
+    .sidebar{width:220px}
+    .main{margin-left:220px}
+    .page{padding:22px}
+}
+@media(max-width:760px){
+    .sidebar{position:relative;width:100%}
+    .brand{height:72px;font-size:27px}
+    .side-label{padding:15px 22px 10px}
+    .nav-link{min-height:43px}
+    .main{margin-left:0}
+    .topbar{padding:16px;align-items:flex-start;flex-direction:column}
+    .page{padding:15px}
+    .hero{padding:26px 22px}
+    .hero h1{font-size:26px}
+    .stats{gap:8px}
+    .stat{padding:12px}
+    .stat-label{font-size:9px}
+    .stat-value{font-size:21px}
+    .card-header{padding:16px}
+    .card-body{padding:15px}
+    .grid{grid-template-columns:1fr}
+    .full{grid-column:auto}
+    .toolbar{align-items:flex-start;flex-direction:column}
+    .footer{align-items:stretch;flex-direction:column}
+    .actions .btn{flex:1}
+    .signatures{margin-top:22px}
+    .signature{min-height:78px;padding:7px;font-size:10px}
+}
+
+@media print{
+    @page{size:A4 portrait;margin:12mm}
+    body{background:white;color:#111}
+    .sidebar,.topbar,.hero,.stats,.footer,.info,.toolbar,.remove{
+        display:none!important;
+    }
+    .main{margin:0}
+    .page,.card-body{padding:0}
+    .print-heading{
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        gap:12px;
+        padding:10px;
+        margin-bottom:10px;
+        border:1px solid #111;
+    }
+    .print-heading strong{font-size:18px}
+    .print-heading h1{font-size:15px}
+    .print-heading span{font-size:9px;text-align:right}
+    .card{
+        overflow:visible;
+        margin:0;
+        border:0;
+        border-radius:0;
+        box-shadow:none;
+    }
+    .card-header{display:none}
+    .grid{gap:8px 12px}
+    .field label{font-size:8px;color:#111}
+    .field input,.field textarea{display:none}
+    .print-value{
+        display:block;
+        min-height:15px;
+        padding:3px 0;
+        border-bottom:1px solid #555;
+        font-size:10px;
+        white-space:pre-wrap;
+        overflow-wrap:anywhere;
+    }
+    .items-wrap{overflow:visible;border:0;border-radius:0}
+    .items{min-width:0;border-collapse:collapse}
+    .items th{
+        padding:6px;
+        border:1px solid #111;
+        background:#d5dbe1;
+        color:#111;
+        font-size:9px;
+    }
+    .items td{
+        height:25px;
+        padding:4px 6px;
+        border:1px solid #111;
+        background:white!important;
+    }
+    .items th:first-child{width:22%}
+    .items th:last-child{display:none}
+    .items td:last-child{display:none}
+    .item-input{display:none}
+    .items .print-value{
+        min-height:15px;
+        border:0;
+        padding:0;
+        font-size:9px;
+    }
+    .signatures{
+        margin-top:36px;
+        border:1px solid #111;
+        break-inside:avoid;
+    }
+    .signature{
+        min-height:85px;
+        border-right:1px solid #111;
+        font-size:10px;
+    }
+    .signature input{
+        display:none;
+    }
+    .signature .print-value{
+        border:0;
+        min-height:15px;
+        font-size:9px;
+    }
+}
+</style>
+</head>
+
+<body>
+<aside class="sidebar">
+    <div class="brand">NASER</div>
+    <div class="side-label">DOCUMENTO</div>
+    <a href="#remito" class="nav-link">
+        <span class="nav-number">01</span>
+        <span>Remito</span>
+    </a>
+</aside>
+
+<main class="main">
+    <header class="topbar">
+        <div class="breadcrumb">NASER / Administración / Remito</div>
+        <div class="badges">
+            <span class="badge badge-state" id="badgeEstado">EN EDICIÓN</span>
+            <span class="badge badge-code">POSN04-F4 · Rev.01 Ago.25</span>
+        </div>
+    </header>
+
+    <div class="page">
+        <div class="print-heading">
+            <strong>NASER</strong>
+            <h1>REMITO</h1>
+            <span>POSN04-F4<br>Rev.01 Ago.25</span>
+        </div>
+
+        <section class="hero">
+            <div class="hero-content">
+                <div class="kicker">DOCUMENTACIÓN DE ENTREGA</div>
+                <h1>Remito</h1>
+                <p>Registro de datos del cliente y elementos remitidos.</p>
+            </div>
+        </section>
+
+        <div class="stats">
+            <div class="stat">
+                <span class="stat-label">N° de remito</span>
+                <span class="stat-value" id="statNumero">—</span>
+            </div>
+            <div class="stat">
+                <span class="stat-label">Renglones disponibles</span>
+                <span class="stat-value" id="statFilas">0</span>
+            </div>
+            <div class="stat">
+                <span class="stat-label">Elementos detallados</span>
+                <span class="stat-value green" id="statItems">0</span>
+            </div>
+        </div>
+
+        <form id="formulario" autocomplete="off">
+            <section class="card" id="remito">
+                <div class="card-header">
+                    <span class="card-number">01</span>
+                    <div>
+                        <h2>Datos del remito</h2>
+                        <p>Complete los datos del destinatario y de la entrega.</p>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="grid">
+                        <div class="field">
+                            <label for="fecha">Fecha</label>
+                            <input id="fecha" name="fecha" type="date">
+                            <span class="print-value"></span>
+                        </div>
+
+                        <div class="field">
+                            <label for="numero">N° de remito</label>
+                            <input id="numero" name="numero" type="text"
+                                   placeholder="000 - 0000">
+                            <span class="print-value"></span>
+                        </div>
+
+                        <div class="field full">
+                            <label for="cliente">Cliente / Proveedor</label>
+                            <input id="cliente" name="cliente" type="text">
+                            <span class="print-value"></span>
+                        </div>
+
+                        <div class="field full">
+                            <label for="domicilio">Domicilio</label>
+                            <input id="domicilio" name="domicilio" type="text">
+                            <span class="print-value"></span>
+                        </div>
+
+                        <div class="field">
+                            <label for="cuit">CUIT</label>
+                            <input id="cuit" name="cuit" type="text">
+                            <span class="print-value"></span>
+                        </div>
+
+                        <div class="field">
+                            <label for="telefono">Teléfono</label>
+                            <input id="telefono" name="telefono" type="tel">
+                            <span class="print-value"></span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="card">
+                <div class="card-header">
+                    <span class="card-number">02</span>
+                    <div>
+                        <h2>Elementos remitidos</h2>
+                        <p>Detalle la cantidad y descripción de cada elemento.</p>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="info">
+                        Se remiten los siguientes elementos. Agregue los renglones
+                        que necesite y complete <strong>cantidad</strong> y
+                        <strong>detalle</strong>.
+                    </div>
+
+                    <div class="toolbar">
+                        <p>Las filas se pueden editar y eliminar.</p>
+                        <button type="button" class="btn btn-green" id="agregar">
+                            + Agregar renglón
+                        </button>
+                    </div>
+
+                    <div class="items-wrap">
+                        <table class="items">
+                            <thead>
+                                <tr>
+                                    <th scope="col">CANTIDAD</th>
+                                    <th scope="col">DETALLE</th>
+                                    <th scope="col">ACCIÓN</th>
+                                </tr>
+                            </thead>
+                            <tbody id="filas"></tbody>
+                        </table>
+                    </div>
+
+                    <div class="signatures">
+                        <div class="signature">
+                            <input name="conductor" aria-label="Nombre del conductor"
+                                   placeholder="Nombre y firma">
+                            <span class="print-value"></span>
+                            <span>Conductor</span>
+                        </div>
+
+                        <div class="signature">
+                            <input name="vehiculo" aria-label="Vehículo"
+                                   placeholder="Identificación del vehículo">
+                            <span class="print-value"></span>
+                            <span>Vehículo</span>
+                        </div>
+
+                        <div class="signature">
+                            <input name="recibiConforme" aria-label="Recibí conforme"
+                                   placeholder="Nombre, aclaración y firma">
+                            <span class="print-value"></span>
+                            <span>Recibí Conforme</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <div class="footer">
+                <p class="status" id="estado" role="status" aria-live="polite">
+                    Documento en edición. El borrador se guarda en este navegador.
+                </p>
+
+                <div class="actions">
+                    <button type="button" class="btn btn-light" id="limpiar">
+                        Limpiar
+                    </button>
+                    <button type="button" class="btn btn-light" id="descargar">
+                        Descargar datos
+                    </button>
+                    <button type="button" class="btn btn-dark" id="imprimir">
+                        Imprimir / PDF
+                    </button>
+                    <button type="button" class="btn btn-green" id="guardar">
+                        Guardar borrador
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</main>
+
+<script>
+"use strict";
+
+const CLAVE = "NASER_POSN04_F4_V1";
+const FILAS_INICIALES = 30;
+const formulario = document.getElementById("formulario");
+const cuerpo = document.getElementById("filas");
+const estado = document.getElementById("estado");
+const badge = document.getElementById("badgeEstado");
+let temporizador;
+
+/* AGREGA UNA FILA DE CANTIDAD Y DETALLE */
+function agregarFila(datos = {}, enfocar = false){
+    const fila = document.createElement("tr");
+
+    const cantidadTd = document.createElement("td");
+    const cantidad = document.createElement("input");
+    cantidad.type = "text";
+    cantidad.inputMode = "decimal";
+    cantidad.className = "item-input";
+    cantidad.dataset.campo = "cantidad";
+    cantidad.setAttribute("aria-label","Cantidad");
+    cantidad.value = typeof datos.cantidad === "string" ? datos.cantidad : "";
+
+    const cantidadPrint = document.createElement("span");
+    cantidadPrint.className = "print-value";
+    cantidadTd.append(cantidad,cantidadPrint);
+
+    const detalleTd = document.createElement("td");
+    const detalle = document.createElement("textarea");
+    detalle.rows = 1;
+    detalle.className = "item-input detail";
+    detalle.dataset.campo = "detalle";
+    detalle.setAttribute("aria-label","Detalle del elemento");
+    detalle.value = typeof datos.detalle === "string" ? datos.detalle : "";
+
+    const detallePrint = document.createElement("span");
+    detallePrint.className = "print-value";
+    detalleTd.append(detalle,detallePrint);
+
+    const accionTd = document.createElement("td");
+    const eliminar = document.createElement("button");
+    eliminar.type = "button";
+    eliminar.className = "remove";
+    eliminar.textContent = "×";
+    eliminar.title = "Eliminar renglón";
+    eliminar.setAttribute("aria-label","Eliminar renglón");
+
+    eliminar.addEventListener("click",() => {
+        if(!confirm("¿Desea eliminar este renglón del remito?")) return;
+
+        fila.remove();
+        marcarCambio();
+
+        const siguiente = cuerpo.querySelector("tr");
+        if(siguiente){
+            siguiente.querySelector("input").focus();
+        }else{
+            document.getElementById("agregar").focus();
+        }
+    });
+
+    accionTd.appendChild(eliminar);
+    fila.append(cantidadTd,detalleTd,accionTd);
+    cuerpo.appendChild(fila);
+
+    if(enfocar) cantidad.focus();
+}
+
+/* INICIA LOS RENGLONES VACÍOS */
+function crearFilasIniciales(){
+    cuerpo.replaceChildren();
+    for(let i=0;i<FILAS_INICIALES;i++) agregarFila();
+}
+
+/* OBTIENE LOS RENGLONES */
+function obtenerItems(){
+    return [...cuerpo.rows].map(fila => ({
+        cantidad:fila.querySelector('[data-campo="cantidad"]').value,
+        detalle:fila.querySelector('[data-campo="detalle"]').value
+    }));
+}
+
+/* REÚNE LOS DATOS */
+function obtenerDatos(){
+    const campos = {};
+
+    formulario.querySelectorAll("[name]").forEach(campo => {
+        if(campo.closest("#filas")) return;
+        campos[campo.name] = campo.value;
+    });
+
+    return {
+        codigo:"POSN04-F4",
+        revision:"Rev.01 Ago.25",
+        guardadoEn:new Date().toISOString(),
+        campos,
+        items:obtenerItems()
+    };
+}
+
+/* ACTUALIZA LOS CONTADORES */
+function actualizarIndicadores(){
+    const items = obtenerItems();
+    const completos = items.filter(item =>
+        item.cantidad.trim() || item.detalle.trim()
+    );
+
+    document.getElementById("statNumero").textContent =
+        document.getElementById("numero").value.trim() || "—";
+
+    document.getElementById("statFilas").textContent = items.length;
+    document.getElementById("statItems").textContent = completos.length;
+}
+
+/* GUARDA AUTOMÁTICAMENTE EN ESTE NAVEGADOR */
+function guardar(manual = false){
+    try{
+        localStorage.setItem(CLAVE,JSON.stringify(obtenerDatos()));
+        badge.textContent = "BORRADOR GUARDADO";
+        estado.textContent =
+            (manual ? "Borrador guardado. " : "Guardado automático. ") +
+            "Guardado en este navegador · " +
+            new Date().toLocaleTimeString("es-AR");
+    }catch(error){
+        badge.textContent = "SIN GUARDAR";
+        estado.textContent =
+            "No se pudo guardar en este navegador. Descargue los datos para conservarlos.";
+    }
+}
+
+function marcarCambio(){
+    actualizarIndicadores();
+    badge.textContent = "EN EDICIÓN";
+    estado.textContent = "Cambios pendientes de guardar…";
+    clearTimeout(temporizador);
+    temporizador = setTimeout(() => guardar(),600);
+}
+
+formulario.addEventListener("input",marcarCambio);
+
+document.getElementById("agregar").addEventListener("click",() => {
+    agregarFila({},true);
+    marcarCambio();
+});
+
+document.getElementById("guardar").addEventListener("click",() => {
+    clearTimeout(temporizador);
+    guardar(true);
+});
+
+/* RECUPERA EL BORRADOR */
+function recuperar(){
+    try{
+        const raw = localStorage.getItem(CLAVE);
+        if(!raw) return false;
+
+        const datos = JSON.parse(raw);
+
+        if(
+            !datos ||
+            datos.codigo !== "POSN04-F4" ||
+            !datos.campos ||
+            typeof datos.campos !== "object" ||
+            !Array.isArray(datos.items)
+        ){
+            throw new Error("Datos guardados inválidos");
+        }
+
+        formulario.querySelectorAll("[name]").forEach(campo => {
+            if(campo.closest("#filas")) return;
+
+            const valor = datos.campos[campo.name];
+            campo.value = typeof valor === "string" ? valor : "";
+        });
+
+        cuerpo.replaceChildren();
+        datos.items.forEach(item => agregarFila(item));
+
+        badge.textContent = "BORRADOR RECUPERADO";
+        estado.textContent = "Se recuperó el borrador guardado en este navegador.";
+        return true;
+    }catch(error){
+        estado.textContent =
+            "No se pudo recuperar el borrador. Puede completar el remito y descargar los datos.";
+        return false;
+    }
+}
+
+/* DESCARGA UNA COPIA DE LOS DATOS */
+document.getElementById("descargar").addEventListener("click",() => {
+    const archivo = new Blob(
+        [JSON.stringify(obtenerDatos(),null,2)],
+        {type:"application/json;charset=utf-8"}
+    );
+
+    const url = URL.createObjectURL(archivo);
+    const enlace = document.createElement("a");
+    enlace.href = url;
+    enlace.download = "NASER-POSN04-F4-Remito.json";
+
+    document.body.appendChild(enlace);
+    enlace.click();
+    enlace.remove();
+
+    setTimeout(() => URL.revokeObjectURL(url),1000);
+    estado.textContent = "Se descargaron los datos del remito.";
+});
+
+/* PREPARA LOS VALORES VISIBLES EN LA IMPRESIÓN */
+function prepararImpresion(){
+    formulario.querySelectorAll(".field").forEach(grupo => {
+        const campo = grupo.querySelector("input,textarea");
+        const impreso = grupo.querySelector(".print-value");
+        if(!campo || !impreso) return;
+
+        if(campo.type === "date" && campo.value){
+            const [anio,mes,dia] = campo.value.split("-");
+            impreso.textContent = dia + "/" + mes + "/" + anio;
+        }else{
+            impreso.textContent = campo.value;
+        }
+    });
+
+    cuerpo.querySelectorAll("tr").forEach(fila => {
+        fila.querySelectorAll("td").forEach(celda => {
+            const campo = celda.querySelector(".item-input");
+            const impreso = celda.querySelector(".print-value");
+            if(campo && impreso) impreso.textContent = campo.value;
+        });
+    });
+
+    document.querySelectorAll(".signature").forEach(firma => {
+        const campo = firma.querySelector("input");
+        const impreso = firma.querySelector(".print-value");
+        if(campo && impreso) impreso.textContent = campo.value;
+    });
+}
+
+window.addEventListener("beforeprint",prepararImpresion);
+
+document.getElementById("imprimir").addEventListener("click",() => {
+    clearTimeout(temporizador);
+    guardar();
+    prepararImpresion();
+    window.print();
+});
+
+/* LIMPIA EL FORMULARIO */
+document.getElementById("limpiar").addEventListener("click",() => {
+    if(!confirm("¿Desea borrar el borrador y limpiar el remito?")) return;
+
+    clearTimeout(temporizador);
+
+    try{
+        localStorage.removeItem(CLAVE);
+    }catch(error){
+        estado.textContent =
+            "No se pudo borrar el borrador. Los campos no fueron modificados.";
+        return;
+    }
+
+    formulario.reset();
+    crearFilasIniciales();
+    actualizarIndicadores();
+
+    badge.textContent = "EN EDICIÓN";
+    estado.textContent = "Remito limpio. Documento en edición.";
+});
+
+/* INICIO */
+if(!recuperar()){
+    crearFilasIniciales();
+}
+actualizarIndicadores();
+</script>
+</body>
+</html>

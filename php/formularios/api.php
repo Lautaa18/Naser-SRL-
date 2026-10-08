@@ -34,6 +34,10 @@ $referencia = mb_substr(trim((string)($in['referencia'] ?? '')), 0, 200);
 
 $reg = $id ? cargarRegistro($pdo, $id) : null;
 if ($id && !$reg) fallar('El registro no existe (puede que lo hayan eliminado).', 404);
+if ($reg && !puedeVerSector($pdo, (int)$reg['sector_id'])) fallar('No tenés acceso a este sector.', 403);
+if ($reg && $reg['estado'] === 'borrador' && (int)$reg['creado_por'] !== $uid && !puedeEditarSector($pdo, (int)$reg['sector_id'])) {
+    fallar('Este formulario es un borrador de otra persona.', 403);
+}
 
 // ---------- helpers ----------
 $urlRegistro = fn(int $rid) => '/php/formularios/llenar.php?id=' . $rid;
