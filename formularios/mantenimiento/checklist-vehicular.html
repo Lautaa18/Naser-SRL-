@@ -1,0 +1,3147 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>NASER SRL | Checklist Vehicular</title>
+
+<style>
+
+/* =========================================================
+   NASER SRL - CHECKLIST VEHICULAR
+========================================================= */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+:root{
+    --black:#0d0d0d;
+    --black2:#171717;
+    --white:#ffffff;
+    --bg:#f2f2f2;
+    --border:#d8d8d8;
+    --text:#111111;
+    --muted:#777777;
+    --green:#71a800;
+    --red:#b42318;
+    --gray:#777777;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    font-family:Arial,Helvetica,sans-serif;
+    background:var(--bg);
+    color:var(--text);
+}
+
+/* =========================================================
+   SIDEBAR
+========================================================= */
+
+.sidebar{
+    position:fixed;
+    left:0;
+    top:0;
+    width:335px;
+    height:100vh;
+    background:var(--black);
+    color:white;
+    padding:40px 28px;
+    overflow-y:auto;
+    z-index:1000;
+}
+
+.brand{
+    display:flex;
+    align-items:center;
+    gap:18px;
+    padding:0 8px 35px;
+    border-bottom:1px solid #333;
+}
+
+.logo{
+    width:60px;
+    height:60px;
+    background:white;
+    color:black;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:30px;
+    font-weight:900;
+}
+
+.brand h1{
+    font-size:29px;
+    letter-spacing:7px;
+}
+
+.brand small{
+    color:#aaa;
+    letter-spacing:5px;
+}
+
+.sidebar-title{
+    margin:35px 10px 20px;
+    font-size:11px;
+    color:#888;
+    letter-spacing:3px;
+    line-height:1.5;
+}
+
+.menu{
+    list-style:none;
+}
+
+.menu a{
+    display:flex;
+    align-items:center;
+    gap:16px;
+    color:#ccc;
+    text-decoration:none;
+    padding:14px 12px;
+    border-left:2px solid transparent;
+    font-size:13px;
+    transition:.2s;
+}
+
+.menu a:hover,
+.menu a.active{
+    color:white;
+    background:#171717;
+    border-left-color:white;
+}
+
+.menu-number{
+    color:#777;
+    width:25px;
+    font-size:10px;
+}
+
+/* =========================================================
+   MAIN
+========================================================= */
+
+.main{
+    margin-left:335px;
+    min-height:100vh;
+}
+
+.topbar{
+    min-height:125px;
+    background:white;
+    border-bottom:1px solid #ddd;
+    padding:28px 50px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+}
+
+.breadcrumb{
+    font-size:11px;
+    color:#777;
+    letter-spacing:3px;
+    margin-bottom:16px;
+}
+
+.topbar h2{
+    font-size:28px;
+}
+
+.control-active{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-size:11px;
+    letter-spacing:2px;
+}
+
+.control-dot{
+    width:10px;
+    height:10px;
+    background:#111;
+    border-radius:50%;
+}
+
+.page{
+    max-width:1600px;
+    margin:auto;
+    padding:45px 48px 100px;
+}
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.hero{
+    background:#111;
+    color:white;
+    padding:45px;
+    display:grid;
+    grid-template-columns:1fr 270px;
+    gap:40px;
+    margin-bottom:30px;
+}
+
+.hero-label{
+    color:#999;
+    font-size:10px;
+    letter-spacing:4px;
+    margin-bottom:20px;
+}
+
+.hero h1{
+    font-size:34px;
+    margin-bottom:14px;
+}
+
+.hero p{
+    color:#ddd;
+    line-height:1.5;
+    max-width:850px;
+}
+
+.document{
+    border-left:1px solid #444;
+    padding-left:35px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+}
+
+.document span{
+    color:#888;
+    font-size:10px;
+    letter-spacing:3px;
+    margin-bottom:15px;
+}
+
+.document strong{
+    font-size:15px;
+    margin-bottom:12px;
+}
+
+.document small{
+    color:#888;
+    letter-spacing:2px;
+}
+
+/* =========================================================
+   PROGRESO
+========================================================= */
+
+.progress-panel{
+    background:#111;
+    color:white;
+    padding:28px 30px;
+    margin-bottom:28px;
+}
+
+.progress-top{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:25px;
+    margin-bottom:20px;
+}
+
+.progress-label{
+    display:block;
+    color:#888;
+    font-size:9px;
+    letter-spacing:2.5px;
+    margin-bottom:8px;
+}
+
+.progress-top h3{
+    font-size:23px;
+}
+
+.progress-counter{
+    display:flex;
+    gap:6px;
+    font-size:17px;
+}
+
+.progress-counter span{
+    color:#777;
+}
+
+.progress-track{
+    height:9px;
+    background:#333;
+    overflow:hidden;
+}
+
+.progress-bar{
+    height:100%;
+    width:0;
+    background:white;
+    transition:.3s;
+}
+
+/* =========================================================
+   CARD
+========================================================= */
+
+.card{
+    background:white;
+    border:1px solid var(--border);
+    margin-bottom:28px;
+    scroll-margin-top:25px;
+}
+
+.card-header{
+    min-height:100px;
+    padding:27px 32px;
+    border-bottom:1px solid var(--border);
+    display:flex;
+    align-items:center;
+    gap:18px;
+}
+
+.card-number{
+    width:44px;
+    height:44px;
+    background:#111;
+    color:white;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:11px;
+    font-weight:bold;
+    flex-shrink:0;
+}
+
+.card-title h3{
+    font-size:19px;
+    margin-bottom:6px;
+}
+
+.card-title p{
+    color:#777;
+    font-size:13px;
+}
+
+.card-body{
+    padding:32px;
+}
+
+/* =========================================================
+   DATOS DEL VEHÍCULO
+========================================================= */
+
+.form-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:23px;
+}
+
+.form-group label{
+    display:block;
+    font-size:10px;
+    font-weight:bold;
+    letter-spacing:.5px;
+    margin-bottom:9px;
+}
+
+.form-group input,
+.form-group select{
+    width:100%;
+    height:55px;
+    background:#fafafa;
+    border:1px solid #ccc;
+    padding:0 15px;
+    font-size:14px;
+    outline:none;
+}
+
+.form-group input:focus,
+.form-group select:focus{
+    border-color:#111;
+    background:white;
+}
+
+/* =========================================================
+   COMBUSTIBLE
+========================================================= */
+
+.fuel-box{
+    margin-top:25px;
+    border:1px solid #ddd;
+    padding:22px;
+}
+
+.fuel-box > label{
+    display:block;
+    font-size:10px;
+    font-weight:bold;
+    letter-spacing:1px;
+    margin-bottom:17px;
+}
+
+.fuel-options{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:10px;
+}
+
+.fuel-option{
+    border:1px solid #ccc;
+    background:#fafafa;
+    padding:14px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    cursor:pointer;
+    font-size:11px;
+    font-weight:bold;
+}
+
+.fuel-option:hover{
+    border-color:#111;
+}
+
+.fuel-option input{
+    accent-color:#111;
+}
+
+/* =========================================================
+   TABLE
+========================================================= */
+
+.table-wrapper{
+    width:100%;
+    overflow-x:auto;
+}
+
+.checklist{
+    width:100%;
+    border-collapse:collapse;
+    min-width:850px;
+}
+
+.checklist th{
+    background:#111;
+    color:white;
+    padding:15px 11px;
+    font-size:10px;
+    letter-spacing:1.3px;
+    text-align:left;
+    border-right:1px solid #333;
+}
+
+.checklist th.center{
+    text-align:center;
+}
+
+.checklist td{
+    padding:11px;
+    border-bottom:1px solid #ddd;
+    font-size:13px;
+}
+
+.checklist tbody tr:nth-child(even){
+    background:#fafafa;
+}
+
+.checklist tbody tr:hover{
+    background:#f2f2f2;
+}
+
+.number{
+    width:55px;
+    text-align:center;
+    color:#888;
+}
+
+.item{
+    font-weight:600;
+}
+
+.option{
+    width:75px;
+    text-align:center;
+}
+
+.radio{
+    width:19px;
+    height:19px;
+    cursor:pointer;
+    accent-color:#111;
+}
+
+.expiration{
+    width:150px;
+    height:39px;
+    border:1px solid #ccc;
+    padding:0 8px;
+}
+
+/* =========================================================
+   COLORES DE ESTADO
+========================================================= */
+
+.row-bueno{
+    border-left:4px solid var(--green);
+}
+
+.row-malo{
+    border-left:4px solid var(--red);
+}
+
+.row-na{
+    border-left:4px solid var(--gray);
+}
+
+.row-error{
+    outline:2px solid var(--red);
+    outline-offset:-2px;
+    background:#fff5f5!important;
+}
+
+.field-error{
+    border:2px solid var(--red)!important;
+    background:#fff7f7!important;
+}
+
+/* =========================================================
+   RESUMEN
+========================================================= */
+
+.summary{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    background:white;
+    border:1px solid #ddd;
+    margin-bottom:28px;
+}
+
+.summary-box{
+    padding:22px;
+    border-right:1px solid #ddd;
+}
+
+.summary-box:last-child{
+    border-right:none;
+}
+
+.summary-box span{
+    display:block;
+    color:#777;
+    font-size:9px;
+    letter-spacing:1.5px;
+    margin-bottom:10px;
+}
+
+.summary-box strong{
+    font-size:28px;
+}
+
+.summary-click{
+    cursor:pointer;
+}
+
+.summary-click:hover{
+    background:#f4f4f4;
+}
+
+.summary-click small{
+    display:block;
+    color:#999;
+    font-size:9px;
+    margin-top:8px;
+    letter-spacing:1px;
+}
+
+/* =========================================================
+   RESULTADOS
+========================================================= */
+
+.result-list{
+    display:grid;
+    gap:10px;
+}
+
+.result-item{
+    display:grid;
+    grid-template-columns:45px 1fr auto;
+    align-items:center;
+    gap:15px;
+    border:1px solid #ddd;
+    background:#fafafa;
+    padding:15px 17px;
+}
+
+.result-number{
+    color:#999;
+    font-size:11px;
+}
+
+.result-name{
+    font-size:13px;
+    font-weight:bold;
+}
+
+.result-section{
+    color:#777;
+    font-size:9px;
+    letter-spacing:1px;
+    text-transform:uppercase;
+}
+
+/* =========================================================
+   OBSERVACIONES
+========================================================= */
+
+textarea{
+    width:100%;
+    min-height:170px;
+    resize:vertical;
+    background:#fafafa;
+    border:1px solid #ccc;
+    padding:15px;
+    font-family:Arial,Helvetica,sans-serif;
+    font-size:14px;
+}
+
+/* =========================================================
+   RESPONSABLES
+========================================================= */
+
+.responsibles{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:20px;
+}
+
+.responsible{
+    border:1px solid #ddd;
+    background:#fafafa;
+    padding:25px;
+}
+
+.responsible small{
+    display:block;
+    color:#777;
+    letter-spacing:2px;
+    margin-bottom:10px;
+}
+
+.responsible h4{
+    margin-bottom:18px;
+}
+
+.responsible input{
+    width:100%;
+    height:55px;
+    border:1px solid #ccc;
+    background:white;
+    padding:0 15px;
+}
+
+/* =========================================================
+   BOTONES
+========================================================= */
+
+.actions{
+    display:flex;
+    justify-content:flex-end;
+    gap:12px;
+    margin-top:30px;
+    flex-wrap:wrap;
+}
+
+.btn{
+    min-width:160px;
+    padding:15px 20px;
+    border:1px solid #111;
+    cursor:pointer;
+    font-size:11px;
+    font-weight:bold;
+    letter-spacing:1px;
+}
+
+.btn-save,
+.btn-light{
+    background:white;
+    color:#111;
+}
+
+.btn-finish{
+    background:#111;
+    color:white;
+    min-width:220px;
+}
+
+.btn-finish:disabled{
+    background:#777;
+    border-color:#777;
+    cursor:not-allowed;
+}
+
+.message{
+    display:none;
+    background:white;
+    border:1px solid #ddd;
+    padding:17px 20px;
+    margin-top:15px;
+    font-size:12px;
+}
+
+.message.error{
+    border-left:4px solid var(--red);
+}
+
+.message.success{
+    border-left:4px solid var(--green);
+}
+
+.finished-banner{
+    display:none;
+    background:#111;
+    color:white;
+    padding:22px 25px;
+    margin-bottom:25px;
+}
+
+.finished-banner strong{
+    display:block;
+    margin-bottom:7px;
+}
+
+.finished-banner span{
+    color:#bbb;
+    font-size:12px;
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+.mobile-menu{
+    display:none;
+}
+
+@media(max-width:1100px){
+
+    .sidebar{
+        width:260px;
+    }
+
+    .main{
+        margin-left:260px;
+    }
+
+    .form-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .hero{
+        grid-template-columns:1fr;
+    }
+
+    .document{
+        border-left:0;
+        border-top:1px solid #444;
+        padding-left:0;
+        padding-top:25px;
+    }
+
+    .summary{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .responsibles{
+        grid-template-columns:1fr;
+    }
+}
+
+@media(max-width:760px){
+
+    .sidebar{
+        width:290px;
+        transform:translateX(-100%);
+        transition:.3s;
+    }
+
+    .sidebar.open{
+        transform:translateX(0);
+    }
+
+    .main{
+        margin-left:0;
+    }
+
+    .mobile-menu{
+        display:block;
+        width:45px;
+        height:45px;
+        border:0;
+        background:#111;
+        color:white;
+        margin-right:15px;
+        font-size:20px;
+    }
+
+    .topbar{
+        padding:20px;
+    }
+
+    .topbar-left{
+        display:flex;
+        align-items:center;
+    }
+
+    .breadcrumb,
+    .control-active{
+        display:none;
+    }
+
+    .topbar h2{
+        font-size:19px;
+    }
+
+    .page{
+        padding:22px 13px 60px;
+    }
+
+    .hero{
+        padding:28px 23px;
+    }
+
+    .hero h1{
+        font-size:25px;
+    }
+
+    .form-grid,
+    .summary{
+        grid-template-columns:1fr;
+    }
+
+    .fuel-options{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .progress-top{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    .actions{
+        flex-direction:column;
+    }
+
+    .btn{
+        width:100%;
+    }
+}
+
+/* =========================================================
+   PRINT
+========================================================= */
+
+@media print{
+
+    .sidebar,
+    .topbar,
+    .actions,
+    .message{
+        display:none!important;
+    }
+
+    .main{
+        margin-left:0;
+    }
+
+    .page{
+        padding:0;
+        max-width:none;
+    }
+
+    body{
+        background:white;
+    }
+
+    .hero,
+    .progress-panel,
+    .card-number,
+    .checklist th{
+        -webkit-print-color-adjust:exact;
+        print-color-adjust:exact;
+    }
+
+    .checklist tr{
+        break-inside:avoid;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- =========================================================
+     SIDEBAR
+========================================================= -->
+
+<aside class="sidebar" id="sidebar">
+
+    <div class="brand">
+
+        <div class="logo">N</div>
+
+        <div>
+            <h1>NASER</h1>
+            <small>SRL</small>
+        </div>
+
+    </div>
+
+    <div class="sidebar-title">
+        SISTEMA DE GESTIÓN<br>
+        INTEGRADO
+    </div>
+
+    <ul class="menu" id="menu"></ul>
+
+</aside>
+
+<!-- =========================================================
+     CONTENIDO
+========================================================= -->
+
+<main class="main">
+
+<header class="topbar">
+
+    <div class="topbar-left">
+
+        <button
+            class="mobile-menu"
+            onclick="toggleMenu()">
+            ☰
+        </button>
+
+        <div>
+
+            <div class="breadcrumb">
+                NASER SRL / SGI / FLOTA
+            </div>
+
+            <h2>
+                Checklist de Estado Vehicular
+            </h2>
+
+        </div>
+
+    </div>
+
+    <div class="control-active">
+
+        <div class="control-dot"></div>
+
+        CONTROL ACTIVO
+
+    </div>
+
+</header>
+
+<div class="page">
+
+<!-- =========================================================
+     HERO
+========================================================= -->
+
+<section class="hero">
+
+    <div>
+
+        <div class="hero-label">
+            INSPECCIÓN OPERATIVA · FLOTA
+        </div>
+
+        <h1>
+            Control de estado vehicular
+        </h1>
+
+        <p>
+            Inspección integral del vehículo, documentación,
+            seguridad, cubiertas, iluminación, fluidos,
+            tractores, semirremolques y condiciones generales.
+        </p>
+
+    </div>
+
+    <div class="document">
+
+        <span>DOCUMENTO</span>
+
+        <strong>
+            CHECKLIST VEHICULAR
+        </strong>
+
+        <small>
+            NASER SRL · SGI
+        </small>
+
+    </div>
+
+</section>
+
+<div
+    class="finished-banner"
+    id="finishedBanner">
+
+    <strong>
+        CHECKLIST FINALIZADO
+    </strong>
+
+    <span id="finishedDate"></span>
+
+</div>
+
+<!-- =========================================================
+     PROGRESO
+========================================================= -->
+
+<section class="progress-panel">
+
+    <div class="progress-top">
+
+        <div>
+
+            <span class="progress-label">
+                PROGRESO DEL CHECKLIST
+            </span>
+
+            <h3 id="progressText">
+                0% completado
+            </h3>
+
+        </div>
+
+        <div class="progress-counter">
+
+            <strong id="completedFields">0</strong>
+
+            <span>/</span>
+
+            <strong id="requiredFields">0</strong>
+
+        </div>
+
+    </div>
+
+    <div class="progress-track">
+
+        <div
+            class="progress-bar"
+            id="progressBar">
+        </div>
+
+    </div>
+
+</section>
+
+<!-- =========================================================
+     DATOS DEL VEHÍCULO
+========================================================= -->
+
+<section
+    class="card observe"
+    id="datos">
+
+    <div class="card-header">
+
+        <div class="card-number">
+            01
+        </div>
+
+        <div class="card-title">
+
+            <h3>
+                Datos del vehículo
+            </h3>
+
+            <p>
+                Información de identificación, entrega y recepción.
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="form-grid">
+
+            <div class="form-group">
+
+                <label>FECHA DE INSPECCIÓN *</label>
+
+                <input
+                    type="date"
+                    id="fechaInspeccion"
+                    class="required-general">
+
+            </div>
+
+            <div class="form-group">
+
+                <label>FECHA DE ENTREGA *</label>
+
+                <input
+                    type="date"
+                    id="fechaEntrega"
+                    class="required-general">
+
+            </div>
+
+            <div class="form-group">
+
+                <label>TIPO DE VEHÍCULO *</label>
+
+                <select
+                    id="tipoVehiculo"
+                    class="required-general">
+
+                    <option value="">
+                        Seleccionar
+                    </option>
+
+                    <option value="Liviano">
+                        Liviano
+                    </option>
+
+                    <option value="Hidrogrua">
+                        Hidrogrúa
+                    </option>
+
+                    <option value="Chasis con Hidrogrua">
+                        Chasis con Hidrogrúa
+                    </option>
+
+                    <option value="Equipo de Slick Line">
+                        Equipo de Slick Line
+                    </option>
+
+                </select>
+
+            </div>
+
+            <div class="form-group">
+
+                <label>PATENTE *</label>
+
+                <input
+                    type="text"
+                    id="patente"
+                    class="required-general"
+                    placeholder="Ej: AB123CD">
+
+            </div>
+
+            <div class="form-group">
+
+                <label>NÚMERO DE INTERNO *</label>
+
+                <input
+                    type="text"
+                    id="numeroInterno"
+                    class="required-general"
+                    placeholder="Número de interno">
+
+            </div>
+
+            <div class="form-group">
+
+                <label>CHOFER QUE ENTREGA *</label>
+
+                <input
+                    type="text"
+                    id="choferEntrega"
+                    class="required-general"
+                    placeholder="Nombre y apellido">
+
+            </div>
+
+            <div class="form-group">
+
+                <label>CHOFER QUE RECIBE *</label>
+
+                <input
+                    type="text"
+                    id="choferRecibe"
+                    class="required-general"
+                    placeholder="Nombre y apellido">
+
+            </div>
+
+            <div class="form-group">
+
+                <label>KILOMETRAJE *</label>
+
+                <input
+                    type="number"
+                    min="0"
+                    id="kilometraje"
+                    class="required-general"
+                    placeholder="Km actuales">
+
+            </div>
+
+            <div class="form-group">
+
+                <label>FECHA DE SERVICE *</label>
+
+                <input
+                    type="date"
+                    id="fechaService"
+                    class="required-general">
+
+            </div>
+
+        </div>
+
+        <div class="fuel-box">
+
+            <label>
+                CANTIDAD DE COMBUSTIBLE *
+            </label>
+
+            <div class="fuel-options">
+
+                <label class="fuel-option">
+
+                    <input
+                        type="radio"
+                        name="combustible"
+                        value="Vacio">
+
+                    VACÍO
+
+                </label>
+
+                <label class="fuel-option">
+
+                    <input
+                        type="radio"
+                        name="combustible"
+                        value="1/4">
+
+                    1/4
+
+                </label>
+
+                <label class="fuel-option">
+
+                    <input
+                        type="radio"
+                        name="combustible"
+                        value="1/2">
+
+                    1/2
+
+                </label>
+
+                <label class="fuel-option">
+
+                    <input
+                        type="radio"
+                        name="combustible"
+                        value="Lleno">
+
+                    LLENO
+
+                </label>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- =========================================================
+     SECCIONES GENERADAS POR JS
+========================================================= -->
+
+<div id="sectionsContainer"></div>
+
+<!-- =========================================================
+     RESUMEN
+========================================================= -->
+
+<div class="summary">
+
+    <div class="summary-box">
+
+        <span>TOTAL</span>
+
+        <strong id="total">66</strong>
+
+    </div>
+
+    <div class="summary-box">
+
+        <span>VERIFICADOS</span>
+
+        <strong id="verified">0</strong>
+
+    </div>
+
+    <div
+        class="summary-box summary-click"
+        onclick="showResults('bueno')">
+
+        <span>BUENO</span>
+
+        <strong id="good">0</strong>
+
+        <small>VER ELEMENTOS</small>
+
+    </div>
+
+    <div
+        class="summary-box summary-click"
+        onclick="showResults('malo')">
+
+        <span>MALO</span>
+
+        <strong id="bad">0</strong>
+
+        <small>VER ELEMENTOS</small>
+
+    </div>
+
+    <div
+        class="summary-box summary-click"
+        onclick="showResults('na')">
+
+        <span>N/A</span>
+
+        <strong id="na">0</strong>
+
+        <small>VER ELEMENTOS</small>
+
+    </div>
+
+</div>
+
+<!-- =========================================================
+     DETALLE DE RESULTADOS
+========================================================= -->
+
+<section
+    class="card"
+    id="resultDetail"
+    style="display:none;">
+
+    <div class="card-header">
+
+        <div class="card-number">
+            ✓
+        </div>
+
+        <div class="card-title">
+
+            <h3 id="resultTitle">
+                Resultados
+            </h3>
+
+            <p>
+                Detalle de elementos según su estado.
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="card-body">
+
+        <div
+            class="result-list"
+            id="resultList">
+        </div>
+
+    </div>
+
+</section>
+
+<!-- =========================================================
+     OBSERVACIONES
+========================================================= -->
+
+<section
+    class="card observe"
+    id="observaciones">
+
+    <div class="card-header">
+
+        <div class="card-number">
+            12
+        </div>
+
+        <div class="card-title">
+
+            <h3>
+                Observaciones
+            </h3>
+
+            <p>
+                Novedades detectadas durante la inspección.
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="card-body">
+
+        <textarea
+            id="observacionesTexto"
+            placeholder="Describa daños, faltantes, vencimientos, reparaciones pendientes o cualquier otra observación..."></textarea>
+
+    </div>
+
+</section>
+
+<!-- =========================================================
+     RESPONSABLES
+========================================================= -->
+
+<section
+    class="card observe"
+    id="responsables">
+
+    <div class="card-header">
+
+        <div class="card-number">
+            13
+        </div>
+
+        <div class="card-title">
+
+            <h3>
+                Responsables del control
+            </h3>
+
+            <p>
+                Personal interviniente en la entrega y recepción.
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="responsibles">
+
+            <div class="responsible">
+
+                <small>CHOFER</small>
+
+                <h4>
+                    Chofer que entrega
+                </h4>
+
+                <input
+                    type="text"
+                    id="responsableEntrega"
+                    class="required-responsible"
+                    placeholder="Nombre y apellido">
+
+            </div>
+
+            <div class="responsible">
+
+                <small>CHOFER</small>
+
+                <h4>
+                    Chofer que recibe
+                </h4>
+
+                <input
+                    type="text"
+                    id="responsableRecibe"
+                    class="required-responsible"
+                    placeholder="Nombre y apellido">
+
+            </div>
+
+            <div class="responsible">
+
+                <small>SUPERVISIÓN</small>
+
+                <h4>
+                    Supervisor
+                </h4>
+
+                <input
+                    type="text"
+                    id="supervisor"
+                    class="required-responsible"
+                    placeholder="Nombre y apellido">
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- =========================================================
+     ACCIONES
+========================================================= -->
+
+<div class="actions">
+
+    <button
+        class="btn btn-save"
+        onclick="saveChecklist()">
+
+        GUARDAR
+
+    </button>
+
+    <button
+        class="btn btn-light"
+        onclick="clearChecklist()">
+
+        LIMPIAR
+
+    </button>
+
+    <button
+        class="btn btn-finish"
+        id="finishButton"
+        onclick="finishChecklist()">
+
+        FINALIZAR CHECKLIST
+
+    </button>
+
+</div>
+
+<div
+    class="message"
+    id="systemMessage">
+</div>
+
+</div>
+</main>
+
+<script>
+
+/* =========================================================
+   SECCIONES
+========================================================= */
+
+const sections = [
+
+{
+    id:"documentacion",
+    number:"02",
+    title:"Documentación",
+    description:"Control de documentación habilitante.",
+    expiration:true,
+    items:[
+        "Carnet de Conducir",
+        "Carnet de Cargas generales",
+        "Carnet de operador de Hidrogrúa",
+        "Carnet de Manejo defensivo",
+        "Carnet ART",
+        "Carnet de Seguro",
+        "VTV",
+        "R.U.T.A",
+        "Certificado de Hidrogrúa",
+        "Cédula verde"
+    ]
+},
+
+{
+    id:"cubiertas",
+    number:"03",
+    title:"Cubiertas",
+    description:"Inspección visual y estado general de neumáticos.",
+    expiration:true,
+    items:[
+        "Estado visual",
+        "Estado del dibujo",
+        "Estado visual del auxilio",
+        "Estado del dibujo del auxilio"
+    ]
+},
+
+{
+    id:"frenos",
+    number:"04",
+    title:"Sistema de Frenos",
+    description:"Control del sistema principal y freno de estacionamiento.",
+    expiration:true,
+    items:[
+        "Freno de mano",
+        "Frenos"
+    ]
+},
+
+{
+    id:"luces",
+    number:"05",
+    title:"Luces",
+    description:"Verificación completa del sistema de iluminación.",
+    expiration:true,
+    items:[
+        "Altas",
+        "Bajas",
+        "Posición",
+        "Balizas",
+        "Luces superiores (3 Marías)",
+        "Freno",
+        "Giro derecho",
+        "Giro Izquierdo",
+        "Retroceso",
+        "Interiores"
+    ]
+},
+
+{
+    id:"seguridad",
+    number:"06",
+    title:"Elementos de Seguridad",
+    description:"Control de elementos de seguridad obligatorios.",
+    expiration:true,
+    items:[
+        "Apoyacabezas",
+        "Cinturón de seguridad",
+        "Matafuego",
+        "Botiquín de primeros auxilios",
+        "Balizas triangular",
+        "Barra de remolque",
+        "Arrestallamas",
+        "Alarma de retroceso",
+        "Conos",
+        "Crique y llave",
+        "Linterna",
+        "Chaleco reflectivo"
+    ]
+},
+
+{
+    id:"exterior",
+    number:"07",
+    title:"Exterior",
+    description:"Inspección del estado exterior del vehículo.",
+    expiration:true,
+    items:[
+        "Parabrisas",
+        "Limpiaparabrisas",
+        "Limpieza",
+        "Estado pintura",
+        "Estado chapa",
+        "Logo de empresa y contrato"
+    ]
+},
+
+{
+    id:"interior",
+    number:"08",
+    title:"Interior",
+    description:"Inspección de cabina y elementos interiores.",
+    expiration:true,
+    items:[
+        "Asientos",
+        "Puertas",
+        "Orden y limpieza",
+        "Bocina",
+        "Calefacción",
+        "Cabina de descanso",
+        "Pedales"
+    ]
+},
+
+{
+    id:"herramientas",
+    number:"09",
+    title:"Herramientas",
+    description:"Control de herramientas disponibles.",
+    expiration:true,
+    items:[
+        "Caja de herramientas"
+    ]
+},
+
+{
+    id:"fluidos",
+    number:"10",
+    title:"Fluidos",
+    description:"Verificación de niveles y fluidos.",
+    expiration:true,
+    items:[
+        "Refrigerante",
+        "Nivel de aceite",
+        "Agua de zorrino",
+        "Aceite hidráulico",
+        "Anticongelante"
+    ]
+},
+
+{
+    id:"tractores",
+    number:"11",
+    title:"Tractores y Semis",
+    description:"Control estructural y elementos de enganche.",
+    expiration:true,
+    items:[
+        "Fisuras",
+        "Estados de bujes",
+        "Estado general",
+        "Plato y seguro de enganche",
+        "Cubiertas",
+        "Orden y limpieza",
+        "Compuertas",
+        "Conexiones de aire",
+        "Perno de enganche"
+    ]
+}
+
+];
+
+/* =========================================================
+   MENÚ
+========================================================= */
+
+const menu =
+    document.getElementById("menu");
+
+function addMenu(number,title,id){
+
+    const li =
+        document.createElement("li");
+
+    li.innerHTML = `
+
+        <a
+            href="#${id}"
+            class="nav-link">
+
+            <span class="menu-number">
+                ${number}
+            </span>
+
+            ${title}
+
+        </a>
+
+    `;
+
+    menu.appendChild(li);
+}
+
+addMenu("01","Datos del vehículo","datos");
+
+sections.forEach(section=>{
+
+    addMenu(
+        section.number,
+        section.title,
+        section.id
+    );
+
+});
+
+addMenu("12","Observaciones","observaciones");
+addMenu("13","Responsables","responsables");
+
+/* =========================================================
+   GENERAR TABLAS
+========================================================= */
+
+const sectionsContainer =
+    document.getElementById(
+        "sectionsContainer"
+    );
+
+let globalItemNumber = 1;
+
+sections.forEach(section=>{
+
+    const card =
+        document.createElement(
+            "section"
+        );
+
+    card.className =
+        "card observe";
+
+    card.id =
+        section.id;
+
+    card.innerHTML = `
+
+        <div class="card-header">
+
+            <div class="card-number">
+                ${section.number}
+            </div>
+
+            <div class="card-title">
+
+                <h3>
+                    ${section.title}
+                </h3>
+
+                <p>
+                    ${section.description}
+                </p>
+
+            </div>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="table-wrapper">
+
+                <table class="checklist">
+
+                    <thead>
+
+                        <tr>
+
+                            <th class="center">
+                                N°
+                            </th>
+
+                            <th>
+                                DETALLE
+                            </th>
+
+                            <th class="center">
+                                BUENO
+                            </th>
+
+                            <th class="center">
+                                MALO
+                            </th>
+
+                            <th class="center">
+                                N/A
+                            </th>
+
+                            <th class="center">
+                                VENCIMIENTO
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        ${createRows(section)}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    `;
+
+    sectionsContainer.appendChild(card);
+
+});
+
+/* =========================================================
+   CREAR FILAS
+========================================================= */
+
+function createRows(section){
+
+    let html = "";
+
+    section.items.forEach(item=>{
+
+        const number =
+            globalItemNumber++;
+
+        html += `
+
+        <tr
+            data-item="${item}"
+            data-section="${section.title}"
+            data-number="${number}">
+
+            <td class="number">
+                ${number}
+            </td>
+
+            <td class="item">
+                ${item}
+            </td>
+
+            <td class="option">
+
+                <input
+                    type="radio"
+                    class="radio"
+                    name="item-${number}"
+                    value="bueno"
+                    onchange="changeRowStatus(this)">
+
+            </td>
+
+            <td class="option">
+
+                <input
+                    type="radio"
+                    class="radio"
+                    name="item-${number}"
+                    value="malo"
+                    onchange="changeRowStatus(this)">
+
+            </td>
+
+            <td class="option">
+
+                <input
+                    type="radio"
+                    class="radio"
+                    name="item-${number}"
+                    value="na"
+                    onchange="changeRowStatus(this)">
+
+            </td>
+
+            <td class="option">
+
+                <input
+                    type="date"
+                    class="expiration">
+
+            </td>
+
+        </tr>
+
+        `;
+
+    });
+
+    return html;
+}
+
+/* =========================================================
+   CAMBIO DE ESTADO
+========================================================= */
+
+function changeRowStatus(input){
+
+    const row =
+        input.closest("tr");
+
+    row.classList.remove(
+        "row-bueno",
+        "row-malo",
+        "row-na",
+        "row-error"
+    );
+
+    row.classList.add(
+        "row-" + input.value
+    );
+
+    updateSummary();
+    updateProgress();
+}
+
+/* =========================================================
+   RESUMEN
+========================================================= */
+
+function updateSummary(){
+
+    const total =
+        document.querySelectorAll(
+            ".checklist tbody tr"
+        ).length;
+
+    const verified =
+        document.querySelectorAll(
+            ".radio:checked"
+        ).length;
+
+    const good =
+        document.querySelectorAll(
+            '.radio[value="bueno"]:checked'
+        ).length;
+
+    const bad =
+        document.querySelectorAll(
+            '.radio[value="malo"]:checked'
+        ).length;
+
+    const na =
+        document.querySelectorAll(
+            '.radio[value="na"]:checked'
+        ).length;
+
+    document.getElementById(
+        "total"
+    ).textContent = total;
+
+    document.getElementById(
+        "verified"
+    ).textContent = verified;
+
+    document.getElementById(
+        "good"
+    ).textContent = good;
+
+    document.getElementById(
+        "bad"
+    ).textContent = bad;
+
+    document.getElementById(
+        "na"
+    ).textContent = na;
+}
+
+/* =========================================================
+   PROGRESO
+========================================================= */
+
+function updateProgress(){
+
+    let total = 0;
+    let completed = 0;
+
+    /* DATOS GENERALES */
+
+    document
+    .querySelectorAll(
+        ".required-general"
+    )
+    .forEach(input=>{
+
+        total++;
+
+        if(
+            input.value.trim() !== ""
+        ){
+            completed++;
+        }
+
+    });
+
+    /* COMBUSTIBLE */
+
+    total++;
+
+    if(
+        document.querySelector(
+            'input[name="combustible"]:checked'
+        )
+    ){
+        completed++;
+    }
+
+    /* CHECKLIST */
+
+    document
+    .querySelectorAll(
+        ".checklist tbody tr"
+    )
+    .forEach(row=>{
+
+        total++;
+
+        if(
+            row.querySelector(
+                ".radio:checked"
+            )
+        ){
+            completed++;
+        }
+
+    });
+
+    /* RESPONSABLES */
+
+    document
+    .querySelectorAll(
+        ".required-responsible"
+    )
+    .forEach(input=>{
+
+        total++;
+
+        if(
+            input.value.trim() !== ""
+        ){
+            completed++;
+        }
+
+    });
+
+    const percentage =
+        total === 0
+        ? 0
+        : Math.round(
+            completed / total * 100
+        );
+
+    document.getElementById(
+        "completedFields"
+    ).textContent = completed;
+
+    document.getElementById(
+        "requiredFields"
+    ).textContent = total;
+
+    document.getElementById(
+        "progressText"
+    ).textContent =
+        percentage +
+        "% completado";
+
+    document.getElementById(
+        "progressBar"
+    ).style.width =
+        percentage + "%";
+}
+
+/* =========================================================
+   VER BUENO / MALO / N/A
+========================================================= */
+
+function showResults(type){
+
+    const titles = {
+        bueno:"Elementos en BUEN estado",
+        malo:"Elementos en MAL estado",
+        na:"Elementos N/A"
+    };
+
+    const selected =
+        document.querySelectorAll(
+            `.radio[value="${type}"]:checked`
+        );
+
+    const card =
+        document.getElementById(
+            "resultDetail"
+        );
+
+    const list =
+        document.getElementById(
+            "resultList"
+        );
+
+    document.getElementById(
+        "resultTitle"
+    ).textContent =
+        titles[type];
+
+    list.innerHTML = "";
+
+    if(selected.length === 0){
+
+        list.innerHTML = `
+
+            <div class="result-item">
+
+                <span>—</span>
+
+                <span>
+                    No hay elementos en esta categoría.
+                </span>
+
+            </div>
+
+        `;
+
+    }
+
+    selected.forEach(input=>{
+
+        const row =
+            input.closest("tr");
+
+        const div =
+            document.createElement(
+                "div"
+            );
+
+        div.className =
+            "result-item";
+
+        div.innerHTML = `
+
+            <span class="result-number">
+
+                ${row.dataset.number}
+
+            </span>
+
+            <span class="result-name">
+
+                ${row.dataset.item}
+
+            </span>
+
+            <span class="result-section">
+
+                ${row.dataset.section}
+
+            </span>
+
+        `;
+
+        list.appendChild(div);
+
+    });
+
+    card.style.display =
+        "block";
+
+    card.scrollIntoView({
+        behavior:"smooth",
+        block:"start"
+    });
+}
+
+/* =========================================================
+   OBTENER DATOS
+========================================================= */
+
+function getChecklistData(){
+
+    const data = {
+
+        general:{},
+        combustible:"",
+        rows:[],
+        observaciones:
+            document.getElementById(
+                "observacionesTexto"
+            ).value,
+
+        responsables:{
+            entrega:
+                document.getElementById(
+                    "responsableEntrega"
+                ).value,
+
+            recibe:
+                document.getElementById(
+                    "responsableRecibe"
+                ).value,
+
+            supervisor:
+                document.getElementById(
+                    "supervisor"
+                ).value
+        },
+
+        savedAt:
+            new Date().toISOString()
+    };
+
+    document
+    .querySelectorAll(
+        ".required-general"
+    )
+    .forEach(input=>{
+
+        data.general[
+            input.id
+        ] = input.value;
+
+    });
+
+    const fuel =
+        document.querySelector(
+            'input[name="combustible"]:checked'
+        );
+
+    if(fuel){
+        data.combustible =
+            fuel.value;
+    }
+
+    document
+    .querySelectorAll(
+        ".checklist tbody tr"
+    )
+    .forEach(row=>{
+
+        const status =
+            row.querySelector(
+                ".radio:checked"
+            );
+
+        const expiration =
+            row.querySelector(
+                ".expiration"
+            );
+
+        data.rows.push({
+
+            number:
+                row.dataset.number,
+
+            section:
+                row.dataset.section,
+
+            item:
+                row.dataset.item,
+
+            status:
+                status
+                ? status.value
+                : "",
+
+            expiration:
+                expiration
+                ? expiration.value
+                : ""
+
+        });
+
+    });
+
+    return data;
+}
+
+/* =========================================================
+   GUARDAR
+========================================================= */
+
+function saveChecklist(){
+
+    const data =
+        getChecklistData();
+
+    localStorage.setItem(
+        "naserChecklistVehiculo",
+        JSON.stringify(data)
+    );
+
+    showMessage(
+        "Checklist vehicular guardado correctamente.",
+        "success"
+    );
+}
+
+/* =========================================================
+   CARGAR
+========================================================= */
+
+function loadChecklist(){
+
+    const saved =
+        localStorage.getItem(
+            "naserChecklistVehiculo"
+        );
+
+    if(!saved){
+        return;
+    }
+
+    try{
+
+        const data =
+            JSON.parse(saved);
+
+        if(data.general){
+
+            Object.keys(
+                data.general
+            )
+            .forEach(id=>{
+
+                const element =
+                    document.getElementById(
+                        id
+                    );
+
+                if(element){
+
+                    element.value =
+                        data.general[id];
+
+                }
+
+            });
+
+        }
+
+        if(data.combustible){
+
+            const fuel =
+                document.querySelector(
+                    `input[name="combustible"][value="${data.combustible}"]`
+                );
+
+            if(fuel){
+                fuel.checked = true;
+            }
+
+        }
+
+        if(data.rows){
+
+            const rows =
+                document.querySelectorAll(
+                    ".checklist tbody tr"
+                );
+
+            rows.forEach(
+                (row,index)=>{
+
+                    const savedRow =
+                        data.rows[index];
+
+                    if(!savedRow){
+                        return;
+                    }
+
+                    if(savedRow.status){
+
+                        const radio =
+                            row.querySelector(
+                                `.radio[value="${savedRow.status}"]`
+                            );
+
+                        if(radio){
+
+                            radio.checked =
+                                true;
+
+                            row.classList.add(
+                                "row-" +
+                                savedRow.status
+                            );
+
+                        }
+
+                    }
+
+                    const expiration =
+                        row.querySelector(
+                            ".expiration"
+                        );
+
+                    if(expiration){
+
+                        expiration.value =
+                            savedRow.expiration || "";
+
+                    }
+
+                }
+            );
+
+        }
+
+        if(
+            data.observaciones !== undefined
+        ){
+
+            document.getElementById(
+                "observacionesTexto"
+            ).value =
+                data.observaciones;
+
+        }
+
+        if(data.responsables){
+
+            document.getElementById(
+                "responsableEntrega"
+            ).value =
+                data.responsables.entrega || "";
+
+            document.getElementById(
+                "responsableRecibe"
+            ).value =
+                data.responsables.recibe || "";
+
+            document.getElementById(
+                "supervisor"
+            ).value =
+                data.responsables.supervisor || "";
+
+        }
+
+    }
+    catch(error){
+
+        console.error(
+            "Error al cargar:",
+            error
+        );
+
+    }
+
+    updateSummary();
+    updateProgress();
+}
+
+/* =========================================================
+   VALIDAR FINALIZACIÓN
+========================================================= */
+
+function validateChecklist(){
+
+    let valid = true;
+    let missing = 0;
+    let firstError = null;
+
+    document
+    .querySelectorAll(
+        ".field-error"
+    )
+    .forEach(element=>{
+
+        element.classList.remove(
+            "field-error"
+        );
+
+    });
+
+    document
+    .querySelectorAll(
+        ".row-error"
+    )
+    .forEach(row=>{
+
+        row.classList.remove(
+            "row-error"
+        );
+
+    });
+
+    /* DATOS DEL VEHÍCULO */
+
+    document
+    .querySelectorAll(
+        ".required-general"
+    )
+    .forEach(input=>{
+
+        if(
+            input.value.trim() === ""
+        ){
+
+            valid = false;
+            missing++;
+
+            input.classList.add(
+                "field-error"
+            );
+
+            if(!firstError){
+                firstError = input;
+            }
+
+        }
+
+    });
+
+    /* COMBUSTIBLE */
+
+    const fuel =
+        document.querySelector(
+            'input[name="combustible"]:checked'
+        );
+
+    if(!fuel){
+
+        valid = false;
+        missing++;
+
+        const fuelBox =
+            document.querySelector(
+                ".fuel-box"
+            );
+
+        fuelBox.classList.add(
+            "field-error"
+        );
+
+        if(!firstError){
+            firstError = fuelBox;
+        }
+
+    }
+
+    /* TODAS LAS FILAS */
+
+    document
+    .querySelectorAll(
+        ".checklist tbody tr"
+    )
+    .forEach(row=>{
+
+        const status =
+            row.querySelector(
+                ".radio:checked"
+            );
+
+        if(!status){
+
+            valid = false;
+            missing++;
+
+            row.classList.add(
+                "row-error"
+            );
+
+            if(!firstError){
+                firstError = row;
+            }
+
+        }
+
+    });
+
+    /* RESPONSABLES */
+
+    document
+    .querySelectorAll(
+        ".required-responsible"
+    )
+    .forEach(input=>{
+
+        if(
+            input.value.trim() === ""
+        ){
+
+            valid = false;
+            missing++;
+
+            input.classList.add(
+                "field-error"
+            );
+
+            if(!firstError){
+                firstError = input;
+            }
+
+        }
+
+    });
+
+    return {
+        valid,
+        missing,
+        firstError
+    };
+}
+
+/* =========================================================
+   FINALIZAR
+========================================================= */
+
+function finishChecklist(){
+
+    const validation =
+        validateChecklist();
+
+    if(!validation.valid){
+
+        showMessage(
+            `No se puede finalizar. Faltan ${validation.missing} campos o controles obligatorios.`,
+            "error"
+        );
+
+        if(validation.firstError){
+
+            validation.firstError
+            .scrollIntoView({
+                behavior:"smooth",
+                block:"center"
+            });
+
+        }
+
+        return;
+    }
+
+    const confirmFinish =
+        confirm(
+            "Todos los controles obligatorios están completos. ¿Desea finalizar el checklist vehicular?"
+        );
+
+    if(!confirmFinish){
+        return;
+    }
+
+    const data =
+        getChecklistData();
+
+    data.finished =
+        true;
+
+    data.finishedAt =
+        new Date().toISOString();
+
+    localStorage.setItem(
+        "naserChecklistVehiculo",
+        JSON.stringify(data)
+    );
+
+    const banner =
+        document.getElementById(
+            "finishedBanner"
+        );
+
+    banner.style.display =
+        "block";
+
+    const now =
+        new Date();
+
+    document.getElementById(
+        "finishedDate"
+    ).textContent =
+        "Finalizado el " +
+        now.toLocaleDateString(
+            "es-AR"
+        ) +
+        " a las " +
+        now.toLocaleTimeString(
+            "es-AR",
+            {
+                hour:"2-digit",
+                minute:"2-digit"
+            }
+        );
+
+    document.getElementById(
+        "progressText"
+    ).textContent =
+        "100% completado";
+
+    document.getElementById(
+        "progressBar"
+    ).style.width =
+        "100%";
+
+    lockChecklist();
+
+    showMessage(
+        "Checklist finalizado correctamente.",
+        "success"
+    );
+
+    window.scrollTo({
+        top:0,
+        behavior:"smooth"
+    });
+}
+
+/* =========================================================
+   BLOQUEAR
+========================================================= */
+
+function lockChecklist(){
+
+    document
+    .querySelectorAll(
+        "input, select, textarea"
+    )
+    .forEach(element=>{
+
+        element.disabled =
+            true;
+
+    });
+
+    document.getElementById(
+        "finishButton"
+    ).disabled =
+        true;
+}
+
+/* =========================================================
+   LIMPIAR
+========================================================= */
+
+function clearChecklist(){
+
+    const confirmation =
+        confirm(
+            "¿Desea limpiar completamente el checklist vehicular?"
+        );
+
+    if(!confirmation){
+        return;
+    }
+
+    localStorage.removeItem(
+        "naserChecklistVehiculo"
+    );
+
+    document
+    .querySelectorAll(
+        "input, textarea"
+    )
+    .forEach(element=>{
+
+        if(
+            element.type === "radio"
+        ){
+
+            element.checked =
+                false;
+
+        }else{
+
+            element.value =
+                "";
+
+        }
+
+        element.disabled =
+            false;
+
+        element.classList.remove(
+            "field-error"
+        );
+
+    });
+
+    document
+    .querySelectorAll(
+        "select"
+    )
+    .forEach(select=>{
+
+        select.selectedIndex =
+            0;
+
+        select.disabled =
+            false;
+
+        select.classList.remove(
+            "field-error"
+        );
+
+    });
+
+    document
+    .querySelectorAll(
+        ".checklist tbody tr"
+    )
+    .forEach(row=>{
+
+        row.classList.remove(
+            "row-bueno",
+            "row-malo",
+            "row-na",
+            "row-error"
+        );
+
+    });
+
+    document
+    .querySelector(
+        ".fuel-box"
+    )
+    .classList.remove(
+        "field-error"
+    );
+
+    document.getElementById(
+        "finishedBanner"
+    ).style.display =
+        "none";
+
+    document.getElementById(
+        "resultDetail"
+    ).style.display =
+        "none";
+
+    document.getElementById(
+        "finishButton"
+    ).disabled =
+        false;
+
+    setToday();
+
+    updateSummary();
+    updateProgress();
+
+    showMessage(
+        "Checklist limpiado correctamente.",
+        "success"
+    );
+}
+
+/* =========================================================
+   MENSAJES
+========================================================= */
+
+function showMessage(text,type){
+
+    const message =
+        document.getElementById(
+            "systemMessage"
+        );
+
+    message.className =
+        "message " + type;
+
+    message.textContent =
+        text;
+
+    message.style.display =
+        "block";
+
+    setTimeout(()=>{
+
+        message.style.display =
+            "none";
+
+    },5000);
+}
+
+/* =========================================================
+   FECHA ACTUAL
+========================================================= */
+
+function setToday(){
+
+    const input =
+        document.getElementById(
+            "fechaInspeccion"
+        );
+
+    if(input.value !== ""){
+        return;
+    }
+
+    const now =
+        new Date();
+
+    const year =
+        now.getFullYear();
+
+    const month =
+        String(
+            now.getMonth()+1
+        ).padStart(2,"0");
+
+    const day =
+        String(
+            now.getDate()
+        ).padStart(2,"0");
+
+    input.value =
+        `${year}-${month}-${day}`;
+}
+
+/* =========================================================
+   ACTUALIZACIÓN AUTOMÁTICA
+========================================================= */
+
+document.addEventListener(
+    "input",
+    event=>{
+
+        event.target
+        .classList
+        .remove(
+            "field-error"
+        );
+
+        updateProgress();
+    }
+);
+
+document.addEventListener(
+    "change",
+    event=>{
+
+        event.target
+        .classList
+        .remove(
+            "field-error"
+        );
+
+        if(
+            event.target.name ===
+            "combustible"
+        ){
+
+            document
+            .querySelector(
+                ".fuel-box"
+            )
+            .classList
+            .remove(
+                "field-error"
+            );
+
+        }
+
+        updateSummary();
+        updateProgress();
+    }
+);
+
+/* =========================================================
+   MENÚ MOBILE
+========================================================= */
+
+function toggleMenu(){
+
+    document
+    .getElementById(
+        "sidebar"
+    )
+    .classList
+    .toggle(
+        "open"
+    );
+}
+
+/* =========================================================
+   MENÚ ACTIVO
+========================================================= */
+
+function startNavigation(){
+
+    const links =
+        document.querySelectorAll(
+            ".nav-link"
+        );
+
+    const cards =
+        document.querySelectorAll(
+            ".observe"
+        );
+
+    const observer =
+        new IntersectionObserver(
+            entries=>{
+
+                entries.forEach(
+                    entry=>{
+
+                        if(
+                            entry.isIntersecting
+                        ){
+
+                            links.forEach(
+                                link=>
+                                link.classList.remove(
+                                    "active"
+                                )
+                            );
+
+                            const active =
+                                document.querySelector(
+                                    `.nav-link[href="#${entry.target.id}"]`
+                                );
+
+                            if(active){
+
+                                active.classList.add(
+                                    "active"
+                                );
+
+                            }
+
+                        }
+
+                    }
+                );
+
+            },
+            {
+                threshold:.2,
+                rootMargin:
+                    "-15% 0px -60% 0px"
+            }
+        );
+
+    cards.forEach(
+        card=>
+        observer.observe(card)
+    );
+
+    links.forEach(link=>{
+
+        link.addEventListener(
+            "click",
+            ()=>{
+
+                if(
+                    window.innerWidth
+                    <= 760
+                ){
+
+                    document
+                    .getElementById(
+                        "sidebar"
+                    )
+                    .classList
+                    .remove(
+                        "open"
+                    );
+
+                }
+
+            }
+        );
+
+    });
+}
+
+/* =========================================================
+   INICIO
+========================================================= */
+
+setToday();
+
+loadChecklist();
+
+updateSummary();
+
+updateProgress();
+
+startNavigation();
+
+</script>
+
+<script>
+// Dentro de NASER, el guardado y el envío se realizan desde la barra del sistema.
+if (window.__NASER_FORM__) {
+    document.querySelectorAll('.required-general, .required-responsible, .checklist input[type="radio"], input[name="combustible"]').forEach(function (field) {
+        field.required = true;
+    });
+    document.querySelectorAll('button[onclick="saveChecklist()"], button[onclick="finishChecklist()"], #finishedBanner').forEach(function (element) {
+        element.style.display = 'none';
+    });
+}
+</script>
+</body>
+</html>

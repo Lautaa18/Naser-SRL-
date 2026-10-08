@@ -1,0 +1,3293 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>NASER SRL | Checklist Hidrogrúa</title>
+
+<style>
+
+/* =========================================================
+   NASER SRL - CHECKLIST HIDROGRÚA
+========================================================= */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+:root{
+    --black:#0d0d0d;
+    --black2:#171717;
+    --white:#ffffff;
+    --bg:#f2f2f2;
+    --border:#d8d8d8;
+    --text:#111111;
+    --muted:#777777;
+    --green:#71a800;
+    --red:#b42318;
+    --gray:#777777;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    font-family:Arial,Helvetica,sans-serif;
+    background:var(--bg);
+    color:var(--text);
+}
+
+/* =========================================================
+   SIDEBAR
+========================================================= */
+
+.sidebar{
+    position:fixed;
+    top:0;
+    left:0;
+
+    width:335px;
+    height:100vh;
+
+    background:var(--black);
+    color:white;
+
+    padding:40px 28px;
+
+    overflow-y:auto;
+
+    z-index:1000;
+}
+
+.brand{
+    display:flex;
+    align-items:center;
+    gap:18px;
+
+    padding:0 8px 35px;
+
+    border-bottom:1px solid #333;
+}
+
+.logo{
+    width:60px;
+    height:60px;
+
+    background:white;
+    color:black;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:30px;
+    font-weight:900;
+}
+
+.brand h1{
+    font-size:29px;
+    letter-spacing:7px;
+}
+
+.brand small{
+    color:#aaa;
+    letter-spacing:5px;
+}
+
+.sidebar-title{
+    margin:35px 10px 20px;
+
+    color:#888;
+
+    font-size:11px;
+    letter-spacing:3px;
+    line-height:1.5;
+}
+
+.menu{
+    list-style:none;
+}
+
+.menu a{
+    display:flex;
+    align-items:center;
+    gap:16px;
+
+    color:#ccc;
+
+    text-decoration:none;
+
+    padding:14px 12px;
+
+    border-left:2px solid transparent;
+
+    font-size:13px;
+
+    transition:.2s;
+}
+
+.menu a:hover,
+.menu a.active{
+    color:white;
+    background:#171717;
+    border-left-color:white;
+}
+
+.menu-number{
+    width:25px;
+
+    color:#777;
+
+    font-size:10px;
+}
+
+/* =========================================================
+   MAIN
+========================================================= */
+
+.main{
+    margin-left:335px;
+    min-height:100vh;
+}
+
+.topbar{
+    min-height:125px;
+
+    background:white;
+
+    border-bottom:1px solid #ddd;
+
+    padding:28px 50px;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+}
+
+.breadcrumb{
+    color:#777;
+
+    font-size:11px;
+
+    letter-spacing:3px;
+
+    margin-bottom:16px;
+}
+
+.topbar h2{
+    font-size:28px;
+}
+
+.control-active{
+    display:flex;
+    align-items:center;
+    gap:10px;
+
+    font-size:11px;
+
+    letter-spacing:2px;
+}
+
+.control-dot{
+    width:10px;
+    height:10px;
+
+    background:#111;
+
+    border-radius:50%;
+}
+
+.mobile-menu{
+    display:none;
+}
+
+/* =========================================================
+   PAGE
+========================================================= */
+
+.page{
+    max-width:1600px;
+
+    margin:auto;
+
+    padding:45px 48px 100px;
+}
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.hero{
+    background:#111;
+    color:white;
+
+    padding:45px;
+
+    display:grid;
+
+    grid-template-columns:1fr 270px;
+
+    gap:40px;
+
+    margin-bottom:30px;
+}
+
+.hero-label{
+    color:#999;
+
+    font-size:10px;
+
+    letter-spacing:4px;
+
+    margin-bottom:20px;
+}
+
+.hero h1{
+    font-size:34px;
+
+    margin-bottom:14px;
+}
+
+.hero p{
+    color:#ddd;
+
+    line-height:1.6;
+
+    max-width:850px;
+}
+
+.document{
+    border-left:1px solid #444;
+
+    padding-left:35px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+}
+
+.document span{
+    color:#888;
+
+    font-size:10px;
+
+    letter-spacing:3px;
+
+    margin-bottom:15px;
+}
+
+.document strong{
+    font-size:15px;
+
+    margin-bottom:12px;
+}
+
+.document small{
+    color:#888;
+
+    letter-spacing:2px;
+}
+
+/* =========================================================
+   PROGRESO
+========================================================= */
+
+.progress-panel{
+    background:#111;
+
+    color:white;
+
+    padding:28px 30px;
+
+    margin-bottom:28px;
+}
+
+.progress-top{
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    gap:25px;
+
+    margin-bottom:20px;
+}
+
+.progress-label{
+    display:block;
+
+    color:#888;
+
+    font-size:9px;
+
+    letter-spacing:2.5px;
+
+    margin-bottom:8px;
+}
+
+.progress-top h3{
+    font-size:23px;
+}
+
+.progress-counter{
+    display:flex;
+
+    align-items:center;
+
+    gap:6px;
+
+    font-size:17px;
+}
+
+.progress-counter span{
+    color:#777;
+}
+
+.progress-track{
+    width:100%;
+
+    height:9px;
+
+    background:#333;
+
+    overflow:hidden;
+}
+
+.progress-bar{
+    width:0%;
+
+    height:100%;
+
+    background:white;
+
+    transition:width .35s ease;
+}
+
+/* =========================================================
+   CARDS
+========================================================= */
+
+.card{
+    background:white;
+
+    border:1px solid var(--border);
+
+    margin-bottom:28px;
+
+    scroll-margin-top:25px;
+}
+
+.card-header{
+    min-height:100px;
+
+    padding:27px 32px;
+
+    border-bottom:1px solid var(--border);
+
+    display:flex;
+
+    align-items:center;
+
+    gap:18px;
+}
+
+.card-number{
+    width:44px;
+    height:44px;
+
+    background:#111;
+
+    color:white;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:11px;
+
+    font-weight:bold;
+
+    flex-shrink:0;
+}
+
+.card-title h3{
+    font-size:19px;
+
+    margin-bottom:6px;
+}
+
+.card-title p{
+    color:#777;
+
+    font-size:13px;
+}
+
+.card-body{
+    padding:32px;
+}
+
+/* =========================================================
+   FORMULARIOS
+========================================================= */
+
+.form-grid{
+    display:grid;
+
+    grid-template-columns:repeat(4,1fr);
+
+    gap:23px;
+}
+
+.form-group label{
+    display:block;
+
+    font-size:10px;
+
+    font-weight:bold;
+
+    letter-spacing:.5px;
+
+    margin-bottom:9px;
+}
+
+.form-group input{
+    width:100%;
+
+    height:55px;
+
+    background:#fafafa;
+
+    border:1px solid #ccc;
+
+    padding:0 15px;
+
+    font-size:14px;
+
+    outline:none;
+}
+
+.form-group input:focus{
+    border-color:#111;
+
+    background:white;
+}
+
+/* =========================================================
+   TABLA
+========================================================= */
+
+.table-wrapper{
+    width:100%;
+
+    overflow-x:auto;
+}
+
+.checklist{
+    width:100%;
+
+    border-collapse:collapse;
+
+    min-width:850px;
+}
+
+.checklist th{
+    background:#111;
+
+    color:white;
+
+    padding:16px 12px;
+
+    font-size:10px;
+
+    letter-spacing:1.3px;
+
+    text-align:left;
+
+    border-right:1px solid #333;
+}
+
+.checklist th.center{
+    text-align:center;
+}
+
+.checklist td{
+    padding:15px 12px;
+
+    border-bottom:1px solid #ddd;
+
+    font-size:13px;
+}
+
+.checklist tbody tr:nth-child(even){
+    background:#fafafa;
+}
+
+.checklist tbody tr:hover{
+    background:#f2f2f2;
+}
+
+.number{
+    width:60px;
+
+    text-align:center;
+
+    color:#888;
+
+    font-weight:bold;
+}
+
+.item{
+    font-weight:600;
+}
+
+.option{
+    width:100px;
+
+    text-align:center;
+}
+
+.radio{
+    width:20px;
+    height:20px;
+
+    cursor:pointer;
+
+    accent-color:#111;
+}
+
+/* =========================================================
+   ESTADOS
+========================================================= */
+
+.row-correcto{
+    border-left:4px solid var(--green);
+}
+
+.row-incorrecto{
+    border-left:4px solid var(--red);
+}
+
+.row-nv{
+    border-left:4px solid var(--gray);
+}
+
+.row-error{
+    outline:2px solid var(--red);
+
+    outline-offset:-2px;
+
+    background:#fff5f5 !important;
+}
+
+.field-error{
+    border:2px solid var(--red) !important;
+
+    background:#fff7f7 !important;
+}
+
+/* =========================================================
+   LEYENDA
+========================================================= */
+
+.legend{
+    display:flex;
+
+    gap:20px;
+
+    flex-wrap:wrap;
+
+    margin-bottom:25px;
+}
+
+.legend-item{
+    display:flex;
+
+    align-items:center;
+
+    gap:9px;
+
+    padding:10px 14px;
+
+    border:1px solid #ddd;
+
+    background:#fafafa;
+
+    font-size:11px;
+
+    font-weight:bold;
+}
+
+.legend-color{
+    width:8px;
+    height:8px;
+
+    border-radius:50%;
+}
+
+.legend-green{
+    background:var(--green);
+}
+
+.legend-red{
+    background:var(--red);
+}
+
+.legend-gray{
+    background:var(--gray);
+}
+
+/* =========================================================
+   RESUMEN
+========================================================= */
+
+.summary{
+    display:grid;
+
+    grid-template-columns:repeat(5,1fr);
+
+    background:white;
+
+    border:1px solid #ddd;
+
+    margin-bottom:28px;
+}
+
+.summary-box{
+    padding:22px;
+
+    border-right:1px solid #ddd;
+}
+
+.summary-box:last-child{
+    border-right:none;
+}
+
+.summary-box span{
+    display:block;
+
+    color:#777;
+
+    font-size:9px;
+
+    letter-spacing:1.5px;
+
+    margin-bottom:10px;
+}
+
+.summary-box strong{
+    font-size:28px;
+}
+
+.summary-click{
+    cursor:pointer;
+
+    transition:.2s;
+}
+
+.summary-click:hover{
+    background:#f4f4f4;
+}
+
+.summary-click small{
+    display:block;
+
+    color:#999;
+
+    font-size:9px;
+
+    letter-spacing:1px;
+
+    margin-top:8px;
+}
+
+/* =========================================================
+   RESULTADOS
+========================================================= */
+
+.result-list{
+    display:grid;
+
+    gap:10px;
+}
+
+.result-item{
+    display:grid;
+
+    grid-template-columns:45px 1fr;
+
+    gap:15px;
+
+    align-items:center;
+
+    border:1px solid #ddd;
+
+    background:#fafafa;
+
+    padding:15px 17px;
+}
+
+.result-number{
+    color:#999;
+
+    font-size:11px;
+}
+
+.result-name{
+    font-size:13px;
+
+    font-weight:bold;
+}
+
+/* =========================================================
+   NOTAS DE SEGURIDAD
+========================================================= */
+
+.safety-box{
+    border:1px solid #111;
+
+    background:#fafafa;
+}
+
+.safety-title{
+    background:#111;
+
+    color:white;
+
+    padding:17px 20px;
+
+    font-size:11px;
+
+    font-weight:bold;
+
+    letter-spacing:2px;
+}
+
+.safety-content{
+    padding:25px;
+}
+
+.safety-content p{
+    font-size:13px;
+
+    line-height:1.7;
+
+    margin-bottom:16px;
+}
+
+.safety-content p:last-child{
+    margin-bottom:0;
+}
+
+.safety-number{
+    display:inline-flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    width:25px;
+    height:25px;
+
+    background:#111;
+
+    color:white;
+
+    font-size:10px;
+
+    font-weight:bold;
+
+    margin-right:10px;
+}
+
+/* =========================================================
+   OBSERVACIONES
+========================================================= */
+
+textarea{
+    width:100%;
+
+    min-height:170px;
+
+    resize:vertical;
+
+    background:#fafafa;
+
+    border:1px solid #ccc;
+
+    padding:15px;
+
+    font-family:Arial,Helvetica,sans-serif;
+
+    font-size:14px;
+
+    outline:none;
+}
+
+/* =========================================================
+   RESPONSABLES
+========================================================= */
+
+.responsibles{
+    display:grid;
+
+    grid-template-columns:repeat(2,1fr);
+
+    gap:25px;
+}
+
+.responsible{
+    border:1px solid #ddd;
+
+    background:#fafafa;
+
+    padding:25px;
+}
+
+.responsible small{
+    display:block;
+
+    color:#777;
+
+    letter-spacing:2px;
+
+    margin-bottom:10px;
+}
+
+.responsible h4{
+    margin-bottom:18px;
+}
+
+.responsible input{
+    width:100%;
+
+    height:55px;
+
+    background:white;
+
+    border:1px solid #ccc;
+
+    padding:0 15px;
+
+    font-size:14px;
+
+    outline:none;
+}
+
+/* =========================================================
+   BOTONES
+========================================================= */
+
+.actions{
+    display:flex;
+
+    justify-content:flex-end;
+
+    gap:12px;
+
+    margin-top:30px;
+
+    flex-wrap:wrap;
+}
+
+.btn{
+    min-width:160px;
+
+    padding:15px 20px;
+
+    border:1px solid #111;
+
+    cursor:pointer;
+
+    font-size:11px;
+
+    font-weight:bold;
+
+    letter-spacing:1px;
+
+    transition:.2s;
+}
+
+.btn-save,
+.btn-light{
+    background:white;
+
+    color:#111;
+}
+
+.btn-save:hover,
+.btn-light:hover{
+    background:#eee;
+}
+
+.btn-finish{
+    min-width:220px;
+
+    background:#111;
+
+    color:white;
+}
+
+.btn-finish:hover{
+    background:#333;
+}
+
+.btn-finish:disabled{
+    background:#777;
+
+    border-color:#777;
+
+    cursor:not-allowed;
+}
+
+/* =========================================================
+   MENSAJES
+========================================================= */
+
+.message{
+    display:none;
+
+    margin-top:15px;
+
+    padding:17px 20px;
+
+    border:1px solid #ddd;
+
+    background:white;
+
+    font-size:12px;
+}
+
+.message.error{
+    border-left:4px solid var(--red);
+}
+
+.message.success{
+    border-left:4px solid var(--green);
+}
+
+.finished-banner{
+    display:none;
+
+    background:#111;
+
+    color:white;
+
+    padding:22px 25px;
+
+    margin-bottom:25px;
+}
+
+.finished-banner strong{
+    display:block;
+
+    font-size:17px;
+
+    margin-bottom:7px;
+}
+
+.finished-banner span{
+    color:#bbb;
+
+    font-size:12px;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media(max-width:1100px){
+
+    .sidebar{
+        width:260px;
+    }
+
+    .main{
+        margin-left:260px;
+    }
+
+    .form-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .hero{
+        grid-template-columns:1fr;
+    }
+
+    .document{
+        border-left:0;
+
+        border-top:1px solid #444;
+
+        padding-left:0;
+
+        padding-top:25px;
+    }
+
+    .summary{
+        grid-template-columns:repeat(2,1fr);
+    }
+}
+
+@media(max-width:760px){
+
+    .sidebar{
+        width:290px;
+
+        transform:translateX(-100%);
+
+        transition:.3s;
+    }
+
+    .sidebar.open{
+        transform:translateX(0);
+    }
+
+    .main{
+        margin-left:0;
+    }
+
+    .mobile-menu{
+        display:block;
+
+        width:45px;
+        height:45px;
+
+        background:#111;
+
+        color:white;
+
+        border:0;
+
+        font-size:20px;
+
+        margin-right:15px;
+    }
+
+    .topbar{
+        padding:20px;
+    }
+
+    .topbar-left{
+        display:flex;
+
+        align-items:center;
+    }
+
+    .breadcrumb,
+    .control-active{
+        display:none;
+    }
+
+    .topbar h2{
+        font-size:19px;
+    }
+
+    .page{
+        padding:22px 13px 60px;
+    }
+
+    .hero{
+        padding:28px 23px;
+    }
+
+    .hero h1{
+        font-size:25px;
+    }
+
+    .form-grid,
+    .summary,
+    .responsibles{
+        grid-template-columns:1fr;
+    }
+
+    .progress-top{
+        flex-direction:column;
+
+        align-items:flex-start;
+    }
+
+    .actions{
+        flex-direction:column;
+    }
+
+    .btn{
+        width:100%;
+    }
+}
+
+/* =========================================================
+   PRINT
+========================================================= */
+
+@media print{
+
+    .sidebar,
+    .topbar,
+    .actions,
+    .message{
+        display:none !important;
+    }
+
+    .main{
+        margin:0;
+    }
+
+    .page{
+        padding:0;
+
+        max-width:none;
+    }
+
+    body{
+        background:white;
+    }
+
+    .hero,
+    .progress-panel,
+    .card-number,
+    .checklist th,
+    .safety-title{
+        -webkit-print-color-adjust:exact;
+
+        print-color-adjust:exact;
+    }
+
+    .checklist tr{
+        break-inside:avoid;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- =========================================================
+     SIDEBAR
+========================================================= -->
+
+<aside
+    class="sidebar"
+    id="sidebar">
+
+    <div class="brand">
+
+        <div class="logo">
+            N
+        </div>
+
+        <div>
+
+            <h1>
+                NASER
+            </h1>
+
+            <small>
+                SRL
+            </small>
+
+        </div>
+
+    </div>
+
+    <div class="sidebar-title">
+        SISTEMA DE GESTIÓN<br>
+        INTEGRADO
+    </div>
+
+    <ul class="menu">
+
+        <li>
+            <a
+                href="#datos"
+                class="nav-link active">
+
+                <span class="menu-number">
+                    01
+                </span>
+
+                Datos generales
+
+            </a>
+        </li>
+
+        <li>
+            <a
+                href="#inspeccion"
+                class="nav-link">
+
+                <span class="menu-number">
+                    02
+                </span>
+
+                Inspección Hidrogrúa
+
+            </a>
+        </li>
+
+        <li>
+            <a
+                href="#seguridad"
+                class="nav-link">
+
+                <span class="menu-number">
+                    03
+                </span>
+
+                Seguridad
+
+            </a>
+        </li>
+
+        <li>
+            <a
+                href="#observaciones"
+                class="nav-link">
+
+                <span class="menu-number">
+                    04
+                </span>
+
+                Observaciones
+
+            </a>
+        </li>
+
+        <li>
+            <a
+                href="#responsables"
+                class="nav-link">
+
+                <span class="menu-number">
+                    05
+                </span>
+
+                Responsables
+
+            </a>
+        </li>
+
+    </ul>
+
+</aside>
+
+<!-- =========================================================
+     MAIN
+========================================================= -->
+
+<main class="main">
+
+<header class="topbar">
+
+    <div class="topbar-left">
+
+        <button
+            class="mobile-menu"
+            onclick="toggleMenu()">
+            ☰
+        </button>
+
+        <div>
+
+            <div class="breadcrumb">
+                NASER SRL / SGI / EQUIPOS
+            </div>
+
+            <h2>
+                Checklist de Hidrogrúa
+            </h2>
+
+        </div>
+
+    </div>
+
+    <div class="control-active">
+
+        <div class="control-dot"></div>
+
+        CONTROL ACTIVO
+
+    </div>
+
+</header>
+
+<div class="page">
+
+<!-- =========================================================
+     HERO
+========================================================= -->
+
+<section class="hero">
+
+    <div>
+
+        <div class="hero-label">
+            INSPECCIÓN OPERATIVA · HIDROGRÚA
+        </div>
+
+        <h1>
+            Control de estado de hidrogrúa
+        </h1>
+
+        <p>
+            Inspección preventiva de componentes, sistemas hidráulicos,
+            elementos de elevación y condiciones generales antes de la
+            utilización del equipo.
+        </p>
+
+    </div>
+
+    <div class="document">
+
+        <span>
+            DOCUMENTO
+        </span>
+
+        <strong>
+            CHECKLIST DE HIDROGRÚA
+        </strong>
+
+        <small>
+            NASER SRL · SGI
+        </small>
+
+    </div>
+
+</section>
+
+<!-- =========================================================
+     FINALIZADO
+========================================================= -->
+
+<div
+    class="finished-banner"
+    id="finishedBanner">
+
+    <strong>
+        CHECKLIST FINALIZADO
+    </strong>
+
+    <span id="finishedDate"></span>
+
+</div>
+
+<!-- =========================================================
+     PROGRESO
+========================================================= -->
+
+<section class="progress-panel">
+
+    <div class="progress-top">
+
+        <div>
+
+            <span class="progress-label">
+                PROGRESO DEL CHECKLIST
+            </span>
+
+            <h3 id="progressText">
+                0% completado
+            </h3>
+
+        </div>
+
+        <div class="progress-counter">
+
+            <strong id="completedFields">
+                0
+            </strong>
+
+            <span>
+                /
+            </span>
+
+            <strong id="requiredFields">
+                0
+            </strong>
+
+        </div>
+
+    </div>
+
+    <div class="progress-track">
+
+        <div
+            class="progress-bar"
+            id="progressBar">
+        </div>
+
+    </div>
+
+</section>
+
+<!-- =========================================================
+     DATOS GENERALES
+========================================================= -->
+
+<section
+    class="card observe"
+    id="datos">
+
+    <div class="card-header">
+
+        <div class="card-number">
+            01
+        </div>
+
+        <div class="card-title">
+
+            <h3>
+                Datos generales
+            </h3>
+
+            <p>
+                Identificación de la inspección y del equipo.
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="form-grid">
+
+            <div class="form-group">
+
+                <label>
+                    FECHA *
+                </label>
+
+                <input
+                    type="date"
+                    id="fecha"
+                    class="required-general">
+
+            </div>
+
+            <div class="form-group">
+
+                <label>
+                    OPERADOR *
+                </label>
+
+                <input
+                    type="text"
+                    id="operador"
+                    class="required-general"
+                    placeholder="Nombre y apellido">
+
+            </div>
+
+            <div class="form-group">
+
+                <label>
+                    EQUIPO *
+                </label>
+
+                <input
+                    type="text"
+                    id="equipo"
+                    class="required-general"
+                    placeholder="Número / identificación">
+
+            </div>
+
+            <div class="form-group">
+
+                <label>
+                    LUGAR *
+                </label>
+
+                <input
+                    type="text"
+                    id="lugar"
+                    class="required-general"
+                    placeholder="Lugar de inspección">
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- =========================================================
+     INSPECCIÓN
+========================================================= -->
+
+<section
+    class="card observe"
+    id="inspeccion">
+
+    <div class="card-header">
+
+        <div class="card-number">
+            02
+        </div>
+
+        <div class="card-title">
+
+            <h3>
+                Inspección de Hidrogrúa
+            </h3>
+
+            <p>
+                Verifique el estado de cada componente antes de operar.
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="legend">
+
+            <div class="legend-item">
+
+                <div class="legend-color legend-green"></div>
+
+                C = CORRECTO
+
+            </div>
+
+            <div class="legend-item">
+
+                <div class="legend-color legend-red"></div>
+
+                I = INCORRECTO
+
+            </div>
+
+            <div class="legend-item">
+
+                <div class="legend-color legend-gray"></div>
+
+                NV = NO VERIFICADO
+
+            </div>
+
+        </div>
+
+        <div class="table-wrapper">
+
+            <table class="checklist">
+
+                <thead>
+
+                    <tr>
+
+                        <th class="center">
+                            N°
+                        </th>
+
+                        <th>
+                            ELEMENTO
+                        </th>
+
+                        <th class="center">
+                            CORRECTO
+                        </th>
+
+                        <th class="center">
+                            INCORRECTO
+                        </th>
+
+                        <th class="center">
+                            NV
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody id="checklistBody"></tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- =========================================================
+     RESUMEN
+========================================================= -->
+
+<div class="summary">
+
+    <div class="summary-box">
+
+        <span>
+            TOTAL
+        </span>
+
+        <strong id="total">
+            10
+        </strong>
+
+    </div>
+
+    <div class="summary-box">
+
+        <span>
+            VERIFICADOS
+        </span>
+
+        <strong id="verified">
+            0
+        </strong>
+
+    </div>
+
+    <div
+        class="summary-box summary-click"
+        onclick="showResults('correcto')">
+
+        <span>
+            CORRECTOS
+        </span>
+
+        <strong id="correct">
+            0
+        </strong>
+
+        <small>
+            VER ELEMENTOS
+        </small>
+
+    </div>
+
+    <div
+        class="summary-box summary-click"
+        onclick="showResults('incorrecto')">
+
+        <span>
+            INCORRECTOS
+        </span>
+
+        <strong id="incorrect">
+            0
+        </strong>
+
+        <small>
+            VER ELEMENTOS
+        </small>
+
+    </div>
+
+    <div
+        class="summary-box summary-click"
+        onclick="showResults('nv')">
+
+        <span>
+            NV
+        </span>
+
+        <strong id="nv">
+            0
+        </strong>
+
+        <small>
+            VER ELEMENTOS
+        </small>
+
+    </div>
+
+</div>
+
+<!-- =========================================================
+     DETALLE RESULTADOS
+========================================================= -->
+
+<section
+    class="card"
+    id="resultDetail"
+    style="display:none;">
+
+    <div class="card-header">
+
+        <div class="card-number">
+            ✓
+        </div>
+
+        <div class="card-title">
+
+            <h3 id="resultTitle">
+                Resultados
+            </h3>
+
+            <p>
+                Detalle de los elementos según la calificación seleccionada.
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="card-body">
+
+        <div
+            class="result-list"
+            id="resultList">
+        </div>
+
+    </div>
+
+</section>
+
+<!-- =========================================================
+     SEGURIDAD
+========================================================= -->
+
+<section
+    class="card observe"
+    id="seguridad">
+
+    <div class="card-header">
+
+        <div class="card-number">
+            03
+        </div>
+
+        <div class="card-title">
+
+            <h3>
+                Seguridad operacional
+            </h3>
+
+            <p>
+                Condiciones obligatorias antes de montar y operar.
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="safety-box">
+
+            <div class="safety-title">
+                NOTAS DE SEGURIDAD
+            </div>
+
+            <div class="safety-content">
+
+                <p>
+
+                    <span class="safety-number">
+                        01
+                    </span>
+
+                    No operar el equipo en caso de existir
+                    pérdidas hidráulicas, fallas o roturas visibles
+                    y dar aviso a supervisión.
+
+                </p>
+
+                <p>
+
+                    <span class="safety-number">
+                        02
+                    </span>
+
+                    Delimitar y señalizar el área de trabajo
+                    antes de montar y operar el equipo.
+
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- =========================================================
+     OBSERVACIONES
+========================================================= -->
+
+<section
+    class="card observe"
+    id="observaciones">
+
+    <div class="card-header">
+
+        <div class="card-number">
+            04
+        </div>
+
+        <div class="card-title">
+
+            <h3>
+                Observaciones
+            </h3>
+
+            <p>
+                Registre cualquier anomalía o condición detectada.
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="card-body">
+
+        <textarea
+            id="observacionesTexto"
+            placeholder="Ingrese observaciones sobre el estado de la hidrogrúa..."></textarea>
+
+    </div>
+
+</section>
+
+<!-- =========================================================
+     RESPONSABLES
+========================================================= -->
+
+<section
+    class="card observe"
+    id="responsables">
+
+    <div class="card-header">
+
+        <div class="card-number">
+            05
+        </div>
+
+        <div class="card-title">
+
+            <h3>
+                Responsables del control
+            </h3>
+
+            <p>
+                Identificación del personal que realiza y controla la inspección.
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="card-body">
+
+        <div class="responsibles">
+
+            <div class="responsible">
+
+                <small>
+                    REALIZA
+                </small>
+
+                <h4>
+                    Responsable que realiza
+                </h4>
+
+                <input
+                    type="text"
+                    id="realiza"
+                    class="required-responsible"
+                    placeholder="Nombre y apellido">
+
+            </div>
+
+            <div class="responsible">
+
+                <small>
+                    CONTROLA
+                </small>
+
+                <h4>
+                    Responsable que controla
+                </h4>
+
+                <input
+                    type="text"
+                    id="controla"
+                    class="required-responsible"
+                    placeholder="Nombre y apellido">
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- =========================================================
+     BOTONES
+========================================================= -->
+
+<div class="actions">
+
+    <button
+        class="btn btn-save"
+        type="button"
+        onclick="saveChecklist()">
+
+        GUARDAR
+
+    </button>
+
+    <button
+        class="btn btn-light"
+        type="button"
+        onclick="clearChecklist()">
+
+        LIMPIAR
+
+    </button>
+
+    <button
+        class="btn btn-finish"
+        type="button"
+        id="finishButton"
+        onclick="finishChecklist()">
+
+        FINALIZAR CHECKLIST
+
+    </button>
+
+</div>
+
+<div
+    class="message"
+    id="systemMessage">
+</div>
+
+</div>
+
+</main>
+
+<script>
+
+/* =========================================================
+   ELEMENTOS HIDROGRÚA
+========================================================= */
+
+const hydroItems = [
+
+    "Cubre comandos",
+
+    "Comandos",
+
+    "Gancho",
+
+    "Enclavamiento",
+
+    "Estabilizadores",
+
+    "Circuito Hidráulico",
+
+    "Cilindro hidráulico",
+
+    "Brazo de elevación",
+
+    "Camión portador de hidrogrúa",
+
+    "Diagrama de carga"
+
+];
+
+/* =========================================================
+   GENERAR FILAS
+========================================================= */
+
+const checklistBody =
+    document.getElementById(
+        "checklistBody"
+    );
+
+hydroItems.forEach(
+    (item,index)=>{
+
+        const number =
+            index + 1;
+
+        const row =
+            document.createElement(
+                "tr"
+            );
+
+        row.dataset.item =
+            item;
+
+        row.dataset.number =
+            number;
+
+        row.innerHTML = `
+
+            <td class="number">
+
+                ${number}
+
+            </td>
+
+            <td class="item">
+
+                ${item}
+
+            </td>
+
+            <td class="option">
+
+                <input
+                    type="radio"
+                    class="radio"
+                    name="hydro-${number}"
+                    value="correcto"
+                    onchange="changeStatus(this)">
+
+            </td>
+
+            <td class="option">
+
+                <input
+                    type="radio"
+                    class="radio"
+                    name="hydro-${number}"
+                    value="incorrecto"
+                    onchange="changeStatus(this)">
+
+            </td>
+
+            <td class="option">
+
+                <input
+                    type="radio"
+                    class="radio"
+                    name="hydro-${number}"
+                    value="nv"
+                    onchange="changeStatus(this)">
+
+            </td>
+
+        `;
+
+        checklistBody.appendChild(
+            row
+        );
+
+    }
+);
+
+/* =========================================================
+   CAMBIO DE ESTADO
+========================================================= */
+
+function changeStatus(input){
+
+    const row =
+        input.closest("tr");
+
+    row.classList.remove(
+        "row-correcto",
+        "row-incorrecto",
+        "row-nv",
+        "row-error"
+    );
+
+    row.classList.add(
+        "row-" +
+        input.value
+    );
+
+    updateSummary();
+
+    updateProgress();
+
+}
+
+/* =========================================================
+   RESUMEN
+========================================================= */
+
+function updateSummary(){
+
+    const total =
+        document.querySelectorAll(
+            ".checklist tbody tr"
+        ).length;
+
+    const verified =
+        document.querySelectorAll(
+            ".radio:checked"
+        ).length;
+
+    const correct =
+        document.querySelectorAll(
+            '.radio[value="correcto"]:checked'
+        ).length;
+
+    const incorrect =
+        document.querySelectorAll(
+            '.radio[value="incorrecto"]:checked'
+        ).length;
+
+    const nv =
+        document.querySelectorAll(
+            '.radio[value="nv"]:checked'
+        ).length;
+
+    document.getElementById(
+        "total"
+    ).textContent =
+        total;
+
+    document.getElementById(
+        "verified"
+    ).textContent =
+        verified;
+
+    document.getElementById(
+        "correct"
+    ).textContent =
+        correct;
+
+    document.getElementById(
+        "incorrect"
+    ).textContent =
+        incorrect;
+
+    document.getElementById(
+        "nv"
+    ).textContent =
+        nv;
+
+}
+
+/* =========================================================
+   PORCENTAJE DE COMPLETADO
+========================================================= */
+
+function updateProgress(){
+
+    let required = 0;
+
+    let completed = 0;
+
+    /* DATOS GENERALES */
+
+    document
+    .querySelectorAll(
+        ".required-general"
+    )
+    .forEach(input=>{
+
+        required++;
+
+        if(
+            input.value.trim() !== ""
+        ){
+
+            completed++;
+
+        }
+
+    });
+
+    /* ELEMENTOS */
+
+    document
+    .querySelectorAll(
+        ".checklist tbody tr"
+    )
+    .forEach(row=>{
+
+        required++;
+
+        if(
+            row.querySelector(
+                ".radio:checked"
+            )
+        ){
+
+            completed++;
+
+        }
+
+    });
+
+    /* RESPONSABLES */
+
+    document
+    .querySelectorAll(
+        ".required-responsible"
+    )
+    .forEach(input=>{
+
+        required++;
+
+        if(
+            input.value.trim() !== ""
+        ){
+
+            completed++;
+
+        }
+
+    });
+
+    const percentage =
+        required === 0
+        ? 0
+        : Math.round(
+            completed /
+            required *
+            100
+        );
+
+    document.getElementById(
+        "completedFields"
+    ).textContent =
+        completed;
+
+    document.getElementById(
+        "requiredFields"
+    ).textContent =
+        required;
+
+    document.getElementById(
+        "progressText"
+    ).textContent =
+        percentage +
+        "% completado";
+
+    document.getElementById(
+        "progressBar"
+    ).style.width =
+        percentage +
+        "%";
+
+}
+
+/* =========================================================
+   MOSTRAR RESULTADOS
+========================================================= */
+
+function showResults(type){
+
+    const titles = {
+
+        correcto:
+            "Elementos CORRECTOS",
+
+        incorrecto:
+            "Elementos INCORRECTOS",
+
+        nv:
+            "Elementos NO VERIFICADOS"
+
+    };
+
+    const selected =
+        document.querySelectorAll(
+            `.radio[value="${type}"]:checked`
+        );
+
+    const card =
+        document.getElementById(
+            "resultDetail"
+        );
+
+    const list =
+        document.getElementById(
+            "resultList"
+        );
+
+    document.getElementById(
+        "resultTitle"
+    ).textContent =
+        titles[type];
+
+    list.innerHTML = "";
+
+    if(
+        selected.length === 0
+    ){
+
+        list.innerHTML = `
+
+            <div class="result-item">
+
+                <span>
+                    —
+                </span>
+
+                <span>
+                    No existen elementos registrados
+                    en esta categoría.
+                </span>
+
+            </div>
+
+        `;
+
+    }
+
+    selected.forEach(
+        input=>{
+
+            const row =
+                input.closest("tr");
+
+            const div =
+                document.createElement(
+                    "div"
+                );
+
+            div.className =
+                "result-item";
+
+            div.innerHTML = `
+
+                <span class="result-number">
+
+                    ${row.dataset.number}
+
+                </span>
+
+                <span class="result-name">
+
+                    ${row.dataset.item}
+
+                </span>
+
+            `;
+
+            list.appendChild(
+                div
+            );
+
+        }
+    );
+
+    card.style.display =
+        "block";
+
+    card.scrollIntoView({
+        behavior:"smooth",
+        block:"start"
+    });
+
+}
+
+/* =========================================================
+   OBTENER DATOS
+========================================================= */
+
+function getChecklistData(){
+
+    const data = {
+
+        general:{},
+
+        items:[],
+
+        observaciones:
+            document.getElementById(
+                "observacionesTexto"
+            ).value,
+
+        responsables:{
+
+            realiza:
+                document.getElementById(
+                    "realiza"
+                ).value,
+
+            controla:
+                document.getElementById(
+                    "controla"
+                ).value
+
+        },
+
+        savedAt:
+            new Date()
+            .toISOString()
+
+    };
+
+    document
+    .querySelectorAll(
+        ".required-general"
+    )
+    .forEach(input=>{
+
+        data.general[
+            input.id
+        ] =
+            input.value;
+
+    });
+
+    document
+    .querySelectorAll(
+        ".checklist tbody tr"
+    )
+    .forEach(row=>{
+
+        const status =
+            row.querySelector(
+                ".radio:checked"
+            );
+
+        data.items.push({
+
+            number:
+                row.dataset.number,
+
+            item:
+                row.dataset.item,
+
+            status:
+                status
+                ? status.value
+                : ""
+
+        });
+
+    });
+
+    return data;
+
+}
+
+/* =========================================================
+   GUARDAR
+========================================================= */
+
+function saveChecklist(){
+
+    const data =
+        getChecklistData();
+
+    localStorage.setItem(
+        "naserChecklistHidrogrua",
+        JSON.stringify(data)
+    );
+
+    showMessage(
+        "Checklist de hidrogrúa guardado correctamente.",
+        "success"
+    );
+
+}
+
+/* =========================================================
+   CARGAR CHECKLIST
+========================================================= */
+
+function loadChecklist(){
+
+    const saved =
+        localStorage.getItem(
+            "naserChecklistHidrogrua"
+        );
+
+    if(!saved){
+        return;
+    }
+
+    try{
+
+        const data =
+            JSON.parse(saved);
+
+        /* DATOS GENERALES */
+
+        if(data.general){
+
+            Object.keys(
+                data.general
+            )
+            .forEach(id=>{
+
+                const input =
+                    document.getElementById(
+                        id
+                    );
+
+                if(input){
+
+                    input.value =
+                        data.general[id];
+
+                }
+
+            });
+
+        }
+
+        /* ITEMS */
+
+        if(data.items){
+
+            const rows =
+                document.querySelectorAll(
+                    ".checklist tbody tr"
+                );
+
+            rows.forEach(
+                (row,index)=>{
+
+                    const savedItem =
+                        data.items[index];
+
+                    if(
+                        !savedItem ||
+                        !savedItem.status
+                    ){
+                        return;
+                    }
+
+                    const radio =
+                        row.querySelector(
+                            `.radio[value="${savedItem.status}"]`
+                        );
+
+                    if(radio){
+
+                        radio.checked =
+                            true;
+
+                        row.classList.add(
+                            "row-" +
+                            savedItem.status
+                        );
+
+                    }
+
+                }
+            );
+
+        }
+
+        /* OBSERVACIONES */
+
+        if(
+            data.observaciones !==
+            undefined
+        ){
+
+            document.getElementById(
+                "observacionesTexto"
+            ).value =
+                data.observaciones;
+
+        }
+
+        /* RESPONSABLES */
+
+        if(data.responsables){
+
+            document.getElementById(
+                "realiza"
+            ).value =
+                data.responsables.realiza
+                || "";
+
+            document.getElementById(
+                "controla"
+            ).value =
+                data.responsables.controla
+                || "";
+
+        }
+
+    }
+    catch(error){
+
+        console.error(
+            "Error al cargar el checklist:",
+            error
+        );
+
+    }
+
+    updateSummary();
+
+    updateProgress();
+
+}
+
+/* =========================================================
+   VALIDAR CHECKLIST
+========================================================= */
+
+function validateChecklist(){
+
+    let valid =
+        true;
+
+    let missing =
+        0;
+
+    let firstError =
+        null;
+
+    /* LIMPIAR ERRORES */
+
+    document
+    .querySelectorAll(
+        ".field-error"
+    )
+    .forEach(element=>{
+
+        element.classList.remove(
+            "field-error"
+        );
+
+    });
+
+    document
+    .querySelectorAll(
+        ".row-error"
+    )
+    .forEach(row=>{
+
+        row.classList.remove(
+            "row-error"
+        );
+
+    });
+
+    /* DATOS GENERALES */
+
+    document
+    .querySelectorAll(
+        ".required-general"
+    )
+    .forEach(input=>{
+
+        if(
+            input.value.trim()
+            === ""
+        ){
+
+            valid =
+                false;
+
+            missing++;
+
+            input.classList.add(
+                "field-error"
+            );
+
+            if(!firstError){
+
+                firstError =
+                    input;
+
+            }
+
+        }
+
+    });
+
+    /* TODOS LOS ELEMENTOS */
+
+    document
+    .querySelectorAll(
+        ".checklist tbody tr"
+    )
+    .forEach(row=>{
+
+        const checked =
+            row.querySelector(
+                ".radio:checked"
+            );
+
+        if(!checked){
+
+            valid =
+                false;
+
+            missing++;
+
+            row.classList.add(
+                "row-error"
+            );
+
+            if(!firstError){
+
+                firstError =
+                    row;
+
+            }
+
+        }
+
+    });
+
+    /* RESPONSABLES */
+
+    document
+    .querySelectorAll(
+        ".required-responsible"
+    )
+    .forEach(input=>{
+
+        if(
+            input.value.trim()
+            === ""
+        ){
+
+            valid =
+                false;
+
+            missing++;
+
+            input.classList.add(
+                "field-error"
+            );
+
+            if(!firstError){
+
+                firstError =
+                    input;
+
+            }
+
+        }
+
+    });
+
+    return{
+
+        valid,
+        missing,
+        firstError
+
+    };
+
+}
+
+/* =========================================================
+   FINALIZAR
+========================================================= */
+
+function finishChecklist(){
+
+    const validation =
+        validateChecklist();
+
+    if(
+        !validation.valid
+    ){
+
+        showMessage(
+            `No se puede finalizar. Faltan ${validation.missing} campos o controles obligatorios.`,
+            "error"
+        );
+
+        if(
+            validation.firstError
+        ){
+
+            validation
+            .firstError
+            .scrollIntoView({
+
+                behavior:"smooth",
+
+                block:"center"
+
+            });
+
+        }
+
+        return;
+
+    }
+
+    const confirmation =
+        confirm(
+            "Todos los campos están completos. ¿Desea finalizar el checklist de hidrogrúa?"
+        );
+
+    if(!confirmation){
+        return;
+    }
+
+    const data =
+        getChecklistData();
+
+    data.finished =
+        true;
+
+    data.finishedAt =
+        new Date()
+        .toISOString();
+
+    localStorage.setItem(
+        "naserChecklistHidrogrua",
+        JSON.stringify(data)
+    );
+
+    const banner =
+        document.getElementById(
+            "finishedBanner"
+        );
+
+    banner.style.display =
+        "block";
+
+    const now =
+        new Date();
+
+    document.getElementById(
+        "finishedDate"
+    ).textContent =
+        "Finalizado el " +
+        now.toLocaleDateString(
+            "es-AR"
+        ) +
+        " a las " +
+        now.toLocaleTimeString(
+            "es-AR",
+            {
+                hour:"2-digit",
+                minute:"2-digit"
+            }
+        );
+
+    document.getElementById(
+        "progressText"
+    ).textContent =
+        "100% completado";
+
+    document.getElementById(
+        "progressBar"
+    ).style.width =
+        "100%";
+
+    lockChecklist();
+
+    showMessage(
+        "Checklist de hidrogrúa finalizado correctamente.",
+        "success"
+    );
+
+    window.scrollTo({
+        top:0,
+        behavior:"smooth"
+    });
+
+}
+
+/* =========================================================
+   BLOQUEAR CHECKLIST
+========================================================= */
+
+function lockChecklist(){
+
+    document
+    .querySelectorAll(
+        "input, textarea"
+    )
+    .forEach(element=>{
+
+        element.disabled =
+            true;
+
+    });
+
+    document.getElementById(
+        "finishButton"
+    ).disabled =
+        true;
+
+}
+
+/* =========================================================
+   LIMPIAR
+========================================================= */
+
+function clearChecklist(){
+
+    const confirmation =
+        confirm(
+            "¿Está seguro de que desea limpiar completamente el checklist de hidrogrúa?"
+        );
+
+    if(!confirmation){
+        return;
+    }
+
+    localStorage.removeItem(
+        "naserChecklistHidrogrua"
+    );
+
+    document
+    .querySelectorAll(
+        "input, textarea"
+    )
+    .forEach(element=>{
+
+        if(
+            element.type ===
+            "radio"
+        ){
+
+            element.checked =
+                false;
+
+        }
+        else{
+
+            element.value =
+                "";
+
+        }
+
+        element.disabled =
+            false;
+
+        element.classList.remove(
+            "field-error"
+        );
+
+    });
+
+    document
+    .querySelectorAll(
+        ".checklist tbody tr"
+    )
+    .forEach(row=>{
+
+        row.classList.remove(
+            "row-correcto",
+            "row-incorrecto",
+            "row-nv",
+            "row-error"
+        );
+
+    });
+
+    document.getElementById(
+        "finishedBanner"
+    ).style.display =
+        "none";
+
+    document.getElementById(
+        "resultDetail"
+    ).style.display =
+        "none";
+
+    document.getElementById(
+        "finishButton"
+    ).disabled =
+        false;
+
+    setToday();
+
+    updateSummary();
+
+    updateProgress();
+
+    showMessage(
+        "Checklist limpiado correctamente.",
+        "success"
+    );
+
+}
+
+/* =========================================================
+   MENSAJES
+========================================================= */
+
+function showMessage(
+    text,
+    type
+){
+
+    const message =
+        document.getElementById(
+            "systemMessage"
+        );
+
+    message.className =
+        "message " +
+        type;
+
+    message.textContent =
+        text;
+
+    message.style.display =
+        "block";
+
+    setTimeout(
+        ()=>{
+
+            message.style.display =
+                "none";
+
+        },
+        5000
+    );
+
+}
+
+/* =========================================================
+   FECHA ACTUAL
+========================================================= */
+
+function setToday(){
+
+    const input =
+        document.getElementById(
+            "fecha"
+        );
+
+    if(
+        input.value !== ""
+    ){
+        return;
+    }
+
+    const now =
+        new Date();
+
+    const year =
+        now.getFullYear();
+
+    const month =
+        String(
+            now.getMonth()+1
+        ).padStart(
+            2,
+            "0"
+        );
+
+    const day =
+        String(
+            now.getDate()
+        ).padStart(
+            2,
+            "0"
+        );
+
+    input.value =
+        `${year}-${month}-${day}`;
+
+}
+
+/* =========================================================
+   ACTUALIZACIÓN AUTOMÁTICA
+========================================================= */
+
+document.addEventListener(
+    "input",
+    event=>{
+
+        event.target
+        .classList
+        .remove(
+            "field-error"
+        );
+
+        updateProgress();
+
+    }
+);
+
+document.addEventListener(
+    "change",
+    event=>{
+
+        event.target
+        .classList
+        .remove(
+            "field-error"
+        );
+
+        const row =
+            event.target.closest(
+                "tr"
+            );
+
+        if(row){
+
+            row.classList.remove(
+                "row-error"
+            );
+
+        }
+
+        updateSummary();
+
+        updateProgress();
+
+    }
+);
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+function toggleMenu(){
+
+    document.getElementById(
+        "sidebar"
+    )
+    .classList
+    .toggle(
+        "open"
+    );
+
+}
+
+/* =========================================================
+   NAVEGACIÓN ACTIVA
+========================================================= */
+
+function startNavigation(){
+
+    const links =
+        document.querySelectorAll(
+            ".nav-link"
+        );
+
+    const sections =
+        document.querySelectorAll(
+            ".observe"
+        );
+
+    const observer =
+        new IntersectionObserver(
+            entries=>{
+
+                entries.forEach(
+                    entry=>{
+
+                        if(
+                            entry.isIntersecting
+                        ){
+
+                            links.forEach(
+                                link=>{
+
+                                    link
+                                    .classList
+                                    .remove(
+                                        "active"
+                                    );
+
+                                }
+                            );
+
+                            const active =
+                                document.querySelector(
+                                    `.nav-link[href="#${entry.target.id}"]`
+                                );
+
+                            if(active){
+
+                                active
+                                .classList
+                                .add(
+                                    "active"
+                                );
+
+                            }
+
+                        }
+
+                    }
+                );
+
+            },
+            {
+                threshold:.2,
+                rootMargin:
+                    "-15% 0px -60% 0px"
+            }
+        );
+
+    sections.forEach(
+        section=>{
+
+            observer.observe(
+                section
+            );
+
+        }
+    );
+
+    links.forEach(
+        link=>{
+
+            link.addEventListener(
+                "click",
+                ()=>{
+
+                    if(
+                        window.innerWidth
+                        <=760
+                    ){
+
+                        document
+                        .getElementById(
+                            "sidebar"
+                        )
+                        .classList
+                        .remove(
+                            "open"
+                        );
+
+                    }
+
+                }
+            );
+
+        }
+    );
+
+}
+
+/* =========================================================
+   INICIAR
+========================================================= */
+
+setToday();
+
+loadChecklist();
+
+updateSummary();
+
+updateProgress();
+
+startNavigation();
+
+</script>
+
+<script>
+// Dentro de NASER, el guardado y el envío se realizan desde la barra del sistema.
+if (window.__NASER_FORM__) {
+    document.querySelectorAll('.required-general, .required-responsible, .checklist input[type="radio"], input[name="combustible"]').forEach(function (field) {
+        field.required = true;
+    });
+    document.querySelectorAll('button[onclick="saveChecklist()"], button[onclick="finishChecklist()"], #finishedBanner').forEach(function (element) {
+        element.style.display = 'none';
+    });
+}
+</script>
+</body>
+</html>
