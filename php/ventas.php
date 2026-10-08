@@ -53,9 +53,203 @@ function normalizarEstadoCotizacion(string $v): string {
     return in_array($v, ['Ganada', 'En Estudio', 'No Adjudicada'], true) ? $v : 'En Estudio';
 }
 
+function normalizarEstadoTicket(string $v): string {
+    return in_array($v, ['Borrador', 'Enviada', 'Aceptada', 'No aceptada'], true) ? $v : 'Borrador';
+}
+
+/** Valida las líneas recibidas desde el generador y calcula el subtotal neto de bonificaciones por ítem. */
+function ventasValidarLineasTicket(string $json): array {
+    if (strlen($json) > 1000000) throw new RuntimeException('La cotización supera el tamaño permitido.');
+    $lineas = json_decode($json, true);
+    if (!is_array($lineas) || count($lineas) < 1 || count($lineas) > 100) {
+        throw new RuntimeException('Agregá al menos un renglón y no superes los 100 ítems.');
+    }
+
+    $limpias = [];
+    $subtotal = 0.0;
+    foreach ($lineas as $linea) {
+        if (!is_array($linea)) throw new RuntimeException('Hay un renglón inválido.');
+        $codigo = trim((string)($linea['codigo'] ?? ''));
+        $descripcion = trim((string)($linea['descripcion'] ?? ''));
+        $unidad = trim((string)($linea['unidad'] ?? ''));
+        $cantidadRaw = $linea['cantidad'] ?? null;
+        $precioRaw = $linea['precio_unitario'] ?? null;
+        $bonificacionRaw = $linea['bonificacion'] ?? 0;
+        if ($descripcion === '' || !is_numeric($cantidadRaw) || !is_numeric($precioRaw) || !is_numeric($bonificacionRaw)) {
+            throw new RuntimeException('Completá descripción, cantidad y precio en todos los renglones.');
+        }
+        $cantidad = (float)$cantidadRaw;
+        $precio = (float)$precioRaw;
+        $bonificacion = (float)$bonificacionRaw;
+        if (!is_finite($cantidad) || !is_finite($precio) || !is_finite($bonificacion) || $cantidad <= 0 || $cantidad > 1000000 || $precio < 0 || $precio > 1000000000 || $bonificacion < 0 || $bonificacion > 100) {
+            throw new RuntimeException('Revisá cantidades, precios y bonificaciones: no pueden ser negativos ni superar el 100%.');
+        }
+        $cantidad = round($cantidad, 4);
+        $precio = round($precio, 2);
+        $bonificacion = round($bonificacion, 2);
+        $subtotal += $cantidad * $precio * (1 - $bonificacion / 100);
+        $limpias[] = [
+            'codigo' => mb_substr($codigo, 0, 40),
+            'descripcion' => mb_substr($descripcion, 0, 1000),
+            'cantidad' => $cantidad,
+            'unidad' => mb_substr($unidad, 0, 60),
+            'precio_unitario' => $precio,
+            'bonificacion' => $bonificacion,
+        ];
+    }
+    return [$limpias, round($subtotal, 2)];
+}
+
+function ventasRutaImagenTicket(?string $ruta): ?string {
+    if (!$ruta || !preg_match('~^ventas/tickets/[A-Za-z0-9._-]+$~', $ruta)) return null;
+    return dirname(__DIR__) . '/uploads/' . $ruta;
+}
+
+function ventasCsvSeguro(string $valor): string {
+    return preg_match('/^\s*[=+\-@]/u', $valor) ? "'" . $valor : $valor;
+}
+
 $uploadDir = dirname(__DIR__) . '/uploads/ventas';
 if (!is_dir($uploadDir)) {
     @mkdir($uploadDir, 0775, true);
+}
+
+$ticketTableReady = false;
+$ticketTableError = '';
+try {
+    $pdo->query('SELECT 1 FROM ventas_tickets LIMIT 0');
+    $ticketTableReady = true;
+} catch (Throwable $e) {
+    // La tabla puede no estar creada todavía; solo entonces intentamos habilitarla automáticamente.
+}
+if (!$ticketTableReady) {
+    try {
+        $pdo->exec("CREATE TABLE IF NOT EXISTS ventas_tickets (
+        id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+        sector_id INT NOT NULL,
+        codigo_cotizacion VARCHAR(40) NOT NULL,
+        fecha DATE NOT NULL,
+        cliente VARCHAR(180) NOT NULL,
+        yacimiento VARCHAR(150) NULL,
+        locacion VARCHAR(150) NULL,
+        responsable_ventas VARCHAR(150) NULL,
+        tipo_servicio VARCHAR(180) NOT NULL,
+        estado VARCHAR(30) NOT NULL DEFAULT 'Borrador',
+        items_json LONGTEXT NOT NULL,
+        subtotal_usd DECIMAL(14,2) NOT NULL DEFAULT 0,
+        descuento_porcentaje DECIMAL(6,2) NOT NULL DEFAULT 0,
+        total_usd DECIMAL(14,2) NOT NULL DEFAULT 0,
+        observaciones TEXT NULL,
+        imagen_path VARCHAR(500) NULL,
+        creado_por INT NULL,
+        actualizado_por INT NULL,
+        creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        actualizado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        UNIQUE KEY uq_ventas_tickets_codigo (sector_id, codigo_cotizacion),
+        KEY idx_ventas_tickets_fecha (sector_id, fecha, id)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+        $ticketTableReady = true;
+    } catch (Throwable $e) {
+        error_log('Ventas tickets: ' . $e->getMessage());
+        $ticketTableError = 'No se pudo habilitar el generador. Verificá permisos de base de datos o aplicá la tabla ventas_tickets del archivo sql/ventas_integracion.sql.';
+    }
+}
+
+$ticketUploadFullPath = null;
+
+/* Exportaciones de las cotizaciones guardadas. */
+if (isset($_GET['exportar_ticket']) || isset($_GET['exportar_ticket_csv'])) {
+    if (!$ticketTableReady) {
+        http_response_code(503);
+        exit('El generador de cotizaciones no está disponible.');
+    }
+    $ticketId = (int)($_GET['exportar_ticket'] ?? $_GET['exportar_ticket_csv'] ?? 0);
+    $st = $pdo->prepare('SELECT * FROM ventas_tickets WHERE id=? AND sector_id=? LIMIT 1');
+    $st->execute([$ticketId, $sid]);
+    $ticketExport = $st->fetch(PDO::FETCH_ASSOC);
+    if (!$ticketExport) {
+        http_response_code(404);
+        exit('Cotización no encontrada.');
+    }
+    $lineasExport = json_decode((string)$ticketExport['items_json'], true);
+    if (!is_array($lineasExport)) $lineasExport = [];
+    $subtotalExport = (float)$ticketExport['subtotal_usd'];
+    $descuentoGlobalExport = (float)$ticketExport['descuento_porcentaje'];
+    $montoDescuentoExport = round($subtotalExport * $descuentoGlobalExport / 100, 2);
+    $totalExport = (float)$ticketExport['total_usd'];
+
+    if (isset($_GET['exportar_ticket_csv'])) {
+        $nombreArchivo = preg_replace('/[^A-Za-z0-9_-]/', '_', (string)$ticketExport['codigo_cotizacion']) . '.csv';
+        session_write_close();
+        while (ob_get_level()) ob_end_clean();
+        header('Content-Type: text/csv; charset=utf-8');
+        header('Content-Disposition: attachment; filename="' . $nombreArchivo . '"');
+        header('X-Content-Type-Options: nosniff');
+        $salida = fopen('php://output', 'wb');
+        fwrite($salida, "\xEF\xBB\xBF");
+        fputcsv($salida, ['COTIZACIÓN DE SERVICIOS', ventasCsvSeguro((string)$ticketExport['codigo_cotizacion'])], ';', '"', '\\');
+        fputcsv($salida, ['Fecha', $ticketExport['fecha'], 'Cliente', ventasCsvSeguro((string)$ticketExport['cliente'])], ';', '"', '\\');
+        fputcsv($salida, ['Yacimiento', ventasCsvSeguro((string)$ticketExport['yacimiento']), 'Locación', ventasCsvSeguro((string)$ticketExport['locacion'])], ';', '"', '\\');
+        fputcsv($salida, ['Responsable de ventas', ventasCsvSeguro((string)$ticketExport['responsable_ventas']), 'Tipo de servicio', ventasCsvSeguro((string)$ticketExport['tipo_servicio'])], ';', '"', '\\');
+        fputcsv($salida, [], ';', '"', '\\');
+        fputcsv($salida, ['Item', 'Descripción', 'Cantidad', 'Unidad', 'Precio Unitario USD', 'Subtotal USD', 'Bonificación %', 'Total USD'], ';', '"', '\\');
+        foreach ($lineasExport as $linea) {
+            $cantidad = (float)($linea['cantidad'] ?? 0);
+            $precio = (float)($linea['precio_unitario'] ?? 0);
+            $bonificacion = (float)($linea['bonificacion'] ?? 0);
+            $bruto = $cantidad * $precio;
+            $neto = $bruto * (1 - $bonificacion / 100);
+            fputcsv($salida, [
+                ventasCsvSeguro((string)($linea['codigo'] ?? '')),
+                ventasCsvSeguro((string)($linea['descripcion'] ?? '')),
+                number_format($cantidad, 4, ',', ''),
+                ventasCsvSeguro((string)($linea['unidad'] ?? '')),
+                number_format($precio, 2, ',', ''),
+                number_format($bruto, 2, ',', ''),
+                number_format($bonificacion, 2, ',', ''),
+                number_format($neto, 2, ',', ''),
+            ], ';', '"', '\\');
+        }
+        fputcsv($salida, [], ';', '"', '\\');
+        fputcsv($salida, ['Subtotal servicios USD', number_format($subtotalExport, 2, ',', '')], ';', '"', '\\');
+        fputcsv($salida, ['Descuento global %', number_format($descuentoGlobalExport, 2, ',', ''), 'Descuento USD', number_format($montoDescuentoExport, 2, ',', '')], ';', '"', '\\');
+        fputcsv($salida, ['TOTAL USD', number_format($totalExport, 2, ',', '')], ';', '"', '\\');
+        fputcsv($salida, ['Estado', $ticketExport['estado'], 'Valores en dólares estadounidenses sin IVA.'], ';', '"', '\\');
+        fclose($salida);
+        exit;
+    }
+
+    $rutaLogo = ventasRutaImagenTicket($ticketExport['imagen_path'] ?? null);
+    $urlLogo = $rutaLogo && is_file($rutaLogo)
+        ? app_url('/uploads/' . ltrim((string)$ticketExport['imagen_path'], '/'))
+        : app_url('/img/logo-naser.png');
+    $fechaExport = date('d/m/Y', strtotime((string)$ticketExport['fecha']));
+    header('Content-Type: text/html; charset=utf-8');
+    ?><!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title><?=h($ticketExport['codigo_cotizacion'])?> | Cotización NASER</title>
+<style>
+@page{size:A4 portrait;margin:12mm}*{box-sizing:border-box}body{font-family:Arial,Helvetica,sans-serif;color:#1f2937;margin:0;background:#f3f6f4}.toolbar{max-width:900px;margin:18px auto;display:flex;gap:8px;justify-content:flex-end}.toolbar a,.toolbar button{font:600 13px Arial,sans-serif;color:#14532d;border:1px solid #d7e3da;border-radius:8px;background:#fff;padding:10px 13px;text-decoration:none;cursor:pointer}.quote{max-width:900px;margin:0 auto 24px;padding:28px 32px;background:#fff;border:1px solid #dfe7e1;box-shadow:0 8px 30px #1b36200d}.quote-head{display:flex;align-items:center;justify-content:space-between;gap:24px;border-bottom:3px solid #15803d;padding-bottom:15px}.quote-head img{width:170px;height:90px;object-fit:contain;object-position:left center}.quote-title{text-align:right}.quote-title h1{font-size:21px;letter-spacing:.04em;color:#14532d;margin:0 0 8px}.quote-title strong{font-size:15px;color:#374151}.status{display:inline-block;margin-top:7px;padding:4px 9px;border-radius:30px;background:#eef6f0;color:#14532d;font-size:10px;font-weight:700}.meta{display:grid;grid-template-columns:1fr 1fr;gap:0 22px;margin:18px 0}.meta div{display:grid;grid-template-columns:145px 1fr;border-bottom:1px solid #e7ece8;padding:8px 4px;font-size:12px}.meta b{color:#5b6b60}.service{margin:6px 0 14px;padding:11px 13px;border-left:4px solid #15803d;background:#f4faf5;font-size:13px}.service span{font-weight:700;color:#14532d;margin-right:8px}.items{width:100%;border-collapse:collapse;font-size:10px}.items th{padding:9px 6px;background:#14532d;color:#fff;text-align:left}.items td{padding:8px 6px;border-bottom:1px solid #e7ece8;vertical-align:top}.items tr{break-inside:avoid}.items .numeric{text-align:right;white-space:nowrap}.totals{width:min(330px,100%);margin:15px 0 0 auto;border-collapse:collapse;font-size:12px}.totals td{padding:6px 8px;border-bottom:1px solid #e7ece8}.totals td:last-child{text-align:right;white-space:nowrap}.totals .grand td{background:#14532d;color:#fff;font-size:15px;font-weight:800;padding:10px 8px}.notes{margin-top:18px;padding:11px;background:#f7f9f7;border:1px solid #e5ebe6;border-radius:6px;font-size:11px;white-space:pre-wrap}.signatures{display:grid;grid-template-columns:1fr 1fr;gap:50px;margin:55px 20px 14px}.signatures div{text-align:center;border-top:1px solid #59665d;padding-top:7px;font-size:10px;color:#526057}.foot{margin-top:20px;border-top:1px solid #e5ebe6;padding-top:9px;font-size:10px;color:#69766e}.empty-note{color:#6b7280;font-size:10px}@media(max-width:640px){.quote{margin:8px;padding:16px}.quote-head img{width:125px;height:70px}.quote-title h1{font-size:17px}.meta div{grid-template-columns:112px 1fr}.items{font-size:9px}.items th,.items td{padding:6px 3px}}@media print{body{background:#fff}.toolbar{display:none}.quote{max-width:none;margin:0;padding:0;border:0;box-shadow:none}.quote-head{-webkit-print-color-adjust:exact;print-color-adjust:exact}.items th,.totals .grand td{-webkit-print-color-adjust:exact;print-color-adjust:exact}.quote-title h1{color:#14532d}}
+</style></head><body>
+<nav class="toolbar"><a href="?exportar_ticket_csv=<?=(int)$ticketExport['id']?>">Descargar para Excel (CSV)</a><button type="button" onclick="window.print()">Imprimir / Guardar en PDF</button><a href="?tab=precios">Volver a Ventas</a></nav>
+<main class="quote">
+<header class="quote-head"><img src="<?=h($urlLogo)?>" alt="Logo de NASER"><div class="quote-title"><h1>COTIZACIÓN DE SERVICIOS</h1><strong><?=h($ticketExport['codigo_cotizacion'])?></strong><br><span class="status"><?=h($ticketExport['estado'])?></span></div></header>
+<section class="meta">
+<div><b>Fecha</b><span><?=h($fechaExport)?></span></div><div><b>Responsable de ventas</b><span><?=h($ticketExport['responsable_ventas'])?></span></div>
+<div><b>Cliente</b><span><?=h($ticketExport['cliente'])?></span></div><div><b>Aceptación del cliente</b><span>&nbsp;</span></div>
+<div><b>Yacimiento</b><span><?=h($ticketExport['yacimiento'])?></span></div><div><b>Locación</b><span><?=h($ticketExport['locacion'])?></span></div>
+</section>
+<div class="service"><span>Tipo de servicio</span><?=h($ticketExport['tipo_servicio'])?></div>
+<table class="items"><thead><tr><th>Item</th><th>Descripción</th><th class="numeric">Cantidad</th><th>Unidad</th><th class="numeric">Precio unitario (USD)</th><th class="numeric">Subtotal (USD)</th><th class="numeric">Bonificación</th><th class="numeric">Total (USD)</th></tr></thead><tbody>
+<?php foreach ($lineasExport as $linea): $cantidad=(float)($linea['cantidad']??0); $precio=(float)($linea['precio_unitario']??0); $bonificacion=(float)($linea['bonificacion']??0); $bruto=$cantidad*$precio; $neto=$bruto*(1-$bonificacion/100); ?>
+<tr><td><?=h((string)($linea['codigo']??''))?></td><td><?=h((string)($linea['descripcion']??''))?></td><td class="numeric"><?=number_format($cantidad,2,',','.')?></td><td><?=h((string)($linea['unidad']??''))?></td><td class="numeric"><?=number_format($precio,2,',','.')?></td><td class="numeric"><?=number_format($bruto,2,',','.')?></td><td class="numeric"><?=number_format($bonificacion,2,',','.')?>%</td><td class="numeric"><?=number_format($neto,2,',','.')?></td></tr>
+<?php endforeach; ?>
+</tbody></table>
+<table class="totals"><tr><td>Subtotal servicios</td><td>USD <?=number_format($subtotalExport,2,',','.')?></td></tr><tr><td>Descuento global (<?=number_format($descuentoGlobalExport,2,',','.')?>%)</td><td>− USD <?=number_format($montoDescuentoExport,2,',','.')?></td></tr><tr class="grand"><td>TOTAL</td><td>USD <?=number_format($totalExport,2,',','.')?></td></tr></table>
+<?php if (trim((string)$ticketExport['observaciones']) !== ''): ?><section class="notes"><b>Observaciones</b><br><?=h($ticketExport['observaciones'])?></section><?php endif; ?>
+<section class="signatures"><div>NASER · Responsable de ventas</div><div>Aceptación del cliente · Firma y aclaración</div></section>
+<footer class="foot">Valores expresados en dólares estadounidenses sin IVA.</footer>
+</main></body></html><?php
+    exit;
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -185,6 +379,98 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $pdo->prepare('DELETE FROM ventas_precios WHERE id=? AND sector_id=?')->execute([$id,$sid]);
             ventasAudit($pdo,$uid,'ventas_precio_eliminar',"Precio #$id");
             $msg = 'Tarifa eliminada.';
+        }
+
+        if ($accion === 'guardar_ticket') {
+            if (!$ticketTableReady) throw new RuntimeException($ticketTableError ?: 'El generador no está disponible.');
+            $ticketId = (int)($_POST['id'] ?? 0);
+            $fecha = trim((string)($_POST['fecha'] ?? ''));
+            $clienteTicket = trim((string)($_POST['cliente'] ?? ''));
+            $yacimiento = trim((string)($_POST['yacimiento'] ?? ''));
+            $locacion = trim((string)($_POST['locacion'] ?? ''));
+            $responsableTicket = trim((string)($_POST['responsable_ventas'] ?? ''));
+            $tipoServicio = trim((string)($_POST['tipo_servicio'] ?? ''));
+            $estadoTicket = normalizarEstadoTicket((string)($_POST['estado'] ?? 'Borrador'));
+            $descuentoGlobal = $_POST['descuento_porcentaje'] ?? null;
+            $observaciones = trim((string)($_POST['observaciones'] ?? ''));
+
+            if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $fecha) || !checkdate((int)substr($fecha, 5, 2), (int)substr($fecha, 8, 2), (int)substr($fecha, 0, 4))) {
+                throw new RuntimeException('Ingresá una fecha válida.');
+            }
+            if ($clienteTicket === '' || $tipoServicio === '') throw new RuntimeException('Completá el cliente y el tipo de servicio.');
+            if (strlen($clienteTicket) > 180 || strlen($yacimiento) > 150 || strlen($locacion) > 150 || strlen($responsableTicket) > 150 || strlen($tipoServicio) > 180) {
+                throw new RuntimeException('Uno de los datos del encabezado supera el largo permitido.');
+            }
+            if (!is_numeric($descuentoGlobal) || !is_finite((float)$descuentoGlobal) || (float)$descuentoGlobal < 0 || (float)$descuentoGlobal > 100) {
+                throw new RuntimeException('El descuento global debe estar entre 0% y 100%.');
+            }
+            $descuentoGlobal = round((float)$descuentoGlobal, 2);
+            [$lineasTicket, $subtotalTicket] = ventasValidarLineasTicket((string)($_POST['items_json'] ?? ''));
+            $totalTicket = round($subtotalTicket * (1 - $descuentoGlobal / 100), 2);
+
+            $st = $pdo->prepare('SELECT * FROM ventas_tickets WHERE id=? AND sector_id=? LIMIT 1');
+            if ($ticketId > 0) {
+                $st->execute([$ticketId, $sid]);
+                $ticketExistente = $st->fetch(PDO::FETCH_ASSOC);
+                if (!$ticketExistente) throw new RuntimeException('La cotización que intentás modificar no existe.');
+                $codigoTicket = (string)$ticketExistente['codigo_cotizacion'];
+                $imagenTicket = $ticketExistente['imagen_path'] ?? null;
+                $imagenAnterior = $imagenTicket;
+            } else {
+                $ticketExistente = null;
+                $codigoTicket = 'TMP-' . bin2hex(random_bytes(10));
+                $imagenTicket = null;
+                $imagenAnterior = null;
+            }
+
+            $fileError = (int)($_FILES['imagen_ticket']['error'] ?? UPLOAD_ERR_NO_FILE);
+            if ($fileError !== UPLOAD_ERR_NO_FILE) {
+                if ($fileError !== UPLOAD_ERR_OK) throw new RuntimeException('No se pudo recibir la imagen del ticket.');
+                $tmpImagen = (string)($_FILES['imagen_ticket']['tmp_name'] ?? '');
+                $tamanoImagen = (int)($_FILES['imagen_ticket']['size'] ?? 0);
+                if ($tamanoImagen < 1 || $tamanoImagen > 5 * 1024 * 1024 || !is_uploaded_file($tmpImagen)) {
+                    throw new RuntimeException('La imagen debe pesar hasta 5 MB.');
+                }
+                $infoImagen = @getimagesize($tmpImagen);
+                $mimeImagen = (new finfo(FILEINFO_MIME_TYPE))->file($tmpImagen);
+                $extensionesImagen = ['image/jpeg'=>'jpg', 'image/png'=>'png', 'image/webp'=>'webp'];
+                if (!$infoImagen || !isset($extensionesImagen[$mimeImagen]) || $infoImagen[0] > 5000 || $infoImagen[1] > 5000) {
+                    throw new RuntimeException('Usá una imagen PNG, JPG o WebP de hasta 5000 × 5000 píxeles.');
+                }
+                $directorioImagen = $uploadDir . '/tickets';
+                if (!is_dir($directorioImagen) && !mkdir($directorioImagen, 0775, true) && !is_dir($directorioImagen)) {
+                    throw new RuntimeException('No se pudo preparar la carpeta para imágenes.');
+                }
+                $nombreImagen = 'logo-ticket-' . bin2hex(random_bytes(12)) . '.' . $extensionesImagen[$mimeImagen];
+                $ticketUploadFullPath = $directorioImagen . '/' . $nombreImagen;
+                if (!move_uploaded_file($tmpImagen, $ticketUploadFullPath)) {
+                    $ticketUploadFullPath = null;
+                    throw new RuntimeException('No se pudo guardar la imagen del ticket.');
+                }
+                $imagenTicket = 'ventas/tickets/' . $nombreImagen;
+            }
+
+            $jsonLineas = json_encode($lineasTicket, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR);
+            $pdo->beginTransaction();
+            if ($ticketExistente) {
+                $st = $pdo->prepare('UPDATE ventas_tickets SET fecha=?,cliente=?,yacimiento=?,locacion=?,responsable_ventas=?,tipo_servicio=?,estado=?,items_json=?,subtotal_usd=?,descuento_porcentaje=?,total_usd=?,observaciones=?,imagen_path=?,actualizado_por=? WHERE id=? AND sector_id=?');
+                $st->execute([$fecha,$clienteTicket,$yacimiento ?: null,$locacion ?: null,$responsableTicket ?: null,$tipoServicio,$estadoTicket,$jsonLineas,$subtotalTicket,$descuentoGlobal,$totalTicket,$observaciones ?: null,$imagenTicket,$uid,$ticketId,$sid]);
+            } else {
+                $st = $pdo->prepare('INSERT INTO ventas_tickets (sector_id,codigo_cotizacion,fecha,cliente,yacimiento,locacion,responsable_ventas,tipo_servicio,estado,items_json,subtotal_usd,descuento_porcentaje,total_usd,observaciones,imagen_path,creado_por,actualizado_por) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)');
+                $st->execute([$sid,$codigoTicket,$fecha,$clienteTicket,$yacimiento ?: null,$locacion ?: null,$responsableTicket ?: null,$tipoServicio,$estadoTicket,$jsonLineas,$subtotalTicket,$descuentoGlobal,$totalTicket,$observaciones ?: null,$imagenTicket,$uid,$uid]);
+                $ticketId = (int)$pdo->lastInsertId();
+                $codigoTicket = 'COT-' . substr($fecha, 0, 4) . '-' . str_pad((string)$ticketId, 6, '0', STR_PAD_LEFT);
+                $pdo->prepare('UPDATE ventas_tickets SET codigo_cotizacion=? WHERE id=? AND sector_id=?')->execute([$codigoTicket,$ticketId,$sid]);
+            }
+            $pdo->commit();
+            $ticketUploadFullPath = null;
+            if ($imagenAnterior && $imagenAnterior !== $imagenTicket) {
+                $rutaAnterior = ventasRutaImagenTicket((string)$imagenAnterior);
+                if ($rutaAnterior && is_file($rutaAnterior)) @unlink($rutaAnterior);
+            }
+            ventasAudit($pdo,$uid,$ticketExistente ? 'ventas_ticket_editar' : 'ventas_ticket_crear', $codigoTicket . ' - ' . $clienteTicket);
+            header('Location: ' . app_url('/php/ventas.php?tab=precios&ticket_guardado=' . $ticketId . '#lista-tickets'));
+            exit;
         }
 
         /* =====================================================
@@ -374,6 +660,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     } catch (Throwable $e) {
         if ($pdo->inTransaction()) $pdo->rollBack();
+        if ($ticketUploadFullPath && is_file($ticketUploadFullPath)) @unlink($ticketUploadFullPath);
         $err = $e->getMessage();
     }
 }
@@ -398,6 +685,26 @@ $clientes=$clientes->fetchAll();
 $precios=$pdo->prepare('SELECT p.*,u.nombre actualizado_nombre FROM ventas_precios p LEFT JOIN usuarios u ON u.id=p.actualizado_por WHERE p.sector_id=? ORDER BY p.servicio_nombre');
 $precios->execute([$sid]);
 $precios=$precios->fetchAll();
+
+$ticketsVenta = [];
+$editTicket = null;
+$ticketEditorLines = [];
+if ($ticketTableReady) {
+    $st = $pdo->prepare('SELECT * FROM ventas_tickets WHERE sector_id=? ORDER BY fecha DESC,id DESC LIMIT 200');
+    $st->execute([$sid]);
+    $ticketsVenta = $st->fetchAll(PDO::FETCH_ASSOC);
+    if ($canEdit && !empty($_GET['editar_ticket'])) {
+        $st = $pdo->prepare('SELECT * FROM ventas_tickets WHERE id=? AND sector_id=? LIMIT 1');
+        $st->execute([(int)$_GET['editar_ticket'], $sid]);
+        $editTicket = $st->fetch(PDO::FETCH_ASSOC) ?: null;
+        if (!$editTicket) $err = 'La cotización que buscás no existe.';
+        if ($editTicket) {
+            $ticketEditorLines = json_decode((string)$editTicket['items_json'], true);
+            if (!is_array($ticketEditorLines)) $ticketEditorLines = [];
+        }
+    }
+    if (!empty($_GET['ticket_guardado'])) $msg = 'La cotización se guardó correctamente. Ya podés imprimirla o exportarla.';
+}
 
 $costos=$pdo->prepare('SELECT c.*,u.nombre actualizado_nombre FROM ventas_costos_operativos c LEFT JOIN usuarios u ON u.id=c.actualizado_por WHERE c.sector_id=? ORDER BY c.linea_servicio');
 $costos->execute([$sid]);
@@ -482,6 +789,8 @@ if($canEdit && !empty($_GET['editar_precio'])){
 .notice{padding:13px 15px;border-radius:11px;margin:12px 0;font-weight:700;font-size:13px}.notice.ok{background:#eaf7ef;color:#176337}.notice.err{background:#fff1f0;color:#9b231b}
 .calc-result{background:var(--vs);border:1px solid #ccebd8;border-radius:13px;padding:16px}.calc-result strong{display:block;font-size:28px;color:var(--vd)}
 .permission{padding:10px 13px;border:1px solid var(--vl);background:#f8faf8;border-radius:11px;font-size:12px;margin-bottom:16px}
+.ticket-builder{padding:0;overflow:hidden}.ticket-builder>summary{list-style:none;cursor:pointer;padding:18px 20px;font-size:17px;font-weight:850;color:var(--vd);display:flex;justify-content:space-between;gap:12px;align-items:center}.ticket-builder>summary::-webkit-details-marker{display:none}.ticket-builder>summary:after{content:'＋';font-size:20px;color:var(--vg)}.ticket-builder[open]>summary:after{content:'−'}.ticket-builder-content{padding:0 20px 20px;border-top:1px solid var(--vl)}
+.ticket-lines-wrap{overflow:auto;border:1px solid var(--vl);border-radius:12px;margin-top:10px}.ticket-lines{border-collapse:collapse;min-width:1120px;width:100%}.ticket-lines th,.ticket-lines td{padding:7px;border-bottom:1px solid #edf1ee;vertical-align:middle}.ticket-lines th{font-size:10px;text-transform:uppercase;color:#27583a;background:#f1f7f3;text-align:left}.ticket-lines input,.ticket-lines select{width:100%;min-width:68px;box-sizing:border-box;padding:8px 7px;border:1px solid #d6dfd8;border-radius:7px;background:#fff;font:inherit;font-size:12px}.ticket-lines .tl-code{width:82px}.ticket-lines .tl-desc{min-width:230px}.ticket-lines .tl-qty{width:84px}.ticket-lines .tl-unit{width:96px}.ticket-lines .tl-money{width:112px}.ticket-lines .tl-bonus{width:86px}.ticket-lines .tl-subtotal{white-space:nowrap;text-align:right;font-size:12px;font-weight:800}.ticket-calculations{margin:14px 0 0 auto;max-width:360px;display:grid;grid-template-columns:1fr auto;gap:8px 16px;align-items:center;font-size:13px}.ticket-calculations strong{text-align:right}.ticket-calculations .ticket-grand{padding:11px 12px;background:var(--vd);color:#fff;border-radius:9px;font-size:17px;grid-column:1/-1;display:flex;justify-content:space-between}.ticket-logo-preview{width:118px;height:72px;object-fit:contain;object-position:left center;border:1px dashed #cbd8cf;border-radius:8px;padding:5px;background:#fff}.ticket-list-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}.ticket-state{display:inline-block;padding:4px 8px;border-radius:999px;background:#edf4ef;color:#27583a;font-size:10px;font-weight:850}.ticket-state.enviada{background:#e0f2fe;color:#0369a1}.ticket-state.aceptada{background:#dcfce7;color:#166534}.ticket-state.no-aceptada{background:#fff0ee;color:#9d1c13}.ticket-empty{padding:18px;color:var(--vm);background:#f8faf8;border-radius:10px;font-size:13px}
 
 /* Estilos de Calendario Interactivo */
 .calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; background: #f8faf8; padding: 10px 15px; border-radius: 12px; border: 1px solid var(--vl); }
@@ -617,6 +926,7 @@ if($canEdit && !empty($_GET['editar_precio'])){
 
 <!-- 2. PRECIOS Y TICKET TIPO -->
 <section id="tab-precios" class="sales-tab">
+<?php if($canEdit && $ticketTableReady):?><div class="sales-actions" style="margin:0 0 12px"><a class="btn primary" href="?tab=precios&amp;nuevo_ticket=1#generador-ticket">＋ Crear ticket / cotización</a><a class="btn secondary" href="#lista-tickets">Ver cotizaciones guardadas</a></div><?php endif;?>
 <div class="sales-grid">
 <?php if($canEdit):?>
 <div class="sales-card">
@@ -683,6 +993,59 @@ if($canEdit && !empty($_GET['editar_precio'])){
 </tbody>
 </table>
 </div>
+</div>
+
+<?php if($canEdit && $ticketTableReady):
+    $ticketLogoPreview = asset('/img/logo-naser.png');
+    if ($editTicket && ($rutaLogoEdicion = ventasRutaImagenTicket($editTicket['imagen_path'] ?? null)) && is_file($rutaLogoEdicion)) {
+        $ticketLogoPreview = app_url('/uploads/' . ltrim((string)$editTicket['imagen_path'], '/'));
+    }
+?>
+<details class="sales-card ticket-builder" id="generador-ticket" <?=($editTicket || !empty($_GET['nuevo_ticket']))?'open':''?>>
+<summary><?=$editTicket?'Editar cotización '.h($editTicket['codigo_cotizacion']):'Crear ticket / cotización para un cliente'?></summary>
+<div class="ticket-builder-content">
+<p>Completá los datos y los renglones. El documento queda guardado en Ventas, con logo NASER predeterminado o una imagen propia, y podés exportarlo a PDF o Excel.</p>
+<form method="post" enctype="multipart/form-data" id="ventasTicketForm" class="sales-form">
+<?=csrf_field()?>
+<input type="hidden" name="accion" value="guardar_ticket">
+<input type="hidden" name="id" value="<?=(int)($editTicket['id']??0)?>">
+<input type="hidden" name="items_json" id="ticketItemsJson" value="[]">
+<label>Fecha<input type="date" name="fecha" required value="<?=h($editTicket['fecha']??date('Y-m-d'))?>"></label>
+<label>Número de cotización<input type="text" readonly value="<?=h($editTicket['codigo_cotizacion']??'Se genera al guardar')?>"></label>
+<label class="full">Cliente<input name="cliente" list="clientesTicket" maxlength="180" required value="<?=h($editTicket['cliente']??'')?>" placeholder="Razón social o nombre del cliente"><datalist id="clientesTicket"><?php foreach($clientes as $cliente):?><option value="<?=h($cliente['razon_social'])?>"><?php endforeach;?></datalist></label>
+<label>Yacimiento<input name="yacimiento" maxlength="150" value="<?=h($editTicket['yacimiento']??'')?>"></label>
+<label>Locación<input name="locacion" maxlength="150" value="<?=h($editTicket['locacion']??'')?>"></label>
+<label>Responsable de ventas<input name="responsable_ventas" maxlength="150" value="<?=h($editTicket['responsable_ventas']??($_SESSION['nombre']??''))?>"></label>
+<label>Estado<select name="estado"><?php foreach(['Borrador','Enviada','Aceptada','No aceptada'] as $estadoTicket):?><option value="<?=h($estadoTicket)?>" <?=($editTicket['estado']??'Borrador')===$estadoTicket?'selected':''?>><?=h($estadoTicket)?></option><?php endforeach;?></select></label>
+<label class="full">Tipo de servicio<input name="tipo_servicio" maxlength="180" required value="<?=h($editTicket['tipo_servicio']??'')?>" placeholder="Ej. Slickline, hidrogrúa, mantenimiento"></label>
+<label class="full">Imagen al inicio del ticket (opcional)<input type="file" name="imagen_ticket" id="ticketLogoFile" accept="image/png,image/jpeg,image/webp"><small>PNG, JPG o WebP · máximo 5 MB. Si no cargás una imagen, se usa el logo de NASER.</small><img class="ticket-logo-preview" id="ticketLogoPreview" src="<?=h($ticketLogoPreview)?>" alt="Vista previa del logo"></label>
+
+<div class="full">
+<div class="ticket-list-head"><h3 style="margin:6px 0">Detalle de servicios</h3><button type="button" class="btn secondary" id="agregarLineaTicket">＋ Agregar renglón</button></div>
+<div class="ticket-lines-wrap"><table class="ticket-lines"><thead><tr><th>Ítem</th><th>Cargar tarifa</th><th>Descripción</th><th>Cantidad</th><th>Unidad</th><th>Precio unitario USD</th><th>Bonificación %</th><th>Subtotal USD</th><th></th></tr></thead><tbody id="ticketLineas"></tbody></table></div>
+</div>
+<label>Descuento global %<input type="number" name="descuento_porcentaje" id="ticketDescuentoGlobal" min="0" max="100" step="0.01" value="<?=h($editTicket['descuento_porcentaje']??0)?>"></label>
+<label class="full">Observaciones<textarea name="observaciones" maxlength="5000" placeholder="Condiciones comerciales, alcance o información para el cliente"><?=h($editTicket['observaciones']??'')?></textarea></label>
+<div class="full">
+<div class="ticket-calculations"><span>Subtotal de servicios</span><strong id="ticketSubtotal">USD 0,00</strong><span>Descuento global</span><strong id="ticketDescuentoMonto">− USD 0,00</strong><div class="ticket-grand"><span>Total USD</span><strong id="ticketTotal">USD 0,00</strong></div></div>
+</div>
+<div class="full" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><button class="btn primary" type="submit">Guardar cotización</button><?php if($editTicket):?><a class="btn secondary" href="?tab=precios#lista-tickets">Cancelar edición</a><?php endif;?></div>
+</form>
+</div>
+</details>
+<?php elseif(!$ticketTableReady): ?>
+<div class="sales-card"><h2>Generador de tickets / cotizaciones</h2><div class="notice err"><?=h($ticketTableError)?></div></div>
+<?php endif; ?>
+
+<div class="sales-card" id="lista-tickets">
+<div class="ticket-list-head"><div><h2 style="margin-bottom:4px">Tickets y cotizaciones guardadas</h2><p style="margin:0;color:var(--vm);font-size:12px">Abrí el documento para imprimirlo o guardarlo como PDF; descargá también una planilla CSV compatible con Excel.</p></div><?php if($canEdit && $ticketTableReady):?><a class="btn primary" href="?tab=precios&amp;nuevo_ticket=1#generador-ticket">＋ Nueva cotización</a><?php endif;?></div>
+<?php if($ticketsVenta): ?>
+<div class="sales-table-wrap" style="margin-top:14px"><table class="sales-table" style="min-width:900px"><thead><tr><th>Número</th><th>Fecha</th><th>Cliente</th><th>Servicio</th><th>Estado</th><th>Total USD</th><th>Exportar / acciones</th></tr></thead><tbody>
+<?php foreach($ticketsVenta as $t): $estadoClase=strtolower(str_replace(' ','-',(string)$t['estado'])); ?>
+<tr><td><strong><?=h($t['codigo_cotizacion'])?></strong></td><td><?=h(date('d/m/Y',strtotime((string)$t['fecha'])))?></td><td><?=h($t['cliente'])?></td><td><?=h($t['tipo_servicio'])?></td><td><span class="ticket-state <?=h($estadoClase)?>"><?=h($t['estado'])?></span></td><td>USD <?=number_format((float)$t['total_usd'],2,',','.')?></td><td class="sales-actions"><a class="btn secondary" target="_blank" rel="noopener" href="?exportar_ticket=<?=(int)$t['id']?>">PDF / Ver</a><a class="btn secondary" href="?exportar_ticket_csv=<?=(int)$t['id']?>">Excel / CSV</a><?php if($canEdit):?><a class="btn secondary" href="?tab=precios&amp;editar_ticket=<?=(int)$t['id']?>#generador-ticket">Editar</a><?php endif;?></td></tr>
+<?php endforeach; ?>
+</tbody></table></div>
+<?php else: ?><div class="ticket-empty" style="margin-top:14px">Todavía no hay tickets guardados. Creá la primera cotización y quedará disponible para editarla o exportarla.</div><?php endif; ?>
 </div>
 </section>
 
@@ -1096,6 +1459,79 @@ function calcTicket(){
     if(e){e.addEventListener('input',calcTicket);e.addEventListener('change',calcTicket);}
 });
 calcTicket();
+
+const ticketTarifas = <?=json_encode(array_map(static fn($p)=>['id'=>(int)$p['id'],'nombre'=>$p['servicio_nombre'],'unidad'=>$p['unidad_medida'],'precio'=>(float)$p['tarifa_base_usd']],$precios), JSON_HEX_TAG|JSON_HEX_AMP|JSON_HEX_APOS|JSON_HEX_QUOT|JSON_UNESCAPED_UNICODE)?>;
+const ticketLineasIniciales = <?=json_encode($ticketEditorLines, JSON_HEX_TAG|JSON_HEX_AMP|JSON_HEX_APOS|JSON_HEX_QUOT|JSON_UNESCAPED_UNICODE)?>;
+(function iniciarGeneradorTicket(){
+    const form=document.getElementById('ventasTicketForm');
+    if(!form) return;
+    const tbody=document.getElementById('ticketLineas');
+    const hidden=document.getElementById('ticketItemsJson');
+    const descuento=document.getElementById('ticketDescuentoGlobal');
+    const dinero=n=>'USD '+Number(n||0).toLocaleString('es-AR',{minimumFractionDigits:2,maximumFractionDigits:2});
+    const valor=n=>{const x=Number(String(n??'').replace(',','.'));return Number.isFinite(x)?x:0;};
+
+    function agregarLinea(item={}){
+        const fila=document.createElement('tr');
+        fila.innerHTML='<td><input class="tl-code" data-campo="codigo" maxlength="40" aria-label="Código de ítem"></td><td><select data-tarifa aria-label="Cargar tarifa"><option value="">Elegir tarifa…</option></select></td><td><input class="tl-desc" data-campo="descripcion" maxlength="1000" required aria-label="Descripción"></td><td><input class="tl-qty" data-campo="cantidad" type="number" min="0.0001" max="1000000" step="0.0001" value="1" required aria-label="Cantidad"></td><td><input class="tl-unit" data-campo="unidad" maxlength="60" aria-label="Unidad"></td><td><input class="tl-money" data-campo="precio_unitario" type="number" min="0" max="1000000000" step="0.01" value="0" required aria-label="Precio unitario en dólares"></td><td><input class="tl-bonus" data-campo="bonificacion" type="number" min="0" max="100" step="0.01" value="0" aria-label="Bonificación porcentual"></td><td class="tl-subtotal" data-subtotal>USD 0,00</td><td><button type="button" class="btn secondary" data-quitar aria-label="Quitar renglón">×</button></td>';
+        const selector=fila.querySelector('[data-tarifa]');
+        ticketTarifas.forEach(t=>selector.add(new Option(t.nombre+' — USD '+Number(t.precio).toLocaleString('es-AR',{minimumFractionDigits:2,maximumFractionDigits:2}),String(t.id))));
+        ['codigo','descripcion','cantidad','unidad','precio_unitario','bonificacion'].forEach(campo=>{
+            const control=fila.querySelector('[data-campo="'+campo+'"]');
+            if(item[campo]!==undefined && item[campo]!==null) control.value=item[campo];
+            control.addEventListener('input',actualizarTicket);
+        });
+        selector.addEventListener('change',()=>{
+            const tarifa=ticketTarifas.find(t=>String(t.id)===selector.value);
+            if(tarifa){fila.querySelector('[data-campo="descripcion"]').value=tarifa.nombre;fila.querySelector('[data-campo="unidad"]').value=tarifa.unidad;fila.querySelector('[data-campo="precio_unitario"]').value=Number(tarifa.precio).toFixed(2);}
+            actualizarTicket();
+        });
+        fila.querySelector('[data-quitar]').addEventListener('click',()=>{fila.remove();if(!tbody.children.length)agregarLinea();actualizarTicket();});
+        tbody.appendChild(fila);
+        actualizarTicket();
+    }
+
+    function actualizarTicket(){
+        let subtotal=0;
+        const lineas=[];
+        tbody.querySelectorAll('tr').forEach(fila=>{
+            const leer=campo=>fila.querySelector('[data-campo="'+campo+'"]').value;
+            const cantidad=valor(leer('cantidad'));
+            const precio=valor(leer('precio_unitario'));
+            const bonificacion=Math.min(100,Math.max(0,valor(leer('bonificacion'))));
+            const totalLinea=cantidad*precio*(1-bonificacion/100);
+            subtotal+=totalLinea;
+            fila.querySelector('[data-subtotal]').textContent=dinero(totalLinea);
+            lineas.push({codigo:leer('codigo'),descripcion:leer('descripcion'),cantidad:leer('cantidad'),unidad:leer('unidad'),precio_unitario:leer('precio_unitario'),bonificacion:leer('bonificacion')});
+        });
+        const pct=Math.min(100,Math.max(0,valor(descuento.value)));
+        const montoDescuento=subtotal*pct/100;
+        document.getElementById('ticketSubtotal').textContent=dinero(subtotal);
+        document.getElementById('ticketDescuentoMonto').textContent='− '+dinero(montoDescuento);
+        document.getElementById('ticketTotal').textContent=dinero(subtotal-montoDescuento);
+        hidden.value=JSON.stringify(lineas);
+    }
+
+    document.getElementById('agregarLineaTicket').addEventListener('click',()=>agregarLinea());
+    descuento.addEventListener('input',actualizarTicket);
+    if(Array.isArray(ticketLineasIniciales) && ticketLineasIniciales.length) ticketLineasIniciales.forEach(agregarLinea); else agregarLinea();
+    form.addEventListener('submit',event=>{
+        actualizarTicket();
+        if(!tbody.children.length){event.preventDefault();alert('Agregá al menos un renglón de servicio.');return;}
+        if(!form.reportValidity()) event.preventDefault();
+    });
+
+    const file=document.getElementById('ticketLogoFile'), preview=document.getElementById('ticketLogoPreview');
+    file.addEventListener('change',()=>{
+        const imagen=file.files&&file.files[0];
+        file.setCustomValidity('');
+        if(!imagen) return;
+        if(imagen.size>5*1024*1024 || !['image/png','image/jpeg','image/webp'].includes(imagen.type)){
+            file.setCustomValidity('Elegí una imagen PNG, JPG o WebP de hasta 5 MB.');file.reportValidity();file.value='';return;
+        }
+        const lector=new FileReader();lector.onload=()=>{preview.src=lector.result;};lector.readAsDataURL(imagen);
+    });
+})();
 
 function filtrarTablaCrm() {
     const input = document.getElementById('filtroCrm');

@@ -52,6 +52,32 @@ CREATE TABLE IF NOT EXISTS ventas_precios (
     INDEX idx_ventas_precios_sector (sector_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- Cotizaciones generadas desde Precios y Ticket; items_json conserva el detalle editable del documento.
+CREATE TABLE IF NOT EXISTS ventas_tickets (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    sector_id INT NOT NULL,
+    codigo_cotizacion VARCHAR(40) NOT NULL,
+    fecha DATE NOT NULL,
+    cliente VARCHAR(180) NOT NULL,
+    yacimiento VARCHAR(150) NULL,
+    locacion VARCHAR(150) NULL,
+    responsable_ventas VARCHAR(150) NULL,
+    tipo_servicio VARCHAR(180) NOT NULL,
+    estado VARCHAR(30) NOT NULL DEFAULT 'Borrador',
+    items_json LONGTEXT NOT NULL,
+    subtotal_usd DECIMAL(14,2) NOT NULL DEFAULT 0,
+    descuento_porcentaje DECIMAL(6,2) NOT NULL DEFAULT 0,
+    total_usd DECIMAL(14,2) NOT NULL DEFAULT 0,
+    observaciones TEXT NULL,
+    imagen_path VARCHAR(500) NULL,
+    creado_por INT NULL,
+    actualizado_por INT NULL,
+    creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    actualizado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    UNIQUE KEY uq_ventas_tickets_codigo (sector_id, codigo_cotizacion),
+    KEY idx_ventas_tickets_fecha (sector_id, fecha, id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 CREATE TABLE IF NOT EXISTS ventas_costos_operativos (
     id INT AUTO_INCREMENT PRIMARY KEY,
     sector_id INT NOT NULL,
