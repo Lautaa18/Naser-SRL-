@@ -74,8 +74,13 @@ function rrhhAsegurarTablas(PDO $pdo): void {
 
 /** Datos del calendario para un mes + alertas activas + resumen. */
 function rrhhDatos(PDO $pdo, int $sid, int $anio, int $mes): array {
-    $ini = sprintf('%04d-%02d-01', $anio, $mes);
-    $fin = date('Y-m-t', strtotime($ini));
+    $primerDia = new DateTimeImmutable(sprintf('%04d-%02d-01', $anio, $mes));
+    $offsetDomingo = (int)$primerDia->format('w');
+    $semanas = (int)ceil(($offsetDomingo + (int)$primerDia->format('t')) / 7);
+    $inicioCalendario = $primerDia->modify('-' . $offsetDomingo . ' days');
+    $finCalendario = $inicioCalendario->modify('+' . ($semanas * 7 - 1) . ' days');
+    $ini = $inicioCalendario->format('Y-m-d');
+    $fin = $finCalendario->format('Y-m-d');
     $hoy = date('Y-m-d');
     $lim = date('Y-m-d', strtotime('+30 days'));
 
@@ -349,21 +354,23 @@ $jsonFlags = JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_
 .rh-kpi b{display:block;font-size:28px;line-height:1.15;margin-top:2px}
 .rh-kpi.red b{color:var(--rh-red)}.rh-kpi.amber b{color:var(--rh-amber)}.rh-kpi.green b{color:var(--rh-green)}.rh-kpi.blue b{color:var(--rh-blue)}
 
-.rh-cal{background:#fff;border:1px solid var(--rh-border);border-radius:17px;padding:16px;margin:10px 0 18px}
-.rh-cal-bar{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-bottom:12px}
+.rh-cal{background:#fff;border:1px solid var(--rh-border);border-radius:15px;padding:14px;margin:10px 0 18px}
+.rh-cal-bar{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;margin-bottom:14px;background:#f8faf8;padding:10px 12px;border:1px solid var(--rh-border);border-radius:12px}
 .rh-cal-bar .spacer{flex:1}
-.rh-cal-bar h2{margin:0 6px;font-size:20px;text-transform:capitalize}
+.rh-cal-bar h2{margin:0 6px;font-size:18px;color:var(--rh-green);text-transform:capitalize;text-align:center}
 .rh-cal-bar select,.rh-cal-bar button{font:inherit;font-size:13px;padding:7px 11px;border:1px solid var(--rh-border);border-radius:9px;background:#fff;cursor:pointer}
 .rh-cal-bar button:hover{background:var(--rh-green-soft)}
 .rh-legend{display:flex;flex-wrap:wrap;gap:12px;font-size:11px;color:var(--rh-gray);margin-bottom:10px}
 .rh-legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
 .rh-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}
 .rh-head{text-align:center;font-size:11px;font-weight:800;color:#52705b;padding:6px 0}
-.rh-day{min-height:104px;border:1px solid #e6ece7;border-radius:10px;padding:6px;background:#fbfdfb;cursor:pointer;position:relative;transition:background .12s,border-color .12s;overflow:hidden}
+.rh-day{min-height:95px;border:1px solid var(--rh-border);border-radius:10px;padding:8px;background:#fff;cursor:pointer;position:relative;display:flex;flex-direction:column;justify-content:space-between;transition:background .12s,border-color .12s;overflow:hidden}
 .rh-day:hover{background:var(--rh-green-soft);border-color:#b9d8c4}
 .rh-day:focus-visible{outline:2px solid var(--rh-green);outline-offset:1px}
 .rh-day.empty{background:transparent;border-color:transparent;cursor:default;pointer-events:none}
-.rh-day.weekend{background:#f6f8f6}
+.rh-day.other{background:#f6f8f7;border-color:#edf1ee}
+.rh-day.other .rh-num>span:first-child{color:#a9b6af;font-weight:600}
+.rh-day.other .rh-chip{opacity:.75}
 .rh-day.today{border:2px solid var(--rh-green);background:#f2fbf5}
 .rh-day.drop{background:#d9f0e1;border-color:var(--rh-green)}
 .rh-num{font-weight:800;font-size:12px;display:flex;justify-content:space-between;align-items:center}
@@ -440,7 +447,8 @@ $jsonFlags = JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_
 .module-table tr.s-proximo td:first-child{box-shadow:inset 4px 0 0 #e0a100}
 .module-table tr.s-vigente td:first-child{box-shadow:inset 4px 0 0 var(--rh-green)}
 .module-table tr.rh-hide{display:none}
-@media(max-width:720px){.rh-day{min-height:70px;padding:4px}.rh-chip{font-size:9px;padding:2px 4px}.rh-form{grid-template-columns:1fr}.rh-head{font-size:10px}}
+@media(max-width:720px){.rh-day{min-height:58px;padding:5px;border-radius:8px}.rh-chip{font-size:10px;padding:3px 4px}.rh-form{grid-template-columns:1fr}.rh-head{font-size:11px;padding:6px 0}.rh-grid{gap:4px}.rh-cal-bar .spacer{display:none}}
+@media(max-width:460px){.rh-cal{padding:10px}.rh-cal-bar{gap:6px}.rh-cal-bar h2{order:-1;flex-basis:100%;font-size:17px}.rh-cal-bar select{flex:1;min-width:0}.rh-grid{gap:3px}.rh-day{min-height:58px;padding:4px 3px;border-radius:7px}.rh-head{font-size:10px;padding:5px 0}.rh-chip{font-size:9px;padding:2px 3px;border-radius:4px}.rh-more{font-size:9px}}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
@@ -508,9 +516,9 @@ $jsonFlags = JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_
 </div>
 <section class="rh-cal">
   <div class="rh-cal-bar">
-    <button type="button" id="calPrev" aria-label="Mes anterior">‹</button>
-    <button type="button" id="calNext" aria-label="Mes siguiente">›</button>
+    <button type="button" id="calPrev" aria-label="Mes anterior">◀ Mes anterior</button>
     <h2 id="calTitulo"></h2>
+    <button type="button" id="calNext" aria-label="Mes siguiente">Mes siguiente ▶</button>
     <span class="spacer"></span>
     <select id="calMes" aria-label="Mes"></select>
     <select id="calAnio" aria-label="Año"></select>
@@ -678,13 +686,16 @@ function renderBar(){
 
 function renderCal(){
   var g = $('#calGrid'), html = '';
-  ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'].forEach(function(d){ html += '<div class="rh-head">' + d + '</div>'; });
+  ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'].forEach(function(d){ html += '<div class="rh-head">' + d + '</div>'; });
   var primero = new Date(S.anio, S.mes-1, 1);
-  var offset = (primero.getDay() + 6) % 7;
+  var offset = primero.getDay();
   var dias = new Date(S.anio, S.mes, 0).getDate();
-  for (var i = 0; i < offset; i++) html += '<div class="rh-day empty"></div>';
-  for (var d = 1; d <= dias; d++){
-    var f = ymd(S.anio, S.mes, d), dow = (offset + d - 1) % 7;
+  var totalCeldas = Math.ceil((offset + dias) / 7) * 7;
+  for (var i = 0; i < totalCeldas; i++){
+    var fechaCelda = new Date(S.anio, S.mes-1, 1 - offset + i);
+    var anioCelda = fechaCelda.getFullYear(), mesCelda = fechaCelda.getMonth() + 1, d = fechaCelda.getDate();
+    var f = ymd(anioCelda, mesCelda, d);
+    var otroMes = mesCelda !== S.mes || anioCelda !== S.anio;
     var items = itemsDelDia(f), chips = '';
     items.slice(0, 3).forEach(function(it){
       if (it.k === 'ev'){
@@ -698,8 +709,8 @@ function renderCal(){
       }
     });
     if (items.length > 3) chips += '<span class="rh-more">+' + (items.length - 3) + ' más</span>';
-    html += '<div class="rh-day' + (f === S.data.hoy ? ' today' : '') + (dow >= 5 ? ' weekend' : '') + '" tabindex="0" role="button" data-fecha="' + f + '" aria-label="' + d + ' de ' + MESES[S.mes-1] + ', ' + items.length + ' elemento(s)">' +
-            '<div class="rh-num"><span>' + d + '</span>' + (CAN_EDIT ? '<span class="rh-add" title="Nueva alerta">＋</span>' : '') + '</div>' + chips + '</div>';
+    html += '<div class="rh-day' + (f === S.data.hoy ? ' today' : '') + (otroMes ? ' other' : '') + '" tabindex="0" role="button"' + (f === S.data.hoy ? ' aria-current="date"' : '') + ' data-fecha="' + f + '" aria-label="' + esc(fmtFecha(f)) + ', ' + items.length + ' elemento(s)">' +
+            '<div class="rh-num"><span>' + d + '</span>' + (f === S.data.hoy ? ' <small style="color:var(--rh-green);font-weight:bold">(Hoy)</small>' : '') + (CAN_EDIT ? '<span class="rh-add" title="Nueva alerta">＋</span>' : '') + '</div>' + chips + '</div>';
   }
   g.innerHTML = html;
 }

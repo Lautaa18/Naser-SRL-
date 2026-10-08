@@ -59,6 +59,8 @@ CREATE TABLE IF NOT EXISTS compras (
  cantidad INT DEFAULT 1,
  prioridad ENUM('Normal','Urgente','Critico') DEFAULT 'Normal',
  proveedor VARCHAR(100) DEFAULT 'Pendiente',
+ monto DECIMAL(12,2) DEFAULT 0.00,
+ moneda VARCHAR(5) DEFAULT 'ARS',
  etapa INT DEFAULT 1,
  estado_logistico VARCHAR(255) DEFAULT 'Pedido cargado',
  fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -70,6 +72,8 @@ CREATE TABLE IF NOT EXISTS compras_documentos (
  etapa INT NOT NULL,
  nombre_archivo VARCHAR(255) NOT NULL,
  ruta_archivo VARCHAR(500) NOT NULL,
+ tipo_documento VARCHAR(100) DEFAULT 'Adjunto',
+ creado_por INT NULL,
  fecha_subida TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
  CONSTRAINT fk_compra_doc FOREIGN KEY (compra_id) REFERENCES compras(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -80,7 +84,10 @@ CREATE TABLE IF NOT EXISTS compras_encuesta (
  calidad VARCHAR(50) NOT NULL,
  estado_fisico VARCHAR(50) NOT NULL,
  cumplimiento_entrega VARCHAR(50) NOT NULL,
+ modalidad_entrega VARCHAR(100) NULL,
  observaciones TEXT,
+ creado_por INT NULL,
+ fecha_registro DATETIME DEFAULT CURRENT_TIMESTAMP,
  fecha_inspeccion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
  CONSTRAINT fk_compra_enc FOREIGN KEY (compra_id) REFERENCES compras(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

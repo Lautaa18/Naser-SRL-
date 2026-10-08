@@ -41,15 +41,19 @@ UPDATE finanzas_alertas f JOIN sectores s ON s.slug='finanzas' SET f.sector_id=s
 
 ALTER TABLE compras
  ADD COLUMN IF NOT EXISTS sector_id INT NULL,
+ ADD COLUMN IF NOT EXISTS monto DECIMAL(12,2) DEFAULT 0.00,
+ ADD COLUMN IF NOT EXISTS moneda VARCHAR(5) DEFAULT 'ARS',
  ADD COLUMN IF NOT EXISTS creado_por INT NULL,
  ADD COLUMN IF NOT EXISTS actualizado_por INT NULL,
  ADD COLUMN IF NOT EXISTS actualizado_en TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
 
 ALTER TABLE compras_documentos
+ ADD COLUMN IF NOT EXISTS tipo_documento VARCHAR(100) DEFAULT 'Adjunto',
  ADD COLUMN IF NOT EXISTS creado_por INT NULL;
 
 ALTER TABLE compras_encuesta
- ADD COLUMN IF NOT EXISTS creado_por INT NULL;
+ ADD COLUMN IF NOT EXISTS creado_por INT NULL,
+ ADD COLUMN IF NOT EXISTS modalidad_entrega VARCHAR(100) NULL;
 
 UPDATE compras c JOIN sectores s ON s.slug='compras' SET c.sector_id=s.id WHERE c.sector_id IS NULL;
 

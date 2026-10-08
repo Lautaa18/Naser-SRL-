@@ -17,13 +17,101 @@ $msg = ''; $err = '';
 
 
 $etapaNombre = [
-    1 => '1. Pedido Cargado',
+    1 => '1. Pedido (documento)',
     2 => '2. Solicitud de Presupuesto',
     3 => '3. Orden de Compra',
-    4 => '4. Facturación',
+    4 => '4. Factura',
     5 => '5. Pago',
     6 => '6. Entrega / Recepción'
 ];
+$tiposDocumentoPorEtapa = [
+    1 => ['Pedido de compra'],
+    2 => ['Solicitud de presupuesto', 'Cotización recibida'],
+    3 => ['Orden de compra'],
+    4 => ['Factura'],
+    5 => ['Comprobante de pago'],
+    6 => ['Remito / comprobante de entrega']
+];
+$documentoPrincipalPorEtapa = [
+    1 => 'Pedido de compra',
+    2 => 'Solicitud de presupuesto',
+    3 => 'Orden de compra',
+    4 => 'Factura',
+    5 => 'Comprobante de pago',
+    6 => 'Remito / comprobante de entrega'
+];
+$estadosLogisticos = [
+    'Pedido cargado', 'Presupuesto solicitado', 'Esperando presupuesto', 'Presupuesto recibido',
+    'Orden de compra emitida', 'Factura recibida', 'Pago registrado',
+    'En preparación', 'Despachado', 'En tránsito', 'Entrega pendiente de evaluación',
+    'Con demora de entrega', 'Incidencia logística'
+];
+$estadosCompraFinales = ['Recibido y evaluado', 'Recibido con observaciones', 'Recibido con no conformidad'];
+$estadoPorEtapa = [
+    1 => 'Pedido cargado',
+    2 => 'Presupuesto solicitado',
+    3 => 'Orden de compra emitida',
+    4 => 'Factura recibida',
+    5 => 'Pago registrado',
+    6 => 'Entrega pendiente de evaluación'
+];
+
+function guardarDocumentoCompra(PDO $pdo, int $compraId, int $etapa, string $tipo, int $usuarioId, string $uploadDir, array $archivo): int
+{
+    $error = (int)($archivo['error'] ?? UPLOAD_ERR_NO_FILE);
+    if ($error !== UPLOAD_ERR_OK) {
+        if ($error === UPLOAD_ERR_INI_SIZE || $error === UPLOAD_ERR_FORM_SIZE) throw new RuntimeException('El archivo supera el tamaño máximo permitido de 10 MB.');
+        throw new RuntimeException('Seleccioná un archivo válido para adjuntar.');
+    }
+    $tmp = (string)($archivo['tmp_name'] ?? '');
+    $size = (int)($archivo['size'] ?? 0);
+    if ($size < 1 || $size > 10 * 1024 * 1024) throw new RuntimeException('El archivo debe pesar menos de 10 MB.');
+
+    $nombreOriginal = str_replace('\\', '/', (string)($archivo['name'] ?? ''));
+    $nombreOriginal = basename($nombreOriginal);
+    $nombreOriginal = preg_replace('/[\\x00-\\x1F\\x7F]/u', '', $nombreOriginal) ?: 'documento';
+    $nombreOriginal = mb_substr($nombreOriginal, 0, 255);
+    $ext = strtolower(pathinfo($nombreOriginal, PATHINFO_EXTENSION));
+    $mimesPorExtension = [
+        'pdf' => ['application/pdf'],
+        'doc' => ['application/msword', 'application/x-ole-storage', 'application/CDFV2'],
+        'docx' => ['application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/zip', 'application/x-zip'],
+        'xls' => ['application/vnd.ms-excel', 'application/x-ole-storage', 'application/CDFV2'],
+        'xlsx' => ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/zip', 'application/x-zip'],
+        'jpg' => ['image/jpeg'], 'jpeg' => ['image/jpeg'], 'png' => ['image/png']
+    ];
+    if (!isset($mimesPorExtension[$ext])) throw new RuntimeException('Formato no permitido. Adjuntá PDF, Word, Excel o imagen JPG/PNG.');
+    if (function_exists('finfo_open') && is_file($tmp)) {
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+        $mime = $finfo ? finfo_file($finfo, $tmp) : false;
+        if ($finfo) finfo_close($finfo);
+        if ($mime && !in_array($mime, $mimesPorExtension[$ext], true)) throw new RuntimeException('El contenido del archivo no coincide con su extensión.');
+    }
+
+    $seguro = 'compra-' . $compraId . '-etapa-' . $etapa . '-' . bin2hex(random_bytes(8)) . '.' . $ext;
+    if (!move_uploaded_file($tmp, $uploadDir . '/' . $seguro)) throw new RuntimeException('No se pudo guardar el archivo adjunto.');
+    try {
+        $st = $pdo->prepare('INSERT INTO compras_documentos(compra_id, etapa, nombre_archivo, ruta_archivo, tipo_documento, creado_por) VALUES(?,?,?,?,?,?)');
+        $st->execute([$compraId, $etapa, $nombreOriginal, 'compras/' . $seguro, $tipo, $usuarioId]);
+        return (int)$pdo->lastInsertId();
+    } catch (Throwable $e) {
+        @unlink($uploadDir . '/' . $seguro);
+        throw $e;
+    }
+}
+
+function notificarCompra(PDO $pdo, int $sectorId, int $creadorId, int $actorId, string $codigo, int $compraId, string $titulo, string $mensaje, string $evento): void
+{
+    if (!function_exists('notificar')) return;
+    try {
+        $responsables = array_column(usuariosConRol($pdo, $sectorId, 'responsable'), 'id');
+        $destinatarios = array_values(array_unique(array_map('intval', array_merge([$creadorId, $actorId], $responsables))));
+        $clave = 'compra:' . $compraId . ':' . $evento . ':' . bin2hex(random_bytes(6));
+        notificar($pdo, $destinatarios, $titulo, $mensaje, '/php/compras.php#seguimiento', 'compra', $clave);
+    } catch (Throwable $e) {
+        error_log('[NASER] Notificación de compra ' . $codigo . ': ' . $e->getMessage());
+    }
+}
 
 $uploadDir = dirname(__DIR__) . '/uploads/compras';
 if (!is_dir($uploadDir)) @mkdir($uploadDir, 0775, true);
@@ -36,91 +124,136 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($a === 'guardar') {
             $id = (int)($_POST['id'] ?? 0);
-            $desc = trim($_POST['descripcion'] ?? '');
-            $cant = max(1, (int)($_POST['cantidad'] ?? 1));
-            $prio = $_POST['prioridad'] ?? 'Normal';
-            $prov = trim($_POST['proveedor'] ?? 'Pendiente');
+            $desc = trim((string)($_POST['descripcion'] ?? ''));
+            $cant = (int)($_POST['cantidad'] ?? 1);
+            $prio = (string)($_POST['prioridad'] ?? 'Normal');
+            $prov = trim((string)($_POST['proveedor'] ?? 'Pendiente')) ?: 'Pendiente';
             $monto = (float)($_POST['monto'] ?? 0);
-            $moneda = $_POST['moneda'] ?? 'ARS';
-            $et = max(1, min(6, (int)($_POST['etapa'] ?? 1)));
-            $estado = trim($_POST['estado_logistico'] ?? 'Pedido cargado');
-
-            if ($desc === '') throw new RuntimeException('Ingresá una descripción para el pedido.');
+            $moneda = (string)($_POST['moneda'] ?? 'ARS');
+            if ($desc === '' || mb_strlen($desc) > 10000) throw new RuntimeException('Ingresá una descripción válida para el pedido.');
+            if ($cant < 1 || !in_array($prio, ['Normal', 'Urgente', 'Critico'], true)) throw new RuntimeException('Revisá la cantidad y prioridad del pedido.');
+            if ($monto < 0 || !in_array($moneda, ['ARS', 'USD'], true)) throw new RuntimeException('Revisá el monto y la moneda.');
 
             if ($id) {
-                $pdo->prepare('UPDATE compras SET descripcion=?, cantidad=?, prioridad=?, proveedor=?, monto=?, moneda=?, etapa=?, estado_logistico=?, actualizado_por=?, actualizado_en=NOW() WHERE id=? AND sector_id=?')
-                    ->execute([$desc, $cant, $prio, $prov, $monto, $moneda, $et, $estado, $uid, $id, $sid]);
+                $st = $pdo->prepare('SELECT codigo, etapa, estado_logistico, creado_por FROM compras WHERE id=? AND sector_id=?');
+                $st->execute([$id, $sid]);
+                $anterior = $st->fetch();
+                if (!$anterior) throw new RuntimeException('Pedido de compra inválido.');
+                $estado = trim((string)($_POST['estado_logistico'] ?? $anterior['estado_logistico']));
+                if (in_array($anterior['estado_logistico'], $estadosCompraFinales, true) && $estado !== $anterior['estado_logistico']) throw new RuntimeException('La recepción evaluada cierra el ciclo de compra y no se puede reabrir desde este formulario.');
+                if (!in_array($estado, $estadosLogisticos, true) && $estado !== $anterior['estado_logistico']) throw new RuntimeException('Seleccioná un estado logístico válido.');
+                $pdo->prepare('UPDATE compras SET descripcion=?, cantidad=?, prioridad=?, proveedor=?, monto=?, moneda=?, estado_logistico=?, actualizado_por=?, actualizado_en=NOW() WHERE id=? AND sector_id=?')
+                    ->execute([$desc, $cant, $prio, mb_substr($prov, 0, 150), $monto, $moneda, $estado, $uid, $id, $sid]);
                 $compraId = $id;
-                $msg = 'Pedido actualizado con éxito.';
+                $codigo = (string)$anterior['codigo'];
+                $creadorId = (int)$anterior['creado_por'];
+                if ($estado !== $anterior['estado_logistico']) {
+                    notificarCompra($pdo, $sid, $creadorId, $uid, $codigo, $id, 'Actualización de compra ' . $codigo, 'El estado logístico cambió a: ' . $estado . '.', 'estado');
+                }
+                $msg = 'Pedido actualizado con éxito. La etapa documental se avanza desde los adjuntos.';
             } else {
-                $codigo = 'CMP-' . date('Y') . '-' . str_pad((string)((int)$pdo->query('SELECT COUNT(*)+1 FROM compras')->fetchColumn()), 4, '0', STR_PAD_LEFT);
-                $pdo->prepare('INSERT INTO compras(sector_id, codigo, sector, descripcion, cantidad, prioridad, proveedor, monto, moneda, etapa, estado_logistico, creado_por, actualizado_por) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)')
-                    ->execute([$sid, $codigo, $sector['nombre'], $desc, $cant, $prio, $prov, $monto, $moneda, $et, $estado, $uid, $uid]);
+                $anio = date('Y');
+                $st = $pdo->prepare("SELECT MAX(CAST(SUBSTRING_INDEX(codigo, '-', -1) AS UNSIGNED)) FROM compras WHERE codigo LIKE ?");
+                $st->execute(['CMP-' . $anio . '-%']);
+                $secuencia = (int)$st->fetchColumn() + 1;
+                do {
+                    $codigo = 'CMP-' . $anio . '-' . str_pad((string)$secuencia++, 4, '0', STR_PAD_LEFT);
+                    $st = $pdo->prepare('SELECT COUNT(*) FROM compras WHERE codigo=?');
+                    $st->execute([$codigo]);
+                } while ((int)$st->fetchColumn() > 0);
+                $estado = 'Pedido cargado';
+                $pdo->prepare('INSERT INTO compras(sector_id, codigo, sector, descripcion, cantidad, prioridad, proveedor, monto, moneda, etapa, estado_logistico, creado_por, actualizado_por) VALUES(?,?,?,?,?,?,?,?,?,1,?,?,?)')
+                    ->execute([$sid, $codigo, $sector['nombre'], $desc, $cant, $prio, mb_substr($prov, 0, 150), $monto, $moneda, $estado, $uid, $uid]);
                 $compraId = (int)$pdo->lastInsertId();
+                $creadorId = $uid;
                 $msg = "Pedido $codigo creado correctamente.";
             }
 
-            if (!empty($_FILES['archivo']['name']) && ($_FILES['archivo']['error'] ?? UPLOAD_ERR_NO_FILE) === UPLOAD_ERR_OK) {
-                $orig = $_FILES['archivo']['name'];
-                $ext = strtolower(pathinfo($orig, PATHINFO_EXTENSION));
-                if (!in_array($ext, ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'jpg', 'png'], true)) throw new RuntimeException('Formato de archivo no permitido.');
-                $safe = 'compra-' . $compraId . '-e' . $et . '-' . time() . '.' . $ext;
-                if (!move_uploaded_file($_FILES['archivo']['tmp_name'], $uploadDir . '/' . $safe)) throw new RuntimeException('Error al guardar el archivo adjunto.');
-                $pdo->prepare('INSERT INTO compras_documentos(compra_id, etapa, nombre_archivo, ruta_archivo, tipo_documento, creado_por) VALUES(?,?,?,?,?,?)')
-                    ->execute([$compraId, $et, $orig, 'compras/' . $safe, 'Documento de Inicio', $uid]);
+            if (!empty($_FILES['archivo']['name']) || (int)($_FILES['archivo']['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_NO_FILE) {
+                try {
+                    guardarDocumentoCompra($pdo, $compraId, 1, 'Pedido de compra', $uid, $uploadDir, $_FILES['archivo']);
+                } catch (Throwable $errorArchivo) {
+                    if (!$id) $pdo->prepare('DELETE FROM compras WHERE id=? AND sector_id=?')->execute([$compraId, $sid]);
+                    throw $errorArchivo;
+                }
             }
             auditModulo($pdo, $uid, 'compras_guardar', "Compra #$compraId");
+            if (!$id) notificarCompra($pdo, $sid, $creadorId, $uid, $codigo, $compraId, 'Nuevo pedido de compra ' . $codigo, 'Se cargó un pedido de compra: ' . $desc . '.', 'creada');
         }
 
         if ($a === 'documento_etapa') {
             $id = (int)($_POST['compra_id'] ?? 0);
-            $et = max(1, min(6, (int)($_POST['etapa_doc'] ?? 1)));
-            $tipoDoc = trim($_POST['tipo_documento'] ?? 'Documento General');
+            $et = (int)($_POST['etapa_doc'] ?? 0);
+            $tipoDoc = trim((string)($_POST['tipo_documento'] ?? ''));
+            if (!isset($etapaNombre[$et]) || !in_array($tipoDoc, $tiposDocumentoPorEtapa[$et], true)) throw new RuntimeException('Seleccioná una etapa y tipo de documento válidos.');
 
-            $st = $pdo->prepare('SELECT id FROM compras WHERE id=? AND sector_id=?');
+            $st = $pdo->prepare('SELECT id, codigo, etapa, estado_logistico, creado_por FROM compras WHERE id=? AND sector_id=?');
             $st->execute([$id, $sid]);
-            if (!$st->fetchColumn()) throw new RuntimeException('Pedido inválido.');
-
-            if (empty($_FILES['archivo_etapa']['name']) || ($_FILES['archivo_etapa']['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_OK) {
-                throw new RuntimeException('Seleccioná un archivo válido.');
+            $compra = $st->fetch();
+            if (!$compra) throw new RuntimeException('Pedido inválido.');
+            $etapaActual = (int)$compra['etapa'];
+            if ($et > $etapaActual + 1) throw new RuntimeException('El ciclo se completa en orden. Adjuntá primero el documento de la etapa pendiente.');
+            if ($et === $etapaActual + 1) {
+                if ($tipoDoc !== $documentoPrincipalPorEtapa[$et]) throw new RuntimeException('Para avanzar, adjuntá el documento principal requerido: ' . $documentoPrincipalPorEtapa[$et] . '.');
+                $st = $pdo->prepare('SELECT COUNT(*) FROM compras_documentos WHERE compra_id=? AND etapa=?');
+                $st->execute([$id, $etapaActual]);
+                if ((int)$st->fetchColumn() === 0) throw new RuntimeException('Adjuntá el documento de la etapa actual antes de avanzar.');
             }
 
-            $orig = $_FILES['archivo_etapa']['name'];
-            $ext = strtolower(pathinfo($orig, PATHINFO_EXTENSION));
-            if (!in_array($ext, ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'jpg', 'png'], true)) throw new RuntimeException('Formato no permitido.');
-            
-            $safe = 'compra-' . $id . '-etapa-' . $et . '-' . time() . '.' . $ext;
-            if (!move_uploaded_file($_FILES['archivo_etapa']['tmp_name'], $uploadDir . '/' . $safe)) throw new RuntimeException('No se pudo guardar el archivo.');
-
-            $pdo->prepare('INSERT INTO compras_documentos(compra_id, etapa, nombre_archivo, ruta_archivo, tipo_documento, creado_por) VALUES(?,?,?,?,?,?)')
-                ->execute([$id, $et, $orig, 'compras/' . $safe, $tipoDoc, $uid]);
-
-            $pdo->prepare('UPDATE compras SET etapa=GREATEST(etapa,?), actualizado_por=?, actualizado_en=NOW() WHERE id=? AND sector_id=?')
-                ->execute([$et, $uid, $id, $sid]);
-
-            auditModulo($pdo, $uid, 'compras_documento', "Documento subido a la compra #$id etapa $et");
-            $msg = 'Documento subido y estado actualizado correctamente.';
+            guardarDocumentoCompra($pdo, $id, $et, $tipoDoc, $uid, $uploadDir, $_FILES['archivo_etapa'] ?? []);
+            $avanza = $et === $etapaActual + 1;
+            if ($avanza) {
+                $estado = $estadoPorEtapa[$et];
+                $pdo->prepare('UPDATE compras SET etapa=?, estado_logistico=?, actualizado_por=?, actualizado_en=NOW() WHERE id=? AND sector_id=?')
+                    ->execute([$et, $estado, $uid, $id, $sid]);
+                $msg = 'Documento subido. La compra avanzó a: ' . $etapaNombre[$et] . '.';
+            } else {
+                $estado = (string)$compra['estado_logistico'];
+                if ($et === 2 && $tipoDoc === 'Cotización recibida') {
+                    $estado = 'Presupuesto recibido';
+                    $pdo->prepare('UPDATE compras SET estado_logistico=?, actualizado_por=?, actualizado_en=NOW() WHERE id=? AND sector_id=?')->execute([$estado, $uid, $id, $sid]);
+                } else {
+                    $pdo->prepare('UPDATE compras SET actualizado_por=?, actualizado_en=NOW() WHERE id=? AND sector_id=?')->execute([$uid, $id, $sid]);
+                }
+                $msg = 'Documento agregado a la compra.';
+            }
+            auditModulo($pdo, $uid, 'compras_documento', "Documento $tipoDoc en compra #$id, etapa $et");
+            notificarCompra($pdo, $sid, (int)$compra['creado_por'], $uid, (string)$compra['codigo'], $id, 'Documento agregado a compra ' . $compra['codigo'], $tipoDoc . ' cargado en ' . $etapaNombre[$et] . '. Estado logístico: ' . $estado . '.', 'documento');
         }
 
         if ($a === 'encuesta') {
             $id = (int)($_POST['compra_id'] ?? 0);
-            $st = $pdo->prepare('SELECT id FROM compras WHERE id=? AND sector_id=?');
+            $st = $pdo->prepare('SELECT id, codigo, etapa, creado_por FROM compras WHERE id=? AND sector_id=?');
             $st->execute([$id, $sid]);
-            if (!$st->fetchColumn()) throw new RuntimeException('Pedido de compra inválido.');
+            $compra = $st->fetch();
+            if (!$compra) throw new RuntimeException('Pedido de compra inválido.');
+            if ((int)$compra['etapa'] < 6) throw new RuntimeException('La recepción se registra después de completar los cinco pasos anteriores y adjuntar el documento de entrega.');
+            $st = $pdo->prepare('SELECT COUNT(*) FROM compras_encuesta WHERE compra_id=?');
+            $st->execute([$id]);
+            if ((int)$st->fetchColumn() > 0) throw new RuntimeException('Esta compra ya tiene una evaluación de recepción registrada.');
 
-            $calidad = $_POST['calidad'] ?? 'Conforme';
-            $estadoFisico = $_POST['estado_fisico'] ?? 'Bueno';
-            $entrega = $_POST['entrega'] ?? 'En término';
-            $obs = trim($_POST['observaciones'] ?? '');
+            $calidad = (string)($_POST['calidad'] ?? '');
+            $estadoFisico = (string)($_POST['estado_fisico'] ?? '');
+            $entrega = (string)($_POST['entrega'] ?? '');
+            $modalidad = (string)($_POST['modalidad_entrega'] ?? '');
+            $obs = trim((string)($_POST['observaciones'] ?? ''));
+            if (!in_array($calidad, ['Conforme', 'Observada', 'No Conforme'], true)
+                || !in_array($estadoFisico, ['Bueno', 'Regular', 'Malo'], true)
+                || !in_array($entrega, ['En término', 'Demorada'], true)
+                || !in_array($modalidad, ['Transporte del proveedor', 'Retiro por NASER', 'Correo / transporte contratado', 'Entrega directa en base / depósito', 'Otro'], true)) {
+                throw new RuntimeException('Completá todas las respuestas de recepción con una opción válida.');
+            }
+            if (mb_strlen($obs) > 5000) throw new RuntimeException('Las observaciones no pueden superar los 5.000 caracteres.');
 
-            $pdo->prepare('INSERT INTO compras_encuesta(compra_id, calidad, estado_fisico, cumplimiento_entrega, observaciones, creado_por) VALUES(?,?,?,?,?,?)')
-                ->execute([$id, $calidad, $estadoFisico, $entrega, $obs, $uid]);
-
-            $pdo->prepare('UPDATE compras SET etapa=6, estado_logistico=?, actualizado_por=?, actualizado_en=NOW() WHERE id=?')
-                ->execute(['Producto Recibido y Evaluado', $uid, $id]);
-
-            auditModulo($pdo, $uid, 'compras_encuesta', "Encuesta registrada para Compra #$id");
-            $msg = 'Recepción y evaluación registrada con éxito.';
+            $pdo->prepare('INSERT INTO compras_encuesta(compra_id, calidad, estado_fisico, cumplimiento_entrega, modalidad_entrega, observaciones, creado_por) VALUES(?,?,?,?,?,?,?)')
+                ->execute([$id, $calidad, $estadoFisico, $entrega, $modalidad, $obs, $uid]);
+            $estadoFinal = ($calidad === 'No Conforme' || $estadoFisico === 'Malo') ? 'Recibido con no conformidad'
+                : (($calidad === 'Observada' || $estadoFisico === 'Regular' || $entrega === 'Demorada') ? 'Recibido con observaciones' : 'Recibido y evaluado');
+            $pdo->prepare('UPDATE compras SET etapa=6, estado_logistico=?, actualizado_por=?, actualizado_en=NOW() WHERE id=? AND sector_id=?')
+                ->execute([$estadoFinal, $uid, $id, $sid]);
+            auditModulo($pdo, $uid, 'compras_encuesta', "Recepción registrada para Compra #$id");
+            notificarCompra($pdo, $sid, (int)$compra['creado_por'], $uid, (string)$compra['codigo'], $id, 'Recepción registrada para compra ' . $compra['codigo'], 'Estado final: ' . $estadoFinal . '. Modalidad de entrega: ' . $modalidad . '.', 'recepcion');
+            $msg = 'Recepción y evaluación registradas. Estado final: ' . $estadoFinal . '.';
         }
 
         if ($a === 'eliminar') {
@@ -142,17 +275,25 @@ if ($canEdit && !empty($_GET['editar'])) {
     $edit = $st->fetch();
 }
 
-$st = $pdo->prepare('SELECT c.*, u.nombre AS actualizado_nombre, (SELECT COUNT(*) FROM compras_documentos d WHERE d.compra_id=c.id) AS total_docs FROM compras c LEFT JOIN usuarios u ON u.id=c.actualizado_por WHERE c.sector_id=? ORDER BY c.fecha_creacion DESC');
+$st = $pdo->prepare('SELECT c.*, u.nombre AS actualizado_nombre,
+    (SELECT COUNT(*) FROM compras_documentos d WHERE d.compra_id=c.id) AS total_docs,
+    (SELECT COUNT(*) FROM compras_documentos d WHERE d.compra_id=c.id AND d.etapa=c.etapa) AS docs_etapa_actual
+    FROM compras c LEFT JOIN usuarios u ON u.id=c.actualizado_por WHERE c.sector_id=? ORDER BY c.fecha_creacion DESC');
 $st->execute([$sid]);
 $rows = $st->fetchAll();
 
-$docsCompra = $pdo->prepare('SELECT d.*, c.codigo FROM compras_documentos d JOIN compras c ON c.id=d.compra_id WHERE c.sector_id=? ORDER BY d.id DESC');
+$docsCompra = $pdo->prepare('SELECT d.*, c.codigo, u.nombre AS subido_por FROM compras_documentos d JOIN compras c ON c.id=d.compra_id LEFT JOIN usuarios u ON u.id=d.creado_por WHERE c.sector_id=? ORDER BY d.id DESC');
 $docsCompra->execute([$sid]);
 $docsCompra = $docsCompra->fetchAll();
 
-$encuestas = $pdo->prepare('SELECT e.*, c.codigo, u.nombre AS usuario_evaluador FROM compras_encuesta e JOIN compras c ON c.id=e.compra_id LEFT JOIN usuarios u ON u.id=e.creado_por WHERE c.sector_id=? ORDER BY e.id DESC');
+$campoFechaEncuesta = hasColumn($pdo, 'compras_encuesta', 'fecha_inspeccion')
+    ? 'COALESCE(e.fecha_inspeccion, e.fecha_registro)'
+    : 'e.fecha_registro';
+$encuestas = $pdo->prepare("SELECT e.*, $campoFechaEncuesta AS fecha_evaluacion, c.codigo, u.nombre AS usuario_evaluador FROM compras_encuesta e JOIN compras c ON c.id=e.compra_id LEFT JOIN usuarios u ON u.id=e.creado_por WHERE c.sector_id=? ORDER BY e.id DESC");
 $encuestas->execute([$sid]);
 $encuestas = $encuestas->fetchAll();
+$encuestadasIds = array_fill_keys(array_map(static fn($e) => (int)$e['compra_id'], $encuestas), true);
+$recepcionesPendientes = array_values(array_filter($rows, static fn($r) => (int)$r['etapa'] >= 6 && !isset($encuestadasIds[(int)$r['id']])));
 
 ?>
 <!doctype html>
@@ -234,16 +375,16 @@ $encuestas = $encuestas->fetchAll();
         <div class="big"><?=count($rows)?></div>
     </div>
     <div class="module-card">
-        <h3>En Cotización / OC</h3>
-        <div class="big"><?=count(array_filter($rows,fn($r)=>(int)$r['etapa']>=1 && (int)$r['etapa']<=3))?></div>
+        <h3>En presupuesto / OC</h3>
+        <div class="big"><?=count(array_filter($rows,fn($r)=>(int)$r['etapa']>=2 && (int)$r['etapa']<=3))?></div>
     </div>
     <div class="module-card">
         <h3>Pendientes de Entrega</h3>
-        <div class="big"><?=count(array_filter($rows,fn($r)=>(int)$r['etapa']>=4 && (int)$r['etapa']<6))?></div>
+        <div class="big"><?=count(array_filter($rows,fn($r)=>(int)$r['etapa']>=4 && !isset($encuestadasIds[(int)$r['id']])))?></div>
     </div>
     <div class="module-card">
-        <h3>Completados</h3>
-        <div class="big"><?=count(array_filter($rows,fn($r)=>(int)$r['etapa']===6))?></div>
+        <h3>Recepción evaluada</h3>
+        <div class="big"><?=count($encuestadasIds)?></div>
     </div>
 </section>
 
@@ -277,13 +418,15 @@ $encuestas = $encuestas->fetchAll();
             <input name="proveedor" value="<?=h($edit['proveedor']??'Pendiente')?>" placeholder="Razón social o proveedor">
         </label>
 
-        <label>Etapa Actual
-            <select name="etapa">
-                <?php foreach($etapaNombre as $num=>$nombre):?>
-                    <option value="<?=$num?>" <?=((int)($edit['etapa']??1))===$num?'selected':''?>><?=h($nombre)?></option>
-                <?php endforeach;?>
-            </select>
+        <?php if($edit):?>
+        <label>Etapa documental
+            <input value="<?=h($etapaNombre[(int)$edit['etapa']]??'Pedido cargado')?>" readonly>
         </label>
+        <?php else:?>
+        <label>Etapa documental
+            <input value="1. Pedido (documento)" readonly>
+        </label>
+        <?php endif;?>
 
         <label>Monto Estimado / Real
             <input type="number" step="0.01" name="monto" value="<?=h($edit['monto']??'0.00')?>">
@@ -296,12 +439,25 @@ $encuestas = $encuestas->fetchAll();
             </select>
         </label>
 
-        <label class="full">Estado Logístico / Seguimiento
-            <input name="estado_logistico" value="<?=h($edit['estado_logistico']??'Pedido cargado')?>" placeholder="Ej: En preparación, Despachado, En depósito...">
+        <?php if($edit):?>
+        <label class="full">Estado logístico
+            <?php if(in_array($edit['estado_logistico'], $estadosCompraFinales, true)):?>
+            <input value="<?=h($edit['estado_logistico'])?>" readonly>
+            <?php else:?>
+            <select name="estado_logistico">
+                <?php if(!in_array($edit['estado_logistico'], $estadosLogisticos, true)):?><option value="<?=h($edit['estado_logistico'])?>" selected><?=h($edit['estado_logistico'])?> (actual)</option><?php endif;?>
+                <?php foreach($estadosLogisticos as $estado):?><option value="<?=h($estado)?>" <?=($edit['estado_logistico']??'')===$estado?'selected':''?>><?=h($estado)?></option><?php endforeach;?>
+            </select>
+            <?php endif;?>
         </label>
+        <?php else:?>
+        <label class="full">Estado logístico inicial
+            <input value="Pedido cargado" readonly>
+        </label>
+        <?php endif;?>
 
-        <label class="full">Adjuntar Archivo Inicial (PDF / Presupuesto)
-            <input type="file" name="archivo" accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.png">
+        <label class="full">Adjuntar Pedido de compra (opcional · máximo 10 MB)
+            <input type="file" name="archivo" accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png">
         </label>
 
         <div class="full">
@@ -375,14 +531,14 @@ $encuestas = $encuestas->fetchAll();
 <?php if($canEdit && $rows):?>
 <section class="module-card" style="margin-top:25px" id="documentos">
     <h3>📎 Gestor de Documentación y Adjuntos por Etapa</h3>
-    <p>Subí archivos en PDF, Excel o Imagen para respaldar el flujo (Presupuestos, Facturas, Comprobantes de Pago, Remitos de Entrega).</p>
+    <p>Adjuntá en orden el documento requerido de cada etapa: pedido, solicitud/cotización, orden de compra, factura, pago y remito. Se avanza de a una etapa y el documento actual debe estar cargado. PDF, Office e imágenes de hasta 10 MB.</p>
     <form method="post" enctype="multipart/form-data" class="module-form"><?=csrf_field()?>
         <input type="hidden" name="accion" value="documento_etapa">
         
         <label>Seleccionar Compra
             <select name="compra_id" required>
                 <?php foreach($rows as $r):?>
-                    <option value="<?=(int)$r['id']?>"><?=h($r['codigo'].' - '.$r['descripcion'])?></option>
+                    <option value="<?=(int)$r['id']?>" data-etapa="<?=(int)$r['etapa']?>" data-doc-actual="<?=(int)$r['docs_etapa_actual']?>"><?=h($r['codigo'].' - '.$r['descripcion'])?></option>
                 <?php endforeach;?>
             </select>
         </label>
@@ -395,16 +551,20 @@ $encuestas = $encuestas->fetchAll();
             </select>
         </label>
 
-        <label class="full">Tipo de Documento
-            <input name="tipo_documento" placeholder="Ej: Solicitud Presupuesto, Orden de Compra #123, Factura A, Remito" required>
+        <label>Tipo de Documento
+            <select name="tipo_documento" id="tipoDocumentoCompra" required>
+                <?php foreach($tiposDocumentoPorEtapa as $num=>$tipos):foreach($tipos as $tipo):?>
+                    <option value="<?=h($tipo)?>" data-etapa="<?=$num?>"><?=h($tipo)?></option>
+                <?php endforeach;endforeach;?>
+            </select>
         </label>
 
-        <label class="full">Archivo (PDF / Imagen / Office)
-            <input type="file" name="archivo_etapa" accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.png" required>
+        <label>Archivo (máximo 10 MB)
+            <input type="file" name="archivo_etapa" accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png" required>
         </label>
 
         <div class="full">
-            <button class="btn primary">Subir Documento y Avanzar Etapa</button>
+            <button class="btn primary">Subir documento de esta etapa</button>
         </div>
     </form>
 </section>
@@ -422,11 +582,12 @@ $encuestas = $encuestas->fetchAll();
                 <th>Etapa</th>
                 <th>Tipo / Descripción</th>
                 <th>Archivo</th>
+                <th>Fecha / Responsable</th>
             </tr>
         </thead>
         <tbody>
         <?php if(!$docsCompra):?>
-            <tr><td colspan="4" style="text-align:center;padding:15px;color:#6b7280">No hay documentos adjuntos.</td></tr>
+            <tr><td colspan="5" style="text-align:center;padding:15px;color:#6b7280">No hay documentos adjuntos.</td></tr>
         <?php endif;?>
         <?php foreach($docsCompra as $d):?>
             <tr>
@@ -438,6 +599,7 @@ $encuestas = $encuestas->fetchAll();
                         📄 <?=h($d['nombre_archivo'])?>
                     </a>
                 </td>
+                <td><?=h($d['subido_por']??'Sistema')?><br><small style="color:#9ca3af"><?=h(date('d/m/Y H:i', strtotime($d['fecha_subida'])))?></small></td>
             </tr>
         <?php endforeach;?>
         </tbody>
@@ -447,20 +609,22 @@ $encuestas = $encuestas->fetchAll();
 <?php if($canEdit && $rows):?>
 <section class="module-card" style="margin-top:25px" id="encuesta">
     <h3>📋 Encuesta de Control de Calidad y Recepción de Producto</h3>
-    <p>Completa este formulario una vez recibido el producto o servicio para evaluar al proveedor y cerrar el ciclo.</p>
+    <p>Al adjuntar el remito en la etapa 6, registrá cómo llegó el producto, su calidad y estado. Cada compra admite una evaluación de recepción.</p>
+    <?php if(!$recepcionesPendientes):?><p class="module-permission">No hay entregas pendientes de evaluación. La compra debe llegar a la etapa 6 y tener su remito adjunto.</p><?php else:?>
     <form method="post" class="module-form"><?=csrf_field()?>
         <input type="hidden" name="accion" value="encuesta">
         
         <label class="full">Compra A Evaluar
             <select name="compra_id" required>
-                <?php foreach($rows as $r):?>
+                <?php foreach($recepcionesPendientes as $r):?>
                     <option value="<?=(int)$r['id']?>"><?=h($r['codigo'].' - '.$r['descripcion'].' ('.$r['proveedor'].')')?></option>
                 <?php endforeach;?>
             </select>
         </label>
 
         <label>Calidad del Producto / Servicio
-            <select name="calidad">
+            <select name="calidad" required>
+                <option value="" selected disabled>Seleccionar calidad</option>
                 <option value="Conforme">Conforme (Cumple especificaciones)</option>
                 <option value="Observada">Observada (Detalles menores)</option>
                 <option value="No Conforme">No Conforme (Rechazado)</option>
@@ -468,29 +632,42 @@ $encuestas = $encuestas->fetchAll();
         </label>
 
         <label>Estado Físico del Envío
-            <select name="estado_fisico">
+            <select name="estado_fisico" required>
+                <option value="" selected disabled>Seleccionar estado</option>
                 <option value="Bueno">Bueno / Excelente</option>
                 <option value="Regular">Regular / Embalaje Dañado</option>
                 <option value="Malo">Malo / Insumo Con Faltantes o Roturas</option>
             </select>
         </label>
 
+        <label class="full">¿Cómo se entregó el producto?
+            <select name="modalidad_entrega" required>
+                <option value="" selected disabled>Seleccionar modalidad</option>
+                <option>Transporte del proveedor</option>
+                <option>Retiro por NASER</option>
+                <option>Correo / transporte contratado</option>
+                <option>Entrega directa en base / depósito</option>
+                <option>Otro</option>
+            </select>
+        </label>
+
         <label class="full">Cumplimiento del Plazo de Entrega
-            <select name="entrega">
+            <select name="entrega" required>
+                <option value="" selected disabled>Seleccionar cumplimiento</option>
                 <option value="En término">En término (Dentro del plazo acordado)</option>
                 <option value="Demorada">Demorada (Entregado fuera de fecha)</option>
-                <option value="No Entregado">No Entregado</option>
             </select>
         </label>
 
         <label class="full">Observaciones Finales / Comentarios de Recepción
-            <textarea name="observaciones" placeholder="Escribe detalles adicionales sobre el estado de la entrega..."></textarea>
+            <textarea name="observaciones" maxlength="5000" placeholder="Indicá cómo llegó el producto: embalaje, transporte, faltantes, daños u otras observaciones..."></textarea>
         </label>
 
         <div class="full">
-            <button class="btn primary">Registrar Evaluación y Finalizar Compra</button>
+            <button class="btn primary">Registrar recepción y evaluación</button>
         </div>
     </form>
+    <?php endif;?>
 </section>
 <?php endif;?>
 
@@ -505,9 +682,11 @@ $encuestas = $encuestas->fetchAll();
                 <th>Compra</th>
                 <th>Calidad</th>
                 <th>Estado Físico</th>
+                <th>Modalidad de entrega</th>
                 <th>Cumplimiento</th>
                 <th>Observaciones</th>
                 <th>Registrado Por</th>
+                <th>Fecha</th>
             </tr>
         </thead>
         <tbody>
@@ -521,9 +700,11 @@ $encuestas = $encuestas->fetchAll();
                     <span class="<?=$qClass?>"><?=h($e['calidad'])?></span>
                 </td>
                 <td><?=h($e['estado_fisico'])?></td>
+                <td><?=h($e['modalidad_entrega']??'—')?></td>
                 <td><?=h($e['cumplimiento_entrega'])?></td>
                 <td><?=h($e['observaciones']?:'Sin observaciones')?></td>
                 <td><?=h($e['usuario_evaluador']??'Sistema')?></td>
+                <td><?=h(date('d/m/Y H:i', strtotime($e['fecha_evaluacion'] ?? 'now')))?></td>
             </tr>
         <?php endforeach;?>
         </tbody>
@@ -533,5 +714,38 @@ $encuestas = $encuestas->fetchAll();
 
 </main>
 </div>
+<script>
+(() => {
+    const compra = document.querySelector('select[name="compra_id"]');
+    const etapa = document.querySelector('select[name="etapa_doc"]');
+    const tipos = document.getElementById('tipoDocumentoCompra');
+    if (!compra || !etapa || !tipos) return;
+    const ajustarEtapas = () => {
+        const seleccionado = compra.selectedOptions[0];
+        const actual = Number(seleccionado?.dataset.etapa || 1);
+        const tieneDocumentoActual = Number(seleccionado?.dataset.docActual || 0) > 0;
+        const maximo = Math.min(6, actual + (tieneDocumentoActual ? 1 : 0));
+        [...etapa.options].forEach(opcion => opcion.disabled = Number(opcion.value) > maximo);
+        if (etapa.selectedOptions.length === 0 || etapa.selectedOptions[0].disabled) {
+            etapa.value = tieneDocumentoActual && actual < 6 ? String(actual + 1) : String(actual);
+        }
+    };
+    const filtrarTipos = () => {
+        const valor = etapa.value;
+        let primero = null;
+        [...tipos.options].forEach(opcion => {
+            const coincide = opcion.dataset.etapa === valor;
+            opcion.hidden = !coincide;
+            opcion.disabled = !coincide;
+            if (coincide && !primero) primero = opcion;
+        });
+        if (primero && (tipos.selectedOptions.length === 0 || tipos.selectedOptions[0].disabled)) tipos.value = primero.value;
+    };
+    compra.addEventListener('change', () => { ajustarEtapas(); filtrarTipos(); });
+    etapa.addEventListener('change', filtrarTipos);
+    ajustarEtapas();
+    filtrarTipos();
+})();
+</script>
 </body>
 </html>

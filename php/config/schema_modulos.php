@@ -85,6 +85,7 @@ function naser_schema_modulos(PDO $pdo): void
         calidad VARCHAR(50) NOT NULL,
         estado_fisico VARCHAR(50) NOT NULL,
         cumplimiento_entrega VARCHAR(50) NOT NULL,
+        modalidad_entrega VARCHAR(100) NULL,
         observaciones TEXT,
         creado_por INT,
         fecha_registro DATETIME DEFAULT CURRENT_TIMESTAMP
@@ -103,14 +104,42 @@ function naser_schema_modulos(PDO $pdo): void
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
 
     // Columnas agregadas despues (para bases creadas con una version vieja)
+    if (!hasColumn($pdo, 'compras', 'sector_id')) {
+        $pdo->exec("ALTER TABLE compras ADD COLUMN sector_id INT NULL AFTER id");
+    }
+    if (!hasColumn($pdo, 'compras', 'creado_por')) {
+        $pdo->exec("ALTER TABLE compras ADD COLUMN creado_por INT NULL");
+    }
+    if (!hasColumn($pdo, 'compras', 'actualizado_por')) {
+        $pdo->exec("ALTER TABLE compras ADD COLUMN actualizado_por INT NULL");
+    }
+    if (!hasColumn($pdo, 'compras', 'actualizado_en')) {
+        $pdo->exec("ALTER TABLE compras ADD COLUMN actualizado_en DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP");
+    }
     if (!hasColumn($pdo, 'compras', 'monto')) {
         $pdo->exec("ALTER TABLE compras ADD COLUMN monto DECIMAL(12,2) DEFAULT 0.00 AFTER proveedor");
     }
     if (!hasColumn($pdo, 'compras', 'moneda')) {
         $pdo->exec("ALTER TABLE compras ADD COLUMN moneda VARCHAR(5) DEFAULT 'ARS' AFTER monto");
     }
+    if (!hasColumn($pdo, 'compras_documentos', 'tipo_documento')) {
+        $pdo->exec("ALTER TABLE compras_documentos ADD COLUMN tipo_documento VARCHAR(100) DEFAULT 'Adjunto'");
+    }
+    if (!hasColumn($pdo, 'compras_documentos', 'creado_por')) {
+        $pdo->exec("ALTER TABLE compras_documentos ADD COLUMN creado_por INT NULL");
+    }
+    if (!hasColumn($pdo, 'compras_encuesta', 'creado_por')) {
+        $pdo->exec("ALTER TABLE compras_encuesta ADD COLUMN creado_por INT NULL");
+    }
     if (!hasColumn($pdo, 'compras_encuesta', 'fecha_registro')) {
         $pdo->exec("ALTER TABLE compras_encuesta ADD COLUMN fecha_registro DATETIME DEFAULT CURRENT_TIMESTAMP");
+    }
+    if (!hasColumn($pdo, 'compras_encuesta', 'modalidad_entrega')) {
+        $pdo->exec("ALTER TABLE compras_encuesta ADD COLUMN modalidad_entrega VARCHAR(100) NULL AFTER cumplimiento_entrega");
+    }
+    $sectorComprasId = $pdo->query("SELECT id FROM sectores WHERE slug='compras' LIMIT 1")->fetchColumn();
+    if ($sectorComprasId !== false) {
+        $pdo->prepare('UPDATE compras SET sector_id=? WHERE sector_id IS NULL')->execute([(int)$sectorComprasId]);
     }
 
     // ---------- RRHH: checklists / formularios ----------

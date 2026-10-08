@@ -1,5 +1,5 @@
 <?php
-// Notificaciones del usuario (avisos de aprobaciones, rechazos, vencimientos)
+// Notificaciones del usuario (compras, aprobaciones, rechazos y vencimientos)
 require __DIR__ . '/config/auth.php';
 requireLogin();
 require __DIR__ . '/config/db.php';
@@ -25,11 +25,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $st = $pdo->prepare('SELECT * FROM notificaciones WHERE usuario_id = ? ORDER BY leida ASC, id DESC LIMIT 200');
 $st->execute([$uid]);
 $items = $st->fetchAll();
-$iconos = ['aprobacion' => '📝', 'aprobado' => '✅', 'rechazado' => '⚠️', 'vencimiento' => '⏰', 'info' => 'ℹ️', 'bienvenida' => '👋'];
+$iconos = ['aprobacion' => '📝', 'aprobado' => '✅', 'rechazado' => '⚠️', 'vencimiento' => '⏰', 'info' => 'ℹ️', 'bienvenida' => '👋', 'compra' => '🛒'];
 ?><!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Notificaciones | NASER SGI</title><link rel="stylesheet" href="<?=asset('/style.css')?>"></head>
 <body><div class="app"><?php sidebar($pdo, 'notificaciones'); ?><main class="content">
-<header class="topbar"><div><p class="eyebrow">AVISOS</p><h1>Notificaciones</h1><p>Formularios para aprobar, aprobaciones, rechazos y vencimientos. También te llegan por mail.</p></div>
+<header class="topbar"><div><p class="eyebrow">AVISOS</p><h1>Notificaciones</h1><p>Compras, formularios para aprobar, aprobaciones, rechazos y vencimientos. Los avisos también pueden llegar por mail.</p></div>
 <div class="top-actions">
   <form method="post"><?=csrf_field()?><input type="hidden" name="accion" value="leer_todas"><button class="btn secondary">Marcar todas como leídas</button></form>
   <form method="post"><?=csrf_field()?><input type="hidden" name="accion" value="borrar_leidas"><button class="btn secondary">Borrar leídas</button></form>
