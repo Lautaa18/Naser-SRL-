@@ -2,7 +2,7 @@
 require_once __DIR__ . '/schema_modulos.php';
 
 // Cambiar este numero cada vez que se agregan tablas/columnas en schema_modulos.php
-const NASER_SCHEMA_VERSION = '2026.10.07-1';
+const NASER_SCHEMA_VERSION = '2026.10.08-1';
 
 function hasColumn(PDO $pdo, string $table, string $column): bool
 {

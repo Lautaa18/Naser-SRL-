@@ -7,6 +7,47 @@
 
 function naser_schema_modulos(PDO $pdo): void
 {
+    // ---------- HSEQ: calidad y observaciones preventivas ----------
+    $pdo->exec("CREATE TABLE IF NOT EXISTS hseq_encuestas_cliente (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        sector_id INT NOT NULL,
+        cliente VARCHAR(180) NOT NULL,
+        servicio VARCHAR(120) NULL,
+        fecha_encuesta DATE NOT NULL,
+        puntaje_general TINYINT UNSIGNED NOT NULL,
+        calidad_servicio TINYINT UNSIGNED NULL,
+        cumplimiento TINYINT UNSIGNED NULL,
+        comunicacion TINYINT UNSIGNED NULL,
+        seguridad TINYINT UNSIGNED NULL,
+        comentarios TEXT NULL,
+        creado_por INT NULL,
+        actualizado_por INT NULL,
+        creado_en DATETIME DEFAULT CURRENT_TIMESTAMP,
+        actualizado_en DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        INDEX idx_hseq_encuesta_fecha (sector_id, fecha_encuesta)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
+
+    $pdo->exec("CREATE TABLE IF NOT EXISTS hseq_observaciones (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        sector_id INT NOT NULL,
+        fecha DATE NOT NULL,
+        lugar VARCHAR(180) NOT NULL,
+        categoria ENUM('Acto inseguro','Condición insegura','Mejora') NOT NULL DEFAULT 'Condición insegura',
+        descripcion TEXT NOT NULL,
+        accion_propuesta TEXT NULL,
+        responsable VARCHAR(150) NULL,
+        fecha_compromiso DATE NULL,
+        prioridad ENUM('Baja','Media','Alta','Crítica') NOT NULL DEFAULT 'Media',
+        estado ENUM('abierta','en_curso','cerrada') NOT NULL DEFAULT 'abierta',
+        cierre TEXT NULL,
+        creado_por INT NULL,
+        actualizado_por INT NULL,
+        creado_en DATETIME DEFAULT CURRENT_TIMESTAMP,
+        actualizado_en DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        INDEX idx_hseq_obs_estado (sector_id, estado, fecha_compromiso),
+        INDEX idx_hseq_obs_fecha (sector_id, fecha)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
+
     // ---------- COMPRAS ----------
     $pdo->exec("CREATE TABLE IF NOT EXISTS compras (
         id INT AUTO_INCREMENT PRIMARY KEY,
