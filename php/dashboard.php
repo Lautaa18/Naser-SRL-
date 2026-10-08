@@ -22,8 +22,8 @@ $catD=formulariosCatalogo(); $infoD=sectoresInfo($pdo);
 $galeria=[
  ['Trabajador','trabajador-slickline.jpeg','formularios/llenar.php?f=operaciones-control-slickline','Control Operativo Slickline','Completar checklist'],
  ['Camión Slickline','Camion-Naser.png','formularios/llenar.php?f=operaciones-control-slickline','Control Operativo Slickline','Completar checklist'],
- ['Unidad Liviana','Unidad-liviana.png','descargar.php?f='.rawurlencode('sgi/1 SG Documentos/PO-SN-01 Mantenimiento de equipos/POSN01-F3 Chequeo Vehicular.pdf'),'Chequeo Vehicular · POSN01-F3 (PDF)','Abrir checklist'],
- ['Hidrogrúa','Hidrogrua.jpeg','descargar.php?f='.rawurlencode('sgi/1 SG Documentos/PO-SN-01 Mantenimiento de equipos/POSN01-F8 Chequeo de hidrogrua.docx'),'Chequeo de Hidrogrúa · POSN01-F8 (Word)','Descargar checklist']
+ ['Unidad Liviana','Unidad-liviana.png','formularios/llenar.php?f=mantenimiento-checklist-vehicular','Checklist Vehicular · Unidad Liviana','Completar checklist'],
+ ['Hidrogrúa','Hidrogrua.jpeg','formularios/llenar.php?f=mantenimiento-checklist-hidrogrua','Checklist de Hidrogrúa','Completar checklist']
 ];
 ?><!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Panel principal | NASER SGI</title><link rel="stylesheet" href="<?=asset('/style.css')?>"></head><body><div class="app"><?php sidebar($pdo,'inicio');?><main class="content">
 <header class="topbar"><div><p class="eyebrow">SERVICIOS NASER SRL</p><h1>Panel principal</h1><p>Gestión centralizada de documentación, sectores y operaciones.</p></div><div class="top-actions"><span class="status"><i></i>Sistema activo</span><span class="user-chip"><?=h($_SESSION['nombre'])?></span></div></header>

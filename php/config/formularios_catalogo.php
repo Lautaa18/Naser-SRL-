@@ -49,6 +49,9 @@ function formulariosCatalogo(): array {
 
         ['ventas-propuesta-economica', 'ventas', 'ventas/propuesta-economica.html', 'Propuesta Económica de Servicio', 'PGSN11-F2'],
 
+        ['mantenimiento-checklist-vehicular','mantenimiento','mantenimiento/checklist-vehicular.html','Checklist Vehicular — Unidad Liviana', ''],
+        ['mantenimiento-checklist-hidrogrua','mantenimiento','mantenimiento/checklist-hidrogrua.html','Checklist Hidrogrúa', ''],
+
         ['operaciones-control-slickline','operaciones','operaciones/control-slickline.html','Control Operativo Slickline', 'SGI-OP-SLK-001'],
         ['operaciones-montaje-well-testing','operaciones','Operaciones/Check List de Montaje de Equipo de Well Testing.html','Check List de Montaje de Equipo de Well Testing', 'POSN03-F2'],
         ['operaciones-evaluacion-riesgos','operaciones','Operaciones/Evaluacion de riesgo y operativos.html','Evaluación de Riesgos Operativos', 'POSN04-F5'],
