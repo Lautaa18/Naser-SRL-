@@ -4,6 +4,7 @@ $subtitle = 'Personal operativo, capacitación, seguridad y documentación asoci
 $image = 'trabajador-slickline.jpeg';
 $sectorSlugs = ['hseq', 'rrhh', 'operaciones'];
 $formCodes = [
+    'operaciones-inspeccion-equipo',
     'rrhh-ingreso',
     'rrhh-induccion-ingresante',
     'rrhh-entrega-epp',

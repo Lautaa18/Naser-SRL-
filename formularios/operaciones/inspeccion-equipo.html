@@ -4,12 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>NASER SRL | Checklist Hidrogrúa</title>
+<title>NASER SRL | Checklist Preparación de Equipo</title>
 
 <style>
 
 /* =========================================================
-   NASER SRL - CHECKLIST HIDROGRÚA
+   CONFIGURACIÓN GENERAL
 ========================================================= */
 
 *{
@@ -26,7 +26,7 @@
     --border:#d8d8d8;
     --text:#111111;
     --muted:#777777;
-    --green:#71a800;
+    --green:#72a900;
     --red:#b42318;
     --gray:#777777;
 }
@@ -47,19 +47,14 @@ body{
 
 .sidebar{
     position:fixed;
-    top:0;
     left:0;
-
+    top:0;
     width:335px;
     height:100vh;
-
     background:var(--black);
     color:white;
-
     padding:40px 28px;
-
     overflow-y:auto;
-
     z-index:1000;
 }
 
@@ -67,23 +62,18 @@ body{
     display:flex;
     align-items:center;
     gap:18px;
-
     padding:0 8px 35px;
-
     border-bottom:1px solid #333;
 }
 
 .logo{
     width:60px;
     height:60px;
-
     background:white;
     color:black;
-
     display:flex;
-    align-items:center;
     justify-content:center;
-
+    align-items:center;
     font-size:30px;
     font-weight:900;
 }
@@ -100,10 +90,8 @@ body{
 
 .sidebar-title{
     margin:35px 10px 20px;
-
-    color:#888;
-
     font-size:11px;
+    color:#888;
     letter-spacing:3px;
     line-height:1.5;
 }
@@ -116,17 +104,11 @@ body{
     display:flex;
     align-items:center;
     gap:16px;
-
     color:#ccc;
-
     text-decoration:none;
-
     padding:14px 12px;
-
     border-left:2px solid transparent;
-
     font-size:13px;
-
     transition:.2s;
 }
 
@@ -138,10 +120,8 @@ body{
 }
 
 .menu-number{
-    width:25px;
-
     color:#777;
-
+    width:25px;
     font-size:10px;
 }
 
@@ -154,27 +134,24 @@ body{
     min-height:100vh;
 }
 
+/* =========================================================
+   TOPBAR
+========================================================= */
+
 .topbar{
     min-height:125px;
-
     background:white;
-
     border-bottom:1px solid #ddd;
-
     padding:28px 50px;
-
     display:flex;
     align-items:center;
     justify-content:space-between;
 }
 
 .breadcrumb{
-    color:#777;
-
     font-size:11px;
-
+    color:#777;
     letter-spacing:3px;
-
     margin-bottom:16px;
 }
 
@@ -186,23 +163,15 @@ body{
     display:flex;
     align-items:center;
     gap:10px;
-
     font-size:11px;
-
     letter-spacing:2px;
 }
 
 .control-dot{
     width:10px;
     height:10px;
-
     background:#111;
-
     border-radius:50%;
-}
-
-.mobile-menu{
-    display:none;
 }
 
 /* =========================================================
@@ -211,9 +180,7 @@ body{
 
 .page{
     max-width:1600px;
-
     margin:auto;
-
     padding:45px 48px 100px;
 }
 
@@ -224,73 +191,53 @@ body{
 .hero{
     background:#111;
     color:white;
-
     padding:45px;
-
     display:grid;
-
     grid-template-columns:1fr 270px;
-
     gap:40px;
-
     margin-bottom:30px;
 }
 
 .hero-label{
     color:#999;
-
     font-size:10px;
-
     letter-spacing:4px;
-
     margin-bottom:20px;
 }
 
 .hero h1{
     font-size:34px;
-
     margin-bottom:14px;
 }
 
 .hero p{
     color:#ddd;
-
-    line-height:1.6;
-
+    line-height:1.5;
     max-width:850px;
 }
 
 .document{
     border-left:1px solid #444;
-
     padding-left:35px;
-
     display:flex;
-
     flex-direction:column;
-
     justify-content:center;
 }
 
 .document span{
     color:#888;
-
     font-size:10px;
-
     letter-spacing:3px;
-
     margin-bottom:15px;
 }
 
 .document strong{
     font-size:15px;
-
     margin-bottom:12px;
 }
 
 .document small{
     color:#888;
-
     letter-spacing:2px;
 }
 
@@ -300,35 +247,24 @@ body{
 
 .progress-panel{
     background:#111;
-
     color:white;
-
     padding:28px 30px;
-
-    margin-bottom:28px;
+    margin-bottom:25px;
 }
 
 .progress-top{
     display:flex;
-
     justify-content:space-between;
-
     align-items:center;
-
     gap:25px;
-
     margin-bottom:20px;
 }
 
 .progress-label{
     display:block;
-
     color:#888;
-
     font-size:9px;
-
     letter-spacing:2.5px;
-
     margin-bottom:8px;
 }
 
@@ -338,11 +274,8 @@ body{
 
 .progress-counter{
     display:flex;
-
     align-items:center;
-
     gap:6px;
-
     font-size:17px;
 }
 
@@ -352,21 +285,15 @@ body{
 
 .progress-track{
     width:100%;
-
     height:9px;
-
     background:#333;
-
     overflow:hidden;
 }
 
 .progress-bar{
-    width:0%;
-
+    width:0;
     height:100%;
-
     background:white;
-
     transition:width .35s ease;
 }
 
@@ -376,58 +303,40 @@ body{
 
 .card{
     background:white;
-
     border:1px solid var(--border);
-
     margin-bottom:28px;
-
     scroll-margin-top:25px;
 }
 
 .card-header{
     min-height:100px;
-
     padding:27px 32px;
-
     border-bottom:1px solid var(--border);
-
     display:flex;
-
     align-items:center;
-
     gap:18px;
 }
 
 .card-number{
     width:44px;
     height:44px;
-
     background:#111;
-
     color:white;
-
     display:flex;
-
-    align-items:center;
-
     justify-content:center;
-
+    align-items:center;
     font-size:11px;
-
     font-weight:bold;
-
     flex-shrink:0;
 }
 
 .card-title h3{
     font-size:19px;
-
     margin-bottom:6px;
 }
 
 .card-title p{
     color:#777;
-
     font-size:13px;
 }
 
@@ -441,77 +350,55 @@ body{
 
 .form-grid{
     display:grid;
-
     grid-template-columns:repeat(4,1fr);
-
     gap:23px;
 }
 
 .form-group label{
     display:block;
-
     font-size:10px;
-
     font-weight:bold;
-
-    letter-spacing:.5px;
-
     margin-bottom:9px;
+    letter-spacing:.5px;
 }
 
 .form-group input{
     width:100%;
-
     height:55px;
-
     background:#fafafa;
-
     border:1px solid #ccc;
-
     padding:0 15px;
-
-    font-size:14px;
-
+    font-size:15px;
     outline:none;
 }
 
 .form-group input:focus{
-    border-color:#111;
-
     background:white;
+    border-color:#111;
 }
 
 /* =========================================================
-   TABLA
+   TABLAS
 ========================================================= */
 
 .table-wrapper{
     width:100%;
-
     overflow-x:auto;
 }
 
 .checklist{
     width:100%;
-
     border-collapse:collapse;
-
-    min-width:850px;
+    min-width:980px;
 }
 
 .checklist th{
     background:#111;
-
     color:white;
-
-    padding:16px 12px;
-
+    padding:15px 11px;
     font-size:10px;
-
     letter-spacing:1.3px;
-
     text-align:left;
-
     border-right:1px solid #333;
 }
 
@@ -520,10 +407,8 @@ body{
 }
 
 .checklist td{
-    padding:15px 12px;
-
+    padding:11px;
     border-bottom:1px solid #ddd;
-
     font-size:13px;
 }
 
@@ -536,13 +421,9 @@ body{
 }
 
 .number{
-    width:60px;
-
+    width:50px;
     text-align:center;
-
     color:#888;
-
-    font-weight:bold;
 }
 
 .item{
@@ -550,99 +431,53 @@ body{
 }
 
 .option{
-    width:100px;
-
+    width:60px;
     text-align:center;
 }
 
 .radio{
-    width:20px;
-    height:20px;
-
-    cursor:pointer;
-
+    width:19px;
+    height:19px;
     accent-color:#111;
+    cursor:pointer;
+}
+
+.state{
+    width:150px;
+    height:39px;
+    border:1px solid #ccc;
+    padding:0 8px;
+    background:white;
+}
+
+.quantity{
+    width:90px;
+    height:39px;
+    border:1px solid #ccc;
+    text-align:center;
+}
+
+.expiration{
+    width:150px;
+    height:39px;
+    border:1px solid #ccc;
+    padding:0 8px;
 }
 
 /* =========================================================
-   ESTADOS
+   ESTADO DE FILAS
 ========================================================= */
 
-.row-correcto{
+.row-si{
     border-left:4px solid var(--green);
 }
 
-.row-incorrecto{
+.row-no{
     border-left:4px solid var(--red);
 }
 
 .row-nv{
     border-left:4px solid var(--gray);
-}
-
-.row-error{
-    outline:2px solid var(--red);
-
-    outline-offset:-2px;
-
-    background:#fff5f5 !important;
-}
-
-.field-error{
-    border:2px solid var(--red) !important;
-
-    background:#fff7f7 !important;
-}
-
-/* =========================================================
-   LEYENDA
-========================================================= */
-
-.legend{
-    display:flex;
-
-    gap:20px;
-
-    flex-wrap:wrap;
-
-    margin-bottom:25px;
-}
-
-.legend-item{
-    display:flex;
-
-    align-items:center;
-
-    gap:9px;
-
-    padding:10px 14px;
-
-    border:1px solid #ddd;
-
-    background:#fafafa;
-
-    font-size:11px;
-
-    font-weight:bold;
-}
-
-.legend-color{
-    width:8px;
-    height:8px;
-
-    border-radius:50%;
-}
-
-.legend-green{
-    background:var(--green);
-}
-
-.legend-red{
-    background:var(--red);
-}
-
-.legend-gray{
-    background:var(--gray);
 }
 
 /* =========================================================
@@ -651,19 +486,14 @@ body{
 
 .summary{
     display:grid;
-
     grid-template-columns:repeat(5,1fr);
-
     background:white;
-
     border:1px solid #ddd;
-
     margin-bottom:28px;
 }
 
 .summary-box{
     padding:22px;
-
     border-right:1px solid #ddd;
 }
 
@@ -673,13 +503,9 @@ body{
 
 .summary-box span{
     display:block;
-
-    color:#777;
-
     font-size:9px;
-
+    color:#777;
     letter-spacing:1.5px;
-
     margin-bottom:10px;
 }
 
@@ -689,123 +515,55 @@ body{
 
 .summary-click{
     cursor:pointer;
-
     transition:.2s;
 }
 
 .summary-click:hover{
-    background:#f4f4f4;
+    background:#f3f3f3;
 }
 
 .summary-click small{
     display:block;
-
-    color:#999;
-
-    font-size:9px;
-
-    letter-spacing:1px;
-
     margin-top:8px;
+    color:#999;
+    font-size:9px;
+    letter-spacing:1px;
 }
 
 /* =========================================================
-   RESULTADOS
+   DETALLE DE RESULTADOS
 ========================================================= */
 
 .result-list{
     display:grid;
-
     gap:10px;
 }
 
 .result-item{
     display:grid;
-
-    grid-template-columns:45px 1fr;
-
-    gap:15px;
-
+    grid-template-columns:45px 1fr auto;
     align-items:center;
-
-    border:1px solid #ddd;
-
-    background:#fafafa;
-
+    gap:15px;
     padding:15px 17px;
+    border:1px solid #ddd;
+    background:#fafafa;
 }
 
-.result-number{
+.result-index{
     color:#999;
-
     font-size:11px;
 }
 
 .result-name{
+    font-weight:600;
     font-size:13px;
-
-    font-weight:bold;
 }
 
-/* =========================================================
-   NOTAS DE SEGURIDAD
-========================================================= */
-
-.safety-box{
-    border:1px solid #111;
-
-    background:#fafafa;
-}
-
-.safety-title{
-    background:#111;
-
-    color:white;
-
-    padding:17px 20px;
-
-    font-size:11px;
-
-    font-weight:bold;
-
-    letter-spacing:2px;
-}
-
-.safety-content{
-    padding:25px;
-}
-
-.safety-content p{
-    font-size:13px;
-
-    line-height:1.7;
-
-    margin-bottom:16px;
-}
-
-.safety-content p:last-child{
-    margin-bottom:0;
-}
-
-.safety-number{
-    display:inline-flex;
-
-    align-items:center;
-
-    justify-content:center;
-
-    width:25px;
-    height:25px;
-
-    background:#111;
-
-    color:white;
-
-    font-size:10px;
-
-    font-weight:bold;
-
-    margin-right:10px;
+.result-section{
+    font-size:9px;
+    color:#777;
+    letter-spacing:1px;
+    text-transform:uppercase;
 }
 
 /* =========================================================
@@ -814,21 +572,13 @@ body{
 
 textarea{
     width:100%;
-
-    min-height:170px;
-
+    min-height:150px;
     resize:vertical;
-
     background:#fafafa;
-
     border:1px solid #ccc;
-
     padding:15px;
-
     font-family:Arial,Helvetica,sans-serif;
-
     font-size:14px;
-
     outline:none;
 }
 
@@ -838,27 +588,20 @@ textarea{
 
 .responsibles{
     display:grid;
-
-    grid-template-columns:repeat(2,1fr);
-
+    grid-template-columns:1fr 1fr;
     gap:25px;
 }
 
 .responsible{
     border:1px solid #ddd;
-
     background:#fafafa;
-
     padding:25px;
 }
 
 .responsible small{
     display:block;
-
     color:#777;
-
     letter-spacing:2px;
-
     margin-bottom:10px;
 }
 
@@ -868,18 +611,11 @@ textarea{
 
 .responsible input{
     width:100%;
-
     height:55px;
-
     background:white;
-
     border:1px solid #ccc;
-
     padding:0 15px;
-
-    font-size:14px;
-
-    outline:none;
+    font-size:15px;
 }
 
 /* =========================================================
@@ -888,51 +624,37 @@ textarea{
 
 .actions{
     display:flex;
-
     justify-content:flex-end;
-
     gap:12px;
-
     margin-top:30px;
-
     flex-wrap:wrap;
 }
 
 .btn{
     min-width:160px;
-
     padding:15px 20px;
-
     border:1px solid #111;
-
     cursor:pointer;
-
     font-size:11px;
-
     font-weight:bold;
-
     letter-spacing:1px;
-
     transition:.2s;
 }
 
-.btn-save,
-.btn-light{
+.btn-light,
+.btn-save{
     background:white;
-
     color:#111;
 }
 
-.btn-save:hover,
-.btn-light:hover{
+.btn-light:hover,
+.btn-save:hover{
     background:#eee;
 }
 
 .btn-finish{
-    min-width:220px;
-
+    min-width:210px;
     background:#111;
-
     color:white;
 }
 
@@ -942,27 +664,20 @@ textarea{
 
 .btn-finish:disabled{
     background:#777;
-
     border-color:#777;
-
     cursor:not-allowed;
 }
 
 /* =========================================================
-   MENSAJES
+   MENSAJES / VALIDACIÓN
 ========================================================= */
 
 .message{
     display:none;
-
     margin-top:15px;
-
     padding:17px 20px;
-
     border:1px solid #ddd;
-
     background:white;
-
     font-size:12px;
 }
 
@@ -974,35 +689,43 @@ textarea{
     border-left:4px solid var(--green);
 }
 
+.field-error{
+    border:2px solid var(--red)!important;
+    background:#fff7f7!important;
+}
+
+.row-error{
+    outline:2px solid var(--red);
+    outline-offset:-2px;
+    background:#fff5f5!important;
+}
+
 .finished-banner{
     display:none;
-
     background:#111;
-
     color:white;
-
     padding:22px 25px;
-
     margin-bottom:25px;
 }
 
 .finished-banner strong{
     display:block;
-
     font-size:17px;
-
     margin-bottom:7px;
 }
 
 .finished-banner span{
     color:#bbb;
-
     font-size:12px;
 }
 
 /* =========================================================
-   RESPONSIVE
+   MOBILE
 ========================================================= */
+
+.mobile-menu{
+    display:none;
+}
 
 @media(max-width:1100px){
 
@@ -1024,11 +747,8 @@ textarea{
 
     .document{
         border-left:0;
-
         border-top:1px solid #444;
-
         padding-left:0;
-
         padding-top:25px;
     }
 
@@ -1041,9 +761,7 @@ textarea{
 
     .sidebar{
         width:290px;
-
         transform:translateX(-100%);
-
         transition:.3s;
     }
 
@@ -1057,18 +775,12 @@ textarea{
 
     .mobile-menu{
         display:block;
-
         width:45px;
         height:45px;
-
         background:#111;
-
         color:white;
-
         border:0;
-
         font-size:20px;
-
         margin-right:15px;
     }
 
@@ -1078,7 +790,6 @@ textarea{
 
     .topbar-left{
         display:flex;
-
         align-items:center;
     }
 
@@ -1110,9 +821,8 @@ textarea{
     }
 
     .progress-top{
-        flex-direction:column;
-
         align-items:flex-start;
+        flex-direction:column;
     }
 
     .actions{
@@ -1122,10 +832,18 @@ textarea{
     .btn{
         width:100%;
     }
+
+    .result-item{
+        grid-template-columns:35px 1fr;
+    }
+
+    .result-section{
+        grid-column:2;
+    }
 }
 
 /* =========================================================
-   PRINT
+   IMPRESIÓN
 ========================================================= */
 
 @media print{
@@ -1134,7 +852,7 @@ textarea{
     .topbar,
     .actions,
     .message{
-        display:none !important;
+        display:none!important;
     }
 
     .main{
@@ -1143,7 +861,6 @@ textarea{
 
     .page{
         padding:0;
-
         max-width:none;
     }
 
@@ -1152,12 +869,10 @@ textarea{
     }
 
     .hero,
-    .progress-panel,
     .card-number,
     .checklist th,
-    .safety-title{
+    .progress-panel{
         -webkit-print-color-adjust:exact;
-
         print-color-adjust:exact;
     }
 
@@ -1175,26 +890,15 @@ textarea{
      SIDEBAR
 ========================================================= -->
 
-<aside
-    class="sidebar"
-    id="sidebar">
+<aside class="sidebar" id="sidebar">
 
     <div class="brand">
 
-        <div class="logo">
-            N
-        </div>
+        <div class="logo">N</div>
 
         <div>
-
-            <h1>
-                NASER
-            </h1>
-
-            <small>
-                SRL
-            </small>
-
+            <h1>NASER</h1>
+            <small>SRL</small>
         </div>
 
     </div>
@@ -1204,79 +908,7 @@ textarea{
         INTEGRADO
     </div>
 
-    <ul class="menu">
-
-        <li>
-            <a
-                href="#datos"
-                class="nav-link active">
-
-                <span class="menu-number">
-                    01
-                </span>
-
-                Datos generales
-
-            </a>
-        </li>
-
-        <li>
-            <a
-                href="#inspeccion"
-                class="nav-link">
-
-                <span class="menu-number">
-                    02
-                </span>
-
-                Inspección Hidrogrúa
-
-            </a>
-        </li>
-
-        <li>
-            <a
-                href="#seguridad"
-                class="nav-link">
-
-                <span class="menu-number">
-                    03
-                </span>
-
-                Seguridad
-
-            </a>
-        </li>
-
-        <li>
-            <a
-                href="#observaciones"
-                class="nav-link">
-
-                <span class="menu-number">
-                    04
-                </span>
-
-                Observaciones
-
-            </a>
-        </li>
-
-        <li>
-            <a
-                href="#responsables"
-                class="nav-link">
-
-                <span class="menu-number">
-                    05
-                </span>
-
-                Responsables
-
-            </a>
-        </li>
-
-    </ul>
+    <ul class="menu" id="menu"></ul>
 
 </aside>
 
@@ -1299,11 +931,11 @@ textarea{
         <div>
 
             <div class="breadcrumb">
-                NASER SRL / SGI / EQUIPOS
+                NASER SRL / SGI / OPERACIONES
             </div>
 
             <h2>
-                Checklist de Hidrogrúa
+                Checklist de Preparación de Equipo
             </h2>
 
         </div>
@@ -1331,29 +963,27 @@ textarea{
     <div>
 
         <div class="hero-label">
-            INSPECCIÓN OPERATIVA · HIDROGRÚA
+            INSPECCIÓN OPERATIVA · SLICKLINE
         </div>
 
         <h1>
-            Control de estado de hidrogrúa
+            Listado de preparación de equipo
         </h1>
 
         <p>
-            Inspección preventiva de componentes, sistemas hidráulicos,
-            elementos de elevación y condiciones generales antes de la
-            utilización del equipo.
+            Control integral de equipos, herramientas, vehículos,
+            seguridad, documentación y condiciones generales
+            previas a la operación.
         </p>
 
     </div>
 
     <div class="document">
 
-        <span>
-            DOCUMENTO
-        </span>
+        <span>DOCUMENTO</span>
 
         <strong>
-            CHECKLIST DE HIDROGRÚA
+            LISTADO DE PREPARACIÓN DE EQUIPO
         </strong>
 
         <small>
@@ -1368,9 +998,7 @@ textarea{
      FINALIZADO
 ========================================================= -->
 
-<div
-    class="finished-banner"
-    id="finishedBanner">
+<div class="finished-banner" id="finishedBanner">
 
     <strong>
         CHECKLIST FINALIZADO
@@ -1402,17 +1030,11 @@ textarea{
 
         <div class="progress-counter">
 
-            <strong id="completedFields">
-                0
-            </strong>
+            <strong id="completedFields">0</strong>
 
-            <span>
-                /
-            </span>
+            <span>/</span>
 
-            <strong id="requiredFields">
-                0
-            </strong>
+            <strong id="requiredFields">0</strong>
 
         </div>
 
@@ -1430,12 +1052,10 @@ textarea{
 </section>
 
 <!-- =========================================================
-     DATOS GENERALES
+     DATOS
 ========================================================= -->
 
-<section
-    class="card observe"
-    id="datos">
+<section class="card observe" id="datos">
 
     <div class="card-header">
 
@@ -1446,11 +1066,11 @@ textarea{
         <div class="card-title">
 
             <h3>
-                Datos generales
+                Datos del servicio
             </h3>
 
             <p>
-                Identificación de la inspección y del equipo.
+                Complete todos los datos de identificación de la operación.
             </p>
 
         </div>
@@ -1463,56 +1083,96 @@ textarea{
 
             <div class="form-group">
 
-                <label>
-                    FECHA *
-                </label>
-
-                <input
-                    type="date"
-                    id="fecha"
-                    class="required-general">
-
-            </div>
-
-            <div class="form-group">
-
-                <label>
-                    OPERADOR *
-                </label>
+                <label>REALIZA *</label>
 
                 <input
                     type="text"
-                    id="operador"
                     class="required-general"
+                    id="realiza"
                     placeholder="Nombre y apellido">
 
             </div>
 
             <div class="form-group">
 
-                <label>
-                    EQUIPO *
-                </label>
+                <label>FECHA *</label>
+
+                <input
+                    type="date"
+                    class="required-general"
+                    id="fecha">
+
+            </div>
+
+            <div class="form-group">
+
+                <label>REVISA *</label>
 
                 <input
                     type="text"
-                    id="equipo"
                     class="required-general"
+                    id="revisa"
+                    placeholder="Nombre y apellido">
+
+            </div>
+
+            <div class="form-group">
+
+                <label>NÚMERO DE EQUIPO *</label>
+
+                <input
+                    type="text"
+                    class="required-general"
+                    id="numeroEquipo"
                     placeholder="Número / identificación">
 
             </div>
 
             <div class="form-group">
 
-                <label>
-                    LUGAR *
-                </label>
+                <label>CLIENTE *</label>
 
                 <input
                     type="text"
-                    id="lugar"
                     class="required-general"
-                    placeholder="Lugar de inspección">
+                    id="cliente"
+                    placeholder="Cliente">
+
+            </div>
+
+            <div class="form-group">
+
+                <label>TIPO DE TRABAJO *</label>
+
+                <input
+                    type="text"
+                    class="required-general"
+                    id="tipoTrabajo"
+                    placeholder="Tipo de trabajo">
+
+            </div>
+
+            <div class="form-group">
+
+                <label>YACIMIENTO *</label>
+
+                <input
+                    type="text"
+                    class="required-general"
+                    id="yacimiento"
+                    placeholder="Yacimiento">
+
+            </div>
+
+            <div class="form-group">
+
+                <label>POZO *</label>
+
+                <input
+                    type="text"
+                    class="required-general"
+                    id="pozo"
+                    placeholder="Pozo">
 
             </div>
 
@@ -1523,104 +1183,10 @@ textarea{
 </section>
 
 <!-- =========================================================
-     INSPECCIÓN
+     SECCIONES DINÁMICAS
 ========================================================= -->
 
-<section
-    class="card observe"
-    id="inspeccion">
-
-    <div class="card-header">
-
-        <div class="card-number">
-            02
-        </div>
-
-        <div class="card-title">
-
-            <h3>
-                Inspección de Hidrogrúa
-            </h3>
-
-            <p>
-                Verifique el estado de cada componente antes de operar.
-            </p>
-
-        </div>
-
-    </div>
-
-    <div class="card-body">
-
-        <div class="legend">
-
-            <div class="legend-item">
-
-                <div class="legend-color legend-green"></div>
-
-                C = CORRECTO
-
-            </div>
-
-            <div class="legend-item">
-
-                <div class="legend-color legend-red"></div>
-
-                I = INCORRECTO
-
-            </div>
-
-            <div class="legend-item">
-
-                <div class="legend-color legend-gray"></div>
-
-                NV = NO VERIFICADO
-
-            </div>
-
-        </div>
-
-        <div class="table-wrapper">
-
-            <table class="checklist">
-
-                <thead>
-
-                    <tr>
-
-                        <th class="center">
-                            N°
-                        </th>
-
-                        <th>
-                            ELEMENTO
-                        </th>
-
-                        <th class="center">
-                            CORRECTO
-                        </th>
-
-                        <th class="center">
-                            INCORRECTO
-                        </th>
-
-                        <th class="center">
-                            NV
-                        </th>
-
-                    </tr>
-
-                </thead>
-
-                <tbody id="checklistBody"></tbody>
-
-            </table>
-
-        </div>
-
-    </div>
-
-</section>
+<div id="sectionsContainer"></div>
 
 <!-- =========================================================
      RESUMEN
@@ -1630,86 +1196,60 @@ textarea{
 
     <div class="summary-box">
 
-        <span>
-            TOTAL
-        </span>
+        <span>TOTAL ELEMENTOS</span>
 
-        <strong id="total">
-            10
-        </strong>
+        <strong id="total">0</strong>
 
     </div>
 
     <div class="summary-box">
 
-        <span>
-            VERIFICADOS
-        </span>
+        <span>RESPONDIDOS</span>
 
-        <strong id="verified">
-            0
-        </strong>
+        <strong id="verified">0</strong>
 
     </div>
 
     <div
         class="summary-box summary-click"
-        onclick="showResults('correcto')">
+        onclick="showResultDetails('si')">
 
-        <span>
-            CORRECTOS
-        </span>
+        <span>SÍ</span>
 
-        <strong id="correct">
-            0
-        </strong>
+        <strong id="yes">0</strong>
 
-        <small>
-            VER ELEMENTOS
-        </small>
+        <small>VER ELEMENTOS</small>
 
     </div>
 
     <div
         class="summary-box summary-click"
-        onclick="showResults('incorrecto')">
+        onclick="showResultDetails('no')">
 
-        <span>
-            INCORRECTOS
-        </span>
+        <span>NO</span>
 
-        <strong id="incorrect">
-            0
-        </strong>
+        <strong id="no">0</strong>
 
-        <small>
-            VER ELEMENTOS
-        </small>
+        <small>VER ELEMENTOS</small>
 
     </div>
 
     <div
         class="summary-box summary-click"
-        onclick="showResults('nv')">
+        onclick="showResultDetails('nv')">
 
-        <span>
-            NV
-        </span>
+        <span>NV</span>
 
-        <strong id="nv">
-            0
-        </strong>
+        <strong id="nv">0</strong>
 
-        <small>
-            VER ELEMENTOS
-        </small>
+        <small>VER ELEMENTOS</small>
 
     </div>
 
 </div>
 
 <!-- =========================================================
-     DETALLE RESULTADOS
+     DETALLE SÍ / NO / NV
 ========================================================= -->
 
 <section
@@ -1725,12 +1265,12 @@ textarea{
 
         <div class="card-title">
 
-            <h3 id="resultTitle">
-                Resultados
+            <h3 id="resultDetailTitle">
+                Detalle
             </h3>
 
             <p>
-                Detalle de los elementos según la calificación seleccionada.
+                Resultado detallado de los elementos seleccionados.
             </p>
 
         </div>
@@ -1749,75 +1289,6 @@ textarea{
 </section>
 
 <!-- =========================================================
-     SEGURIDAD
-========================================================= -->
-
-<section
-    class="card observe"
-    id="seguridad">
-
-    <div class="card-header">
-
-        <div class="card-number">
-            03
-        </div>
-
-        <div class="card-title">
-
-            <h3>
-                Seguridad operacional
-            </h3>
-
-            <p>
-                Condiciones obligatorias antes de montar y operar.
-            </p>
-
-        </div>
-
-    </div>
-
-    <div class="card-body">
-
-        <div class="safety-box">
-
-            <div class="safety-title">
-                NOTAS DE SEGURIDAD
-            </div>
-
-            <div class="safety-content">
-
-                <p>
-
-                    <span class="safety-number">
-                        01
-                    </span>
-
-                    No operar el equipo en caso de existir
-                    pérdidas hidráulicas, fallas o roturas visibles
-                    y dar aviso a supervisión.
-
-                </p>
-
-                <p>
-
-                    <span class="safety-number">
-                        02
-                    </span>
-
-                    Delimitar y señalizar el área de trabajo
-                    antes de montar y operar el equipo.
-
-                </p>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</section>
-
-<!-- =========================================================
      OBSERVACIONES
 ========================================================= -->
 
@@ -1828,7 +1299,7 @@ textarea{
     <div class="card-header">
 
         <div class="card-number">
-            04
+            14
         </div>
 
         <div class="card-title">
@@ -1838,7 +1309,7 @@ textarea{
             </h3>
 
             <p>
-                Registre cualquier anomalía o condición detectada.
+                Registre novedades, anomalías o información complementaria.
             </p>
 
         </div>
@@ -1849,7 +1320,7 @@ textarea{
 
         <textarea
             id="observacionesTexto"
-            placeholder="Ingrese observaciones sobre el estado de la hidrogrúa..."></textarea>
+            placeholder="Ingrese observaciones..."></textarea>
 
     </div>
 
@@ -1866,17 +1337,17 @@ textarea{
     <div class="card-header">
 
         <div class="card-number">
-            05
+            15
         </div>
 
         <div class="card-title">
 
             <h3>
-                Responsables del control
+                Responsables
             </h3>
 
             <p>
-                Identificación del personal que realiza y controla la inspección.
+                Identificación de los operadores responsables.
             </p>
 
         </div>
@@ -1890,17 +1361,17 @@ textarea{
             <div class="responsible">
 
                 <small>
-                    REALIZA
+                    OPERADOR SALIENTE
                 </small>
 
                 <h4>
-                    Responsable que realiza
+                    Operador / Encargado
                 </h4>
 
                 <input
                     type="text"
-                    id="realiza"
                     class="required-responsible"
+                    id="operadorSaliente"
                     placeholder="Nombre y apellido">
 
             </div>
@@ -1908,17 +1379,17 @@ textarea{
             <div class="responsible">
 
                 <small>
-                    CONTROLA
+                    OPERADOR INGRESANTE
                 </small>
 
                 <h4>
-                    Responsable que controla
+                    Operador ingresante
                 </h4>
 
                 <input
                     type="text"
-                    id="controla"
                     class="required-responsible"
+                    id="operadorIngresante"
                     placeholder="Nombre y apellido">
 
             </div>
@@ -1977,70 +1448,498 @@ textarea{
 <script>
 
 /* =========================================================
-   ELEMENTOS HIDROGRÚA
+   DATOS DEL CHECKLIST
 ========================================================= */
 
-const hydroItems = [
+const sections = [
 
-    "Cubre comandos",
+{
+    id:"presion",
+    number:"02",
+    title:"Equipo de Control de Presión",
+    description:"Control del equipamiento de presión.",
 
-    "Comandos",
+    items:[
+        "BOP",
+        "Stuffing Box (1)",
+        "Lubricador",
+        "Tool Catcher",
+        "Pump in sub",
+        'Brida con Anillo 2 9/16", 4 1/16" (10Kpsi)',
+        'Conexión BDP 2 3/8", 2 7/8", 3", 3 ½", 4 ½" EUE',
+        'Cuplas 2 3/8", 2 7/8", 3 ½", 4 1/2"',
+        "Espárragos con tuercas (Cant. 20)",
+        "Indicador de Peso (1)",
+        'Polea de reenvío (14")',
+        "Manguera p/Stuffing Box",
+        "Manguera Tool Catcher",
+        "Manguera BOP",
+        "Bomba Hidráulica Manual",
+        "Tapón de Carga c/ Grillete",
+        "Tapón Protector Hembra",
+        "Tapón Protector Macho",
+        "Manómetros",
+        "Wireclamp",
+        "Eslingas anti-látigo para todos los acoples"
+    ]
+},
 
-    "Gancho",
+{
+    id:"slickline",
+    number:"03",
+    title:"Herramientas de Slickline",
+    description:"Control general de herramientas de Slickline.",
 
-    "Enclavamiento",
+    items:[
+        'Rope Socket (1 1/2")',
+        'Rope Socket (1 3/4")',
+        'Knuckle Joint (1 1/2")',
+        'Knuckle Joint (1 3/4")',
+        'Barra de peso tungsteno (1 ½", 2")',
+        'Barra de peso 5’ - 1 ¾"',
+        'Barra de peso 3’ - 1 ¾"',
+        'Barra de peso 5’ - 1 ½"',
+        'Barra de peso 3’ - 1 ½"',
+        'Tijera Mecánica (1 ½")',
+        'Tijera Mecánica (1 ¾")',
+        'Tijera hidráulica (1 ½")',
+        'Tijera hidráulica (1 ¾")',
+        'Tijera Tubular (1 ½"; 1 ¾"; 1 7/8")',
+        'Cubeta muestreadora (1 1/2", 2")',
+        "Block de impresión (7 unidades)",
+        "Calibrador (12 unidades)",
+        "Fresa",
+        "Cepillo desparafinador",
+        "Funda de registradores con puntera",
+        "Blind Box (3 unidades)",
+        "Shifting Tool B",
+        'Pescador JD 1/4"',
+        'Pescador JD 1 ½"',
+        'Pescador SB 2"',
+        'Pescador JD 2 ½"',
+        'Pescador JU ¼"',
+        'Pescador JU 1 ½"',
+        'Pescador SB 2"',
+        'Pescador JU 2 ½"',
+        'Pescador de 3" JD',
+        'Pescador de 3" JU',
+        "Pescador Overshot",
+        "Pescador magnético",
+        'Pescante GS (2")',
+        'Pescante GS (2 ½")',
+        "Pescante Arpón",
+        'Cortador de Línea (1 ½"; 1 ¾")',
+        'Crossover Pin 1 1/16" Box 15/16"',
+        'Crossover Pin 15/16" Box 1 1/16"',
+        'Kickover "L"',
+        'Kickover "R"',
+        'Running Tool A 2 1/2" y 3 1/2"',
+        "Tubing End Locator",
+        "Tubing Swedge",
+        "Shock Absorber",
+        "Quick Lock",
+        "Probador de alambre",
+        "Bomba para cargar Martin Decker",
+        "Fuelle de pulmón de Martin Decker",
+        "Transmisión mecánica para odómetro",
+        "Mango de crique en el equipo",
+        "Prolongación de 125 cm en el equipo",
+        'Tubos 19 mm o ¾" en el equipo'
+    ]
+},
 
-    "Estabilizadores",
+{
+    id:"miscelaneos",
+    number:"04",
+    title:"Misceláneos",
+    description:"Elementos auxiliares y consumibles.",
 
-    "Circuito Hidráulico",
+    items:[
+        "Bolsa de Trapo",
+        "Grasa",
+        "Aceite Hidráulico",
+        "Soportes para Lubricador",
+        "Extintores (anotar vencimientos)",
+        "Línea de Vida",
+        "Manguera para desfogue",
+        "Contenedores de residuos",
+        "Kit O'rings",
+        "Kit Packings",
+        "Pala"
+    ]
+},
 
-    "Cilindro hidráulico",
+{
+    id:"vehiculos",
+    number:"05",
+    title:"Vehículos / Grúa",
+    description:"Control de unidades, grúa y mantenimiento.",
 
-    "Brazo de elevación",
+    items:[
+        "Tarjeta de Circulación",
+        "Llanta de Refacción",
+        "Gato Hidráulico",
+        "Llave",
+        "Horas actuales de equipo Slickline",
+        "Horas de próximo servicio",
+        "Grúa Certificada (cargar vencimiento)",
+        "Eslinga",
+        "Pulpo de Izaje",
+        "Km de hidro actual",
+        "Km de próximo service de hidrogrúa",
+        "Km de unidad liviana actual",
+        "Km de próximo service de unidad liviana"
+    ]
+},
 
-    "Camión portador de hidrogrúa",
+{
+    id:"alambre",
+    number:"06",
+    title:"Alambre",
+    description:"Documentación y control del alambre.",
 
-    "Diagrama de carga"
+    items:[
+        "Libro de Alambre",
+        "Registro de última prueba de Alambre"
+    ]
+},
+
+{
+    id:"medicion",
+    number:"07",
+    title:"Sistema de Medición",
+    description:"Control de instrumentos y sistemas de medición.",
+
+    items:[
+        "Sistema Mecánico (Contador & Celda Peso)",
+        "Benchmark (Revisión Encoder)",
+        "Verificación Física del sistema de medición",
+        "Aceite Hidráulico de Instrumentos"
+    ]
+},
+
+{
+    id:"detectores",
+    number:"08",
+    title:"Detectores / Fecha de Calibración",
+    description:"Control de detectores y vencimientos.",
+    expiration:true,
+
+    items:[
+        "Multigas",
+        "Monogas",
+        "Anemómetro"
+    ]
+},
+
+{
+    id:"cabina",
+    number:"09",
+    title:"Cabina",
+    description:"Control general de las condiciones de cabina.",
+
+    items:[
+        "Botiquín primeros auxilios",
+        "Elementos de primeros auxilios: Cuello Filadelfia",
+        "Elementos de primeros auxilios: Férulas",
+        "Elementos de primeros auxilios: Camilla",
+        "Rol de Emergencias Propio",
+        "Rol de Emergencias del Cliente",
+        "Lavaojos",
+        "Puerta y Ventanas",
+        "Escalera de acceso",
+        "Iluminación",
+        "Orden y Limpieza",
+        "Comandos de cabina"
+    ]
+},
+
+{
+    id:"seguridad",
+    number:"10",
+    title:"Seguridad del Equipo",
+    description:"Controles complementarios de seguridad.",
+
+    items:[
+        "Indicador de peso (Martin Decker)",
+        "Corte de Corriente y cartelería",
+        "Puesta a tierra",
+        "Calzas de Seguridad",
+        "Freno de mano colocado",
+        "Arresta llamas"
+    ]
+},
+
+{
+    id:"epp",
+    number:"11",
+    title:"Elementos de Protección Personal",
+    description:"Verificación de EPP e indumentaria.",
+
+    items:[
+        "Arnés de seguridad",
+        "Cabos de amarres",
+        "Protectores auditivos",
+        "Estado de EPP en uso",
+        "Estado de indumentaria"
+    ]
+},
+
+{
+    id:"senalizacion",
+    number:"12",
+    title:"Señalización",
+    description:"Control de señalización de la zona operativa.",
+
+    items:[
+        "Conos y cadenas en zona de cable",
+        "Estacionamiento",
+        "Punto de Reunión",
+        "Carteles banderita (orientación a equipo)"
+    ]
+},
+
+{
+    id:"documentacion",
+    number:"13",
+    title:"Documentación",
+    description:"Control documental y fechas de vencimiento.",
+    expiration:true,
+
+    items:[
+        "Seguro de Vehículo",
+        "V.T.V.",
+        "Carpeta de IND de Herramientas y equipo (cargar vencimiento)"
+    ]
+}
 
 ];
 
 /* =========================================================
-   GENERAR FILAS
+   CREAR MENÚ
 ========================================================= */
 
-const checklistBody =
-    document.getElementById(
-        "checklistBody"
+const menu =
+    document.getElementById("menu");
+
+function addMenu(number,title,id){
+
+    const li =
+        document.createElement("li");
+
+    li.innerHTML = `
+
+        <a href="#${id}" class="nav-link">
+
+            <span class="menu-number">
+                ${number}
+            </span>
+
+            ${title}
+
+        </a>
+
+    `;
+
+    menu.appendChild(li);
+}
+
+addMenu(
+    "01",
+    "Datos del servicio",
+    "datos"
+);
+
+sections.forEach(section=>{
+
+    addMenu(
+        section.number,
+        section.title,
+        section.id
     );
 
-hydroItems.forEach(
-    (item,index)=>{
+});
 
-        const number =
-            index + 1;
+addMenu(
+    "14",
+    "Observaciones",
+    "observaciones"
+);
 
-        const row =
-            document.createElement(
-                "tr"
-            );
+addMenu(
+    "15",
+    "Responsables",
+    "responsables"
+);
 
-        row.dataset.item =
-            item;
+/* =========================================================
+   GENERAR SECCIONES
+========================================================= */
 
-        row.dataset.number =
-            number;
+const container =
+    document.getElementById(
+        "sectionsContainer"
+    );
 
-        row.innerHTML = `
+sections.forEach(section=>{
+
+    const card =
+        document.createElement(
+            "section"
+        );
+
+    card.className =
+        "card observe";
+
+    card.id =
+        section.id;
+
+    const finalColumn =
+        section.expiration
+        ? "VENCIMIENTO"
+        : "CANTIDAD";
+
+    card.innerHTML = `
+
+        <div class="card-header">
+
+            <div class="card-number">
+
+                ${section.number}
+
+            </div>
+
+            <div class="card-title">
+
+                <h3>
+                    ${section.title}
+                </h3>
+
+                <p>
+                    ${section.description}
+                </p>
+
+            </div>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="table-wrapper">
+
+                <table class="checklist">
+
+                    <thead>
+
+                        <tr>
+
+                            <th class="center">
+                                N°
+                            </th>
+
+                            <th>
+                                ELEMENTO
+                            </th>
+
+                            <th class="center">
+                                SÍ
+                            </th>
+
+                            <th class="center">
+                                NO
+                            </th>
+
+                            <th class="center">
+                                NV
+                            </th>
+
+                            <th>
+                                ESTADO
+                            </th>
+
+                            <th class="center">
+                                ${finalColumn}
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        ${createRows(section)}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    `;
+
+    container.appendChild(card);
+
+});
+
+/* =========================================================
+   CREAR FILAS
+========================================================= */
+
+function createRows(section){
+
+    return section.items
+    .map((item,index)=>{
+
+        const finalField =
+            section.expiration
+
+            ? `
+
+                <input
+                    type="date"
+                    class="expiration">
+
+            `
+
+            : `
+
+                <input
+                    type="number"
+                    min="0"
+                    class="quantity"
+                    placeholder="0">
+
+            `;
+
+        return `
+
+        <tr
+            data-section="${section.title}"
+            data-item="${item}">
 
             <td class="number">
 
-                ${number}
+                ${
+                    String(index+1)
+                    .padStart(2,"0")
+                }
 
             </td>
 
             <td class="item">
-
                 ${item}
+            </td>
+
+            <td class="option">
+
+                <input
+                    type="radio"
+                    class="radio"
+                    name="${section.id}-${index}"
+                    value="si"
+                    onchange="setStatus(this)">
 
             </td>
 
@@ -2049,9 +1948,9 @@ hydroItems.forEach(
                 <input
                     type="radio"
                     class="radio"
-                    name="hydro-${number}"
-                    value="correcto"
-                    onchange="changeStatus(this)">
+                    name="${section.id}-${index}"
+                    value="no"
+                    onchange="setStatus(this)">
 
             </td>
 
@@ -2060,55 +1959,92 @@ hydroItems.forEach(
                 <input
                     type="radio"
                     class="radio"
-                    name="hydro-${number}"
-                    value="incorrecto"
-                    onchange="changeStatus(this)">
-
-            </td>
-
-            <td class="option">
-
-                <input
-                    type="radio"
-                    class="radio"
-                    name="hydro-${number}"
+                    name="${section.id}-${index}"
                     value="nv"
-                    onchange="changeStatus(this)">
+                    onchange="setStatus(this)">
 
             </td>
+
+            <td>
+
+                <select class="state">
+
+                    <option value="">
+                        Seleccionar
+                    </option>
+
+                    <option value="Bueno">
+                        Bueno
+                    </option>
+
+                    <option value="Regular">
+                        Regular
+                    </option>
+
+                    <option value="Malo">
+                        Malo
+                    </option>
+
+                    <option value="Reparar">
+                        Reparar
+                    </option>
+
+                    <option value="Fuera de servicio">
+                        Fuera de servicio
+                    </option>
+
+                    <option value="N/A">
+                        N/A
+                    </option>
+
+                </select>
+
+            </td>
+
+            <td class="option">
+
+                ${finalField}
+
+            </td>
+
+        </tr>
 
         `;
 
-        checklistBody.appendChild(
-            row
-        );
+    })
+    .join("");
 
-    }
-);
+}
 
 /* =========================================================
-   CAMBIO DE ESTADO
+   SÍ / NO / NV
 ========================================================= */
 
-function changeStatus(input){
+function setStatus(input){
 
     const row =
         input.closest("tr");
 
     row.classList.remove(
-        "row-correcto",
-        "row-incorrecto",
+        "row-si",
+        "row-no",
         "row-nv",
         "row-error"
     );
 
-    row.classList.add(
-        "row-" +
-        input.value
-    );
+    if(input.value === "si"){
+        row.classList.add("row-si");
+    }
+
+    if(input.value === "no"){
+        row.classList.add("row-no");
+    }
+
+    if(input.value === "nv"){
+        row.classList.add("row-nv");
+    }
 
     updateSummary();
-
     updateProgress();
 
 }
@@ -2129,14 +2065,14 @@ function updateSummary(){
             ".radio:checked"
         ).length;
 
-    const correct =
+    const yes =
         document.querySelectorAll(
-            '.radio[value="correcto"]:checked'
+            '.radio[value="si"]:checked'
         ).length;
 
-    const incorrect =
+    const no =
         document.querySelectorAll(
-            '.radio[value="incorrecto"]:checked'
+            '.radio[value="no"]:checked'
         ).length;
 
     const nv =
@@ -2155,14 +2091,14 @@ function updateSummary(){
         verified;
 
     document.getElementById(
-        "correct"
+        "yes"
     ).textContent =
-        correct;
+        yes;
 
     document.getElementById(
-        "incorrect"
+        "no"
     ).textContent =
-        incorrect;
+        no;
 
     document.getElementById(
         "nv"
@@ -2172,13 +2108,12 @@ function updateSummary(){
 }
 
 /* =========================================================
-   PORCENTAJE DE COMPLETADO
+   PORCENTAJE DE PROGRESO
 ========================================================= */
 
 function updateProgress(){
 
-    let required = 0;
-
+    let totalRequired = 0;
     let completed = 0;
 
     /* DATOS GENERALES */
@@ -2189,36 +2124,12 @@ function updateProgress(){
     )
     .forEach(input=>{
 
-        required++;
+        totalRequired++;
 
         if(
             input.value.trim() !== ""
         ){
-
             completed++;
-
-        }
-
-    });
-
-    /* ELEMENTOS */
-
-    document
-    .querySelectorAll(
-        ".checklist tbody tr"
-    )
-    .forEach(row=>{
-
-        required++;
-
-        if(
-            row.querySelector(
-                ".radio:checked"
-            )
-        ){
-
-            completed++;
-
         }
 
     });
@@ -2231,24 +2142,86 @@ function updateProgress(){
     )
     .forEach(input=>{
 
-        required++;
+        totalRequired++;
 
         if(
             input.value.trim() !== ""
         ){
-
             completed++;
+        }
 
+    });
+
+    /* FILAS */
+
+    document
+    .querySelectorAll(
+        ".checklist tbody tr"
+    )
+    .forEach(row=>{
+
+        /*
+           Cada elemento posee tres puntos:
+           1. SÍ / NO / NV
+           2. Estado
+           3. Cantidad o vencimiento
+        */
+
+        totalRequired += 3;
+
+        const radio =
+            row.querySelector(
+                ".radio:checked"
+            );
+
+        if(radio){
+            completed++;
+        }
+
+        const state =
+            row.querySelector(
+                ".state"
+            );
+
+        if(
+            state &&
+            state.value !== ""
+        ){
+            completed++;
+        }
+
+        const quantity =
+            row.querySelector(
+                ".quantity"
+            );
+
+        const expiration =
+            row.querySelector(
+                ".expiration"
+            );
+
+        if(
+            quantity &&
+            quantity.value !== ""
+        ){
+            completed++;
+        }
+
+        if(
+            expiration &&
+            expiration.value !== ""
+        ){
+            completed++;
         }
 
     });
 
     const percentage =
-        required === 0
+        totalRequired === 0
         ? 0
         : Math.round(
             completed /
-            required *
+            totalRequired *
             100
         );
 
@@ -2260,74 +2233,64 @@ function updateProgress(){
     document.getElementById(
         "requiredFields"
     ).textContent =
-        required;
+        totalRequired;
 
     document.getElementById(
         "progressText"
     ).textContent =
-        percentage +
-        "% completado";
+        `${percentage}% completado`;
 
     document.getElementById(
         "progressBar"
     ).style.width =
-        percentage +
-        "%";
+        `${percentage}%`;
 
 }
 
 /* =========================================================
-   MOSTRAR RESULTADOS
+   DETALLE SÍ / NO / NV
 ========================================================= */
 
-function showResults(type){
-
-    const titles = {
-
-        correcto:
-            "Elementos CORRECTOS",
-
-        incorrecto:
-            "Elementos INCORRECTOS",
-
-        nv:
-            "Elementos NO VERIFICADOS"
-
-    };
+function showResultDetails(type){
 
     const selected =
         document.querySelectorAll(
             `.radio[value="${type}"]:checked`
         );
 
-    const card =
+    const resultCard =
         document.getElementById(
             "resultDetail"
         );
 
-    const list =
+    const resultList =
         document.getElementById(
             "resultList"
         );
 
-    document.getElementById(
-        "resultTitle"
-    ).textContent =
+    const title =
+        document.getElementById(
+            "resultDetailTitle"
+        );
+
+    const titles = {
+        si:"Elementos marcados SÍ",
+        no:"Elementos marcados NO",
+        nv:"Elementos marcados NV"
+    };
+
+    title.textContent =
         titles[type];
 
-    list.innerHTML = "";
+    resultList.innerHTML = "";
 
-    if(
-        selected.length === 0
-    ){
+    if(selected.length === 0){
 
-        list.innerHTML = `
+        resultList.innerHTML = `
 
             <div class="result-item">
 
-                <span>
-                    —
-                </span>
+                <span>—</span>
 
                 <span>
                     No existen elementos registrados
@@ -2341,10 +2304,16 @@ function showResults(type){
     }
 
     selected.forEach(
-        input=>{
+        (radio,index)=>{
 
             const row =
-                input.closest("tr");
+                radio.closest("tr");
+
+            const item =
+                row.dataset.item;
+
+            const section =
+                row.dataset.section;
 
             const div =
                 document.createElement(
@@ -2356,31 +2325,38 @@ function showResults(type){
 
             div.innerHTML = `
 
-                <span class="result-number">
+                <span class="result-index">
 
-                    ${row.dataset.number}
+                    ${
+                        String(index+1)
+                        .padStart(2,"0")
+                    }
 
                 </span>
 
                 <span class="result-name">
 
-                    ${row.dataset.item}
+                    ${item}
+
+                </span>
+
+                <span class="result-section">
+
+                    ${section}
 
                 </span>
 
             `;
 
-            list.appendChild(
-                div
-            );
+            resultList.appendChild(div);
 
         }
     );
 
-    card.style.display =
+    resultCard.style.display =
         "block";
 
-    card.scrollIntoView({
+    resultCard.scrollIntoView({
         behavior:"smooth",
         block:"start"
     });
@@ -2388,39 +2364,36 @@ function showResults(type){
 }
 
 /* =========================================================
-   OBTENER DATOS
+   OBTENER DATOS PARA GUARDAR
 ========================================================= */
 
 function getChecklistData(){
 
     const data = {
 
+        savedAt:
+            new Date().toISOString(),
+
         general:{},
 
-        items:[],
+        rows:[],
 
-        observaciones:
+        observations:
             document.getElementById(
                 "observacionesTexto"
             ).value,
 
         responsables:{
-
-            realiza:
+            saliente:
                 document.getElementById(
-                    "realiza"
+                    "operadorSaliente"
                 ).value,
 
-            controla:
+            ingresante:
                 document.getElementById(
-                    "controla"
+                    "operadorIngresante"
                 ).value
-
-        },
-
-        savedAt:
-            new Date()
-            .toISOString()
+        }
 
     };
 
@@ -2430,9 +2403,7 @@ function getChecklistData(){
     )
     .forEach(input=>{
 
-        data.general[
-            input.id
-        ] =
+        data.general[input.id] =
             input.value;
 
     });
@@ -2443,23 +2414,50 @@ function getChecklistData(){
     )
     .forEach(row=>{
 
-        const status =
+        const radio =
             row.querySelector(
                 ".radio:checked"
             );
 
-        data.items.push({
+        const state =
+            row.querySelector(
+                ".state"
+            );
 
-            number:
-                row.dataset.number,
+        const quantity =
+            row.querySelector(
+                ".quantity"
+            );
+
+        const expiration =
+            row.querySelector(
+                ".expiration"
+            );
+
+        data.rows.push({
+
+            section:
+                row.dataset.section,
 
             item:
                 row.dataset.item,
 
-            status:
-                status
-                ? status.value
-                : ""
+            answer:
+                radio
+                ? radio.value
+                : "",
+
+            state:
+                state
+                ? state.value
+                : "",
+
+            finalValue:
+                quantity
+                ? quantity.value
+                : expiration
+                    ? expiration.value
+                    : ""
 
         });
 
@@ -2479,26 +2477,26 @@ function saveChecklist(){
         getChecklistData();
 
     localStorage.setItem(
-        "naserChecklistHidrogrua",
+        "naserChecklistPreparacion",
         JSON.stringify(data)
     );
 
     showMessage(
-        "Checklist de hidrogrúa guardado correctamente.",
+        "Checklist guardado correctamente. Puede continuar completándolo más tarde.",
         "success"
     );
 
 }
 
 /* =========================================================
-   CARGAR CHECKLIST
+   CARGAR CHECKLIST GUARDADO
 ========================================================= */
 
 function loadChecklist(){
 
     const saved =
         localStorage.getItem(
-            "naserChecklistHidrogrua"
+            "naserChecklistPreparacion"
         );
 
     if(!saved){
@@ -2509,8 +2507,6 @@ function loadChecklist(){
 
         const data =
             JSON.parse(saved);
-
-        /* DATOS GENERALES */
 
         if(data.general){
 
@@ -2535,9 +2531,7 @@ function loadChecklist(){
 
         }
 
-        /* ITEMS */
-
-        if(data.items){
+        if(data.rows){
 
             const rows =
                 document.querySelectorAll(
@@ -2547,30 +2541,66 @@ function loadChecklist(){
             rows.forEach(
                 (row,index)=>{
 
-                    const savedItem =
-                        data.items[index];
+                    const savedRow =
+                        data.rows[index];
 
-                    if(
-                        !savedItem ||
-                        !savedItem.status
-                    ){
+                    if(!savedRow){
                         return;
                     }
 
-                    const radio =
+                    if(savedRow.answer){
+
+                        const radio =
+                            row.querySelector(
+                                `.radio[value="${savedRow.answer}"]`
+                            );
+
+                        if(radio){
+
+                            radio.checked =
+                                true;
+
+                            row.classList.add(
+                                `row-${savedRow.answer}`
+                            );
+
+                        }
+
+                    }
+
+                    const state =
                         row.querySelector(
-                            `.radio[value="${savedItem.status}"]`
+                            ".state"
                         );
 
-                    if(radio){
+                    if(state){
 
-                        radio.checked =
-                            true;
+                        state.value =
+                            savedRow.state || "";
 
-                        row.classList.add(
-                            "row-" +
-                            savedItem.status
+                    }
+
+                    const quantity =
+                        row.querySelector(
+                            ".quantity"
                         );
+
+                    const expiration =
+                        row.querySelector(
+                            ".expiration"
+                        );
+
+                    if(quantity){
+
+                        quantity.value =
+                            savedRow.finalValue || "";
+
+                    }
+
+                    if(expiration){
+
+                        expiration.value =
+                            savedRow.finalValue || "";
 
                     }
 
@@ -2579,70 +2609,57 @@ function loadChecklist(){
 
         }
 
-        /* OBSERVACIONES */
-
         if(
-            data.observaciones !==
-            undefined
+            data.observations !== undefined
         ){
 
             document.getElementById(
                 "observacionesTexto"
             ).value =
-                data.observaciones;
+                data.observations;
 
         }
-
-        /* RESPONSABLES */
 
         if(data.responsables){
 
             document.getElementById(
-                "realiza"
+                "operadorSaliente"
             ).value =
-                data.responsables.realiza
-                || "";
+                data.responsables.saliente || "";
 
             document.getElementById(
-                "controla"
+                "operadorIngresante"
             ).value =
-                data.responsables.controla
-                || "";
+                data.responsables.ingresante || "";
 
         }
+
+        updateSummary();
+        updateProgress();
 
     }
     catch(error){
 
         console.error(
-            "Error al cargar el checklist:",
+            "Error al recuperar el checklist:",
             error
         );
 
     }
 
-    updateSummary();
-
-    updateProgress();
-
 }
 
 /* =========================================================
-   VALIDAR CHECKLIST
+   VALIDAR CHECKLIST COMPLETO
 ========================================================= */
 
 function validateChecklist(){
 
-    let valid =
-        true;
+    let valid = true;
+    let firstError = null;
+    let missing = 0;
 
-    let missing =
-        0;
-
-    let firstError =
-        null;
-
-    /* LIMPIAR ERRORES */
+    /* QUITAR ERRORES ANTERIORES */
 
     document
     .querySelectorAll(
@@ -2660,9 +2677,9 @@ function validateChecklist(){
     .querySelectorAll(
         ".row-error"
     )
-    .forEach(row=>{
+    .forEach(element=>{
 
-        row.classList.remove(
+        element.classList.remove(
             "row-error"
         );
 
@@ -2677,13 +2694,10 @@ function validateChecklist(){
     .forEach(input=>{
 
         if(
-            input.value.trim()
-            === ""
+            input.value.trim() === ""
         ){
 
-            valid =
-                false;
-
+            valid = false;
             missing++;
 
             input.classList.add(
@@ -2691,45 +2705,7 @@ function validateChecklist(){
             );
 
             if(!firstError){
-
-                firstError =
-                    input;
-
-            }
-
-        }
-
-    });
-
-    /* TODOS LOS ELEMENTOS */
-
-    document
-    .querySelectorAll(
-        ".checklist tbody tr"
-    )
-    .forEach(row=>{
-
-        const checked =
-            row.querySelector(
-                ".radio:checked"
-            );
-
-        if(!checked){
-
-            valid =
-                false;
-
-            missing++;
-
-            row.classList.add(
-                "row-error"
-            );
-
-            if(!firstError){
-
-                firstError =
-                    row;
-
+                firstError = input;
             }
 
         }
@@ -2745,13 +2721,10 @@ function validateChecklist(){
     .forEach(input=>{
 
         if(
-            input.value.trim()
-            === ""
+            input.value.trim() === ""
         ){
 
-            valid =
-                false;
-
+            valid = false;
             missing++;
 
             input.classList.add(
@@ -2759,22 +2732,116 @@ function validateChecklist(){
             );
 
             if(!firstError){
-
-                firstError =
-                    input;
-
+                firstError = input;
             }
 
         }
 
     });
 
-    return{
+    /* TODAS LAS FILAS */
 
+    document
+    .querySelectorAll(
+        ".checklist tbody tr"
+    )
+    .forEach(row=>{
+
+        let rowValid = true;
+
+        const radio =
+            row.querySelector(
+                ".radio:checked"
+            );
+
+        const state =
+            row.querySelector(
+                ".state"
+            );
+
+        const quantity =
+            row.querySelector(
+                ".quantity"
+            );
+
+        const expiration =
+            row.querySelector(
+                ".expiration"
+            );
+
+        if(!radio){
+
+            valid = false;
+            rowValid = false;
+            missing++;
+
+        }
+
+        if(
+            !state ||
+            state.value === ""
+        ){
+
+            valid = false;
+            rowValid = false;
+            missing++;
+
+            if(state){
+                state.classList.add(
+                    "field-error"
+                );
+            }
+
+        }
+
+        if(
+            quantity &&
+            quantity.value === ""
+        ){
+
+            valid = false;
+            rowValid = false;
+            missing++;
+
+            quantity.classList.add(
+                "field-error"
+            );
+
+        }
+
+        if(
+            expiration &&
+            expiration.value === ""
+        ){
+
+            valid = false;
+            rowValid = false;
+            missing++;
+
+            expiration.classList.add(
+                "field-error"
+            );
+
+        }
+
+        if(!rowValid){
+
+            row.classList.add(
+                "row-error"
+            );
+
+            if(!firstError){
+                firstError = row;
+            }
+
+        }
+
+    });
+
+    return {
         valid,
-        missing,
-        firstError
-
+        firstError,
+        missing
     };
 
 }
@@ -2788,38 +2855,29 @@ function finishChecklist(){
     const validation =
         validateChecklist();
 
-    if(
-        !validation.valid
-    ){
+    if(!validation.valid){
 
         showMessage(
-            `No se puede finalizar. Faltan ${validation.missing} campos o controles obligatorios.`,
+            `No se puede finalizar el checklist. Faltan ${validation.missing} campos o controles por completar. Los pendientes fueron marcados en rojo.`,
             "error"
         );
 
-        if(
+        if(validation.firstError){
+
             validation.firstError
-        ){
-
-            validation
-            .firstError
             .scrollIntoView({
-
                 behavior:"smooth",
-
                 block:"center"
-
             });
 
         }
 
         return;
-
     }
 
     const confirmation =
         confirm(
-            "Todos los campos están completos. ¿Desea finalizar el checklist de hidrogrúa?"
+            "Todos los campos están completos. ¿Desea finalizar definitivamente este checklist?"
         );
 
     if(!confirmation){
@@ -2833,13 +2891,22 @@ function finishChecklist(){
         true;
 
     data.finishedAt =
-        new Date()
-        .toISOString();
+        new Date().toISOString();
 
     localStorage.setItem(
-        "naserChecklistHidrogrua",
+        "naserChecklistPreparacion",
         JSON.stringify(data)
     );
+
+    document.getElementById(
+        "progressText"
+    ).textContent =
+        "100% completado";
+
+    document.getElementById(
+        "progressBar"
+    ).style.width =
+        "100%";
 
     const banner =
         document.getElementById(
@@ -2856,9 +2923,7 @@ function finishChecklist(){
         "finishedDate"
     ).textContent =
         "Finalizado el " +
-        now.toLocaleDateString(
-            "es-AR"
-        ) +
+        now.toLocaleDateString("es-AR") +
         " a las " +
         now.toLocaleTimeString(
             "es-AR",
@@ -2868,39 +2933,29 @@ function finishChecklist(){
             }
         );
 
-    document.getElementById(
-        "progressText"
-    ).textContent =
-        "100% completado";
-
-    document.getElementById(
-        "progressBar"
-    ).style.width =
-        "100%";
-
     lockChecklist();
 
+    banner.scrollIntoView({
+        behavior:"smooth",
+        block:"center"
+    });
+
     showMessage(
-        "Checklist de hidrogrúa finalizado correctamente.",
+        "Checklist finalizado correctamente.",
         "success"
     );
-
-    window.scrollTo({
-        top:0,
-        behavior:"smooth"
-    });
 
 }
 
 /* =========================================================
-   BLOQUEAR CHECKLIST
+   BLOQUEAR DESPUÉS DE FINALIZAR
 ========================================================= */
 
 function lockChecklist(){
 
     document
     .querySelectorAll(
-        "input, textarea"
+        "input, select, textarea"
     )
     .forEach(element=>{
 
@@ -2924,7 +2979,7 @@ function clearChecklist(){
 
     const confirmation =
         confirm(
-            "¿Está seguro de que desea limpiar completamente el checklist de hidrogrúa?"
+            "¿Está seguro de que desea limpiar todo el checklist? Se perderán los datos guardados."
         );
 
     if(!confirmation){
@@ -2932,30 +2987,48 @@ function clearChecklist(){
     }
 
     localStorage.removeItem(
-        "naserChecklistHidrogrua"
+        "naserChecklistPreparacion"
     );
 
     document
     .querySelectorAll(
-        "input, textarea"
+        'input[type="text"], input[type="number"], input[type="date"], textarea'
     )
     .forEach(element=>{
 
-        if(
-            element.type ===
-            "radio"
-        ){
+        element.value = "";
 
-            element.checked =
-                false;
+        element.disabled =
+            false;
 
-        }
-        else{
+        element.classList.remove(
+            "field-error"
+        );
 
-            element.value =
-                "";
+    });
 
-        }
+    document
+    .querySelectorAll(
+        'input[type="radio"]'
+    )
+    .forEach(element=>{
+
+        element.checked =
+            false;
+
+        element.disabled =
+            false;
+
+    });
+
+    document
+    .querySelectorAll(
+        "select"
+    )
+    .forEach(element=>{
+
+        element.selectedIndex =
+            0;
 
         element.disabled =
             false;
@@ -2973,8 +3046,8 @@ function clearChecklist(){
     .forEach(row=>{
 
         row.classList.remove(
-            "row-correcto",
-            "row-incorrecto",
+            "row-si",
+            "row-no",
             "row-nv",
             "row-error"
         );
@@ -2996,10 +3069,8 @@ function clearChecklist(){
     ).disabled =
         false;
 
-    setToday();
-
+    setDate();
     updateSummary();
-
     updateProgress();
 
     showMessage(
@@ -3013,10 +3084,7 @@ function clearChecklist(){
    MENSAJES
 ========================================================= */
 
-function showMessage(
-    text,
-    type
-){
+function showMessage(text,type){
 
     const message =
         document.getElementById(
@@ -3024,8 +3092,7 @@ function showMessage(
         );
 
     message.className =
-        "message " +
-        type;
+        `message ${type}`;
 
     message.textContent =
         text;
@@ -3033,15 +3100,12 @@ function showMessage(
     message.style.display =
         "block";
 
-    setTimeout(
-        ()=>{
+    setTimeout(()=>{
 
-            message.style.display =
-                "none";
+        message.style.display =
+            "none";
 
-        },
-        5000
-    );
+    },5000);
 
 }
 
@@ -3049,42 +3113,34 @@ function showMessage(
    FECHA ACTUAL
 ========================================================= */
 
-function setToday(){
+function setDate(){
 
-    const input =
+    const dateInput =
         document.getElementById(
             "fecha"
         );
 
-    if(
-        input.value !== ""
-    ){
+    if(dateInput.value !== ""){
         return;
     }
 
-    const now =
+    const today =
         new Date();
 
     const year =
-        now.getFullYear();
+        today.getFullYear();
 
     const month =
         String(
-            now.getMonth()+1
-        ).padStart(
-            2,
-            "0"
-        );
+            today.getMonth()+1
+        ).padStart(2,"0");
 
     const day =
         String(
-            now.getDate()
-        ).padStart(
-            2,
-            "0"
-        );
+            today.getDate()
+        ).padStart(2,"0");
 
-    input.value =
+    dateInput.value =
         `${year}-${month}-${day}`;
 
 }
@@ -3097,13 +3153,21 @@ document.addEventListener(
     "input",
     event=>{
 
-        event.target
-        .classList
-        .remove(
-            "field-error"
-        );
+        if(
+            event.target.matches(
+                "input, textarea"
+            )
+        ){
 
-        updateProgress();
+            event.target
+            .classList
+            .remove(
+                "field-error"
+            );
+
+            updateProgress();
+
+        }
 
     }
 );
@@ -3112,39 +3176,47 @@ document.addEventListener(
     "change",
     event=>{
 
-        event.target
-        .classList
-        .remove(
-            "field-error"
-        );
+        if(
+            event.target.matches(
+                "input, select"
+            )
+        ){
 
-        const row =
-            event.target.closest(
-                "tr"
+            event.target
+            .classList
+            .remove(
+                "field-error"
             );
 
-        if(row){
+            const row =
+                event.target.closest(
+                    "tr"
+                );
 
-            row.classList.remove(
-                "row-error"
-            );
+            if(row){
+
+                row.classList.remove(
+                    "row-error"
+                );
+
+            }
+
+            updateSummary();
+            updateProgress();
 
         }
-
-        updateSummary();
-
-        updateProgress();
 
     }
 );
 
 /* =========================================================
-   MOBILE
+   MENÚ MOBILE
 ========================================================= */
 
 function toggleMenu(){
 
-    document.getElementById(
+    document
+    .getElementById(
         "sidebar"
     )
     .classList
@@ -3155,23 +3227,24 @@ function toggleMenu(){
 }
 
 /* =========================================================
-   NAVEGACIÓN ACTIVA
+   MENÚ ACTIVO
 ========================================================= */
 
 function startNavigation(){
 
-    const links =
+    const navLinks =
         document.querySelectorAll(
             ".nav-link"
         );
 
-    const sections =
+    const observedSections =
         document.querySelectorAll(
             ".observe"
         );
 
     const observer =
         new IntersectionObserver(
+
             entries=>{
 
                 entries.forEach(
@@ -3181,27 +3254,25 @@ function startNavigation(){
                             entry.isIntersecting
                         ){
 
-                            links.forEach(
-                                link=>{
+                            navLinks
+                            .forEach(link=>{
 
-                                    link
-                                    .classList
-                                    .remove(
-                                        "active"
-                                    );
+                                link.classList
+                                .remove(
+                                    "active"
+                                );
 
-                                }
-                            );
+                            });
 
-                            const active =
-                                document.querySelector(
+                            const link =
+                                document
+                                .querySelector(
                                     `.nav-link[href="#${entry.target.id}"]`
                                 );
 
-                            if(active){
+                            if(link){
 
-                                active
-                                .classList
+                                link.classList
                                 .add(
                                     "active"
                                 );
@@ -3214,59 +3285,58 @@ function startNavigation(){
                 );
 
             },
+
             {
                 threshold:.2,
                 rootMargin:
                     "-15% 0px -60% 0px"
             }
+
         );
 
-    sections.forEach(
-        section=>{
+    observedSections
+    .forEach(section=>{
 
-            observer.observe(
-                section
-            );
+        observer.observe(
+            section
+        );
 
-        }
-    );
+    });
 
-    links.forEach(
-        link=>{
+    navLinks
+    .forEach(link=>{
 
-            link.addEventListener(
-                "click",
-                ()=>{
+        link.addEventListener(
+            "click",
+            ()=>{
 
-                    if(
-                        window.innerWidth
-                        <=760
-                    ){
+                if(
+                    window.innerWidth <= 760
+                ){
 
-                        document
-                        .getElementById(
-                            "sidebar"
-                        )
-                        .classList
-                        .remove(
-                            "open"
-                        );
-
-                    }
+                    document
+                    .getElementById(
+                        "sidebar"
+                    )
+                    .classList
+                    .remove(
+                        "open"
+                    );
 
                 }
-            );
 
-        }
-    );
+            }
+        );
+
+    });
 
 }
 
 /* =========================================================
-   INICIAR
+   INICIO
 ========================================================= */
 
-setToday();
+setDate();
 
 loadChecklist();
 
@@ -3281,7 +3351,7 @@ startNavigation();
 <script>
 // Validación de los campos obligatorios al enviar desde el sistema NASER.
 if (window.__NASER_FORM__) {
-    document.querySelectorAll('.required-general, .required-responsible, .checklist input[type="radio"], input[name="combustible"]').forEach(function (field) {
+    document.querySelectorAll('.required-general, .required-responsible, .checklist input[type="radio"], .checklist .state, .checklist .quantity, .checklist .expiration').forEach(function (field) {
         field.required = true;
     });
 }

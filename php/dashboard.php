@@ -20,7 +20,7 @@ $maxSector=max([1]+array_values($porSector));
 $totAprobados=0;if($ids){$totAprobados=(int)$pdo->query("SELECT COUNT(*) FROM formularios_registros WHERE estado='aprobado' AND sector_id IN (".implode(',',$ids).")")->fetchColumn();}
 $catD=formulariosCatalogo(); $infoD=sectoresInfo($pdo);
 $galeria=[
- ['Trabajador','trabajador-slickline.jpeg','formularios/llenar.php?f=operaciones-control-slickline','Control Operativo Slickline','Completar checklist'],
+ ['Trabajador','trabajador-slickline.jpeg','formularios/llenar.php?f=operaciones-inspeccion-equipo','Inspección y preparación de equipo','Completar checklist'],
  ['Camión Slickline','Camion-Naser.png','formularios/llenar.php?f=operaciones-control-slickline','Control Operativo Slickline','Completar checklist'],
  ['Unidad Liviana','Unidad-liviana.png','formularios/llenar.php?f=mantenimiento-checklist-vehicular','Checklist Vehicular · Unidad Liviana','Completar checklist'],
  ['Hidrogrúa','Hidrogrua.jpeg','formularios/llenar.php?f=mantenimiento-checklist-hidrogrua','Checklist de Hidrogrúa','Completar checklist']

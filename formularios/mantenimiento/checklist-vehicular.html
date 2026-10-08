@@ -3133,13 +3133,10 @@ startNavigation();
 </script>
 
 <script>
-// Dentro de NASER, el guardado y el envío se realizan desde la barra del sistema.
+// Validación de los campos obligatorios al enviar desde el sistema NASER.
 if (window.__NASER_FORM__) {
     document.querySelectorAll('.required-general, .required-responsible, .checklist input[type="radio"], input[name="combustible"]').forEach(function (field) {
         field.required = true;
-    });
-    document.querySelectorAll('button[onclick="saveChecklist()"], button[onclick="finishChecklist()"], #finishedBanner').forEach(function (element) {
-        element.style.display = 'none';
     });
 }
 </script>
