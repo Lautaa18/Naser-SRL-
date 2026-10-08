@@ -20,10 +20,10 @@ $maxSector=max([1]+array_values($porSector));
 $totAprobados=0;if($ids){$totAprobados=(int)$pdo->query("SELECT COUNT(*) FROM formularios_registros WHERE estado='aprobado' AND sector_id IN (".implode(',',$ids).")")->fetchColumn();}
 $catD=formulariosCatalogo(); $infoD=sectoresInfo($pdo);
 $galeria=[
- ['Trabajador','trabajador-slickline.jpeg','equipos/trabajador.php#formularios','Ingreso, entrega de EPP, formación y seguridad'],
- ['Camión Slickline','Camion-Naser.png','equipos/camion-slickline.php#formularios','Control de Slickline, herramientas y registros operativos'],
- ['Unidad Liviana','Unidad-liviana.png','equipos/unidad-liviana.php#formularios','Acceso a locación, riesgos y seguridad de los traslados'],
- ['Hidrogrúa','Hidrogrua.jpeg','equipos/hidrogrua.php#formularios','Evaluación de riesgos, visitas de equipo y registros']
+ ['Trabajador','trabajador-slickline.jpeg','formularios/llenar.php?f=operaciones-control-slickline','Control Operativo Slickline','Completar checklist'],
+ ['Camión Slickline','Camion-Naser.png','formularios/llenar.php?f=operaciones-control-slickline','Control Operativo Slickline','Completar checklist'],
+ ['Unidad Liviana','Unidad-liviana.png','descargar.php?f='.rawurlencode('sgi/1 SG Documentos/PO-SN-01 Mantenimiento de equipos/POSN01-F3 Chequeo Vehicular.pdf'),'Chequeo Vehicular · POSN01-F3 (PDF)','Abrir checklist'],
+ ['Hidrogrúa','Hidrogrua.jpeg','descargar.php?f='.rawurlencode('sgi/1 SG Documentos/PO-SN-01 Mantenimiento de equipos/POSN01-F8 Chequeo de hidrogrua.docx'),'Chequeo de Hidrogrúa · POSN01-F8 (Word)','Descargar checklist']
 ];
 ?><!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Panel principal | NASER SGI</title><link rel="stylesheet" href="<?=asset('/style.css')?>"></head><body><div class="app"><?php sidebar($pdo,'inicio');?><main class="content">
 <header class="topbar"><div><p class="eyebrow">SERVICIOS NASER SRL</p><h1>Panel principal</h1><p>Gestión centralizada de documentación, sectores y operaciones.</p></div><div class="top-actions"><span class="status"><i></i>Sistema activo</span><span class="user-chip"><?=h($_SESSION['nombre'])?></span></div></header>
@@ -48,7 +48,7 @@ $galeria=[
   </div>
 </section>
 
-<section class="fleet-panel"><div class="section-head"><div><p class="eyebrow">ACCESOS DIRECTOS</p><h2>Personal, flota y equipamiento</h2><p>Seleccioná una imagen para completar sus formularios o consultar registros y documentación.</p></div></div><div class="fleet-images"><?php foreach($galeria as [$titulo,$img,$url,$desc]):?><a class="fleet-card" href="<?=h(app_url('/php/'.$url))?>"><div class="fleet-image"><img src="<?=app_url('/img/'.$img)?>" alt="<?=h($titulo)?>" loading="lazy"></div><div class="fleet-card-body"><h3><?=h($titulo)?></h3><p><?=h($desc)?></p><span>Ver formularios →</span></div></a><?php endforeach;?></div></section>
+<section class="fleet-panel"><div class="section-head"><div><p class="eyebrow">ACCESOS DIRECTOS</p><h2>Personal, flota y equipamiento</h2><p>Seleccioná una imagen para abrir su control o checklist correspondiente.</p></div></div><div class="fleet-images"><?php foreach($galeria as [$titulo,$img,$url,$desc,$accion]):?><a class="fleet-card" href="<?=h(app_url('/php/'.$url))?>"><div class="fleet-image"><img src="<?=app_url('/img/'.$img)?>" alt="<?=h($titulo)?>" loading="lazy"></div><div class="fleet-card-body"><h3><?=h($titulo)?></h3><p><?=h($desc)?></p><span><?=h($accion)?> →</span></div></a><?php endforeach;?></div></section>
 <section class="policy-panel"><p class="eyebrow">INFORMACIÓN GENERAL</p><h2>Política de Calidad, Ambiente, Seguridad y Salud</h2><p>El sistema concentra la información necesaria para acompañar las operaciones de Slickline, Well Testing y Flow Back, con foco en seguridad, calidad, ambiente y mejora continua.</p><div class="policy-grid"><span>✓ Mejora continua</span><span>✓ Cumplimiento legal y normativo</span><span>✓ Prevención de incidentes</span><span>✓ Trabajo seguro y saludable</span></div></section>
 <div class="section-head"><div><p class="eyebrow">GESTIÓN CENTRALIZADA</p><h2>Sectores habilitados</h2></div></div><section class="sector-grid"><?php foreach($sectores as $s):?><article class="sector-card"><div class="sector-code"><?=h(strtoupper(substr($s['nombre'],0,2)))?></div><h3><?=h($s['nombre'])?></h3><p>Carpetas, documentación y procedimientos del sector.</p><div class="card-links"><a href="<?=app_url('/php/sector.php?sector='.urlencode($s['slug']))?>">Abrir sector →</a></div></article><?php endforeach;?></section>
 </main></div></body></html>
