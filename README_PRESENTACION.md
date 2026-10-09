@@ -130,7 +130,7 @@ La conexión de base también se maneja por variables `DB_HOST`, `DB_NAME`, `DB_
 ## Formularios digitales, permisos y avisos (actualización 01/10/2026)
 
 ### Formularios
-- Los HTML originales están en `formularios/<sector>/` y se registran en `php/config/formularios_catalogo.php` (49 formularios: HSEQ, RRHH, Compras, Ventas y Operaciones).
+- Los HTML originales están en `formularios/<sector>/` y se registran en `php/config/formularios_catalogo.php` (63 formularios: HSEQ, RRHH, Compras, Ventas, Operaciones y Mantenimiento).
 - Se completan desde **Formularios** (menú) o desde la página de cada sector. Todo se guarda en la tabla `formularios_registros` (campos + estado interno del formulario) con historial en `formularios_historial`.
 - Circuito: **Borrador → Enviado (pendiente de aprobación) → Aprobado / Rechazado**. Al enviar, los responsables del sector reciben aviso en la campanita y por mail. Al aprobar o rechazar, se avisa a quien lo cargó.
 - Los botones propios de cada formulario (Guardar, Finalizar, Agregar...) también guardan en la base.
@@ -138,6 +138,10 @@ La conexión de base también se maneja por variables `DB_HOST`, `DB_NAME`, `DB_
 - Para sumar un formulario nuevo: copiar el HTML a `formularios/<sector>/` y agregar una línea en el catálogo.
 - Operaciones incluye los 12 documentos nuevos. Las imágenes de Inicio abren los formularios relacionados con cada recurso; los accesos para completar y consultar respetan los permisos de cada usuario.
 - Los formularios usan `css/formularios-responsive.css` al abrirse dentro del sistema: misma información en computadora y celular, campos adaptados y tablas con desplazamiento local. El diseño de impresión se conserva.
+- **Mantenimiento** incluye los checklists Vehicular e Hidrogrúa y 11 formatos digitalizados: utilización del alambre, inspección operativa, elementos críticos de operación, unidad Slickline, lavaojos, izaje y guinche, polea de reenvío, apertura/cierre de BOP, herramientas de mano, extintores y elementos de izaje.
+- Los 11 formatos usan `js/mantenimiento-formularios.js` y `css/mantenimiento-formularios.css`. Conservan los códigos, revisiones, criterios y opciones del documento de origen; cada HTML contiene su definición en `maintenance-config`. En las planillas se pueden agregar y eliminar filas, con identificadores estables para conservar los datos.
+- En estos formatos, **Guardar** guarda un borrador en la base; **Finalizar checklist** valida y envía a aprobación; **Limpiar** vacía los campos sin borrar el registro guardado hasta volver a guardar; **Comenzar nuevo** abre un registro nuevo. Los botones anteriores de los demás formularios se mantienen. Las firmas y aclaraciones son campos de texto.
+- Se verificaron los 11 formatos con una base temporal: guardado y recuperación, filas dinámicas, validación, envío/aprobación/reapertura, limpieza, nuevo registro y vistas a 320 y 1440 px.
 
 ### Permisos
 - **Super usuario** (rol admin): ve, edita y aprueba todo; administra y elimina usuarios.

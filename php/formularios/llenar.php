@@ -133,6 +133,13 @@ $accionesHist = ['creado' => 'Creó el formulario', 'guardado' => 'Guardó cambi
     else if (d.type === 'naser:dirty' && puedeEditar) { revision++; dirty.hidden = false; }
     else if (d.type === 'naser:collected' && reqs[d.reqId]) { reqs[d.reqId](d); delete reqs[d.reqId]; }
     else if (d.type === 'naser:save-request' && puedeEditar) accion('guardar');
+    else if (d.type === 'naser:submit-request' && puedeEditar) accion('enviar');
+    else if (d.type === 'naser:new-request' && puedeEditar && !ocupado) {
+      if (dirty.hidden || confirm('¿Comenzar un formulario nuevo? Los cambios sin guardar del actual se perderán.')) {
+        dirty.hidden = true;
+        window.location.href = <?=json_encode(app_url('/php/formularios/llenar.php'))?> + '?f=' + encodeURIComponent(FORM);
+      }
+    }
   });
   refInput.addEventListener('input', function(){ if (puedeEditar) { revision++; dirty.hidden = false; } });
   window.addEventListener('beforeunload', function(e){ if (!dirty.hidden) { e.preventDefault(); e.returnValue = ''; } });
@@ -185,7 +192,7 @@ $accionesHist = ['creado' => 'Creó el formulario', 'guardado' => 'Guardó cambi
         payload.referencia = refInput.value.trim();
       }
       var j = await enviarApi(payload);
-      dirty.hidden = revision !== revisionGuardada;
+      dirty.hidden = revision === revisionGuardada;
       if (j.redirect) { window.location.href = j.redirect; return; }
       var nuevo = !id; id = j.id;
       if (nombre === 'guardar') {

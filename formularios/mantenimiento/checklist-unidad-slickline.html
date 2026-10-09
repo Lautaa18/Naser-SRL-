@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Checklist de la unidad de Slickline | NASER SGI</title>
+  <link rel="stylesheet" href="../../css/mantenimiento-formularios.css">
+</head>
+<body>
+  <main id="maintenance-form"></main>
+  <script id="maintenance-config" type="application/json">
+{
+  "id": "checklist-unidad-slickline",
+  "title": "Checklist de la unidad de Slickline",
+  "code": "POSN01-F7",
+  "revision": "Rev.00 Jun.2021",
+  "description": "Control de equipo de Slick Line.",
+  "generalFields": [
+    {"key": "pozo", "label": "Pozo", "type": "text", "required": true},
+    {"key": "equipo", "label": "Equipo", "type": "text", "required": true},
+    {"key": "fecha", "label": "Fecha", "type": "date", "required": true},
+    {"key": "supervisor", "label": "Supervisor", "type": "text", "required": false},
+    {"key": "operador", "label": "Operador", "type": "text", "required": true},
+    {"key": "unidad", "label": "Unidad", "type": "text", "required": true}
+  ],
+  "sections": [
+    {
+      "key": "guinche", "title": "Guinche", "type": "checklist", "itemLabel": "Elemento",
+      "columns": [{"key": "presente", "label": "S / N", "type": "select", "options": ["S", "N"]}],
+      "rows": [
+        {"key": "morza", "label": "Morza"},
+        {"key": "rueda-auxilio", "label": "Rueda de auxilio"},
+        {"key": "matafuegos-10kg", "label": "Matafuegos x 10 kg"},
+        {"key": "bop", "label": "BOP"},
+        {"key": "stuffing-box", "label": "Stuffing box"},
+        {"key": "lubricadores", "label": "Lubricadores"},
+        {"key": "x-over-2-7-8", "label": "X over 2 7/8"},
+        {"key": "x-over-3", "label": "X over 3"},
+        {"key": "x-over-3-1-2", "label": "X over 3 1/2"},
+        {"key": "carteles", "label": "Carteles indicadores"},
+        {"key": "bandeja", "label": "Bandeja antiderrame"},
+        {"key": "manguera", "label": "Manguera para Martin Decker"},
+        {"key": "caballetes", "label": "Caballetes"},
+        {"key": "lanza", "label": "Lanza de remolque"}
+      ]
+    },
+    {
+      "key": "cajoneras", "title": "Cajoneras", "type": "checklist", "itemLabel": "Elemento",
+      "columns": [{"key": "presente", "label": "S / N", "type": "select", "options": ["S", "N"]}],
+      "rows": [
+        {"key": "calzas", "label": "Calzas"},
+        {"key": "bridas-5000", "label": "Bridas 3 1/8 x 5000 PSI"},
+        {"key": "bridas-10000", "label": "Bridas 3 1/16 x 10000"},
+        {"key": "maza", "label": "Maza bronce x 5 kg"},
+        {"key": "pinza-alambre", "label": "Pinza p/cortar alambre"},
+        {"key": "llaves-golpe", "label": "Llaves de golpe"},
+        {"key": "stilson-24", "label": "Stilson 24 pulgadas"},
+        {"key": "stilson-36", "label": "Stilson 36 pulgadas"},
+        {"key": "grasa-litio", "label": "Grasa de litio"},
+        {"key": "arrestallamas", "label": "Arrestallamas"},
+        {"key": "perros-bateria", "label": "Perros de batería"},
+        {"key": "bomba-stuffing", "label": "Bomba hid. 10K para stuffing"},
+        {"key": "roldana", "label": "Roldana de reenvío aluminio"},
+        {"key": "pulmon", "label": "Pulmón"},
+        {"key": "faja-1m", "label": "Faja x 1 mts. p/pulmón"},
+        {"key": "faja-2m", "label": "Faja x 2 mts."},
+        {"key": "clamp", "label": "Clamp"},
+        {"key": "cadena-clamp", "label": "Cadena p/clamp"},
+        {"key": "slingas", "label": "Slingas de acero p/percha"},
+        {"key": "soga", "label": "Soga"},
+        {"key": "manguera-stuffing", "label": "Manguera p/stuffing box"},
+        {"key": "manguera-bop", "label": "Manguera p/BOP"},
+        {"key": "probador-alambre", "label": "Probador de alambre"},
+        {"key": "carteles-seguridad", "label": "Carteles de seguridad"},
+        {"key": "pala", "label": "Pala"}
+      ]
+    },
+    {
+      "key": "seguridad", "title": "Elementos de seguridad", "type": "checklist", "itemLabel": "Elemento",
+      "columns": [{"key": "presente", "label": "S / N", "type": "select", "options": ["S", "N"]}],
+      "rows": [
+        {"key": "detector", "label": "Detector de gases"},
+        {"key": "manga-viento", "label": "Manga de viento"},
+        {"key": "conos", "label": "Conos de señalización"},
+        {"key": "carteleria", "label": "Cartelería"},
+        {"key": "anemometro", "label": "Anemómetro"},
+        {"key": "botiquin", "label": "Botiquín de primeros auxilios"},
+        {"key": "inmovilizacion", "label": "Elementos de inmovilización"},
+        {"key": "epp", "label": "EPP (arnés y cabo de vida)"}
+      ]
+    },
+    {
+      "key": "sala-operacion", "title": "Sala de operación", "type": "checklist", "itemLabel": "Elemento",
+      "columns": [{"key": "presente", "label": "S / N", "type": "select", "options": ["S", "N"]}],
+      "rows": [
+        {"key": "caja-herramientas", "label": "Caja con herramientas"},
+        {"key": "calibre", "label": "Calibre tipo Venier"},
+        {"key": "carpetas", "label": "Carpetas con documentación"},
+        {"key": "cadenas", "label": "Cadenas para nieve"},
+        {"key": "oring", "label": "Caja con oring (varios)"},
+        {"key": "bomba-martin", "label": "Bomba para Martin Decker"},
+        {"key": "manometros-3", "label": "Manómetros 3 KPSI"},
+        {"key": "manometros-5", "label": "Manómetros 5 KPSI"},
+        {"key": "manometros-10", "label": "Manómetros 10 KPSI"},
+        {"key": "matafuego-10", "label": "Matafuego x 10 kg"},
+        {"key": "matafuego-5", "label": "Matafuego x 5 kg"}
+      ]
+    },
+    {
+      "key": "cabina", "title": "Cabina", "type": "checklist", "itemLabel": "Elemento",
+      "columns": [{"key": "presente", "label": "S / N", "type": "select", "options": ["S", "N"]}],
+      "rows": [
+        {"key": "crique", "label": "Crique x 12 tn."},
+        {"key": "llave-rueda", "label": "Llave rueda"},
+        {"key": "palanca", "label": "Palanca p/crique"},
+        {"key": "perno", "label": "Perno de paragolpe"},
+        {"key": "balizas", "label": "Balizas reglamentarias"},
+        {"key": "matafuego-1", "label": "Matafuego x 1 kg"}
+      ]
+    },
+    {
+      "key": "control-presion", "title": "Equipo de control de presión", "type": "checklist", "itemLabel": "Elemento",
+      "columns": [{"key": "estado", "label": "B / M", "type": "select", "options": ["B", "M"]}],
+      "rows": [
+        {"key": "brida", "label": "Estado de brida"},
+        {"key": "roscas-cross-over", "label": "Estado roscas de cross over"},
+        {"key": "tapa-brida", "label": "Tapa de izaje de brida"},
+        {"key": "bop-conexiones", "label": "BOP: conexiones"},
+        {"key": "bop-tapa", "label": "BOP: tapa de izaje"},
+        {"key": "bop-prueba", "label": "BOP: prueba de apertura y cierre"},
+        {"key": "bop-inspeccion", "label": "BOP: registro de inspección mensual"},
+        {"key": "lubricadores-roscas", "label": "Lubricadores: estado de roscas"},
+        {"key": "lubricadores-abac", "label": "Lubricadores: estado de ABAC"},
+        {"key": "lubricadores-visual", "label": "Lubricadores: inspección visual"},
+        {"key": "lubricadores-registro", "label": "Lubricadores: registro de inspección"},
+        {"key": "stuffing-roscas", "label": "Stuffing box: estado de roscas"},
+        {"key": "stuffing-engrase", "label": "Stuffing box: engrase"},
+        {"key": "stuffing-visual", "label": "Stuffing box: inspección visual"},
+        {"key": "stuffing-packing-kit", "label": "Stuffing box packing kit"}
+      ]
+    },
+    {
+      "key": "documentacion", "title": "Documentación", "type": "checklist", "itemLabel": "Elemento",
+      "columns": [{"key": "presente", "label": "S / N", "type": "select", "options": ["S", "N"]}],
+      "rows": [
+        {"key": "tarjeta-verde", "label": "Tarjeta verde"},
+        {"key": "patente", "label": "Patente"},
+        {"key": "seguro", "label": "Seguro"},
+        {"key": "tarjeta-ruta", "label": "Tarjeta de ruta"},
+        {"key": "vtv", "label": "VTV"},
+        {"key": "tarjeta-autogestionable", "label": "Tarjeta autogestionable"},
+        {"key": "carnet-conducir", "label": "Carnet de conducir"},
+        {"key": "carnet-defensivo", "label": "Carnet manejo defensivo"},
+        {"key": "carnet-cargas", "label": "Carnet cargas generales"}
+      ]
+    },
+    {
+      "key": "caja-herramienta", "title": "Caja de herramienta", "type": "checklist", "itemLabel": "Elemento",
+      "columns": [{"key": "presente", "label": "S / N", "type": "select", "options": ["S", "N"]}],
+      "rows": [
+        {"key": "alicate", "label": "Alicate"},
+        {"key": "arco-sierra", "label": "Arco de sierra"},
+        {"key": "pico-loro", "label": "Pico de loro"},
+        {"key": "pinza-comun", "label": "Pinza común"},
+        {"key": "pinza-fuerza", "label": "Pinza de fuerza"},
+        {"key": "cinta-metrica", "label": "Cinta métrica"},
+        {"key": "destornillador-paleta", "label": "Destornillador paleta (chico)"},
+        {"key": "destornillador-phillips", "label": "Destornillador Phillips (chico)"},
+        {"key": "extractor-stuffing", "label": "Extractor para tornillo de stuffing"},
+        {"key": "llaves-allen", "label": "Juego de llaves Allen"},
+        {"key": "lima-chapista", "label": "Lima de chapista con marco"},
+        {"key": "lima-media-cana", "label": "Lima media caña"},
+        {"key": "lima-redonda", "label": "Lima redonda"},
+        {"key": "linterna", "label": "Linterna"},
+        {"key": "llave-1-1-16", "label": "Llave combinada 1 1/16 pulgadas"},
+        {"key": "llave-1-1-2", "label": "Llave combinada 1 1/2 pulgadas"},
+        {"key": "llave-1-3-8", "label": "Llave combinada 1 3/8 pulgadas"},
+        {"key": "llave-1-5-8", "label": "Llave combinada 1 5/8 pulgadas"},
+        {"key": "llave-1", "label": "Llave combinada 1 pulgada"},
+        {"key": "llave-1-2", "label": "Llave combinada 1/2 pulgada"},
+        {"key": "llave-11mm", "label": "Llave combinada 11 mm"},
+        {"key": "llave-13-16", "label": "Llave combinada 13/16 pulgadas"},
+        {"key": "llave-15-16", "label": "Llave combinada 15/16 pulgadas"},
+        {"key": "llave-3-4", "label": "Llave combinada 3/4 pulgada"},
+        {"key": "llave-3-8", "label": "Llave combinada 3/8 pulgada"},
+        {"key": "llave-5-8", "label": "Llave combinada 5/8 pulgada"},
+        {"key": "llave-7-16", "label": "Llave combinada 7/16 pulgadas"},
+        {"key": "llave-7-8", "label": "Llave combinada 7/8 pulgada"},
+        {"key": "llave-9-16", "label": "Llave combinada 9/16 pulgadas"},
+        {"key": "llave-francesa", "label": "Llave francesa de 12 pulgadas"},
+        {"key": "llave-gs", "label": "Llave para reparar GS"},
+        {"key": "prensa-pescadores", "label": "Prensa para reparar pescadores"}
+      ]
+    }
+  ],
+  "finalFields": [
+    {"key": "realiza", "label": "Realiza — Firma y aclaración", "type": "text", "required": false},
+    {"key": "revisa", "label": "Revisa — Firma y aclaración", "type": "text", "required": false}
+  ],
+  "notes": ["Referencias: S = Sí; N = No. En equipo de control de presión: B = Bueno; M = Malo."],
+  "observationsLabel": "Comentarios"
+}
+  </script>
+  <script src="../../js/mantenimiento-formularios.js"></script>
+</body>
+</html>

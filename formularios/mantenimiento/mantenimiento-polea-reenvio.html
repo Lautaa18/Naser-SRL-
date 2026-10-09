@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Mantenimiento de polea de reenvío | NASER SGI</title>
+  <link rel="stylesheet" href="../../css/mantenimiento-formularios.css">
+</head>
+<body>
+  <main id="maintenance-form"></main>
+  <script id="maintenance-config" type="application/json">
+  {
+    "id": "mantenimiento-polea-reenvio",
+    "title": "Mantenimiento de polea de reenvío",
+    "code": "PGSN01-F11",
+    "revision": "Rev.01 Oct.25",
+    "description": "Registro de revisión y mantenimiento de la polea de reenvío.",
+    "generalFields": [
+      {"key": "dominio", "label": "Dominio", "type": "text", "required": true},
+      {"key": "equipo", "label": "Equipo", "type": "text", "required": false},
+      {"key": "marca", "label": "Marca", "type": "text", "required": false},
+      {"key": "diametro", "label": "Diámetro", "type": "text", "required": false}
+    ],
+    "sections": [
+      {
+        "key": "mantenimientos",
+        "title": "Registro de mantenimiento",
+        "type": "log",
+        "initialRows": 1,
+        "columns": [
+          {"key": "fecha", "label": "Fecha", "type": "date", "required": true},
+          {"key": "chequeo_visual", "label": "Realizar chequeo visual", "type": "text"},
+          {"key": "lubricacion", "label": "Revisar lubricación", "type": "text"},
+          {"key": "espigas_ejes", "label": "Revisar espigas de ejes", "type": "text"},
+          {"key": "eje_central", "label": "Ajuste de eje central", "type": "text"},
+          {"key": "grillete", "label": "Controlar estado de grillete", "type": "text"},
+          {"key": "guiador", "label": "Revisar estado de guiador", "type": "text"},
+          {"key": "observaciones", "label": "Observaciones", "type": "textarea"},
+          {"key": "firma_aclaracion", "label": "Firma y aclaración", "type": "text"}
+        ]
+      }
+    ],
+    "finalFields": [],
+    "notes": [],
+    "observationsLabel": "Observaciones generales"
+  }
+  </script>
+  <script src="../../js/mantenimiento-formularios.js"></script>
+</body>
+</html>

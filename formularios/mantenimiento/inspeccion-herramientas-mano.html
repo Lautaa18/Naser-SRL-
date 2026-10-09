@@ -1,0 +1,376 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Inspección de herramientas de mano | NASER SGI</title>
+<link rel="stylesheet" href="../../css/mantenimiento-formularios.css">
+</head>
+<body>
+<main id="maintenance-form"></main>
+<script id="maintenance-config" type="application/json">
+{
+  "id": "inspeccion-herramientas-mano",
+  "title": "Inspección de herramientas de mano",
+  "code": "POSN01-F13",
+  "revision": "Rev.00 Sep-25",
+  "description": "Registro de inspección de herramientas manuales y sus condiciones.",
+  "generalFields": [
+    {
+      "key": "inspecciono",
+      "label": "Inspeccionó (nombre y apellido)",
+      "type": "text",
+      "required": true
+    },
+    {
+      "key": "firmaInspector",
+      "label": "Firma y aclaración de quien inspeccionó",
+      "type": "text",
+      "required": true
+    },
+    {
+      "key": "equipo",
+      "label": "Equipo SL",
+      "type": "text",
+      "required": true
+    },
+    {
+      "key": "fecha",
+      "label": "Fecha de inspección",
+      "type": "date",
+      "required": true
+    },
+    {
+      "key": "supervisor",
+      "label": "Supervisor (nombre y apellido)",
+      "type": "text",
+      "required": true
+    },
+    {
+      "key": "firmaSupervisor",
+      "label": "Firma y aclaración del supervisor",
+      "type": "text",
+      "required": true
+    }
+  ],
+  "sections": [
+    {
+      "key": "herramientas",
+      "title": "Listado de herramientas manuales",
+      "type": "checklist",
+      "itemLabel": "Herramienta",
+      "rows": [
+        {
+          "key": "herramienta1",
+          "label": "Llave 7/16"
+        },
+        {
+          "key": "herramienta2",
+          "label": "Llave 1/2"
+        },
+        {
+          "key": "herramienta3",
+          "label": "Llave 9/16"
+        },
+        {
+          "key": "herramienta4",
+          "label": "Llave 5/8"
+        },
+        {
+          "key": "herramienta5",
+          "label": "Llave 11/16"
+        },
+        {
+          "key": "herramienta6",
+          "label": "Llave 13/16"
+        },
+        {
+          "key": "herramienta7",
+          "label": "Llave 7/8"
+        },
+        {
+          "key": "herramienta8",
+          "label": "Llave 3/4"
+        },
+        {
+          "key": "herramienta9",
+          "label": "Llave 15/16"
+        },
+        {
+          "key": "herramienta10",
+          "label": "Llave 11 mm"
+        },
+        {
+          "key": "herramienta11",
+          "label": "Llave 13 mm"
+        },
+        {
+          "key": "herramienta12",
+          "label": "Llave 14 mm"
+        },
+        {
+          "key": "herramienta13",
+          "label": "Llave 16 mm"
+        },
+        {
+          "key": "herramienta14",
+          "label": "Llave 17 mm"
+        },
+        {
+          "key": "herramienta15",
+          "label": "Llave 19 mm"
+        },
+        {
+          "key": "herramienta16",
+          "label": "Llave 20 mm"
+        },
+        {
+          "key": "herramienta17",
+          "label": "Llave 22 mm"
+        },
+        {
+          "key": "herramienta18",
+          "label": "Francesa 12\""
+        },
+        {
+          "key": "herramienta19",
+          "label": "Francesa 8\""
+        },
+        {
+          "key": "herramienta20",
+          "label": "Destornillador paleta"
+        },
+        {
+          "key": "herramienta21",
+          "label": "Destornillador Philips"
+        },
+        {
+          "key": "herramienta22",
+          "label": "Pinza de fuerza"
+        },
+        {
+          "key": "herramienta23",
+          "label": "Alicate"
+        },
+        {
+          "key": "herramienta24",
+          "label": "Pinza pico de loro"
+        },
+        {
+          "key": "herramienta25",
+          "label": "Pinza"
+        },
+        {
+          "key": "herramienta26",
+          "label": "Stilson 10\""
+        },
+        {
+          "key": "herramienta27",
+          "label": "Allen mm"
+        },
+        {
+          "key": "herramienta28",
+          "label": "Allen pulgadas"
+        },
+        {
+          "key": "herramienta29",
+          "label": "Arco de sierra"
+        },
+        {
+          "key": "herramienta30",
+          "label": "Lima plana"
+        },
+        {
+          "key": "herramienta31",
+          "label": "Lima triangular"
+        },
+        {
+          "key": "herramienta32",
+          "label": "Lima media caña"
+        },
+        {
+          "key": "herramienta33",
+          "label": "Lima redonda"
+        },
+        {
+          "key": "herramienta34",
+          "label": "Punto de 5, 3, 6 mm"
+        },
+        {
+          "key": "herramienta35",
+          "label": "Martillo bolita"
+        },
+        {
+          "key": "herramienta36",
+          "label": "Cepillo de acero"
+        }
+      ],
+      "columns": [
+        {
+          "key": "limpia",
+          "label": "Limpia",
+          "type": "select",
+          "options": [
+            "Bueno",
+            "Malo",
+            "N/A"
+          ],
+          "required": true
+        },
+        {
+          "key": "corrosion",
+          "label": "Corrosión",
+          "type": "select",
+          "options": [
+            "Bueno",
+            "Malo",
+            "N/A"
+          ],
+          "required": true
+        },
+        {
+          "key": "torceduras",
+          "label": "Torceduras, alabeadas. Ausencia de redondeos",
+          "type": "select",
+          "options": [
+            "Bueno",
+            "Malo",
+            "N/A"
+          ],
+          "required": true
+        },
+        {
+          "key": "aislamiento",
+          "label": "Aislamiento",
+          "type": "select",
+          "options": [
+            "Bueno",
+            "Malo",
+            "N/A"
+          ],
+          "required": true
+        },
+        {
+          "key": "pesoInserto",
+          "label": "Peso inserto (ej. maza, martillos)",
+          "type": "select",
+          "options": [
+            "Bueno",
+            "Malo",
+            "N/A"
+          ],
+          "required": true
+        },
+        {
+          "key": "rebabas",
+          "label": "Libre de rebabas",
+          "type": "select",
+          "options": [
+            "Bueno",
+            "Malo",
+            "N/A"
+          ],
+          "required": true
+        },
+        {
+          "key": "grietas",
+          "label": "Ausencia de grietas",
+          "type": "select",
+          "options": [
+            "Bueno",
+            "Malo",
+            "N/A"
+          ],
+          "required": true
+        },
+        {
+          "key": "mango",
+          "label": "Longitud del mango adecuado",
+          "type": "select",
+          "options": [
+            "Bueno",
+            "Malo",
+            "N/A"
+          ],
+          "required": true
+        },
+        {
+          "key": "tension",
+          "label": "Tensión correcta",
+          "type": "select",
+          "options": [
+            "Bueno",
+            "Malo",
+            "N/A"
+          ],
+          "required": true
+        },
+        {
+          "key": "dientes",
+          "label": "Dientes afilados",
+          "type": "select",
+          "options": [
+            "Bueno",
+            "Malo",
+            "N/A"
+          ],
+          "required": true
+        },
+        {
+          "key": "filo",
+          "label": "Filo apropiado",
+          "type": "select",
+          "options": [
+            "Bueno",
+            "Malo",
+            "N/A"
+          ],
+          "required": true
+        },
+        {
+          "key": "proteccionFilos",
+          "label": "Protección de filos",
+          "type": "select",
+          "options": [
+            "Bueno",
+            "Malo",
+            "N/A"
+          ],
+          "required": true
+        },
+        {
+          "key": "juego",
+          "label": "Ausencia de juego excesivo",
+          "type": "select",
+          "options": [
+            "Bueno",
+            "Malo",
+            "N/A"
+          ],
+          "required": true
+        },
+        {
+          "key": "uso",
+          "label": "Sin evidencia de ser utilizada para fines para el que no fue diseñada",
+          "type": "select",
+          "options": [
+            "Bueno",
+            "Malo",
+            "N/A"
+          ],
+          "required": true
+        }
+      ]
+    }
+  ],
+  "finalFields": [],
+  "notes": [
+    "Referencias: Bueno = ✓; Malo = X; No aplica = N/A.",
+    "Con una condición de X no se deberá utilizar esa herramienta."
+  ],
+  "observationsLabel": "Observaciones"
+}
+</script>
+<script src="../../js/mantenimiento-formularios.js"></script>
+</body>
+</html>

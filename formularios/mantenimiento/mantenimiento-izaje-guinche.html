@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Mantenimiento de equipo de izaje y guinche | NASER SGI</title>
+  <link rel="stylesheet" href="../../css/mantenimiento-formularios.css">
+</head>
+<body>
+  <main id="maintenance-form"></main>
+  <script id="maintenance-config" type="application/json">
+  {
+    "id": "mantenimiento-izaje-guinche",
+    "title": "Mantenimiento de equipo de izaje y guinche",
+    "code": "PGSN01-F10",
+    "revision": "Rev.02 Oct.25",
+    "description": "Registro de controles y engrase del equipo de izaje y guinche.",
+    "generalFields": [
+      {"key": "dominio", "label": "Dominio", "type": "text", "required": true},
+      {"key": "pluma", "label": "Pluma", "type": "text", "required": false},
+      {"key": "numero_interno", "label": "N° interno", "type": "text", "required": false},
+      {"key": "marca", "label": "Marca", "type": "text", "required": false},
+      {"key": "modelo", "label": "Modelo", "type": "text", "required": false}
+    ],
+    "sections": [
+      {
+        "key": "mantenimientos",
+        "title": "Registro de mantenimiento",
+        "type": "log",
+        "initialRows": 1,
+        "columns": [
+          {"key": "fecha", "label": "Fecha", "type": "date", "required": true},
+          {"key": "cable_izaje", "label": "Control de cable de izaje", "type": "text"},
+          {"key": "tensores_vientos", "label": "Control de tensores y vientos", "type": "text"},
+          {"key": "polea", "label": "Control de polea", "type": "text"},
+          {"key": "pernos_seguros", "label": "Control de pernos y seguros", "type": "text"},
+          {"key": "engrase_pluma", "label": "Engrase de pluma", "type": "text"},
+          {"key": "engrase_cardan", "label": "Engrase cardán corto", "type": "text"},
+          {"key": "engrase_guinche", "label": "Engrase de guinche", "type": "text"},
+          {"key": "engrase_devanador", "label": "Engrase devanador", "type": "text"},
+          {"key": "observaciones", "label": "Observaciones", "type": "textarea"},
+          {"key": "firma_aclaracion", "label": "Firma y aclaración", "type": "text"}
+        ]
+      }
+    ],
+    "finalFields": [],
+    "notes": [],
+    "observationsLabel": "Observaciones generales"
+  }
+  </script>
+  <script src="../../js/mantenimiento-formularios.js"></script>
+</body>
+</html>

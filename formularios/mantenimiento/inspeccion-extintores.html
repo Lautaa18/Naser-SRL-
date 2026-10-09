@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Inspección de extintores | NASER SGI</title>
+<link rel="stylesheet" href="../../css/mantenimiento-formularios.css">
+</head>
+<body>
+<main id="maintenance-form"></main>
+<script id="maintenance-config" type="application/json">
+{
+  "id": "inspeccion-extintores",
+  "title": "Inspección de extintores",
+  "code": "POSN01-F14",
+  "revision": "Rev.00 Sep-25",
+  "description": "Registro de inspección de hasta seis extintores por equipo.",
+  "generalFields": [
+    {
+      "key": "fecha",
+      "label": "Fecha de inspección",
+      "type": "date",
+      "required": true
+    },
+    {
+      "key": "equipo",
+      "label": "Equipos SL",
+      "type": "text",
+      "required": true
+    },
+    {
+      "key": "operador",
+      "label": "Operador",
+      "type": "text",
+      "required": true
+    },
+    {
+      "key": "extintor1",
+      "label": "Extintor 1 · N°",
+      "type": "text",
+      "required": false
+    },
+    {
+      "key": "extintor2",
+      "label": "Extintor 2 · N°",
+      "type": "text",
+      "required": false
+    },
+    {
+      "key": "extintor3",
+      "label": "Extintor 3 · N°",
+      "type": "text",
+      "required": false
+    },
+    {
+      "key": "extintor4",
+      "label": "Extintor 4 · N°",
+      "type": "text",
+      "required": false
+    },
+    {
+      "key": "extintor5",
+      "label": "Extintor 5 · N°",
+      "type": "text",
+      "required": false
+    },
+    {
+      "key": "extintor6",
+      "label": "Extintor 6 · N°",
+      "type": "text",
+      "required": false
+    }
+  ],
+  "sections": [
+    {
+      "key": "extintores",
+      "title": "Verificación de extintores",
+      "type": "checklist",
+      "itemLabel": "Verificar / Cómo se hace",
+      "rows": [
+        {
+          "key": "precinto",
+          "label": "Precinto de seguridad",
+          "detail": "Pasador metálico y precinto plástico de seguridad."
+        },
+        {
+          "key": "manometro",
+          "label": "Manómetro",
+          "detail": "Debe marcar en la zona verde."
+        },
+        {
+          "key": "identificacion",
+          "label": "Chapa de identificación",
+          "detail": "Es visible los datos como: N° de identificación, capacidad y agente extintor."
+        },
+        {
+          "key": "pruebaHidraulica",
+          "label": "Prueba hidráulica",
+          "detail": "Se realiza cada 5 años desde la fecha de fabricación."
+        },
+        {
+          "key": "vencimiento",
+          "label": "Fecha de vencimiento de carga",
+          "detail": "Texto del formato de referencia: «Está vencido»."
+        },
+        {
+          "key": "manguera",
+          "label": "Manguera de descarga",
+          "detail": "Sin rotura."
+        },
+        {
+          "key": "cilindro",
+          "label": "Cilindro",
+          "detail": "Sin golpes, deformaciones."
+        }
+      ],
+      "columns": [
+        {
+          "key": "extintor1",
+          "label": "Extintor 1",
+          "type": "select",
+          "options": [
+            "Sí cumple",
+            "No cumple"
+          ],
+          "required": false
+        },
+        {
+          "key": "extintor2",
+          "label": "Extintor 2",
+          "type": "select",
+          "options": [
+            "Sí cumple",
+            "No cumple"
+          ],
+          "required": false
+        },
+        {
+          "key": "extintor3",
+          "label": "Extintor 3",
+          "type": "select",
+          "options": [
+            "Sí cumple",
+            "No cumple"
+          ],
+          "required": false
+        },
+        {
+          "key": "extintor4",
+          "label": "Extintor 4",
+          "type": "select",
+          "options": [
+            "Sí cumple",
+            "No cumple"
+          ],
+          "required": false
+        },
+        {
+          "key": "extintor5",
+          "label": "Extintor 5",
+          "type": "select",
+          "options": [
+            "Sí cumple",
+            "No cumple"
+          ],
+          "required": false
+        },
+        {
+          "key": "extintor6",
+          "label": "Extintor 6",
+          "type": "select",
+          "options": [
+            "Sí cumple",
+            "No cumple"
+          ],
+          "required": false
+        }
+      ]
+    }
+  ],
+  "finalFields": [
+    {
+      "key": "firmaOperador",
+      "label": "Firma y aclaración del operador",
+      "type": "text",
+      "required": true
+    }
+  ],
+  "notes": [
+    "Terminología a utilizar: Sí cumple = ✓; No cumple = X.",
+    "Criterios transcritos del formato de referencia."
+  ],
+  "observationsLabel": "Observaciones"
+}
+</script>
+<script src="../../js/mantenimiento-formularios.js"></script>
+</body>
+</html>

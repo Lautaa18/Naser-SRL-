@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Control de apertura y cierre de BOP | NASER SGI</title>
+  <link rel="stylesheet" href="../../css/mantenimiento-formularios.css">
+</head>
+<body>
+  <main id="maintenance-form"></main>
+  <script id="maintenance-config" type="application/json">
+  {
+    "id": "control-apertura-cierre-bop",
+    "title": "Control de apertura y cierre de BOP",
+    "code": "PGSN01-F12",
+    "revision": "Rev.01 Oct.25",
+    "description": "Registro de cierre y apertura de BOP por fecha y pozo.",
+    "generalFields": [
+      {"key": "equipo", "label": "Equipo", "type": "text", "required": true},
+      {"key": "dominio", "label": "Dominio", "type": "text", "required": false},
+      {"key": "marca", "label": "Marca", "type": "text", "required": false},
+      {"key": "diametro", "label": "Diámetro", "type": "text", "required": false},
+      {"key": "numero_serie", "label": "N° de serie", "type": "text", "required": false}
+    ],
+    "sections": [
+      {
+        "key": "controles",
+        "title": "Registro de apertura y cierre",
+        "type": "log",
+        "initialRows": 1,
+        "columns": [
+          {"key": "fecha", "label": "Fecha", "type": "date", "required": true},
+          {"key": "pozo", "label": "Pozo", "type": "text"},
+          {"key": "presion_bdp", "label": "Presión BDP", "type": "text"},
+          {"key": "cierre_hidraulico", "label": "Cierre de BOP · Cierre hidráulico", "type": "text"},
+          {"key": "cierre_manual", "label": "Cierre de BOP · Cierre manual (N° de vueltas)", "type": "number", "step": "any"},
+          {"key": "cierre_ecualizador", "label": "Cierre de BOP · Cierre de ecualizador", "type": "text"},
+          {"key": "descompresion_lubricador", "label": "Cierre de BOP · Descompresión de lubricador", "type": "text"},
+          {"key": "hermeticidad", "label": "Cierre de BOP · Chequeo de hermeticidad (10 min)", "type": "text"},
+          {"key": "apertura_ecualizador", "label": "Apertura de BOP · Apertura de ecualizador", "type": "text"},
+          {"key": "apertura_manual", "label": "Apertura de BOP · Apertura manual (N° de vueltas)", "type": "number", "step": "any"},
+          {"key": "apertura_hidraulica", "label": "Apertura de BOP · Apertura hidráulica", "type": "text"},
+          {"key": "observaciones", "label": "Observaciones", "type": "textarea"},
+          {"key": "firma", "label": "Firma", "type": "text"},
+          {"key": "aclaracion", "label": "Aclaración", "type": "text"}
+        ]
+      }
+    ],
+    "finalFields": [],
+    "notes": [],
+    "observationsLabel": "Observaciones generales"
+  }
+  </script>
+  <script src="../../js/mantenimiento-formularios.js"></script>
+</body>
+</html>

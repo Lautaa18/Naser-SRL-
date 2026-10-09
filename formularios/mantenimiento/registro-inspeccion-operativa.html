@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Registro de inspección operativa | NASER SGI</title>
+  <link rel="stylesheet" href="../../css/mantenimiento-formularios.css">
+</head>
+<body>
+  <main id="maintenance-form"></main>
+  <script id="maintenance-config" type="application/json">
+{
+  "id": "registro-inspeccion-operativa",
+  "title": "Registro de inspección operativa",
+  "code": "POSN01-F4",
+  "revision": "Rev.00",
+  "description": "Realizar antes y después de cada trabajo.",
+  "generalFields": [
+    {"key": "equipo", "label": "Equipo N°", "type": "text", "required": true},
+    {"key": "patente", "label": "Patente", "type": "text", "required": true},
+    {"key": "locacion", "label": "Locación", "type": "text", "required": true},
+    {"key": "fecha-inicio", "label": "Fecha de inicio de operación", "type": "date", "required": true},
+    {"key": "fecha-fin", "label": "Fecha de fin de operación", "type": "date", "required": false}
+  ],
+  "sections": [
+    {
+      "key": "seguridad", "title": "Seguridad", "type": "checklist", "itemLabel": "Verificación",
+      "columns": [
+        {"key": "antes", "label": "Antes", "type": "select", "options": ["OK", "F", "N/A"]},
+        {"key": "despues", "label": "Después", "type": "select", "options": ["OK", "F", "N/A"]}
+      ],
+      "rows": [
+        {"key": "bloqueo", "label": "Bloquear y etiquetar la unidad."},
+        {"key": "minuta", "label": "Realizar minuta de seguridad para identificar los riesgos."},
+        {"key": "epp", "label": "Colocarse los EPP adecuados antes de iniciar a trabajar."}
+      ]
+    },
+    {
+      "key": "unidad-potencia", "title": "Unidad de potencia", "type": "checklist", "itemLabel": "Verificación",
+      "columns": [
+        {"key": "antes", "label": "Antes", "type": "select", "options": ["OK", "F", "N/A"]},
+        {"key": "despues", "label": "Después", "type": "select", "options": ["OK", "F", "N/A"]}
+      ],
+      "rows": [
+        {"key": "horas", "label": "Verificar horas de trabajo."},
+        {"key": "combustible", "label": "Registrar nivel de tanque de combustible, drenar filtros separadores y tanques."},
+        {"key": "refrigerante", "label": "Revisar radiador, nivel refrigerante. Agregar si necesita. Registrar cantidad."},
+        {"key": "aceite-motor", "label": "Revisar condición y nivel de aceite de motor. Agregar si necesita. Registrar cantidad."},
+        {"key": "baterias", "label": "Revisar condición de baterías, master y cableado. Ajuste de terminales."},
+        {"key": "correas", "label": "Revisar condición y tensión de correas. Ajustar si necesita. Engrasar poleas."},
+        {"key": "apagado-emergencia", "label": "Revisar posición de perilla de apagado de emergencia de motor."},
+        {"key": "aceite-hidraulico", "label": "Revisar condición y nivel de aceite hidráulico. Agregar si necesita. Registrar cantidad."},
+        {"key": "guardas", "label": "Revisar condición de guardas, picaportes y soportes."}
+      ]
+    },
+    {
+      "key": "unidad-completa", "title": "Unidad completa", "type": "checklist", "itemLabel": "Verificación",
+      "columns": [
+        {"key": "antes", "label": "Antes", "type": "select", "options": ["OK", "F", "N/A"]},
+        {"key": "despues", "label": "Después", "type": "select", "options": ["OK", "F", "N/A"]}
+      ],
+      "rows": [
+        {"key": "luces", "label": "Revisar sistema de luces de trabajo del equipo."},
+        {"key": "estructuras", "label": "Revisar condición de escaleras, plataformas, soportes, guardas, patines y polines."},
+        {"key": "cables", "label": "Revisar condición de cables, terminales y puesta a tierra."},
+        {"key": "neumaticos", "label": "Revisar condición y presión de neumáticos (115 psi), ajuste de tuercas."},
+        {"key": "limpieza", "label": "Revisar y realizar limpieza de la unidad completa."}
+      ]
+    },
+    {
+      "key": "certificaciones", "title": "Certificaciones", "type": "checklist", "itemLabel": "Verificación",
+      "columns": [
+        {"key": "antes", "label": "Antes", "type": "select", "options": ["OK", "F", "N/A"]},
+        {"key": "despues", "label": "Después", "type": "select", "options": ["OK", "F", "N/A"]}
+      ],
+      "rows": [
+        {"key": "patente-trailer", "label": "Revisar documentación de patente y tráiler."},
+        {"key": "extintor", "label": "Revisar vigencia y condición de extintor y soporte."},
+        {"key": "mantenimiento", "label": "Revisar vigencia de servicio de mantenimiento."},
+        {"key": "seguro-vtv-ruta", "label": "Revisar documentación de seguro, VTV y RUTA."}
+      ]
+    },
+    {
+      "key": "declaracion", "title": "Certificación de la inspección", "type": "checklist", "itemLabel": "Declaración",
+      "columns": [
+        {"key": "antes", "label": "Antes", "type": "select", "options": ["Sí", "No"]},
+        {"key": "despues", "label": "Después", "type": "select", "options": ["Sí", "No"]}
+      ],
+      "rows": [{"key": "certifico", "label": "Certifico que el equipo lo revisé y cumple con los criterios de operación."}]
+    }
+  ],
+  "finalFields": [
+    {"key": "firma-antes", "label": "Firma y aclaración — Antes", "type": "text", "required": false},
+    {"key": "firma-despues", "label": "Firma y aclaración — Después", "type": "text", "required": false},
+    {"key": "realizado-por", "label": "Realizado por", "type": "text", "required": false},
+    {"key": "cargo-realizado", "label": "Cargo de quien realiza", "type": "text", "required": false},
+    {"key": "dni-realizado", "label": "DNI de quien realiza", "type": "text", "required": false},
+    {"key": "aprobado-por", "label": "Aprobado por", "type": "text", "required": false},
+    {"key": "cargo-aprobado", "label": "Cargo de quien aprueba", "type": "text", "required": false},
+    {"key": "dni-aprobado", "label": "DNI de quien aprueba", "type": "text", "required": false}
+  ],
+  "notes": ["Referencias: OK = Correcto; F = Falla; N/A = No aplica."],
+  "observationsLabel": "Observaciones y cantidades registradas"
+}
+  </script>
+  <script src="../../js/mantenimiento-formularios.js"></script>
+</body>
+</html>

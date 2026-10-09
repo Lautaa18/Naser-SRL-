@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Control de elementos críticos de operación | NASER SGI</title>
+  <link rel="stylesheet" href="../../css/mantenimiento-formularios.css">
+</head>
+<body>
+  <main id="maintenance-form"></main>
+  <script id="maintenance-config" type="application/json">
+{
+  "id": "inspeccion-equipo-presion",
+  "title": "Control de elementos críticos de operación",
+  "code": "POSN01-F6",
+  "revision": "",
+  "description": "Inspección y funcionamiento del equipo de control de presión.",
+  "generalFields": [
+    {"key": "fecha", "label": "Fecha", "type": "date", "required": true},
+    {"key": "equipo", "label": "Equipo", "type": "text", "required": true},
+    {"key": "ubicacion", "label": "Ubicación", "type": "text", "required": true},
+    {"key": "operador", "label": "Operador", "type": "text", "required": true},
+    {"key": "ayudante", "label": "Ayudante", "type": "text", "required": false},
+    {"key": "supervisor", "label": "Supervisor", "type": "text", "required": false}
+  ],
+  "sections": [
+    {
+      "key": "elementos", "title": "Elementos", "type": "checklist", "itemLabel": "Elemento",
+      "columns": [{"key": "estado", "label": "Estado", "type": "select", "options": ["Correcto", "Incorrecto"]}],
+      "rows": [
+        {"key": "riesgos-epp", "label": "Antes de comenzar el control realizar análisis de riesgos. Utilizar todos los EPP correspondientes a los riesgos de la tarea."},
+        {"key": "limpieza", "label": "Limpiar todos los elementos con agua a presión / detergente industrial."},
+        {"key": "roscas-uniones-poleas", "label": "Revisar que las roscas, uniones y poleas no presenten signos de desgaste ni rotura. En caso contrario reemplazar elementos."},
+        {"key": "interior", "label": "Limpiar y enjuagar el equipo de control de presión en su interior. Inspeccionar la presencia de rebabas, bordes afilados, marcas de alambre y signos de corrosión. Reparar si es necesario."},
+        {"key": "desarme", "label": "Desarmar todos los componentes que correspondan y revisar considerando los criterios anteriores."},
+        {"key": "almacenamiento", "label": "Al desmontar componentes metálicos, asegurarse de almacenarlos juntos, de forma limpia y ordenada."},
+        {"key": "goma", "label": "Revisar los signos de uso y desgaste en componentes de goma. Reemplazar si es necesario."},
+        {"key": "rebabas", "label": "Eliminar rebabas utilizando tela esmeril o elemento de pulido no metálico."},
+        {"key": "residuos", "label": "Asegurarse de eliminar cualquier residuo de los componentes antes del montaje."},
+        {"key": "adecuacion", "label": "Revisar junto al responsable de mantenimiento que todos los componentes sean adecuados para su propósito."},
+        {"key": "reemplazos", "label": "Registrar todos los elementos reemplazados en POSN01-F3, teniendo en cuenta su medida, número de serie y especificación."},
+        {"key": "prensa", "label": "Verificar el estado de los prensa de bronce superior e inferior. Reemplazar si está desgastado o sobredimensionado y registrar en POSN01-F3."},
+        {"key": "juntas-piston", "label": "Comprobar si las juntas están dañadas y si el pistón de la BOP está desgastado o tiene libertad de movimiento vertical. Reemplazar si se requiere y registrar."},
+        {"key": "no-conforme", "label": "Si el equipo no pasa la inspección visual, o las piezas para reemplazar no están disponibles, registrar en POSN01-F3 y etiquetar en rojo con ‘No conforme’. Comunique a supervisión."},
+        {"key": "lubricante", "label": "Aplicar una ligera capa de lubricante a todas las superficies."},
+        {"key": "ensamblaje", "label": "Vuelva a ensamblar de forma correcta, revisando la hoja técnica del equipo."},
+        {"key": "ajuste", "label": "Ajustar todos los componentes siguiendo los procedimientos de trabajo."},
+        {"key": "orden", "label": "Asegurar un correcto orden y presentación durante el armado."}
+      ]
+    },
+    {
+      "key": "funcionamiento", "title": "Funcionamiento", "type": "checklist", "itemLabel": "Verificación",
+      "columns": [{"key": "estado", "label": "Estado", "type": "select", "options": ["Correcto", "Incorrecto"]}],
+      "rows": [
+        {"key": "alineacion-polea", "label": "Verificar la alineación de la polea y los cojinetes para ver si gira libremente."},
+        {"key": "baston-polea", "label": "Verificar que el bastón de la polea tenga movimiento giratorio."},
+        {"key": "manguera", "label": "Conectar la manguera hidráulica de la bomba manual a la tuerca del prensa."},
+        {"key": "presion-hidraulica", "label": "Aplicar presión hidráulica y confirmar el movimiento del pistón en la tuerca del prensa."},
+        {"key": "purga", "label": "Purgar toda la presión y llevar el resorte del pistón a posición neutra."},
+        {"key": "grasa", "label": "Si corresponde, inyectar grasa a través del colector del stuffing box, asegurándose que la línea de control esté en posición correcta."},
+        {"key": "valvulas", "label": "Asegurar que las válvulas aguja puedan abrir y cerrarse completamente."},
+        {"key": "ecualizador", "label": "Asegurar que el ecualizador pueda abrir y cerrar completamente."},
+        {"key": "prueba-presion", "label": "Después del reensamblaje, realizar una prueba de presión."}
+      ]
+    }
+  ],
+  "finalFields": [
+    {"key": "realizo", "label": "Realizó — Firma y aclaración", "type": "text", "required": false},
+    {"key": "controlo", "label": "Controló — Firma y aclaración", "type": "text", "required": false}
+  ],
+  "notes": [],
+  "observationsLabel": "Observaciones"
+}
+  </script>
+  <script src="../../js/mantenimiento-formularios.js"></script>
+</body>
+</html>

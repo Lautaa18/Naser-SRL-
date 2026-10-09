@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Control de lavaojos | NASER SGI</title>
+  <link rel="stylesheet" href="../../css/mantenimiento-formularios.css">
+</head>
+<body>
+  <main id="maintenance-form"></main>
+  <script id="maintenance-config" type="application/json">
+  {
+    "id": "control-lavaojos",
+    "title": "Control de lavaojos",
+    "code": "POSN01-F9",
+    "revision": "Rev.01 Oct25",
+    "description": "Registro de limpieza y cambio de agua de los equipos lavaojos.",
+    "generalFields": [
+      {"key": "equipo", "label": "Equipo", "type": "text", "required": true},
+      {"key": "operador", "label": "Operador", "type": "text", "required": false}
+    ],
+    "sections": [
+      {
+        "key": "controles",
+        "title": "Control de lavaojos",
+        "type": "log",
+        "initialRows": 1,
+        "columns": [
+          {"key": "fecha", "label": "Fecha", "type": "date", "required": true},
+          {"key": "limpieza", "label": "Limpieza (Sí/No)", "type": "select", "options": ["Sí", "No"]},
+          {"key": "cambio_agua", "label": "Cambio de agua (Sí/No)", "type": "select", "options": ["Sí", "No"]},
+          {"key": "observaciones", "label": "Observaciones", "type": "textarea"},
+          {"key": "firma_aclaracion", "label": "Firma y aclaración", "type": "text"}
+        ]
+      }
+    ],
+    "finalFields": [],
+    "notes": [
+      "NOTA: Es importante realizar el control, limpieza y cambio de agua de los equipos lavaojos de forma periódica, ya que en caso de ser necesario su uso, deben encontrarse limpios. El agua a temperatura ambiente favorece el desarrollo de microorganismos en el lavaojos, pudiendo ocasionar infecciones si se coloca en heridas. De ser necesario, utilice solución fisiológica (verificar que el envase se encuentre cerrado) presente en el botiquín de primeros auxilios para el lavado de ojos.",
+      "No introduzca ninguna sustancia en los lavaojos. No utilice agua sucia o estancada para el lavado de ojos."
+    ],
+    "observationsLabel": "Observaciones generales"
+  }
+  </script>
+  <script src="../../js/mantenimiento-formularios.js"></script>
+</body>
+</html>

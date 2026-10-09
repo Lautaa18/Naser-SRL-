@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Control de elementos de izaje | NASER SGI</title>
+<link rel="stylesheet" href="../../css/mantenimiento-formularios.css">
+</head>
+<body>
+<main id="maintenance-form"></main>
+<script id="maintenance-config" type="application/json">
+{
+  "id": "control-elementos-izaje",
+  "title": "Control de elementos de izaje",
+  "code": "POSN01-F17",
+  "revision": "Rev.02 Sep.2026",
+  "description": "Control de pluma de izaje, eslinga textil y gancho / grillete.",
+  "generalFields": [
+    {
+      "key": "fecha",
+      "label": "Fecha",
+      "type": "date",
+      "required": true
+    },
+    {
+      "key": "ubicacion",
+      "label": "Ubicación",
+      "type": "text",
+      "required": true
+    },
+    {
+      "key": "equipo",
+      "label": "Equipo",
+      "type": "text",
+      "required": true
+    },
+    {
+      "key": "numeroEquipo",
+      "label": "N° de equipo",
+      "type": "text",
+      "required": true
+    },
+    {
+      "key": "operador",
+      "label": "Operador",
+      "type": "text",
+      "required": true
+    },
+    {
+      "key": "version",
+      "label": "Versión",
+      "type": "text",
+      "required": true
+    }
+  ],
+  "sections": [
+    {
+      "key": "pluma",
+      "title": "Pluma de izaje",
+      "type": "checklist",
+      "itemLabel": "Ítem / Criterio de aceptación",
+      "rows": [
+        {
+          "key": "estructura",
+          "label": "Estructura",
+          "detail": "Sin fisuras, deformaciones o corrosión."
+        },
+        {
+          "key": "cable",
+          "label": "Cable",
+          "detail": "Sin hebras rotas, aplastamientos o desgaste."
+        },
+        {
+          "key": "poleas",
+          "label": "Poleas",
+          "detail": "Correcto funcionamiento y sin desgaste excesivo."
+        },
+        {
+          "key": "vientos",
+          "label": "Vientos",
+          "detail": "Anclajes firmes y tensión adecuada."
+        },
+        {
+          "key": "estabilizadores",
+          "label": "Estabilizadores",
+          "detail": "Correcta extensión y funcionamiento."
+        },
+        {
+          "key": "luces",
+          "label": "Luces",
+          "detail": "Luces operativas y visibles."
+        }
+      ],
+      "columns": [
+        {
+          "key": "resultado",
+          "label": "Resultado",
+          "type": "select",
+          "options": [
+            "Cumple",
+            "No cumple",
+            "N/A"
+          ],
+          "required": true
+        }
+      ],
+      "footerFields": [
+        {
+          "key": "resultadoFinal",
+          "label": "Resultado final de la pluma de izaje",
+          "type": "select",
+          "options": [
+            "Aceptada",
+            "Rechazada"
+          ],
+          "required": true
+        }
+      ]
+    },
+    {
+      "key": "eslinga",
+      "title": "Eslinga textil",
+      "type": "checklist",
+      "itemLabel": "Ítem / Criterio de aceptación",
+      "rows": [
+        {
+          "key": "identificacion",
+          "label": "Identificación",
+          "detail": "Contar con N° en su etiqueta o precinto."
+        },
+        {
+          "key": "capacidad",
+          "label": "Capacidad",
+          "detail": "Contar con información de carga máxima admisible."
+        },
+        {
+          "key": "limpieza",
+          "label": "Limpieza",
+          "detail": "Libre de hidrocarburos y productos químicos."
+        },
+        {
+          "key": "trazabilidad",
+          "label": "Trazabilidad",
+          "detail": "Debe contar con fecha de inicio de servicio."
+        },
+        {
+          "key": "estructura",
+          "label": "Estado estructural",
+          "detail": "No se deben observar roturas o puntos descosidos."
+        },
+        {
+          "key": "continuidad",
+          "label": "Continuidad",
+          "detail": "Libre de signos de estiramientos."
+        }
+      ],
+      "columns": [
+        {
+          "key": "resultado",
+          "label": "Resultado",
+          "type": "select",
+          "options": [
+            "Cumple",
+            "No cumple",
+            "N/A"
+          ],
+          "required": true
+        }
+      ],
+      "footerFields": [
+        {
+          "key": "resultadoFinal",
+          "label": "Resultado final de la eslinga textil",
+          "type": "select",
+          "options": [
+            "Aceptado",
+            "Rechazado"
+          ],
+          "required": true
+        }
+      ]
+    },
+    {
+      "key": "ganchoGrillete",
+      "title": "Gancho / grillete",
+      "type": "checklist",
+      "itemLabel": "Ítem / Criterio de aceptación",
+      "rows": [
+        {
+          "key": "identificacion",
+          "label": "Identificación",
+          "detail": "Debe contar con N° en su etiqueta o precinto."
+        },
+        {
+          "key": "capacidad",
+          "label": "Capacidad",
+          "detail": "Información de carga máxima admisible (WLL)."
+        },
+        {
+          "key": "estructura",
+          "label": "Estado estructural",
+          "detail": "No presentar roturas, golpes, corrosión, ni daños."
+        },
+        {
+          "key": "continuidad",
+          "label": "Continuidad",
+          "detail": "Libre de signos de estiramientos o deformaciones."
+        },
+        {
+          "key": "pestillo",
+          "label": "Pestillo",
+          "detail": "Correcto funcionamiento. Sin desgaste ni deformaciones."
+        },
+        {
+          "key": "funcionamiento",
+          "label": "Funcionamiento",
+          "detail": "Roscar y asegurar correctamente, con alfiler estándar."
+        }
+      ],
+      "columns": [
+        {
+          "key": "resultado",
+          "label": "Resultado",
+          "type": "select",
+          "options": [
+            "Cumple",
+            "No cumple",
+            "N/A"
+          ],
+          "required": true
+        }
+      ],
+      "footerFields": [
+        {
+          "key": "resultadoFinal",
+          "label": "Resultado final del gancho / grillete",
+          "type": "select",
+          "options": [
+            "Aceptado",
+            "Rechazado"
+          ],
+          "required": true
+        }
+      ]
+    }
+  ],
+  "finalFields": [
+    {
+      "key": "firmaOperador",
+      "label": "Operador · Firma y aclaración",
+      "type": "text",
+      "required": true
+    },
+    {
+      "key": "firmaSupervisor",
+      "label": "Supervisor · Firma y aclaración",
+      "type": "text",
+      "required": true
+    }
+  ],
+  "notes": [],
+  "observationsLabel": "Observaciones y acciones correctivas"
+}
+</script>
+<script src="../../js/mantenimiento-formularios.js"></script>
+</body>
+</html>

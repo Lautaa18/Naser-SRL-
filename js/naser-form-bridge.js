@@ -132,7 +132,7 @@
   // Los botones propios del formulario (Guardar / Finalizar) tambien guardan en la base
   document.addEventListener('click', function (e) {
     var b = e.target.closest ? e.target.closest('button,input[type="button"],input[type="submit"]') : null;
-    if (!b || cfg.readonly) return;
+    if (!b || cfg.readonly || b.hasAttribute('data-naser-managed-action')) return;
     var txt = (b.textContent || b.value || '').trim();
     // Guardar / Finalizar / Agregar / Eliminar filas del formulario => se guarda tambien en el sistema
     if (/guardar|finalizar|agregar|a[ñn]adir|eliminar|quitar|limpiar|borrar|restablecer/i.test(txt)) {
@@ -149,6 +149,10 @@
     var d = e.data;
     if (d.type === 'naser:collect') {
       if (d.validate) {
+        if (typeof window.naserValidate === 'function' && window.naserValidate() === false) {
+          post({ type: 'naser:collected', reqId: d.reqId, valid: false });
+          return;
+        }
         var invalid = campos().find(function (el) { return !el.disabled && el.willValidate && !el.checkValidity(); });
         if (invalid) {
           invalid.reportValidity();

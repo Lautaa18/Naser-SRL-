@@ -49,6 +49,18 @@ function formulariosCatalogo(): array {
 
         ['ventas-propuesta-economica', 'ventas', 'ventas/propuesta-economica.html', 'Propuesta Económica de Servicio', 'PGSN11-F2'],
 
+        ['mantenimiento-checklist-unidad-slickline','mantenimiento','mantenimiento/checklist-unidad-slickline.html','Checklist de la unidad de Slickline','POSN01-F7'],
+        ['mantenimiento-control-apertura-cierre-bop','mantenimiento','mantenimiento/control-apertura-cierre-bop.html','Control de apertura y cierre de BOP','PGSN01-F12'],
+        ['mantenimiento-control-elementos-izaje','mantenimiento','mantenimiento/control-elementos-izaje.html','Control de elementos de izaje','POSN01-F17'],
+        ['mantenimiento-control-lavaojos','mantenimiento','mantenimiento/control-lavaojos.html','Control de lavaojos','POSN01-F9'],
+        ['mantenimiento-inspeccion-equipo-presion','mantenimiento','mantenimiento/inspeccion-equipo-presion.html','Control de elementos críticos de operación','POSN01-F6'],
+        ['mantenimiento-inspeccion-extintores','mantenimiento','mantenimiento/inspeccion-extintores.html','Inspección de extintores','POSN01-F14'],
+        ['mantenimiento-inspeccion-herramientas-mano','mantenimiento','mantenimiento/inspeccion-herramientas-mano.html','Inspección de herramientas de mano','POSN01-F13'],
+        ['mantenimiento-mantenimiento-izaje-guinche','mantenimiento','mantenimiento/mantenimiento-izaje-guinche.html','Mantenimiento de equipo de izaje y guinche','PGSN01-F10'],
+        ['mantenimiento-mantenimiento-polea-reenvio','mantenimiento','mantenimiento/mantenimiento-polea-reenvio.html','Mantenimiento de polea de reenvío','PGSN01-F11'],
+        ['mantenimiento-registro-inspeccion-operativa','mantenimiento','mantenimiento/registro-inspeccion-operativa.html','Registro de inspección operativa','POSN01-F4'],
+        ['mantenimiento-utilizacion-alambre','mantenimiento','mantenimiento/utilizacion-alambre.html','Utilización del alambre','POSN01-F1'],
+
         ['mantenimiento-checklist-vehicular','mantenimiento','mantenimiento/checklist-vehicular.html','Checklist Vehicular — Unidad Liviana', ''],
         ['mantenimiento-checklist-hidrogrua','mantenimiento','mantenimiento/checklist-hidrogrua.html','Checklist Hidrogrúa', ''],
 
