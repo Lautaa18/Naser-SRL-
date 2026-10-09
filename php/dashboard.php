@@ -51,4 +51,25 @@ $galeria=[
 <section class="fleet-panel"><div class="section-head"><div><p class="eyebrow">ACCESOS DIRECTOS</p><h2>Personal, flota y equipamiento</h2><p>Seleccioná una imagen para abrir su control o checklist correspondiente.</p></div></div><div class="fleet-images"><?php foreach($galeria as [$titulo,$img,$url,$desc,$accion]):?><a class="fleet-card" href="<?=h(app_url('/php/'.$url))?>"><div class="fleet-image"><img src="<?=app_url('/img/'.$img)?>" alt="<?=h($titulo)?>" loading="lazy"></div><div class="fleet-card-body"><h3><?=h($titulo)?></h3><p><?=h($desc)?></p><span><?=h($accion)?> →</span></div></a><?php endforeach;?></div></section>
 <section class="policy-panel"><p class="eyebrow">INFORMACIÓN GENERAL</p><h2>Política de Calidad, Ambiente, Seguridad y Salud</h2><p>El sistema concentra la información necesaria para acompañar las operaciones de Slickline, Well Testing y Flow Back, con foco en seguridad, calidad, ambiente y mejora continua.</p><div class="policy-grid"><span>✓ Mejora continua</span><span>✓ Cumplimiento legal y normativo</span><span>✓ Prevención de incidentes</span><span>✓ Trabajo seguro y saludable</span></div></section>
 <div class="section-head"><div><p class="eyebrow">GESTIÓN CENTRALIZADA</p><h2>Sectores habilitados</h2></div></div><section class="sector-grid"><?php foreach($sectores as $s):?><article class="sector-card"><div class="sector-code"><?=h(strtoupper(substr($s['nombre'],0,2)))?></div><h3><?=h($s['nombre'])?></h3><p>Carpetas, documentación y procedimientos del sector.</p><div class="card-links"><a href="<?=app_url('/php/sector.php?sector='.urlencode($s['slug']))?>">Abrir sector →</a></div></article><?php endforeach;?></section>
+<details class="developers-section">
+  <summary class="developers-toggle">
+    <span class="developers-icon" aria-hidden="true">&lt;/&gt;</span>
+    <span class="developers-toggle-copy"><strong>Desarrolladores</strong><span>Conocé al equipo detrás de este proyecto</span></span>
+    <svg class="developers-chevron" width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </summary>
+  <div class="developers-content">
+    <figure class="developers-photo"><img src="<?=h(asset('/img/Desarrolladores.jpeg'))?>" alt="Foto grupal compartida por el equipo del proyecto NASER" width="1600" height="1200" loading="lazy"></figure>
+    <div class="developers-info">
+      <p class="eyebrow">PERSONAS QUE HACEN POSIBLE EL PROYECTO</p>
+      <h2>Desarrolladores de este proyecto</h2>
+      <p class="developers-description">Un proyecto construido en equipo.</p>
+      <ul class="developers-names" aria-label="Desarrolladores del proyecto">
+        <li><span aria-hidden="true">GV</span><strong>Gonzalo Vilche</strong></li>
+        <li><span aria-hidden="true">RW</span><strong>Robert Weisser</strong></li>
+        <li><span aria-hidden="true">LZ</span><strong>Lautaro Zeballos</strong></li>
+      </ul>
+      <p class="developers-signature">NASER <span>·</span> Sistema de Gestión Integrado</p>
+    </div>
+  </div>
+</details>
 </main></div></body></html>

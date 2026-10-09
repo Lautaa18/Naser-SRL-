@@ -336,6 +336,35 @@
   .fleet-panel,.policy-panel,.table-panel,.form-panel,.quick-panel{padding:16px}
 }
 
+/* Equipo del proyecto: acceso desplegable debajo de los sectores de Inicio. */
+.developers-section{margin-top:30px;border:1px solid var(--line);border-radius:20px;background:#fff;box-shadow:var(--shadow);overflow:hidden}
+.developers-toggle{display:flex;align-items:center;gap:16px;padding:22px 26px;list-style:none;cursor:pointer;color:var(--green-dark);background:linear-gradient(110deg,#edf8f2,#fff)}
+.developers-toggle::-webkit-details-marker{display:none}
+.developers-toggle:hover{background:#edf8f2}
+.developers-toggle:focus-visible{outline:3px solid var(--green);outline-offset:-4px;border-radius:18px}
+.developers-icon{display:grid;place-items:center;flex-shrink:0;width:48px;height:48px;border-radius:14px;background:var(--green-dark);color:#fff;font:700 20px monospace}
+.developers-toggle-copy{display:grid;gap:3px;min-width:0}
+.developers-toggle-copy strong{font-size:19px}
+.developers-toggle-copy>span{color:var(--muted);font-size:13px}
+.developers-chevron{margin-left:auto;flex-shrink:0;transition:transform .2s ease}
+.developers-section[open] .developers-chevron{transform:rotate(180deg)}
+.developers-content{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);align-items:center;border-top:1px solid var(--line);padding:28px;gap:32px}
+.developers-photo{margin:0;min-width:0;border-radius:14px;overflow:hidden;background:var(--bg)}
+.developers-photo img{display:block;width:100%;height:auto}
+.developers-info{min-width:0;padding:8px 0}
+.developers-info .eyebrow{font-size:10px;line-height:1.7;letter-spacing:1.5px}
+.developers-info h2{font-size:clamp(23px,2.5vw,32px);line-height:1.2;letter-spacing:-.6px;margin:10px 0 12px;color:var(--ink)}
+.developers-description{color:var(--muted);margin:0 0 22px}
+.developers-names{list-style:none;padding:0;margin:0;display:grid;gap:12px}
+.developers-names li{display:flex;align-items:center;gap:12px;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:#f9fbfa}
+.developers-names li>span{display:grid;place-items:center;flex-shrink:0;width:36px;height:36px;background:var(--green-soft);color:var(--green-dark);border-radius:50%;font-size:12px;font-weight:800}
+.developers-names strong{font-size:15px;overflow-wrap:anywhere}
+.developers-signature{margin:24px 0 0;color:var(--muted);font-size:11px;line-height:1.7}
+.developers-signature span{padding:0 5px;color:var(--green)}
+@media(max-width:1000px){.developers-content{grid-template-columns:1fr;gap:20px}.developers-photo{max-width:720px;width:100%;justify-self:center}.developers-info{padding:0}}
+@media(max-width:600px){.developers-section{margin-top:24px;border-radius:16px}.developers-toggle{padding:18px 16px;gap:12px}.developers-icon{width:40px;height:40px;border-radius:11px;font-size:17px}.developers-toggle-copy strong{font-size:17px}.developers-toggle-copy>span{font-size:12px}.developers-content{padding:16px;gap:20px}.developers-info h2{font-size:24px}.developers-names li{padding:10px 12px}}
+@media(prefers-reduced-motion:reduce){.developers-chevron{transition:none}}
+
 /* Campanita flotante (PC): siempre visible arriba a la derecha. En celular se usa la de la barra superior. */
 .notif-bell--float{position:fixed;top:14px;right:24px;z-index:40;width:46px;height:46px;border-radius:50%;background:#fff;border:1px solid var(--line);box-shadow:0 6px 18px rgba(22,56,40,.16)}
 .notif-bell--float svg{width:23px;height:23px}
