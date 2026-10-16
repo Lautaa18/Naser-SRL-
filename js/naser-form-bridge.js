@@ -117,8 +117,11 @@
   }
 
   function bloquear() {
-    document.querySelectorAll('input,select,textarea,fieldset').forEach(function (el) { el.disabled = true; });
+    document.querySelectorAll('input,select,textarea,fieldset').forEach(function (el) {
+      if (!el.hasAttribute('data-naser-readonly-control')) el.disabled = true;
+    });
     Array.prototype.forEach.call(document.querySelectorAll('button,[role="button"],input[type="button"],input[type="submit"]'), function (b) {
+      if (b.hasAttribute('data-naser-readonly-control')) return;
       if (!/imprimir|pdf|exportar|descargar/i.test(b.textContent || b.value || b.getAttribute('aria-label') || '')) { b.disabled = true; b.style.opacity = '.45'; b.style.pointerEvents = 'none'; }
     });
     document.body.classList.add('naser-readonly');
@@ -141,13 +144,24 @@
   }, true);
 
   ['input', 'change'].forEach(function (ev) {
-    document.addEventListener(ev, function () { if (!aplicando) post({ type: 'naser:dirty' }); }, true);
+    document.addEventListener(ev, function (event) {
+      if (!aplicando && !cfg.readonly && !event.target.closest('[data-naser-ignore]')) post({ type: 'naser:dirty' });
+    }, true);
   });
 
   window.addEventListener('message', function (e) {
     if (e.origin !== parentOrigin || e.source !== window.parent || !e.data || typeof e.data !== 'object') return;
     var d = e.data;
     if (d.type === 'naser:collect') {
+      if (!cfg.readonly && typeof window.naserBeforeCollect === 'function') {
+        cfg.collecting = true;
+        try {
+          if (window.naserBeforeCollect() === false) {
+            post({ type: 'naser:collected', reqId: d.reqId, valid: false });
+            return;
+          }
+        } finally { cfg.collecting = false; }
+      }
       if (d.validate) {
         if (typeof window.naserValidate === 'function' && window.naserValidate() === false) {
           post({ type: 'naser:collected', reqId: d.reqId, valid: false });

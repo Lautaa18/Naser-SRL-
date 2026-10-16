@@ -92,6 +92,10 @@ window.__NASER_FORM__ = $cfg;
 HTML;
 $head .= "\n<link rel=\"stylesheet\" href=\"" . h(asset('/css/form-movil.css')) . "\">";
 $bridge = '<script src="' . h(asset('/js/naser-form-bridge.js')) . '"></script>';
+if (in_array($codigo, ['operaciones-diagrama-trabajo', 'operaciones-stock-herramientas'], true)) {
+    // Instalar antes del puente genérico para reconocer también las acciones dinámicas.
+    $bridge = '<script src="' . h(asset('/js/naser-collection-form.js')) . '"></script>' . $bridge;
+}
 $responsive = '<link rel="stylesheet" href="' . h(asset('/css/formularios-responsive.css')) . '">';
 
 if (preg_match('/<head[^>]*>/i', $html, $m, PREG_OFFSET_CAPTURE)) {

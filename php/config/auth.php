@@ -165,6 +165,6 @@ function csrf_field(): string { return '<input type="hidden" name="csrf" value="
 function verify_csrf(): void {
     $enviado = $_POST['csrf'] ?? ($_SERVER['HTTP_X_CSRF_TOKEN'] ?? '');
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && !hash_equals($_SESSION['csrf'] ?? '', (string)$enviado)) {
-        http_response_code(419); exit('Sesión expirada. Volvé atrás y reintentá.');
+        http_response_code(403); exit('Sesión expirada. Volvé atrás y reintentá.');
     }
 }
