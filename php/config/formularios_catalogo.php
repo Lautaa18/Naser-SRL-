@@ -64,8 +64,8 @@ function formulariosCatalogo(): array {
         ['mantenimiento-checklist-vehicular','mantenimiento','mantenimiento/checklist-vehicular.html','Checklist Vehicular — Unidad Liviana', ''],
         ['mantenimiento-checklist-hidrogrua','mantenimiento','mantenimiento/checklist-hidrogrua.html','Checklist Hidrogrúa', ''],
 
-        ['operaciones-diagrama-trabajo','operaciones','operaciones/diagrama-trabajo.html','Diagrama de trabajo — Cronograma mensual', ''],
-        ['operaciones-stock-herramientas','operaciones','operaciones/stock-herramientas.html','Stock de herramientas', 'POSN08-F1'],
+        ['operaciones-diagrama-trabajo','rrhh','operaciones/diagrama-trabajo.html','Diagrama de trabajo — Cronograma mensual', ''],
+        ['operaciones-stock-herramientas','mantenimiento','operaciones/stock-herramientas.html','Stock de herramientas', 'POSN08-F1'],
         ['operaciones-inspeccion-equipo','operaciones','operaciones/inspeccion-equipo.html','Inspección de Equipo — Checklist de Preparación', ''],
         ['operaciones-control-slickline','operaciones','operaciones/control-slickline.html','Control Operativo Slickline', 'SGI-OP-SLK-001'],
         ['operaciones-montaje-well-testing','operaciones','operaciones/Check List de Montaje de Equipo de Well Testing.html','Check List de Montaje de Equipo de Well Testing', 'POSN03-F2'],
@@ -197,4 +197,34 @@ function formulariosPanel(PDO $pdo, string $slug): void {
       </table>
     </div>
     <?php endif;
+}
+
+/** Apartado propio de planificación o inventario dentro del sector. */
+function seccionTrabajoSector(PDO $pdo, string $slug): void {
+    $codigo = match ($slug) {
+        'rrhh' => 'operaciones-diagrama-trabajo',
+        'mantenimiento' => 'operaciones-stock-herramientas',
+        default => null,
+    };
+    if (!$codigo) return;
+    $sector = sectorPorSlug($pdo, $slug);
+    if (!$sector || !puedeVerSector($pdo, (int)$sector['id'])) return;
+    $titulo = $slug === 'rrhh' ? 'Diagrama de trabajo' : 'Stock de herramientas';
+    $id = $slug === 'rrhh' ? 'diagrama-trabajo' : 'stock-herramientas';
+    $descripcion = $slug === 'rrhh'
+        ? 'Organizá el cronograma mensual de trabajo del personal.'
+        : 'Consultá y actualizá el inventario de herramientas de Mantenimiento.';
+    $hub = app_url('/php/formularios/index.php') . '?sector=' . urlencode($slug) . '&f=' . urlencode($codigo);
+    ?>
+    <section class="module-card" id="<?=h($id)?>" aria-labelledby="<?=h($id)?>-titulo">
+      <h2 id="<?=h($id)?>-titulo"><?=h($titulo)?></h2>
+      <p><?=h($descripcion)?></p>
+      <div class="top-actions">
+        <a class="btn secondary" href="<?=h($hub)?>">Ver registros</a>
+        <?php if (puedeCompletarSector($pdo, (int)$sector['id'])): ?>
+          <a class="btn primary" href="<?=h(app_url('/php/formularios/llenar.php') . '?f=' . urlencode($codigo))?>">Crear registro</a>
+        <?php endif; ?>
+      </div>
+    </section>
+    <?php
 }

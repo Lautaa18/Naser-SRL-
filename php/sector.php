@@ -382,6 +382,8 @@ function documentUrl(string $archivo): string
 
         </header>
 
+        <?php if (!$cid): seccionTrabajoSector($pdo, $slug); endif; ?>
+
 
         <!-- =================================================
              NAVEGACIÓN DE CARPETAS

@@ -65,20 +65,10 @@ if ($ids) {
     $st->execute($ids); $ops = $st->fetchAll();
 }
 $mostrarFormulario = isset($_GET['nuevo']) || isset($_GET['editar']) || $error;
-$sectorOperaciones = array_values(array_filter($sectores, fn($s) => $s['slug'] === 'operaciones'))[0] ?? null;
 ?>
 <!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Listado de operaciones | NASER</title><link rel="stylesheet" href="<?=asset('/style.css')?>"></head><body><div class="app"><?php sidebar($pdo,'operaciones'); ?>
 <main class="content operations-page"><header class="section-top"><div><p class="eyebrow">GESTIÓN OPERATIVA</p><h1>Listado de operaciones</h1><p>Registrá y consultá las actividades de campo.</p></div><?php if ($editables): ?><a class="btn primary" href="<?=app_url('/php/operaciones.php')?>?nuevo=1#operation-form">+ Agregar operación</a><?php endif; ?></header>
-<?php if ($sectorOperaciones): ?>
-<section class="operations-editor" aria-label="Planificación y herramientas">
-  <h2>Planificación y herramientas</h2>
-  <p>Consultá los registros guardados o creá uno desde cada apartado.</p>
-  <div class="operations-actions">
-    <a class="btn secondary" href="<?=h(app_url('/php/formularios/index.php').'?sector=operaciones&f=operaciones-diagrama-trabajo')?>">Diagrama de trabajo</a>
-    <a class="btn secondary" href="<?=h(app_url('/php/formularios/index.php').'?sector=operaciones&f=operaciones-stock-herramientas')?>">Stock de herramientas</a>
-  </div>
-</section>
-<?php endif; ?>
+
 <?php if (in_array($_GET['ok'] ?? '', ['guardada','eliminada'], true)): ?><div class="alert success" role="status">Operación <?=($_GET['ok']==='eliminada'?'eliminada':'guardada')?> correctamente.</div><?php endif; ?>
 <?php if ($error): ?><div class="alert error" role="alert"><?=h($error)?></div><?php endif; ?>
 <?php if ($mostrarFormulario && $editables): ?><section class="operations-editor" id="operation-form"><h2><?=$registro['id']?'Editar operación':'Nueva operación'?></h2><form method="post" class="form-grid"><?=csrf_field()?><input type="hidden" name="accion" value="guardar"><input type="hidden" name="id" value="<?=(int)$registro['id']?>"><div class="operations-fields"><label>Sector<select name="sector_id" required><?php foreach ($editables as $s): ?><option value="<?=(int)$s['id']?>" <?=(int)$registro['sector_id']===(int)$s['id']?'selected':''?>><?=h($s['nombre'])?></option><?php endforeach; ?></select></label>
