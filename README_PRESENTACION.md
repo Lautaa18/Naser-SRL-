@@ -65,10 +65,11 @@ docker compose ps
 
 ## Cuenta principal
 
-- Correo: `admin@naser.test`
-- Contraseña: `Admin123!`
-
-El resto está en `CUENTAS_PRUEBA.txt`.
+- **En tu PC (`APP_ENV=dev`)**: al crear la base se genera una cuenta demo de prueba (usuario y clave en `php/config/bootstrap.php`).
+- **En el servidor (`APP_ENV=production`)** no existe ninguna cuenta demo. El primer super usuario se crea desde la terminal:
+  `docker compose exec web php php/tools/crear_usuarios.php`
+  (crea a todo el personal de la estructura y muestra las contraseñas temporales).
+- Para darle contraseña a todo el personal: **Usuarios y permisos → Contraseñas para el personal** (genera una temporal para cada persona y permite descargar el Excel).
 
 ## Prueba funcional antes de presentar
 

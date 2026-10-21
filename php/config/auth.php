@@ -163,8 +163,64 @@ function csrf_token(): string {
 }
 function csrf_field(): string { return '<input type="hidden" name="csrf" value="'.h(csrf_token()).'">'; }
 function verify_csrf(): void {
-    $enviado = $_POST['csrf'] ?? ($_SERVER['HTTP_X_CSRF_TOKEN'] ?? '');
-    if ($_SERVER['REQUEST_METHOD'] === 'POST' && !hash_equals($_SESSION['csrf'] ?? '', (string)$enviado)) {
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') return;
+    $enviado = (string)($_POST['csrf'] ?? ($_SERVER['HTTP_X_CSRF_TOKEN'] ?? ''));
+    $esperado = (string)($_SESSION['csrf'] ?? '');
+    // Un token vacio nunca es valido (antes "vacio == vacio" dejaba pasar el envio sin token)
+    if ($esperado === '' || $enviado === '' || !hash_equals($esperado, $enviado)) {
         http_response_code(403); exit('Sesión expirada. Volvé atrás y reintentá.');
     }
+}
+
+/**
+ * IP real de quien visita. Detras de Caddy o Cloudflare Tunnel, REMOTE_ADDR es la IP del proxy
+ * (la misma para todos), asi que solo en ese caso (proxy en red privada/local) se toma la IP
+ * que informa el proxy.
+ */
+function naser_client_ip(): string {
+    $remote = (string)($_SERVER['REMOTE_ADDR'] ?? '');
+    $remotoEsProxy = $remote !== '' && filter_var($remote, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) === false;
+    if ($remotoEsProxy) {
+        foreach (['HTTP_CF_CONNECTING_IP', 'HTTP_X_FORWARDED_FOR'] as $cab) {
+            if (empty($_SERVER[$cab])) continue;
+            $primera = trim(explode(',', (string)$_SERVER[$cab])[0]);
+            if (filter_var($primera, FILTER_VALIDATE_IP)) return $primera;
+        }
+    }
+    return $remote;
+}
+
+/** Cierra la sesion y borra la cookie. */
+function naser_cerrar_sesion(): void {
+    $_SESSION = [];
+    if (ini_get('session.use_cookies')) {
+        $p = session_get_cookie_params();
+        setcookie(session_name(), '', time() - 42000, $p['path'], $p['domain'], $p['secure'], $p['httponly']);
+    }
+    if (session_status() === PHP_SESSION_ACTIVE) session_destroy();
+}
+
+/**
+ * Revalida la sesion contra la base en cada pedido: si la cuenta se desactivo o se borro, se corta
+ * la sesion en el momento; si cambio el rol o se reseteo la clave, se actualiza sin pedir otro login.
+ */
+function naser_validar_sesion(PDO $pdo): void {
+    if (empty($_SESSION['usuario_id'])) return;
+    $st = $pdo->prepare('SELECT activo, rol, debe_cambiar_password FROM usuarios WHERE id = ?');
+    $st->execute([(int)$_SESSION['usuario_id']]);
+    $u = $st->fetch();
+    if (!$u || (int)$u['activo'] !== 1) {
+        naser_cerrar_sesion();
+        $quiereJson = ($_SERVER['HTTP_X_CSRF_TOKEN'] ?? '') !== '' || str_contains((string)($_SERVER['HTTP_ACCEPT'] ?? ''), 'application/json');
+        if ($quiereJson) {
+            http_response_code(401);
+            header('Content-Type: application/json; charset=utf-8');
+            exit(json_encode(['ok' => false, 'error' => 'Tu sesión terminó o tu cuenta fue desactivada. Volvé a ingresar.'], JSON_UNESCAPED_UNICODE));
+        }
+        header('Location: ' . app_url('/php/login.php'));
+        exit;
+    }
+    $_SESSION['rol'] = $u['rol'];
+    if ((int)$u['debe_cambiar_password'] === 1) $_SESSION['debe_cambiar_password'] = true;
+    else unset($_SESSION['debe_cambiar_password']);
 }

@@ -82,6 +82,9 @@ switch ($accion) {
         // ---------- ENVIAR A APROBACIÓN ----------
         $perm = permisosRegistro($pdo, $reg);
         if (!$perm['enviar']) fallar('No podés enviar este formulario.', 403);
+        $datosEnviados = json_decode((string)($reg['datos_json'] ?? ''), true);
+        $conContenido = is_array($datosEnviados) && array_filter($datosEnviados, fn($v) => !($v === '' || $v === null || $v === false || $v === []));
+        if (!$conContenido) fallar('El formulario está en blanco: completá los datos antes de enviarlo a aprobación.');
         $pdo->prepare("UPDATE formularios_registros SET estado = 'enviado', enviado_por = ?, enviado_en = NOW(), comentario_revision = NULL WHERE id = ?")->execute([$uid, $id]);
         historialFormulario($pdo, $id, 'enviado', trim((string)($in['comentario'] ?? '')) ?: null);
         $form = formularioPorCodigo($reg['formulario']);

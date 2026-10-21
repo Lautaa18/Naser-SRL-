@@ -543,9 +543,9 @@ function naser_bootstrap(PDO $pdo): void
     $adminId = (int)$st->fetchColumn();
 
 
-    // La cuenta admin@naser.test solo se crea en desarrollo o si no existe ningun administrador
-    $hayAdmins = (int)$pdo->query("SELECT COUNT(*) FROM usuarios WHERE rol='admin' AND activo=1")->fetchColumn() > 0;
-    if (!$adminId && (app_is_dev() || !$hayAdmins)) {
+    // La cuenta demo admin@naser.test (con clave conocida) SOLO se crea en desarrollo.
+    // En produccion el primer super usuario se crea desde la terminal: php php/tools/crear_usuarios.php
+    if (!$adminId && app_is_dev()) {
 
         $st = $pdo->prepare("
             INSERT INTO usuarios (

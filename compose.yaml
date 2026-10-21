@@ -28,7 +28,8 @@ services:
       DB_USER: ${DB_USER:-naser}
       DB_PASS: ${DB_PASS:-naser2026}
       APP_BASE: ${APP_BASE:-}
-      APP_ENV: ${APP_ENV:-dev}
+      # Por seguridad, si falta el .env arranca en production (sin errores en pantalla ni cuenta demo)
+      APP_ENV: ${APP_ENV:-production}
       APP_URL: ${APP_URL:-http://localhost:8080}
       # Mails: en desarrollo van a Mailpit (http://localhost:8025). En produccion poner el SMTP real en .env
       MAIL_TRANSPORT: ${MAIL_TRANSPORT:-smtp}

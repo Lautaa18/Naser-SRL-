@@ -3,25 +3,33 @@ require __DIR__ . '/config/db.php';
 require __DIR__ . '/config/auth.php';
 if (!empty($_SESSION['usuario_id'])) { header('Location: '.app_url('/php/dashboard.php')); exit; }
 $error='';
-// Bloqueo temporal: 5 intentos fallidos en 15 minutos (por correo o por IP)
-const LOGIN_MAX_INTENTOS = 5;
+// Bloqueo temporal por intentos fallidos en 15 minutos. Se cuenta por separado:
+//  - 5 intentos del MISMO correo desde la MISMA IP (alguien probando claves de una cuenta)
+//  - 30 intentos desde una misma IP (alguien probando muchas cuentas)
+//  - 20 intentos sobre un mismo correo desde cualquier IP (ataque repartido)
+// Asi, 5 errores de una persona no dejan afuera a todo el personal ni a una cuenta puntual.
+const LOGIN_MAX_CORREO_IP = 5;
+const LOGIN_MAX_IP = 30;
+const LOGIN_MAX_CORREO = 20;
 const LOGIN_MINUTOS_BLOQUEO = 15;
 function loginBloqueado(PDO $pdo, string $email, string $ip): bool {
-    $st=$pdo->prepare('SELECT COUNT(*) FROM login_intentos WHERE (email=? OR ip=?) AND creado_en > (NOW() - INTERVAL '.LOGIN_MINUTOS_BLOQUEO.' MINUTE)');
-    $st->execute([$email,$ip]);
-    return (int)$st->fetchColumn() >= LOGIN_MAX_INTENTOS;
+    $st=$pdo->prepare('SELECT COALESCE(SUM(email=? AND ip=?),0) a, COALESCE(SUM(ip=?),0) b, COALESCE(SUM(email=?),0) c
+                       FROM login_intentos WHERE creado_en > (NOW() - INTERVAL '.LOGIN_MINUTOS_BLOQUEO.' MINUTE)');
+    $st->execute([$email,$ip,$ip,$email]);
+    $n=$st->fetch();
+    return (int)$n['a'] >= LOGIN_MAX_CORREO_IP || (int)$n['b'] >= LOGIN_MAX_IP || (int)$n['c'] >= LOGIN_MAX_CORREO;
 }
 if ($_SERVER['REQUEST_METHOD']==='POST') {
     verify_csrf();
     $email=strtolower(trim($_POST['email']??'')); $password=$_POST['password']??'';
-    $ip=substr((string)($_SERVER['REMOTE_ADDR'] ?? ''),0,45);
+    $ip=substr(naser_client_ip(),0,45);
     if (loginBloqueado($pdo,$email,$ip)) {
         $error='Demasiados intentos fallidos. Esperá '.LOGIN_MINUTOS_BLOQUEO.' minutos e intentá de nuevo.';
     } else {
         $st=$pdo->prepare('SELECT id,nombre,email,password,rol,activo,debe_cambiar_password FROM usuarios WHERE LOWER(email)=? LIMIT 1');
         $st->execute([$email]); $u=$st->fetch();
         if ($u && (int)$u['activo']===1 && password_verify($password,$u['password'])) {
-            $pdo->prepare('DELETE FROM login_intentos WHERE email=?')->execute([$email]);
+            $pdo->prepare('DELETE FROM login_intentos WHERE email=? AND ip=?')->execute([$email,$ip]);
             session_regenerate_id(true);
             $_SESSION['usuario_id']=(int)$u['id']; $_SESSION['nombre']=$u['nombre']; $_SESSION['email']=$u['email']; $_SESSION['rol']=$u['rol'];
             if ((int)$u['debe_cambiar_password'] === 1) $_SESSION['debe_cambiar_password'] = true;

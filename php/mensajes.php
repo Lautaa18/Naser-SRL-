@@ -19,7 +19,7 @@ unset($_SESSION['flash_msg_mensajes']);
 
 function hiloDe(PDO $pdo, int $id): array {
     $st = $pdo->prepare('SELECT m.*, u.nombre AS autor, sd.nombre AS sector_de, sp.nombre AS sector_para
-        FROM mensajes m JOIN usuarios u ON u.id = m.de_usuario_id
+        FROM mensajes m LEFT JOIN usuarios u ON u.id = m.de_usuario_id
         JOIN sectores sd ON sd.id = m.de_sector_id JOIN sectores sp ON sp.id = m.para_sector_id
         WHERE m.id = ? OR m.respuesta_a = ? ORDER BY m.id');
     $st->execute([$id, $id]);
@@ -75,7 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             header('Location: ' . app_url('/php/mensajes.php?ver=' . $raiz)); exit;
         }
     } catch (Throwable $e) {
-        $err = $e->getMessage();
+        $err = mensaje_error($e);
     }
 }
 
@@ -100,7 +100,7 @@ $lista = [];
 if (!$hilo) {
     if ($vista === 'enviados') {
         $st = $pdo->prepare('SELECT m.*, u.nombre AS autor, sd.nombre AS sector_de, sp.nombre AS sector_para, 1 AS leido
-            FROM mensajes m JOIN usuarios u ON u.id = m.de_usuario_id JOIN sectores sd ON sd.id = m.de_sector_id JOIN sectores sp ON sp.id = m.para_sector_id
+            FROM mensajes m LEFT JOIN usuarios u ON u.id = m.de_usuario_id JOIN sectores sd ON sd.id = m.de_sector_id JOIN sectores sp ON sp.id = m.para_sector_id
             WHERE m.de_usuario_id = ? ORDER BY m.id DESC LIMIT 100');
         $st->execute([$uid]);
     } else {
@@ -108,7 +108,7 @@ if (!$hilo) {
         $ph = implode(',', array_fill(0, count($ids), '?'));
         $st = $pdo->prepare("SELECT m.*, u.nombre AS autor, sd.nombre AS sector_de, sp.nombre AS sector_para,
             EXISTS (SELECT 1 FROM mensajes_leidos l WHERE l.mensaje_id = m.id AND l.usuario_id = ?) AS leido
-            FROM mensajes m JOIN usuarios u ON u.id = m.de_usuario_id JOIN sectores sd ON sd.id = m.de_sector_id JOIN sectores sp ON sp.id = m.para_sector_id
+            FROM mensajes m LEFT JOIN usuarios u ON u.id = m.de_usuario_id JOIN sectores sd ON sd.id = m.de_sector_id JOIN sectores sp ON sp.id = m.para_sector_id
             WHERE m.para_sector_id IN ($ph) AND m.de_usuario_id <> ? ORDER BY m.id DESC LIMIT 100");
         $st->execute(array_merge([$uid], $ids, [$uid]));
     }
@@ -131,7 +131,7 @@ function fechaMsg(string $f): string { return date('d/m/Y H:i', strtotime($f)); 
   <section class="table-panel"><h2><?= h($hilo[0]['asunto']) ?></h2>
   <?php foreach ($hilo as $m): ?>
     <div style="border:1px solid #dfe7e1;border-radius:12px;padding:12px 14px;margin:10px 0">
-      <strong><?= h($m['autor']) ?></strong> <span class="muted">· <?= h($m['sector_de']) ?> → <?= h($m['sector_para']) ?> · <?= h(fechaMsg($m['creado_en'])) ?></span>
+      <strong><?= h($m['autor'] ?? 'Usuario eliminado') ?></strong> <span class="muted">· <?= h($m['sector_de']) ?> → <?= h($m['sector_para']) ?> · <?= h(fechaMsg($m['creado_en'])) ?></span>
       <p style="margin:8px 0 0"><?= nl2br(h($m['cuerpo'])) ?></p>
     </div>
   <?php endforeach; ?></section>
@@ -166,7 +166,7 @@ function fechaMsg(string $f): string { return date('d/m/Y H:i', strtotime($f)); 
     <div class="table-wrap"><table><thead><tr><th>Asunto</th><th><?= $vista === 'enviados' ? 'Para' : 'De' ?></th><th>Fecha</th></tr></thead><tbody>
     <?php foreach ($lista as $m): $raiz = $m['respuesta_a'] ?: $m['id']; ?>
       <tr><td><a href="<?= app_url('/php/mensajes.php?ver=' . (int)$raiz) ?>"><?= $m['leido'] ? '' : '<strong>● ' ?><?= h($m['asunto']) ?><?= $m['leido'] ? '' : '</strong>' ?></a></td>
-      <td><?= $vista === 'enviados' ? h($m['sector_para']) : h($m['autor'] . ' (' . $m['sector_de'] . ')') ?></td><td><?= h(fechaMsg($m['creado_en'])) ?></td></tr>
+      <td><?= $vista === 'enviados' ? h($m['sector_para']) : h(($m['autor'] ?? 'Usuario eliminado') . ' (' . $m['sector_de'] . ')') ?></td><td><?= h(fechaMsg($m['creado_en'])) ?></td></tr>
     <?php endforeach; ?>
     <?php if (!$lista): ?><tr><td colspan="3" class="muted">No hay mensajes.</td></tr><?php endif; ?>
     </tbody></table></div>

@@ -57,6 +57,17 @@
     return out;
   }
 
+  // Valores iniciales del formulario (antes de cargar lo guardado): sirven para saber si alguien completo algo
+  var valoresBase = null;
+  function valorVacio(v) { return v === '' || v === null || v === undefined || v === false || (Array.isArray(v) && !v.length); }
+  function hayContenido() {
+    if (!valoresBase) return true;
+    var ahora = recolectar();
+    return Object.keys(ahora).some(function (k) {
+      return !valorVacio(ahora[k]) && JSON.stringify(ahora[k]) !== JSON.stringify(valoresBase[k]);
+    });
+  }
+
   function disparar(el) {
     ['input', 'change'].forEach(function (ev) {
       try { el.dispatchEvent(new Event(ev, { bubbles: true })); } catch (e) {}
@@ -173,6 +184,11 @@
           post({ type: 'naser:collected', reqId: d.reqId, valid: false });
           return;
         }
+        // No se puede enviar a aprobacion un formulario en blanco
+        if (!hayContenido()) {
+          post({ type: 'naser:collected', reqId: d.reqId, valid: false, motivo: 'vacio' });
+          return;
+        }
       }
       volcarEstadoPropio();
       var storage = (window.__naserLS && window.__naserLS.__dump) ? window.__naserLS.__dump() : {};
@@ -191,6 +207,7 @@
   }
 
   function iniciar() {
+    try { valoresBase = recolectar(); } catch (e) { valoresBase = null; }
     aplicar(cfg.fields || null);
     if (cfg.readonly) bloquear();
     informarAltura();

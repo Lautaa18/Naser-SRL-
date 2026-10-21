@@ -19,6 +19,7 @@ if($ids){$st=$pdo->query("SELECT sector_id,COUNT(*) c FROM formularios_registros
 $maxSector=max([1]+array_values($porSector));
 $totAprobados=0;if($ids){$totAprobados=(int)$pdo->query("SELECT COUNT(*) FROM formularios_registros WHERE estado='aprobado' AND sector_id IN (".implode(',',$ids).")")->fetchColumn();}
 $catD=formulariosCatalogo(); $infoD=sectoresInfo($pdo);
+$paginasEquipo=['Trabajador'=>'equipos/trabajador.php','Camión Slickline'=>'equipos/camion-slickline.php','Unidad Liviana'=>'equipos/unidad-liviana.php','Hidrogrúa'=>'equipos/hidrogrua.php'];
 $galeria=[
  ['Trabajador','trabajador-slickline.jpeg','formularios/llenar.php?f=operaciones-inspeccion-equipo','Inspección y preparación de equipo','Completar checklist'],
  ['Camión Slickline','Camion-Naser.png','formularios/llenar.php?f=operaciones-control-slickline','Control Operativo Slickline','Completar checklist'],
@@ -48,7 +49,11 @@ $galeria=[
   </div>
 </section>
 
-<section class="fleet-panel"><div class="section-head"><div><p class="eyebrow">ACCESOS DIRECTOS</p><h2>Personal, flota y equipamiento</h2><p>Seleccioná una imagen para abrir su control o checklist correspondiente.</p></div></div><div class="fleet-images"><?php foreach($galeria as [$titulo,$img,$url,$desc,$accion]):?><a class="fleet-card" href="<?=h(app_url('/php/'.$url))?>"><div class="fleet-image"><img src="<?=app_url('/img/'.$img)?>" alt="<?=h($titulo)?>" loading="lazy"></div><div class="fleet-card-body"><h3><?=h($titulo)?></h3><p><?=h($desc)?></p><span><?=h($accion)?> →</span></div></a><?php endforeach;?></div></section>
+<section class="fleet-panel"><div class="section-head"><div><p class="eyebrow">ACCESOS DIRECTOS</p><h2>Personal, flota y equipamiento</h2><p>Seleccioná una imagen para abrir su control o checklist correspondiente.</p></div></div><div class="fleet-images"><?php foreach($galeria as [$titulo,$img,$url,$desc,$accion]):
+  // Si la persona no puede completar ese formulario (otro sector), la tarjeta lleva a la ficha del equipo, no a un error
+  $fCod=formularioPorCodigo(substr(strrchr($url,'='),1)); $fSec=$fCod?sectorPorSlug($pdo,$fCod['sector']):null;
+  if(!($fSec&&puedeCompletarSector($pdo,(int)$fSec['id']))){ $url=$paginasEquipo[$titulo]; $accion='Ver equipo y registros'; }
+?><a class="fleet-card" href="<?=h(app_url('/php/'.$url))?>"><div class="fleet-image"><img src="<?=app_url('/img/'.$img)?>" alt="<?=h($titulo)?>" loading="lazy"></div><div class="fleet-card-body"><h3><?=h($titulo)?></h3><p><?=h($desc)?></p><span><?=h($accion)?> →</span></div></a><?php endforeach;?></div></section>
 <section class="policy-panel"><p class="eyebrow">INFORMACIÓN GENERAL</p><h2>Política de Calidad, Ambiente, Seguridad y Salud</h2><p>El sistema concentra la información necesaria para acompañar las operaciones de Slickline, Well Testing y Flow Back, con foco en seguridad, calidad, ambiente y mejora continua.</p><div class="policy-grid"><span>✓ Mejora continua</span><span>✓ Cumplimiento legal y normativo</span><span>✓ Prevención de incidentes</span><span>✓ Trabajo seguro y saludable</span></div></section>
 <div class="section-head"><div><p class="eyebrow">GESTIÓN CENTRALIZADA</p><h2>Sectores habilitados</h2></div></div><section class="sector-grid"><?php foreach($sectores as $s):?><article class="sector-card"><div class="sector-code"><?=h(strtoupper(substr($s['nombre'],0,2)))?></div><h3><?=h($s['nombre'])?></h3><p>Carpetas, documentación y procedimientos del sector.</p><div class="card-links"><a href="<?=app_url('/php/sector.php?sector='.urlencode($s['slug']))?>">Abrir sector →</a></div></article><?php endforeach;?></section>
 <details class="developers-section">

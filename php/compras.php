@@ -263,7 +263,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $msg = 'Registro de compra eliminado.';
         }
     } catch (Throwable $e) {
-        $err = $e->getMessage();
+        $err = mensaje_error($e);
     }
 }
 

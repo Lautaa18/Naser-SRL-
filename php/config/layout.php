@@ -57,7 +57,7 @@ function sidebar(PDO $pdo, string $active=''): void {
   <div class="sidebar-user">
     <div class="sidebar-user-top"><strong><?=h($_SESSION['nombre'] ?? '')?></strong></div>
     <span><?=h(etiquetaRolUsuario($pdo))?></span>
-    <div class="sidebar-user-links"><a href="<?=app_url('/php/perfil.php')?>">Mi perfil</a><a href="<?=app_url('/php/logout.php')?>">Cerrar sesión</a></div>
+    <div class="sidebar-user-links"><a href="<?=app_url('/php/perfil.php')?>">Mi perfil</a><form method="post" action="<?=app_url('/php/logout.php')?>" class="logout-form"><?=csrf_field()?><button type="submit">Cerrar sesión</button></form></div>
   </div>
 </aside>
 <script>
