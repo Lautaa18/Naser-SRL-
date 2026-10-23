@@ -309,6 +309,9 @@ $st = $pdo->prepare('SELECT c.*, u.nombre AS actualizado_nombre,
     FROM compras c LEFT JOIN usuarios u ON u.id=c.actualizado_por WHERE c.sector_id=? ORDER BY c.fecha_creacion DESC');
 $st->execute([$sid]);
 $rows = $st->fetchAll();
+$st = $pdo->prepare("SELECT COUNT(*) FROM formularios_registros WHERE sector_id=? AND formulario='compras-pedido-materiales'");
+$st->execute([$sid]);
+$pedidosFormulario = (int)$st->fetchColumn();
 $presupuestoCompraId = (int)($_GET['presupuesto'] ?? 0);
 $presupuestoCompraCodigo = '';
 foreach ($rows as $rowCompra) {
@@ -348,7 +351,7 @@ $recepcionesPendientes = array_values(array_filter($rows, static fn($r) => (int)
 .module-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 16px}.module-tabs a{padding:9px 14px;border:1px solid var(--nl);border-radius:999px;background:#fff;color:var(--nd);font-size:13px;font-weight:800;text-decoration:none;transition:all .2s}
 .module-tabs a:hover{background:var(--ns);border-color:var(--ng)}
 .module-permission{padding:11px 14px;border:1px solid var(--nl);background:#f7faf8;border-radius:12px;margin-bottom:18px;font-size:13px}
-.module-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:15px;margin:18px 0 24px}
+.module-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:15px;margin:18px 0 24px}
 .module-card{background:#fff;border:1px solid var(--nl);border-radius:17px;padding:19px;box-shadow:0 5px 18px rgba(31,41,55,.045)}
 .module-card h3{margin:0 0 8px;font-size:15px;color:#374151}.module-card .big{font-size:30px;line-height:1;font-weight:900;color:var(--ng);margin-top:6px}
 .module-toolbar{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin:25px 0 12px}.module-toolbar h2{margin:0;font-size:20px}
@@ -366,6 +369,7 @@ $recepcionesPendientes = array_values(array_filter($rows, static fn($r) => (int)
 .badge-calidad{background:#dcfce7;color:#15803d;padding:3px 6px;border-radius:4px;font-weight:bold;font-size:11px}
 .badge-calidad-obs{background:#fef3c7;color:#b45309}
 .badge-calidad-bad{background:#fee2e2;color:#b91c1c}
+@media(max-width:1200px){.module-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:900px){.module-grid{grid-template-columns:1fr 1fr}.flow{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:650px){.module-grid,.module-form{grid-template-columns:1fr}.module-form .full{grid-column:auto}.flow{grid-template-columns:repeat(2,1fr)}}
 </style>
@@ -408,7 +412,7 @@ $recepcionesPendientes = array_values(array_filter($rows, static fn($r) => (int)
 
 <section class="module-grid">
     <div class="module-card">
-        <h3>Total Compras</h3>
+        <h3>Compras en seguimiento</h3>
         <div class="big"><?=count($rows)?></div>
     </div>
     <div class="module-card">
@@ -422,6 +426,11 @@ $recepcionesPendientes = array_values(array_filter($rows, static fn($r) => (int)
     <div class="module-card">
         <h3>Recepción evaluada</h3>
         <div class="big"><?=count($encuestadasIds)?></div>
+    </div>
+    <div class="module-card">
+        <h3>Pedidos de materiales (formularios)</h3>
+        <div class="big"><?=$pedidosFormulario?></div>
+        <small>Incluye borradores y formularios enviados.</small>
     </div>
 </section>
 
@@ -650,11 +659,16 @@ $recepcionesPendientes = array_values(array_filter($rows, static fn($r) => (int)
     </table>
 </div>
 
-<?php if($canEdit && $rows):?>
 <section class="module-card" style="margin-top:25px" id="encuesta">
     <h3>📋 Encuesta de Control de Calidad y Recepción de Producto</h3>
+    <?php if(!$canEdit):?>
+        <p class="module-permission">Modo consulta: las evaluaciones registradas aparecen en el historial. Para completar una encuesta necesitás permisos de edición en Compras.</p>
+    <?php elseif(!$rows):?>
+        <p class="module-permission">Todavía no hay compras en seguimiento. El formulario de pedido digital se cuenta arriba, pero primero hay que registrar la compra en el ciclo y llevarla a la etapa 6 con su remito para habilitar la encuesta.</p>
+    <?php elseif(!$recepcionesPendientes):?>
+        <p class="module-permission">No hay entregas pendientes de evaluación. La encuesta se habilita cuando una compra llega a la etapa 6 y tiene cargado el remito. Revisá el <a href="#seguimiento">seguimiento de compras</a>.</p>
+    <?php else:?>
     <p>Al adjuntar el remito en la etapa 6, registrá cómo llegó el producto, su calidad y estado. Cada compra admite una evaluación de recepción.</p>
-    <?php if(!$recepcionesPendientes):?><p class="module-permission">No hay entregas pendientes de evaluación. La compra debe llegar a la etapa 6 y tener su remito adjunto.</p><?php else:?>
     <form method="post" class="module-form"><?=csrf_field()?>
         <input type="hidden" name="accion" value="encuesta">
         
@@ -713,7 +727,6 @@ $recepcionesPendientes = array_values(array_filter($rows, static fn($r) => (int)
     </form>
     <?php endif;?>
 </section>
-<?php endif;?>
 
 <?php if($encuestas):?>
 <div class="module-toolbar">
