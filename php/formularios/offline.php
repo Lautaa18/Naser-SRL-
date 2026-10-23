@@ -7,7 +7,7 @@ $codigo = (string)($_GET['f'] ?? '');
 $form = formularioPorCodigo($codigo);
 if (!$form) { http_response_code(404); exit('Formulario no encontrado.'); }
 $sector = sectorPorSlug($pdo, $form['sector']);
-if (!$sector || !puedeCompletarSector($pdo, (int)$sector['id'])) { http_response_code(403); exit('No tenés permiso para completar formularios de este sector.'); }
+if (!$sector || !puedeCompletarFormulario($pdo, $form['codigo'], (int)$sector['id'])) { http_response_code(403); exit('No tenés permiso para completar formularios de este sector.'); }
 $archivo = rutaFormulario($form);
 if (!is_file($archivo)) { http_response_code(404); exit('Falta el archivo del formulario.'); }
 $html = file_get_contents($archivo);

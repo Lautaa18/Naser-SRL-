@@ -100,14 +100,14 @@ $qs = fn(array $extra) => '?' . http_build_query(array_filter(array_merge(['sect
 </script>
 
 <?php if ($sector && $formsSector): ?>
-  <div class="section-head"><div><h2>Completar un formulario</h2><p><?= $puedeCompletar ? 'Elegí el formulario que querés cargar.' : 'Podés ver los registros, pero no completar formularios de este sector.' ?></p></div></div>
+  <div class="section-head"><div><h2>Completar un formulario</h2><p><?= $puedeCompletar ? 'Elegí el formulario que querés cargar.' : (array_filter($formsSector, fn($f) => puedeCompletarFormulario($pdo, $f['codigo'], (int)$sector['id'])) ? 'Podés completar los formularios que tienen el botón Completar; el resto solo se puede ver.' : 'Podés ver los registros, pero no completar formularios de este sector.') ?></p></div></div>
   <div class="grid-forms">
     <?php foreach ($formsSector as $f): ?>
       <div class="card-form">
         <div><?php if ($f['codigo_sgi']): ?><span class="fx-code"><?=h($f['codigo_sgi'])?></span><?php endif; ?><h3><?=h($f['titulo'])?></h3></div>
         <div class="fx-card-actions">
-          <?php if ($puedeCompletar): ?><a class="btn primary small" href="<?=h(app_url('/php/formularios/llenar.php') . '?f=' . urlencode($f['codigo']))?>">Completar</a><?php endif; ?>
-          <?php if ($puedeCompletar): ?><a class="btn secondary small" title="Descargar para completar sin internet y subir después" href="<?=h(app_url('/php/formularios/offline.php') . '?f=' . urlencode($f['codigo']))?>">⬇ Sin conexión</a><?php endif; ?>
+          <?php if (puedeCompletarFormulario($pdo, $f['codigo'], (int)$sector['id'])): ?><a class="btn primary small" href="<?=h(app_url('/php/formularios/llenar.php') . '?f=' . urlencode($f['codigo']))?>">Completar</a><?php endif; ?>
+          <?php if (puedeCompletarFormulario($pdo, $f['codigo'], (int)$sector['id'])): ?><a class="btn secondary small" title="Descargar para completar sin internet y subir después" href="<?=h(app_url('/php/formularios/offline.php') . '?f=' . urlencode($f['codigo']))?>">⬇ Sin conexión</a><?php endif; ?>
           <a class="btn secondary small" href="<?=h($qs(['f' => $f['codigo']]))?>">Registros</a>
         </div>
       </div>

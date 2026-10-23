@@ -22,7 +22,7 @@ if ($reg && $reg['estado'] === 'borrador' && (int)$reg['creado_por'] !== (int)$_
 if ($reg) {
     $perm = permisosRegistro($pdo, $reg);
 } else {
-    if (!puedeCompletarSector($pdo, $sid)) { http_response_code(403); exit('No tenés permiso para completar formularios de este sector.'); }
+    if (!puedeCompletarFormulario($pdo, $form['codigo'], $sid)) { http_response_code(403); exit('No tenés permiso para completar formularios de este sector.'); }
     $perm = ['ver' => true, 'editar' => true, 'enviar' => true, 'aprobar' => false, 'reabrir' => false, 'eliminar' => false];
 }
 $estado = $reg['estado'] ?? 'nuevo';
@@ -82,7 +82,7 @@ $accionesHist = ['creado' => 'Creó el formulario', 'guardado' => 'Guardó cambi
   </div>
   <div class="fx-toolbar-side">
     <button class="btn secondary" data-accion="imprimir">🖨 Imprimir / PDF</button>
-    <?php if ($reg && puedeCompletarSector($pdo, $sid)): ?><button class="btn secondary" data-accion="duplicar">⧉ Duplicar</button><?php endif; ?>
+    <?php if ($reg && puedeCompletarFormulario($pdo, $form['codigo'], $sid)): ?><button class="btn secondary" data-accion="duplicar">⧉ Duplicar</button><?php endif; ?>
     <?php if ($perm['eliminar']): ?><button class="btn danger" data-accion="eliminar">🗑 Eliminar</button><?php endif; ?>
   </div>
 </div>

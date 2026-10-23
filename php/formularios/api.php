@@ -59,7 +59,7 @@ switch ($accion) {
             $form = formularioPorCodigo((string)($in['formulario'] ?? ''));
             if (!$form) fallar('Formulario desconocido.');
             $sector = sectorPorSlug($pdo, $form['sector']);
-            if (!$sector || !puedeCompletarSector($pdo, (int)$sector['id'])) fallar('No tenés permiso para completar formularios de este sector.', 403);
+            if (!$sector || !puedeCompletarFormulario($pdo, $form['codigo'], (int)$sector['id'])) fallar('No tenés permiso para completar formularios de este sector.', 403);
             $pdo->prepare('INSERT INTO formularios_registros (formulario, sector_id, estado, creado_por, actualizado_por) VALUES (?,?,?,?,?)')
                 ->execute([$form['codigo'], (int)$sector['id'], 'borrador', $uid, $uid]);
             $id = (int)$pdo->lastInsertId();
@@ -129,7 +129,7 @@ switch ($accion) {
     // ---------- DUPLICAR ----------
     case 'duplicar':
         if (!$reg) fallar('Falta el registro.');
-        if (!puedeCompletarSector($pdo, (int)$reg['sector_id'])) fallar('No tenés permiso para completar formularios de este sector.', 403);
+        if (!puedeCompletarFormulario($pdo, (string)$reg['formulario'], (int)$reg['sector_id'])) fallar('No tenés permiso para completar formularios de este sector.', 403);
         $pdo->prepare("INSERT INTO formularios_registros (formulario, sector_id, referencia, estado, datos_json, storage_json, creado_por, actualizado_por) VALUES (?,?,?,?,?,?,?,?)")
             ->execute([$reg['formulario'], $reg['sector_id'], $reg['referencia'] ? mb_substr('Copia de ' . $reg['referencia'], 0, 200) : null, 'borrador', $reg['datos_json'], $reg['storage_json'], $uid, $uid]);
         $nuevoId = (int)$pdo->lastInsertId();
@@ -154,7 +154,7 @@ switch ($accion) {
         $form = formularioPorCodigo((string)($arc['formulario'] ?? ''));
         if (!$form) fallar('El formulario del archivo ya no existe en el sistema.');
         $sector = sectorPorSlug($pdo, $form['sector']);
-        if (!$sector || !puedeCompletarSector($pdo, (int)$sector['id'])) fallar('No tenés permiso para completar formularios de este sector.', 403);
+        if (!$sector || !puedeCompletarFormulario($pdo, $form['codigo'], (int)$sector['id'])) fallar('No tenés permiso para completar formularios de este sector.', 403);
         $offId = preg_replace('/[^A-Za-z0-9\-]/', '', (string)($arc['offline_id'] ?? ''));
         if ($offId !== '') {
             $st = $pdo->prepare("SELECT h.registro_id FROM formularios_historial h WHERE h.comentario LIKE ? LIMIT 1");
