@@ -2,6 +2,8 @@
 require_once __DIR__ . '/app.php';
 if (session_status() !== PHP_SESSION_ACTIVE) {
     $https = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || (($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') === 'https');
+    // La sesión dura 8 h sin actividad (por defecto PHP la borra a los 24 min y salía "sesión expirada")
+    ini_set('session.gc_maxlifetime', '28800');
     session_set_cookie_params(['lifetime' => 0, 'path' => '/', 'secure' => $https, 'httponly' => true, 'samesite' => 'Lax']);
     session_start();
 }
@@ -168,7 +170,9 @@ function verify_csrf(): void {
     $esperado = (string)($_SESSION['csrf'] ?? '');
     // Un token vacio nunca es valido (antes "vacio == vacio" dejaba pasar el envio sin token)
     if ($esperado === '' || $enviado === '' || !hash_equals($esperado, $enviado)) {
-        http_response_code(403); exit('Sesión expirada. Volvé atrás y reintentá.');
+        http_response_code(403);
+        if (str_contains((string)($_SERVER['HTTP_ACCEPT'] ?? ''), 'application/json') || isset($_SERVER['HTTP_X_CSRF_TOKEN'])) exit('Sesión expirada. Recargá la página e ingresá de nuevo.');
+        exit('<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><body style="font-family:sans-serif;max-width:480px;margin:15vh auto;padding:0 16px"><h2>La página estuvo abierta demasiado tiempo</h2><p>Por seguridad, la sesión de esa pantalla venció. No se perdió nada: volvé a cargar la página y repetí la acción.</p><p><a href="' . h(app_url('/php/login.php')) . '" style="display:inline-block;padding:10px 18px;background:#1f4e8c;color:#fff;border-radius:6px;text-decoration:none">Ir a ingresar</a></p></body>');
     }
 }
 
