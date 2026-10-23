@@ -456,7 +456,7 @@ $jsonFlags = JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_
 <section class="module-hero"><p class="eyebrow">SERVICIOS NASER SRL · RECURSOS HUMANOS</p><h1>Gestión de Recursos Humanos</h1><p>Licencias, vencimientos, capacitaciones y seguimiento del personal.</p></section>
 <div class="module-tabs">
   <a href="<?=app_url('/php/sector.php?sector='.$slug)?>">📁 Documentación</a>
-  <a href="#diagrama-trabajo">Diagrama de trabajo</a>
+  <a href="<?=h(urlHerramientaSector($slug))?>">📅 Diagrama de trabajo</a>
   <a href="#formularios">📋 Formularios / Checklists</a>
   <a href="#gestion">⚙ Gestión</a>
   <a href="#calendario">📅 Calendario</a>
@@ -478,7 +478,6 @@ $jsonFlags = JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_
 </section>
 
 <!-- SECCIÓN: FORMULARIOS DIGITALES (se guardan en la base de datos) -->
-<?php seccionTrabajoSector($pdo, 'rrhh'); ?>
 <?php formulariosPanel($pdo, 'rrhh'); ?>
 
 <!-- SECCIÓN: GESTIÓN DE VENCIMIENTOS Y LICENCIAS -->

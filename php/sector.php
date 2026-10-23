@@ -351,6 +351,7 @@ function documentUrl(string $archivo): string
                 <?php if (formulariosDeSector($slug)): ?>
                     <a class="btn primary" href="<?= h(app_url('/php/formularios/index.php') . '?sector=' . urlencode($slug)) ?>">✎ Formularios</a>
                 <?php endif; ?>
+                <?php botonHerramientaSector($pdo, $slug); ?>
 
 
                 <!-- SOLO RESPONSABLE DEL SECTOR O ADMIN -->
@@ -382,7 +383,6 @@ function documentUrl(string $archivo): string
 
         </header>
 
-        <?php if (!$cid): seccionTrabajoSector($pdo, $slug); endif; ?>
 
 
         <!-- =================================================

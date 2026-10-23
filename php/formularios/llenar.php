@@ -40,7 +40,11 @@ $accionesHist = ['creado' => 'Creó el formulario', 'guardado' => 'Guardó cambi
 <link rel="stylesheet" href="<?=asset('/style.css')?>">
 </head><body><div class="app"><?php sidebar($pdo, $sector['slug']); ?><main class="content">
 
+<?php if (esHerramientaDeTrabajo($form['codigo'])): ?>
+<nav class="breadcrumbs"><a href="<?=h(app_url('/php/sector.php?sector=' . urlencode($sector['slug'])))?>"><?=h($sector['nombre'])?></a><span>›</span><span><?=h($form['titulo'])?></span></nav>
+<?php else: ?>
 <nav class="breadcrumbs"><a href="<?=h($hub)?>">Formularios · <?=h($sector['nombre'])?></a><span>›</span><span><?=h($form['titulo'])?></span></nav>
+<?php endif; ?>
 
 <section class="fx-head">
   <div class="fx-head-info">
