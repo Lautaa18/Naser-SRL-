@@ -38,7 +38,8 @@ function requireAdmin(): void {
      - observador:  solo ve
    Reglas:
      - Todos ven todos los sectores, salvo los "restringidos"
-       (ej: Operaciones), que solo ven sus integrantes.
+       (hoy ninguno: Operaciones lo ve todo el personal, pero solo su
+       equipo completa formularios), que solo ven sus integrantes.
      - Burbuja colaborativa: los responsables de un sector de la
        burbuja pueden editar y completar en todos los sectores de
        esa burbuja, pero solo aprueba el responsable del area.

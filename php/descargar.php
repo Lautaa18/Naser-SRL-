@@ -4,7 +4,7 @@
  * Apache redirige aca todo pedido a /uploads/... (ver uploads/.htaccess).
  *  - Hay que estar logueado.
  *  - Documentos del SGI: los ve cualquier usuario logueado.
- *  - Resto de los sectores: solo quien puede ver ese sector (Operaciones es restringido).
+ *  - Resto de los sectores: solo quien puede ver ese sector (si se marca algun sector como restringido, solo sus integrantes).
  *  - Archivo que no se puede asociar a un sector: solo el super usuario.
  */
 require __DIR__ . '/config/auth.php';
