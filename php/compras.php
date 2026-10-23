@@ -209,7 +209,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $msg = 'Documento subido. La compra avanzó a: ' . $etapaNombre[$et] . '.';
             } else {
                 $estado = (string)$compra['estado_logistico'];
-                if ($et === 2 && $tipoDoc === 'Cotización recibida') {
+                if ($etapaActual === 2 && $et === 2 && $tipoDoc === 'Cotización recibida') {
                     $estado = 'Presupuesto recibido';
                     $pdo->prepare('UPDATE compras SET estado_logistico=?, actualizado_por=?, actualizado_en=NOW() WHERE id=? AND sector_id=?')->execute([$estado, $uid, $id, $sid]);
                 } else {
@@ -258,7 +258,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($a === 'eliminar') {
             $id = (int)($_POST['id'] ?? 0);
-            $pdo->prepare('DELETE FROM compras WHERE id=? AND sector_id=?')->execute([$id, $sid]);
+            if ($id < 1) throw new RuntimeException('Seleccioná un pedido de compra válido.');
+
+            $pdo->beginTransaction();
+            try {
+                $st = $pdo->prepare('SELECT id FROM compras WHERE id=? AND sector_id=? FOR UPDATE');
+                $st->execute([$id, $sid]);
+                if (!$st->fetchColumn()) throw new RuntimeException('Pedido de compra inválido.');
+
+                $st = $pdo->prepare('SELECT ruta_archivo FROM compras_documentos WHERE compra_id=?');
+                $st->execute([$id]);
+                $rutasDocumentos = $st->fetchAll(PDO::FETCH_COLUMN);
+
+                $pdo->prepare('DELETE FROM compras_documentos WHERE compra_id=?')->execute([$id]);
+                $pdo->prepare('DELETE FROM compras_encuesta WHERE compra_id=?')->execute([$id]);
+                $pdo->prepare('DELETE FROM compras WHERE id=? AND sector_id=?')->execute([$id, $sid]);
+                $pdo->commit();
+            } catch (Throwable $errorEliminar) {
+                if ($pdo->inTransaction()) $pdo->rollBack();
+                throw $errorEliminar;
+            }
+
+            // Los archivos se eliminan después de confirmar la transacción para no
+            // perderlos si la base de datos rechaza el borrado.
+            foreach ($rutasDocumentos as $rutaDocumento) {
+                $rutaDocumento = str_replace('\\', '/', (string)$rutaDocumento);
+                if (!preg_match('#^compras/[^/]+$#', $rutaDocumento)) continue;
+                $archivoDocumento = $uploadDir . DIRECTORY_SEPARATOR . basename($rutaDocumento);
+                if (is_file($archivoDocumento)) @unlink($archivoDocumento);
+            }
             auditModulo($pdo, $uid, 'compras_eliminar', "Compra #$id");
             $msg = 'Registro de compra eliminado.';
         }
@@ -281,6 +309,15 @@ $st = $pdo->prepare('SELECT c.*, u.nombre AS actualizado_nombre,
     FROM compras c LEFT JOIN usuarios u ON u.id=c.actualizado_por WHERE c.sector_id=? ORDER BY c.fecha_creacion DESC');
 $st->execute([$sid]);
 $rows = $st->fetchAll();
+$presupuestoCompraId = (int)($_GET['presupuesto'] ?? 0);
+$presupuestoCompraCodigo = '';
+foreach ($rows as $rowCompra) {
+    if ((int)$rowCompra['id'] === $presupuestoCompraId && (int)$rowCompra['etapa'] >= 2) {
+        $presupuestoCompraCodigo = (string)$rowCompra['codigo'];
+        break;
+    }
+}
+if ($presupuestoCompraCodigo === '') $presupuestoCompraId = 0;
 
 $docsCompra = $pdo->prepare('SELECT d.*, c.codigo, u.nombre AS subido_por FROM compras_documentos d JOIN compras c ON c.id=d.compra_id LEFT JOIN usuarios u ON u.id=d.creado_por WHERE c.sector_id=? ORDER BY d.id DESC');
 $docsCompra->execute([$sid]);
@@ -514,6 +551,9 @@ $recepcionesPendientes = array_values(array_filter($rows, static fn($r) => (int)
                 <td><?=h($r['actualizado_nombre']??'Sistema')?><br><small style="color:#9ca3af"><?=date('d/m/Y H:i',strtotime($r['actualizado_en']))?></small></td>
                 <?php if($canEdit):?>
                     <td class="module-actions">
+                        <?php if((int)$r['etapa'] >= 2):?>
+                            <a class="btn secondary" href="<?=app_url('/php/compras.php?presupuesto='.(int)$r['id'].'#documentos')?>">Adjuntar presupuesto</a>
+                        <?php endif;?>
                         <a class="btn secondary" href="?editar=<?=(int)$r['id']?>">Editar</a>
                         <form method="post" onsubmit="return confirm('¿Confirma eliminar este pedido de compra?')"><?=csrf_field()?>
                             <input type="hidden" name="accion" value="eliminar">
@@ -530,15 +570,15 @@ $recepcionesPendientes = array_values(array_filter($rows, static fn($r) => (int)
 
 <?php if($canEdit && $rows):?>
 <section class="module-card" style="margin-top:25px" id="documentos">
-    <h3>📎 Gestor de Documentación y Adjuntos por Etapa</h3>
-    <p>Adjuntá en orden el documento requerido de cada etapa: pedido, solicitud/cotización, orden de compra, factura, pago y remito. Se avanza de a una etapa y el documento actual debe estar cargado. PDF, Office e imágenes de hasta 10 MB.</p>
+    <h3><?=$presupuestoCompraId ? '📎 Adjuntar presupuesto a compra '.h($presupuestoCompraCodigo) : '📎 Gestor de Documentación y Adjuntos por Etapa'?></h3>
+    <p>Podés adjuntar varios presupuestos de proveedores, uno por vez. Para cargarlos, elegí la compra, la etapa “Solicitud de Presupuesto” y “Presupuesto / cotización recibida del proveedor”. Cada archivo queda asociado a la compra; PDF, Office e imágenes de hasta 10 MB. Los documentos principales del ciclo se cargan en orden.</p>
     <form method="post" enctype="multipart/form-data" class="module-form"><?=csrf_field()?>
         <input type="hidden" name="accion" value="documento_etapa">
         
         <label>Seleccionar Compra
             <select name="compra_id" required>
                 <?php foreach($rows as $r):?>
-                    <option value="<?=(int)$r['id']?>" data-etapa="<?=(int)$r['etapa']?>" data-doc-actual="<?=(int)$r['docs_etapa_actual']?>"><?=h($r['codigo'].' - '.$r['descripcion'])?></option>
+                    <option value="<?=(int)$r['id']?>" data-etapa="<?=(int)$r['etapa']?>" data-doc-actual="<?=(int)$r['docs_etapa_actual']?>" <?=($presupuestoCompraId === (int)$r['id'])?'selected':''?>><?=h($r['codigo'].' - '.$r['descripcion'])?></option>
                 <?php endforeach;?>
             </select>
         </label>
@@ -546,7 +586,7 @@ $recepcionesPendientes = array_values(array_filter($rows, static fn($r) => (int)
         <label>Etapa Correspondiente
             <select name="etapa_doc" required>
                 <?php foreach($etapaNombre as $n=>$et):?>
-                    <option value="<?=$n?>"><?=h($et)?></option>
+                    <option value="<?=$n?>" <?=($presupuestoCompraId && $n === 2)?'selected':''?>><?=h($et)?></option>
                 <?php endforeach;?>
             </select>
         </label>
@@ -554,7 +594,7 @@ $recepcionesPendientes = array_values(array_filter($rows, static fn($r) => (int)
         <label>Tipo de Documento
             <select name="tipo_documento" id="tipoDocumentoCompra" required>
                 <?php foreach($tiposDocumentoPorEtapa as $num=>$tipos):foreach($tipos as $tipo):?>
-                    <option value="<?=h($tipo)?>" data-etapa="<?=$num?>"><?=h($tipo)?></option>
+                    <option value="<?=h($tipo)?>" data-etapa="<?=$num?>" <?=($presupuestoCompraId && $num === 2 && $tipo === 'Cotización recibida')?'selected':''?>><?=h($tipo === 'Cotización recibida' ? 'Presupuesto / cotización recibida del proveedor' : $tipo)?></option>
                 <?php endforeach;endforeach;?>
             </select>
         </label>
