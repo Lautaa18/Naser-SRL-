@@ -568,9 +568,13 @@ $recepcionesPendientes = array_values(array_filter($rows, static fn($r) => (int)
     </table>
 </div>
 
-<?php if($canEdit && $rows):?>
 <section class="module-card" style="margin-top:25px" id="documentos">
-    <h3><?=$presupuestoCompraId ? '📎 Adjuntar presupuesto a compra '.h($presupuestoCompraCodigo) : '📎 Gestor de Documentación y Adjuntos por Etapa'?></h3>
+    <h3><?=$presupuestoCompraId ? '📎 Adjuntar presupuesto a compra '.h($presupuestoCompraCodigo) : '📎 Adjuntos por Etapa'?></h3>
+    <?php if(!$canEdit):?>
+        <p class="module-permission">Modo consulta: podés ver los documentos en el repositorio. Para adjuntar archivos necesitás permisos de edición en Compras.</p>
+    <?php elseif(!$rows):?>
+        <p class="module-permission">Todavía no hay pedidos de compra. Primero creá un pedido en <a href="#gestion">Modificar / Registrar Pedido</a>; después vas a poder adjuntar el presupuesto, la orden de compra, la factura, el pago y el remito desde acá.</p>
+    <?php else:?>
     <p>Podés adjuntar varios presupuestos de proveedores, uno por vez. Para cargarlos, elegí la compra, la etapa “Solicitud de Presupuesto” y “Presupuesto / cotización recibida del proveedor”. Cada archivo queda asociado a la compra; PDF, Office e imágenes de hasta 10 MB. Los documentos principales del ciclo se cargan en orden.</p>
     <form method="post" enctype="multipart/form-data" class="module-form"><?=csrf_field()?>
         <input type="hidden" name="accion" value="documento_etapa">
@@ -607,8 +611,8 @@ $recepcionesPendientes = array_values(array_filter($rows, static fn($r) => (int)
             <button class="btn primary">Subir documento de esta etapa</button>
         </div>
     </form>
+    <?php endif;?>
 </section>
-<?php endif;?>
 
 <div class="module-toolbar">
     <h2>Repositorio de Documentos Adjuntos</h2>
