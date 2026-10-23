@@ -92,7 +92,28 @@ function formularioPorCodigo(string $codigo): ?array {
     return formulariosCatalogo()[$codigo] ?? null;
 }
 function formulariosDeSector(string $slug): array {
-    return array_values(array_filter(formulariosCatalogo(), fn($f) => $f['sector'] === $slug));
+    return array_values(array_filter(formulariosCatalogo(), fn($f) => $f['sector'] === $slug && !esHerramientaDeTrabajo($f['codigo'])));
+}
+/**
+ * Herramientas de trabajo del sector (no son formularios para completar uno por uno):
+ * se abren con un botón propio en la página del sector y no figuran en la lista de formularios.
+ */
+function herramientasDeTrabajo(): array {
+    return [
+        'rrhh' => ['codigo' => 'operaciones-diagrama-trabajo', 'titulo' => 'Diagrama de trabajo', 'icono' => '📅'],
+        'mantenimiento' => ['codigo' => 'operaciones-stock-herramientas', 'titulo' => 'Stock de herramientas', 'icono' => '🧰'],
+    ];
+}
+function herramientaDeSector(string $slug): ?array {
+    return herramientasDeTrabajo()[$slug] ?? null;
+}
+function esHerramientaDeTrabajo(string $codigo): bool {
+    foreach (herramientasDeTrabajo() as $h) if ($h['codigo'] === $codigo) return true;
+    return false;
+}
+/** URL de entrada directa a la herramienta de trabajo del sector. */
+function urlHerramientaSector(string $slug): string {
+    return app_url('/php/formularios/herramienta.php') . '?sector=' . urlencode($slug);
 }
 /**
  * Formularios que puede completar el RESPONSABLE DE CUALQUIER SECTOR (no solo los del sector dueño).
@@ -225,32 +246,11 @@ function formulariosPanel(PDO $pdo, string $slug): void {
     <?php endif;
 }
 
-/** Apartado propio de planificación o inventario dentro del sector. */
-function seccionTrabajoSector(PDO $pdo, string $slug): void {
-    $codigo = match ($slug) {
-        'rrhh' => 'operaciones-diagrama-trabajo',
-        'mantenimiento' => 'operaciones-stock-herramientas',
-        default => null,
-    };
-    if (!$codigo) return;
+/** Botón de entrada a la herramienta de trabajo del sector (Diagrama de trabajo / Stock de herramientas). */
+function botonHerramientaSector(PDO $pdo, string $slug): void {
+    $h = herramientaDeSector($slug);
+    if (!$h) return;
     $sector = sectorPorSlug($pdo, $slug);
     if (!$sector || !puedeVerSector($pdo, (int)$sector['id'])) return;
-    $titulo = $slug === 'rrhh' ? 'Diagrama de trabajo' : 'Stock de herramientas';
-    $id = $slug === 'rrhh' ? 'diagrama-trabajo' : 'stock-herramientas';
-    $descripcion = $slug === 'rrhh'
-        ? 'Organizá el cronograma mensual de trabajo del personal.'
-        : 'Consultá y actualizá el inventario de herramientas de Mantenimiento.';
-    $hub = app_url('/php/formularios/index.php') . '?sector=' . urlencode($slug) . '&f=' . urlencode($codigo);
-    ?>
-    <section class="module-card" id="<?=h($id)?>" aria-labelledby="<?=h($id)?>-titulo">
-      <h2 id="<?=h($id)?>-titulo"><?=h($titulo)?></h2>
-      <p><?=h($descripcion)?></p>
-      <div class="top-actions">
-        <a class="btn secondary" href="<?=h($hub)?>">Ver registros</a>
-        <?php if (puedeCompletarSector($pdo, (int)$sector['id'])): ?>
-          <a class="btn primary" href="<?=h(app_url('/php/formularios/llenar.php') . '?f=' . urlencode($codigo))?>">Crear registro</a>
-        <?php endif; ?>
-      </div>
-    </section>
-    <?php
+    ?><a class="btn primary" href="<?=h(urlHerramientaSector($slug))?>"><?=h($h['icono'])?> <?=h($h['titulo'])?></a><?php
 }
