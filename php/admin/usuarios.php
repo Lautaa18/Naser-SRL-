@@ -124,8 +124,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Clave general numérica (opcional): la misma para todos los destinatarios; igual la tienen que cambiar al ingresar
             $claveGeneral = trim((string)($_POST['clave_general'] ?? ''));
             if ($claveGeneral !== '') {
-                if (!preg_match('/^\d{8,12}$/', $claveGeneral)) throw new RuntimeException('La clave general tiene que ser solo números, entre 8 y 12 dígitos.');
-                if (preg_match('/^(\d)\1+$/', $claveGeneral) || strpos('0123456789012345678909876543210', $claveGeneral) !== false) throw new RuntimeException('Esa clave es demasiado obvia (repetida o correlativa). Elegí otra.');
+                if (!preg_match('/^\d{4,12}$/', $claveGeneral)) throw new RuntimeException('La clave general tiene que ser solo números, entre 4 y 12 dígitos.');
             }
             $enviarMails = isset($_POST['enviar_mails']);
             if ($enviarMails) require_once __DIR__ . '/../config/mailer.php';
@@ -277,7 +276,7 @@ function matrizRoles(array $sectores, array $roles, array $ROLES): void { ?>
     <label style="display:flex;gap:8px;align-items:center;font-weight:600"><input type="radio" name="alcance" value="sin_ingreso" checked style="width:auto"> Solo a quienes todavía no ingresaron (recomendado)</label>
     <label style="display:flex;gap:8px;align-items:center;font-weight:600"><input type="radio" name="alcance" value="todos" style="width:auto"> A todos los usuarios activos (menos a mí) — también a quienes ya eligieron su propia clave</label>
     <label style="display:grid;gap:4px;font-weight:600">¿Falta alguien? Agregalo acá (opcional)<textarea name="personas_nuevas" rows="3" placeholder="Una persona por línea: Nombre Apellido, correo&#10;Ej: Juan Pérez, juan.perez@gruponaser.com.ar&#10;(sin correo se arma nombre.apellido@gruponaser.com.ar)"></textarea><small class="muted" style="font-weight:400">Se crean sin sector: después les asignás permisos en la lista de usuarios.</small></label>
-    <label style="display:grid;gap:4px;font-weight:600">Clave general numérica (opcional)<input name="clave_general" inputmode="numeric" pattern="[0-9]{8,12}" maxlength="12" autocomplete="off" placeholder="Dejá vacío para una clave distinta por persona"><small class="muted" style="font-weight:400">Solo números, 8 a 12 dígitos, no obvia. Si la completás, todos los del alcance elegido entran con esa misma clave y el sistema les exige cambiarla al ingresar. Mientras alguien no entre, cualquiera que la conozca podría usar su cuenta: usala solo unos días y con la opción "solo a quienes no ingresaron".</small></label>
+    <label style="display:grid;gap:4px;font-weight:600">Clave general numérica (opcional)<input name="clave_general" inputmode="numeric" pattern="[0-9]{4,12}" maxlength="12" autocomplete="off" placeholder="Dejá vacío para una clave distinta por persona"><small class="muted" style="font-weight:400">Solo números, 4 a 12 dígitos (cuanto más fácil, más corto tiene que ser el plazo para usarla). Si la completás, todos los del alcance elegido entran con esa misma clave y el sistema les exige cambiarla al ingresar. Mientras alguien no entre, cualquiera que la conozca podría usar su cuenta: usala solo unos días y con la opción "solo a quienes no ingresaron".</small></label>
     <label style="display:flex;gap:8px;align-items:center;font-weight:600"><input type="checkbox" name="enviar_mails" style="width:auto"> Enviarles también su usuario y contraseña por mail (requiere SMTP configurado)</label>
     <div style="display:flex;gap:10px;flex-wrap:wrap">
       <button class="btn primary" name="salida" value="pantalla">Generar y mostrar en pantalla</button>
