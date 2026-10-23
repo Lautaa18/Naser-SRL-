@@ -2,7 +2,7 @@
 require_once __DIR__ . '/schema_modulos.php';
 
 // Cambiar este numero cada vez que se agregan tablas/columnas en schema_modulos.php
-const NASER_SCHEMA_VERSION = '2026.10.23-1';
+const NASER_SCHEMA_VERSION = '2026.10.23-2';
 
 function hasColumn(PDO $pdo, string $table, string $column): bool
 {
@@ -1039,6 +1039,14 @@ function naser_bootstrap(PDO $pdo): void
         END
         SET r.sector_id = s.id
         WHERE r.formulario IN ('operaciones-diagrama-trabajo', 'operaciones-stock-herramientas')");
+
+    // Una sola vez: Operaciones deja de ser un sector restringido (lo ve todo el personal; opera solo su equipo).
+    // Si despues se vuelve a marcar como restringido desde Usuarios y permisos, no se toca de nuevo.
+    $yaAbierto = $pdo->query("SELECT valor FROM sistema_config WHERE clave = 'operaciones_visible_para_todos'")->fetchColumn();
+    if ($yaAbierto === false) {
+        $pdo->exec("UPDATE sectores SET restringido = 0 WHERE slug = 'operaciones'");
+        $pdo->exec("INSERT INTO sistema_config (clave, valor) VALUES ('operaciones_visible_para_todos', '1')");
+    }
 
     $pdo->prepare("INSERT INTO sistema_config (clave, valor) VALUES ('schema_version', ?) ON DUPLICATE KEY UPDATE valor = VALUES(valor)")
         ->execute([NASER_SCHEMA_VERSION]);

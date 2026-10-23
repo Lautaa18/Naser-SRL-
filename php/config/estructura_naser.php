@@ -71,11 +71,11 @@ function estructuraNaser(): array {
             'finanzas' => ['noelia', 'carina', 'victor', 'ariel.costallat', 'osvaldo', 'ariel.ibanez'],
             'rrhh'     => ['noelia', 'carina', 'victor', 'ariel.costallat', 'osvaldo', 'ariel.ibanez'],
             'ventas'   => ['noelia', 'carina', 'victor', 'ariel.costallat', 'osvaldo', 'ariel.ibanez'],
-            'operaciones' => ['victor'],   // Gerencia puede mirar Operaciones (sector restringido)
+            'operaciones' => ['victor'],   // Gerencia mira Operaciones (como observador)
         ],
 
         // Sectores que SOLO ven sus integrantes (el resto de los sectores los ven todos)
-        'restringidos' => ['operaciones'],
+        'restringidos' => [],   // Operaciones lo ve todo el personal; solo su equipo (responsables y operadores) completa formularios
 
         // Burbujas: en una burbuja colaborativa, los responsables de cualquiera de sus sectores
         // pueden editar y completar formularios en todos ellos, pero aprueba solo el responsable del área.
