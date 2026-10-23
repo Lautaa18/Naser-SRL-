@@ -89,7 +89,7 @@ if ($allowedIds) {
               <?php if ($form['codigo_sgi'] !== ''): ?><span class="fx-code"><?=h($form['codigo_sgi'])?></span><?php endif; ?>
             </div>
             <div class="fx-card-actions">
-              <?php if (puedeCompletarSector($pdo, $form['sector_id'])): ?><a class="btn primary" href="<?=h($fill)?>">Completar nuevo</a><?php endif; ?>
+              <?php if (puedeCompletarFormulario($pdo, $form['codigo'], (int)$form['sector_id'])): ?><a class="btn primary" href="<?=h($fill)?>">Completar nuevo</a><?php endif; ?>
               <a class="btn secondary" href="<?=h($hub)?>">Ver registros</a>
             </div>
           </article>

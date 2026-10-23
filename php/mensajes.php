@@ -7,8 +7,8 @@ require_once __DIR__ . '/config/notificaciones.php';
 verify_csrf();
 
 $uid = (int)$_SESSION['usuario_id'];
-$sectores = sectoresInfo($pdo);                       // id => datos
-$mios = array_map('intval', array_keys(misRolesSector($pdo)));
+$sectores = array_filter(sectoresInfo($pdo), fn($s) => $s['slug'] !== 'sgi');   // id => datos (el SGI no es un sector: no recibe ni envia mensajes)
+$mios = array_values(array_filter(array_map('intval', array_keys(misRolesSector($pdo))), fn($id) => isset($sectores[$id])));
 $puedoComoSector = esAdmin() ? array_keys($sectores) : $mios;   // desde que sector puedo escribir
 // Primero los sectores donde soy responsable u operador (el sector "propio"), despues los de solo lectura
 $pesoRol = ['responsable' => 0, 'operador' => 1, 'observador' => 2];
@@ -72,7 +72,7 @@ function destinatarioValido(PDO $pdo, int $uid, int $destino): ?array {
 /** Personas a las que se les puede escribir, con sus sectores (sin mostrar mails). */
 function personasDestino(PDO $pdo, int $uid): array {
     $st = $pdo->prepare("SELECT u.id, u.nombre, GROUP_CONCAT(DISTINCT s.nombre ORDER BY s.orden SEPARATOR ', ') AS sectores
-        FROM usuarios u LEFT JOIN usuario_sector us ON us.usuario_id = u.id LEFT JOIN sectores s ON s.id = us.sector_id
+        FROM usuarios u LEFT JOIN usuario_sector us ON us.usuario_id = u.id LEFT JOIN sectores s ON s.id = us.sector_id AND s.slug <> 'sgi'
         WHERE u.activo = 1 AND u.id <> ? GROUP BY u.id, u.nombre ORDER BY u.nombre");
     $st->execute([$uid]);
     return $st->fetchAll();

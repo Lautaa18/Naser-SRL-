@@ -52,7 +52,11 @@ function sectoresInfo(PDO $pdo): array {
     $cache = [];
     $rows = $pdo->query('SELECT s.id, s.nombre, s.slug, s.orden, s.burbuja_id, s.restringido, COALESCE(b.colaborativa,0) AS colaborativa, b.nombre AS burbuja
                          FROM sectores s LEFT JOIN burbujas b ON b.id = s.burbuja_id ORDER BY s.orden, s.nombre')->fetchAll();
-    foreach ($rows as $r) $cache[(int)$r['id']] = $r;
+    foreach ($rows as $r) {
+        // El SGI no es un sector de trabajo: es el apartado de documentacion. Asi se muestra en todo el sistema.
+        if ($r['slug'] === 'sgi') $r['nombre'] = 'SGI (documentación)';
+        $cache[(int)$r['id']] = $r;
+    }
     return $cache;
 }
 /** Roles del usuario logueado: [sector_id => 'responsable'|'operador'|'observador']. */

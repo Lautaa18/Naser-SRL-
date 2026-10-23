@@ -72,7 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-$sectores = sectoresInfo($pdo);
+$sectores = array_filter(sectoresInfo($pdo), fn($s) => $s['slug'] !== 'sgi');   // el SGI no es un sector de trabajo
 $id = (int)($_GET['id'] ?? 0);
 $nuevo = isset($_GET['nuevo']) && $editar;
 
