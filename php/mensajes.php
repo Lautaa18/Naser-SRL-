@@ -38,6 +38,8 @@ function puedeVerHilo(array $hilo, int $uid, array $mios): bool {
     }
     return false;
 }
+/** Solo se puede responder si el ULTIMO mensaje de la conversacion lo escribio otra persona (nadie se responde a si mismo). */
+function puedeResponder(array $hilo, int $uid): bool { return $hilo && (int)end($hilo)['de_usuario_id'] !== $uid; }
 /** Texto del destinatario de un mensaje: la persona o el sector. */
 function destinoMsg(array $m): string { return $m['persona_para'] ?? null ? (string)$m['persona_para'] : (string)($m['sector_para'] ?? ''); }
 /** Envia un mensaje a un SECTOR ($paraSector) o a UNA PERSONA ($paraUsuario). */
@@ -105,6 +107,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $raiz = (int)($_POST['raiz'] ?? 0);
             $hilo = hiloDe($pdo, $raiz);
             if (!$hilo || (int)$hilo[0]['id'] !== $raiz || $hilo[0]['respuesta_a'] !== null || !puedeVerHilo($hilo, $uid, $mios)) throw new RuntimeException('Conversación no encontrada.');
+            if (!puedeResponder($hilo, $uid)) throw new RuntimeException('No podés responder un mensaje que enviaste vos: tiene que contestar otra persona primero.');
             $ult = end($hilo);
             if (esHiloPrivado($hilo)) {
                 // Conversacion entre dos personas: la respuesta va a la otra persona
@@ -182,7 +185,9 @@ function fechaMsg(string $f): string { return date('d/m/Y H:i', strtotime($f)); 
       <p style="margin:8px 0 0"><?= nl2br(h($m['cuerpo'])) ?></p>
     </div>
   <?php endforeach; ?></section>
-  <?php if ($puedoComoSector): ?>
+  <?php if ($puedoComoSector && !puedeResponder($hilo, $uid)): ?>
+  <section class="form-panel"><p class="muted">Enviaste el último mensaje de esta conversación. Cuando otra persona responda, vas a poder contestarle desde acá.</p></section>
+  <?php elseif ($puedoComoSector): ?>
   <section class="form-panel"><h2>Responder</h2>
   <form method="post" class="form-grid"><?= csrf_field() ?>
     <input type="hidden" name="accion" value="responder"><input type="hidden" name="raiz" value="<?= (int)$hilo[0]['id'] ?>">
