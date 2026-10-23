@@ -68,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             volverPersonal($a === 'baja' ? 'Empleado dado de baja.' : 'Empleado reactivado.', '?id=' . $id);
         }
     } catch (Throwable $e) {
-        $err = str_contains($e->getMessage(), 'Duplicate') ? 'Ya existe un empleado con ese legajo.' : $e->getMessage();
+        $err = str_contains($e->getMessage(), 'Duplicate') ? 'Ya existe un empleado con ese legajo.' : mensaje_error($e);
     }
 }
 

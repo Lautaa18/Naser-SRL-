@@ -186,7 +186,7 @@ $accionesHist = ['creado' => 'Creó el formulario', 'guardado' => 'Guardó cambi
       var revisionGuardada = revision;
       if (nombre === 'guardar' || nombre === 'enviar') {
         var d = await recolectar(nombre === 'enviar');
-        if (d.valid === false) { aviso('Completá los campos obligatorios y corregí los datos indicados antes de enviar.', 'err'); return; }
+        if (d.valid === false) { aviso(d.motivo === 'vacio' ? 'El formulario está en blanco: completá los datos antes de enviarlo a aprobación.' : 'Completá los campos obligatorios y corregí los datos indicados antes de enviar.', 'err'); return; }
         payload.datos = d.fields; payload.storage = d.storage;
         if (!refInput.value.trim() && d.sugerencia) refInput.value = d.sugerencia;
         payload.referencia = refInput.value.trim();
