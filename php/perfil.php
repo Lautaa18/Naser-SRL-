@@ -75,7 +75,8 @@ $roles = misRolesSector($pdo);
     <?php foreach (sectoresInfo($pdo) as $s): $sid = (int)$s['id']; if (!puedeVerSector($pdo, $sid)) continue; $r = $roles[$sid] ?? null; ?>
       <tr><td><?=h($s['nombre'])?><?= $s['burbuja'] ? ' <small class="muted">· ' . h($s['burbuja']) . '</small>' : '' ?></td>
       <td><?= $r ? '<span class="tag ' . h($r) . '">' . h(nombreRolSector($r)) . '</span>' : '<span class="muted">—</span>' ?></td>
-      <td><?= implode(' · ', array_filter(['Ver', puedeCompletarSector($pdo, $sid) ? 'Completar' : null, puedeEditarSector($pdo, $sid) ? 'Editar' : null, puedeAprobarSector($pdo, $sid) ? 'Aprobar' : null])) ?></td></tr>
+      <td><?= $s['slug'] === 'sgi' ? implode(' · ', array_filter(['Ver documentación', puedeEditarSector($pdo, $sid) ? 'Cargar y editar documentos' : null]))
+        : implode(' · ', array_filter(['Ver', puedeCompletarSector($pdo, $sid) ? 'Completar' : null, puedeEditarSector($pdo, $sid) ? 'Editar' : null, puedeAprobarSector($pdo, $sid) ? 'Aprobar' : null])) ?></td></tr>
     <?php endforeach; ?>
     </tbody></table>
     <h2 style="margin-top:22px">Avisos por mail</h2>

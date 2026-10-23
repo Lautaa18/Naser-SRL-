@@ -5,8 +5,15 @@
 // Uso (en el servidor, desde la carpeta del proyecto):
 //   docker compose exec web php php/tools/depurar_duplicados.php            -> SOLO MUESTRA el plan (no cambia nada)
 //   docker compose exec web php php/tools/depurar_duplicados.php --aplicar  -> aplica el plan
+//   Agregar --conservar=pdf si el original que querés conservar es el PDF (por defecto: el editable, Word/Excel).
 //
-// Como decide:
+// Como decide (dos casos):
+//   A) MISMO CONTENIDO: el mismo archivo subido mas de una vez.
+//   B) MISMO DOCUMENTO EN DISTINTOS FORMATOS: igual nombre (sin la extension) en el mismo sector, por ejemplo
+//      "PGSN02-F1 Perfil de puesto" en .docx, .xlsx y .pdf. Se conserva UN formato: por defecto el editable
+//      (Word/Excel/PowerPoint), despues el PDF, despues el resto. Con --conservar=pdf se invierte.
+//      Si hay dos archivos del mismo formato con el mismo nombre y distinto contenido, NO se tocan (pueden ser versiones).
+//
 //   - Compara el CONTENIDO de los archivos (SHA-256), no el nombre: dos archivos con distinto nombre pero
 //     igual contenido son repetidos; dos con el mismo nombre y distinto contenido NO.
 //   - El ORIGINAL es el documento mas viejo (menor id). Los demas repetidos DEL MISMO SECTOR se eliminan.
@@ -23,6 +30,7 @@ if (PHP_SAPI !== 'cli') { http_response_code(403); exit("Solo desde la terminal.
 require __DIR__ . '/../config/db.php';
 
 $aplicar = in_array('--aplicar', array_slice($argv, 1), true);
+$prefierePdf = in_array('--conservar=pdf', array_slice($argv, 1), true);
 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 $uploads = realpath(dirname(__DIR__, 2) . '/uploads');
@@ -81,7 +89,45 @@ foreach ($docs as $d) {
     if (!isset($hashDe[$a])) continue;
     $clave = (int)$d['sector_id'] . '|' . $hashDe[$a];
     if (!isset($vistos[$clave])) { $vistos[$clave] = $d; continue; }
-    $quitar[] = ['doc' => $d, 'original' => $vistos[$clave]];
+    $quitar[] = ['doc' => $d, 'original' => $vistos[$clave], 'motivo' => 'mismo contenido'];
+}
+$idsQuitar = array_map(fn($q) => (int)$q['doc']['id'], $quitar);
+
+// ---------- 3b. El mismo documento en distintos formatos (mismo sector, mismo nombre) ----------
+$normalizar = function (string $t): string {
+    $t = mb_strtolower($t);
+    $t = strtr($t, ['á'=>'a','é'=>'e','í'=>'i','ó'=>'o','ú'=>'u','ü'=>'u','ñ'=>'n','à'=>'a','è'=>'e','ì'=>'i','ò'=>'o','ù'=>'u']);
+    $t = preg_replace('/[^a-z0-9]+/', ' ', $t) ?? $t;
+    $t = preg_replace('/\b(copia|copy)\b( de)?/', ' ', $t) ?? $t;        // "- copia", "copy"
+    $t = preg_replace('/\s\d{1,2}$/', '', trim($t)) ?? $t;               // "(1)", "(2)" del explorador de Windows
+    return trim(preg_replace('/\s+/', ' ', $t) ?? $t);
+};
+$prioridadFormato = $prefierePdf
+    ? ['pdf', 'docx', 'doc', 'xlsx', 'xls', 'pptx', 'ppt', 'csv', 'txt', 'png', 'jpg', 'jpeg']
+    : ['docx', 'doc', 'xlsx', 'xls', 'pptx', 'ppt', 'pdf', 'csv', 'txt', 'png', 'jpg', 'jpeg'];
+$peso = fn(string $ext) => ($i = array_search($ext, $prioridadFormato, true)) === false ? 99 : $i;
+$yaSeVan = array_flip($idsQuitar);
+$grupos = [];      // sector|nombre normalizado => filas
+foreach ($docs as $d) {
+    if (isset($yaSeVan[(int)$d['id']])) continue;
+    $nombreBase = pathinfo((string)($d['nombre_original'] ?: $d['titulo']), PATHINFO_FILENAME);
+    $norm = $normalizar($nombreBase !== '' ? $nombreBase : (string)$d['titulo']);
+    if ($norm === '' || mb_strlen($norm) < 4) continue;   // nombres demasiado cortos o vacios: no se agrupan
+    $grupos[(int)$d['sector_id'] . '|' . $norm][] = $d;
+}
+$gruposFormato = 0;
+foreach ($grupos as $filas) {
+    $exts = array_unique(array_map(fn($d) => strtolower(pathinfo((string)$d['archivo'], PATHINFO_EXTENSION)), $filas));
+    if (count($exts) < 2) continue;                        // un solo formato: no hay nada que unificar
+    usort($filas, fn($a, $b) => [$peso(strtolower(pathinfo((string)$a['archivo'], PATHINFO_EXTENSION))), (int)$a['id']] <=> [$peso(strtolower(pathinfo((string)$b['archivo'], PATHINFO_EXTENSION))), (int)$b['id']]);
+    $original = $filas[0];
+    $extOriginal = strtolower(pathinfo((string)$original['archivo'], PATHINFO_EXTENSION));
+    $gruposFormato++;
+    foreach ($filas as $d) {
+        if ((int)$d['id'] === (int)$original['id']) continue;
+        if (strtolower(pathinfo((string)$d['archivo'], PATHINFO_EXTENSION)) === $extOriginal) continue;   // mismo formato: puede ser otra version, no se toca
+        $quitar[] = ['doc' => $d, 'original' => $original, 'motivo' => 'mismo documento en otro formato'];
+    }
 }
 $idsQuitar = array_map(fn($q) => (int)$q['doc']['id'], $quitar);
 
@@ -103,11 +149,11 @@ $marca = date('Ymd_His');
 $csv = $dirBackups . "/duplicados_$marca.csv";
 if ($quitar && ($fh = @fopen($csv, 'w'))) {
     fwrite($fh, "\xEF\xBB\xBF");
-    fputcsv($fh, ['accion', 'id', 'sector', 'carpeta', 'titulo', 'archivo', 'se_conserva_id', 'se_conserva_carpeta'], ';');
+    fputcsv($fh, ['accion', 'motivo', 'id', 'sector', 'carpeta', 'titulo', 'archivo', 'se_conserva_id', 'se_conserva_titulo', 'se_conserva_archivo', 'se_conserva_carpeta'], ';');
     foreach ($quitar as $q) {
         $d = $q['doc']; $o = $q['original'];
-        fputcsv($fh, ['ELIMINAR', $d['id'], $sectores[(int)$d['sector_id']] ?? $d['sector_id'], $rutaCarpeta($d['carpeta_id'] !== null ? (int)$d['carpeta_id'] : null),
-                      $d['titulo'], $d['archivo'], $o['id'], $rutaCarpeta($o['carpeta_id'] !== null ? (int)$o['carpeta_id'] : null)], ';');
+        fputcsv($fh, ['ELIMINAR', $q['motivo'], $d['id'], $sectores[(int)$d['sector_id']] ?? $d['sector_id'], $rutaCarpeta($d['carpeta_id'] !== null ? (int)$d['carpeta_id'] : null),
+                      $d['titulo'], $d['archivo'], $o['id'], $o['titulo'], $o['archivo'], $rutaCarpeta($o['carpeta_id'] !== null ? (int)$o['carpeta_id'] : null)], ';');
     }
     fclose($fh);
 }
@@ -116,7 +162,9 @@ echo "==================================================\n";
 echo $aplicar ? "DEPURAR DOCUMENTOS REPETIDOS — APLICANDO\n" : "DEPURAR DOCUMENTOS REPETIDOS — SOLO PLAN (no se cambia nada)\n";
 echo "==================================================\n";
 echo "Documentos activos revisados: " . count($docs) . " (" . count($hashDe) . " archivos distintos en disco)\n";
-echo "Repetidos a eliminar (mismo sector, mismo contenido): " . count($quitar) . "\n";
+$nContenido = count(array_filter($quitar, fn($q) => $q['motivo'] === 'mismo contenido'));
+echo "Repetidos a eliminar: " . count($quitar) . " ($nContenido por mismo contenido, " . (count($quitar) - $nContenido) . " por ser el mismo documento en otro formato)\n";
+echo "Formato que se conserva: " . ($prefierePdf ? 'PDF' : 'el editable (Word/Excel/PowerPoint) y si no hay, el PDF') . "\n";
 $porSector = [];
 foreach ($quitar as $q) { $n = $sectores[(int)$q['doc']['sector_id']] ?? '?'; $porSector[$n] = ($porSector[$n] ?? 0) + 1; }
 arsort($porSector);
@@ -124,9 +172,9 @@ foreach ($porSector as $n => $c) printf("  %-18s %4d\n", $n, $c);
 echo "Copias en otros sectores que pasan a apuntar al original: " . count($repuntar) . " archivo(s)\n";
 echo "Archivos que se mueven a backups/duplicados_$marca/: " . count($sobrantes) . "\n";
 if ($faltan) echo "Sin archivo en el disco (no se tocan): " . count($faltan) . "\n";
-echo "\nEjemplos (se conserva el más viejo):\n";
-foreach (array_slice($quitar, 0, 12) as $q) {
-    printf("  - [%s] #%d \"%s\"  ←  igual a #%d \"%s\"\n", $sectores[(int)$q['doc']['sector_id']] ?? '?', $q['doc']['id'], $q['doc']['titulo'], $q['original']['id'], $q['original']['titulo']);
+echo "\nEjemplos:\n";
+foreach (array_slice($quitar, 0, 15) as $q) {
+    printf("  - [%s] se va #%d \"%s\" (.%s)  →  queda #%d \"%s\" (.%s)  [%s]\n", $sectores[(int)$q['doc']['sector_id']] ?? '?', $q['doc']['id'], $q['doc']['titulo'], strtolower(pathinfo((string)$q['doc']['archivo'], PATHINFO_EXTENSION)), $q['original']['id'], $q['original']['titulo'], strtolower(pathinfo((string)$q['original']['archivo'], PATHINFO_EXTENSION)), $q['motivo']);
 }
 if ($quitar) echo "\nDetalle completo: $csv\n";
 

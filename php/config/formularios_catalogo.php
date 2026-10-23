@@ -101,11 +101,24 @@ function formulariosDeSector(string $slug): array {
 function formulariosAbiertosAResponsables(): array {
     return ['compras-pedido-materiales'];
 }
+/**
+ * Checklists operativos de equipos (son de Mantenimiento pero los completa el equipo de OPERACIONES:
+ * responsables y operadores, entre ellos Basoalto, Belizón, Costallat, Grier y los operadores).
+ * Los aprueba el responsable de Mantenimiento.
+ */
+function formulariosOperativosDeOperaciones(): array {
+    return ['mantenimiento-checklist-vehicular', 'mantenimiento-checklist-hidrogrua', 'mantenimiento-checklist-unidad-slickline'];
+}
 /** ¿Puede el usuario completar ESTE formulario? (permiso del sector, o responsable de cualquier sector si el formulario esta abierto). */
 function puedeCompletarFormulario(PDO $pdo, string $codigoFormulario, int $sectorId): bool {
     if (puedeCompletarSector($pdo, $sectorId)) return true;
-    if (!in_array($codigoFormulario, formulariosAbiertosAResponsables(), true)) return false;
     if (!puedeVerSector($pdo, $sectorId)) return false;
+    if (in_array($codigoFormulario, formulariosOperativosDeOperaciones(), true)) {
+        $opsId = null;
+        foreach (sectoresInfo($pdo) as $s) if ($s['slug'] === 'operaciones') $opsId = (int)$s['id'];
+        return $opsId !== null && in_array(misRolesSector($pdo)[$opsId] ?? null, ['responsable', 'operador'], true);
+    }
+    if (!in_array($codigoFormulario, formulariosAbiertosAResponsables(), true)) return false;
     return in_array('responsable', misRolesSector($pdo), true);
 }
 function rutaFormulario(array $f): string {
