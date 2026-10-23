@@ -25,7 +25,7 @@ if ($reg) {
     $fields = json_decode((string)$reg['datos_json'], true) ?: new stdClass();
     $storage = json_decode((string)$reg['storage_json'], true) ?: new stdClass();
 } else {
-    $readonly = !puedeCompletarSector($pdo, (int)$sector['id']);
+    $readonly = !puedeCompletarFormulario($pdo, $form['codigo'], (int)$sector['id']);
     $fields = new stdClass();
     $storage = new stdClass();
 }

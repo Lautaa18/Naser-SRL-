@@ -94,6 +94,20 @@ function formularioPorCodigo(string $codigo): ?array {
 function formulariosDeSector(string $slug): array {
     return array_values(array_filter(formulariosCatalogo(), fn($f) => $f['sector'] === $slug));
 }
+/**
+ * Formularios que puede completar el RESPONSABLE DE CUALQUIER SECTOR (no solo los del sector dueño).
+ * El registro queda en el sector dueño (ej. Compras) y lo aprueba el responsable de ese sector.
+ */
+function formulariosAbiertosAResponsables(): array {
+    return ['compras-pedido-materiales'];
+}
+/** ¿Puede el usuario completar ESTE formulario? (permiso del sector, o responsable de cualquier sector si el formulario esta abierto). */
+function puedeCompletarFormulario(PDO $pdo, string $codigoFormulario, int $sectorId): bool {
+    if (puedeCompletarSector($pdo, $sectorId)) return true;
+    if (!in_array($codigoFormulario, formulariosAbiertosAResponsables(), true)) return false;
+    if (!puedeVerSector($pdo, $sectorId)) return false;
+    return in_array('responsable', misRolesSector($pdo), true);
+}
 function rutaFormulario(array $f): string {
     return dirname(__DIR__, 2) . '/formularios/' . $f['archivo'];
 }
@@ -110,7 +124,7 @@ function sectorPorSlug(PDO $pdo, string $slug): ?array {
 function permisosRegistro(PDO $pdo, array $reg): array {
     $sid = (int)$reg['sector_id'];
     $uid = (int)($_SESSION['usuario_id'] ?? 0);
-    $completar = puedeCompletarSector($pdo, $sid);
+    $completar = puedeCompletarFormulario($pdo, (string)$reg['formulario'], $sid);
     $aprobar = puedeAprobarSector($pdo, $sid);
     $esAutor = (int)($reg['creado_por'] ?? 0) === $uid;
     $editable = in_array($reg['estado'], ['borrador', 'rechazado'], true);
@@ -148,7 +162,6 @@ function formulariosPanel(PDO $pdo, string $slug): void {
     $pend = $pdo->prepare("SELECT COUNT(*) FROM formularios_registros WHERE sector_id = ? AND estado = 'enviado'");
     $pend->execute([$sid]);
     $pendientes = (int)$pend->fetchColumn();
-    $puedeCompletar = puedeCompletarSector($pdo, $sid);
     $hub = app_url('/php/formularios/index.php') . '?sector=' . urlencode($slug);
     ?>
     <div class="module-toolbar" id="formularios">
@@ -168,7 +181,7 @@ function formulariosPanel(PDO $pdo, string $slug): void {
           <?php if ($f['codigo_sgi']): ?><span class="fx-code"><?=h($f['codigo_sgi'])?></span><?php endif; ?>
           <h3><?=h($f['titulo'])?></h3>
         </div>
-        <?php if ($puedeCompletar): ?>
+        <?php if (puedeCompletarFormulario($pdo, $f['codigo'], $sid)): ?>
           <a class="btn primary" href="<?=h(app_url('/php/formularios/llenar.php') . '?f=' . urlencode($f['codigo']))?>">Completar nuevo</a>
         <?php else: ?>
           <a class="btn secondary" href="<?=h($hub . '&f=' . urlencode($f['codigo']))?>">Ver registros</a>

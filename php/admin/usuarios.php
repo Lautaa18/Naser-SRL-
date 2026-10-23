@@ -152,11 +152,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $q = $pdo->prepare('SELECT COUNT(*) FROM formularios_registros WHERE creado_por = ? OR enviado_por = ? OR revisado_por = ? OR actualizado_por = ?');
             $q->execute([$id, $id, $id, $id]);
             $nForms = (int)$q->fetchColumn();
-            $q = $pdo->prepare('SELECT COUNT(*) FROM mensajes WHERE de_usuario_id = ?');
-            $q->execute([$id]);
+            $q = $pdo->prepare('SELECT COUNT(*) FROM mensajes WHERE de_usuario_id = ? OR para_usuario_id = ?');
+            $q->execute([$id, $id]);
             $nMsgs = (int)$q->fetchColumn();
             if ($nForms || $nMsgs) {
-                throw new RuntimeException('No se puede eliminar a ' . $u['nombre'] . ': participó en ' . $nForms . ' formulario(s) y envió ' . $nMsgs . ' mensaje(s) que quedarían sin autor. Usá "Desactivar": pierde el acceso y se conserva todo el historial.');
+                throw new RuntimeException('No se puede eliminar a ' . $u['nombre'] . ': participó en ' . $nForms . ' formulario(s) y en ' . $nMsgs . ' mensaje(s) que quedarían sin autor o sin destinatario. Usá "Desactivar": pierde el acceso y se conserva todo el historial.');
             }
             $pdo->prepare('DELETE FROM notificaciones WHERE usuario_id = ?')->execute([$id]);
             $pdo->prepare('DELETE FROM mensajes_leidos WHERE usuario_id = ?')->execute([$id]);
