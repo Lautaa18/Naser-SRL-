@@ -32,6 +32,37 @@ $limpiarJson = function ($v): ?string {
 };
 $referencia = mb_substr(trim((string)($in['referencia'] ?? '')), 0, 200);
 
+// ---------- HERRAMIENTAS DE TRABAJO (Diagrama de trabajo, Stock de herramientas) ----------
+// Guardado directo sobre un único registro compartido por sector: sin borrador, envío ni aprobación.
+if ($accion === 'herramienta_guardar') {
+    $form = formularioPorCodigo((string)($in['formulario'] ?? ''));
+    if (!$form || !esHerramientaDeTrabajo($form['codigo'])) fallar('Herramienta desconocida.');
+    $sector = sectorPorSlug($pdo, $form['sector']);
+    if (!$sector || !puedeCompletarFormulario($pdo, $form['codigo'], (int)$sector['id'])) fallar('No tenés permiso para modificar esta herramienta.', 403);
+    $sid = (int)$sector['id'];
+    $st = $pdo->prepare('SELECT id, actualizado_en FROM formularios_registros WHERE formulario = ? AND sector_id = ? ORDER BY actualizado_en DESC, id DESC LIMIT 1');
+    $st->execute([$form['codigo'], $sid]);
+    $actual = $st->fetch();
+    $datosJson = $limpiarJson($in['datos'] ?? new stdClass());
+    $storageJson = $limpiarJson($in['storage'] ?? new stdClass());
+    if (!$actual) {
+        $pdo->prepare("INSERT INTO formularios_registros (formulario, sector_id, estado, datos_json, storage_json, creado_por, actualizado_por) VALUES (?,?,?,?,?,?,?)")
+            ->execute([$form['codigo'], $sid, 'aprobado', $datosJson, $storageJson, $uid, $uid]);
+        $id = (int)$pdo->lastInsertId();
+        registrarActividad($pdo, 'herramienta_creada', $form['titulo']);
+    } else {
+        // Si otra persona guardó después de que se abrió esta pantalla, no se pisa su trabajo.
+        if ((int)$actual['id'] !== $id || (string)$actual['actualizado_en'] !== (string)($in['base'] ?? '')) {
+            fallar('Otra persona modificó esta pantalla mientras la tenías abierta. Recargá la página para ver los cambios antes de seguir.', 409);
+        }
+        $pdo->prepare("UPDATE formularios_registros SET datos_json = ?, storage_json = ?, actualizado_por = ?, estado = 'aprobado' WHERE id = ?")
+            ->execute([$datosJson, $storageJson, $uid, $id]);
+    }
+    $st = $pdo->prepare('SELECT actualizado_en FROM formularios_registros WHERE id = ?');
+    $st->execute([$id]);
+    responder(['ok' => true, 'id' => $id, 'version' => (string)$st->fetchColumn(), 'mensaje' => 'Guardado.']);
+}
+
 $reg = $id ? cargarRegistro($pdo, $id) : null;
 if ($id && !$reg) fallar('El registro no existe (puede que lo hayan eliminado).', 404);
 if ($reg && !puedeVerSector($pdo, (int)$reg['sector_id'])) fallar('No tenés acceso a este sector.', 403);
