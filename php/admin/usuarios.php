@@ -90,6 +90,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($a === 'generar_claves') {
             // Contraseña temporal nueva para varias personas a la vez (cada una la cambia al primer ingreso)
             $alcance = ($_POST['alcance'] ?? '') === 'todos' ? 'todos' : 'sin_ingreso';
+            // Personas que todavía no tienen usuario: una por línea, "Nombre Apellido, correo" (sin correo se arma nombre.apellido@dominio)
+            $creados = 0; $nuevos = [];
+            $lineas = preg_split('/\R+/', trim((string)($_POST['personas_nuevas'] ?? '')), -1, PREG_SPLIT_NO_EMPTY);
+            $existe = $pdo->prepare('SELECT 1 FROM usuarios WHERE email = ?');
+            foreach ($lineas as $linea) {
+                $partes = array_map('trim', preg_split('/[,;\t]+/', $linea));
+                $nom = $partes[0] ?? '';
+                $mail = strtolower($partes[1] ?? '');
+                if ($nom === '') continue;
+                if ($mail === '') {
+                    $pal = preg_split('/\s+/', strtolower(iconv('UTF-8', 'ASCII//TRANSLIT', $nom) ?: $nom));
+                    $pal = array_values(array_filter(array_map(fn($x) => preg_replace('/[^a-z]/', '', $x), $pal)));
+                    if (count($pal) < 2) throw new RuntimeException('Para "' . $nom . '" escribí nombre y apellido, o agregá el correo después de una coma.');
+                    $mail = emailNaser($pal[0] . '.' . $pal[count($pal) - 1]);
+                }
+                if (!filter_var($mail, FILTER_VALIDATE_EMAIL)) throw new RuntimeException('Correo inválido en la línea: ' . $linea);
+                $existe->execute([$mail]);
+                if ($existe->fetchColumn()) continue;
+                $nuevos[$mail] = $nom;
+            }
+            // Recién después de validar todas las líneas se crean (si una falla, no se crea ninguna)
+            foreach ($nuevos as $mail => $nom) {
+                $pdo->prepare('INSERT INTO usuarios (nombre, email, password, rol, activo, debe_cambiar_password) VALUES (?,?,?,?,1,1)')
+                    ->execute([$nom, $mail, password_hash(passwordTemporal(), PASSWORD_DEFAULT), 'usuario']);
+                registrarActividad($pdo, 'crear_usuario', $mail);
+                $creados++;
+            }
             $q = $pdo->prepare('SELECT id, nombre, email FROM usuarios WHERE activo = 1 AND id <> ?' . ($alcance === 'sin_ingreso' ? ' AND ultimo_acceso IS NULL' : '') . ' ORDER BY nombre');
             $q->execute([$yoId]);
             $destinatarios = $q->fetchAll();
@@ -132,7 +159,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 fclose($out);
                 exit;
             }
-            volver('Se generaron ' . count($lote) . ' contraseña(s) temporal(es). Cada persona tiene que cambiarla al ingresar.', $lote);
+            volver('Se generaron ' . count($lote) . ' contraseña(s) temporal(es)' . ($creados ? " (se crearon $creados usuario(s) nuevo(s): asignales sector en la lista de abajo)" : '') . '. Cada persona tiene que cambiarla al ingresar.', $lote);
         }
 
         if ($a === 'estado') {
@@ -249,6 +276,7 @@ function matrizRoles(array $sectores, array $roles, array $ROLES): void { ?>
     <input type="hidden" name="accion" value="generar_claves">
     <label style="display:flex;gap:8px;align-items:center;font-weight:600"><input type="radio" name="alcance" value="sin_ingreso" checked style="width:auto"> Solo a quienes todavía no ingresaron (recomendado)</label>
     <label style="display:flex;gap:8px;align-items:center;font-weight:600"><input type="radio" name="alcance" value="todos" style="width:auto"> A todos los usuarios activos (menos a mí) — también a quienes ya eligieron su propia clave</label>
+    <label style="display:grid;gap:4px;font-weight:600">¿Falta alguien? Agregalo acá (opcional)<textarea name="personas_nuevas" rows="3" placeholder="Una persona por línea: Nombre Apellido, correo&#10;Ej: Juan Pérez, juan.perez@gruponaser.com.ar&#10;(sin correo se arma nombre.apellido@gruponaser.com.ar)"></textarea><small class="muted" style="font-weight:400">Se crean sin sector: después les asignás permisos en la lista de usuarios.</small></label>
     <label style="display:grid;gap:4px;font-weight:600">Clave general numérica (opcional)<input name="clave_general" inputmode="numeric" pattern="[0-9]{8,12}" maxlength="12" autocomplete="off" placeholder="Dejá vacío para una clave distinta por persona"><small class="muted" style="font-weight:400">Solo números, 8 a 12 dígitos, no obvia. Si la completás, todos los del alcance elegido entran con esa misma clave y el sistema les exige cambiarla al ingresar. Mientras alguien no entre, cualquiera que la conozca podría usar su cuenta: usala solo unos días y con la opción "solo a quienes no ingresaron".</small></label>
     <label style="display:flex;gap:8px;align-items:center;font-weight:600"><input type="checkbox" name="enviar_mails" style="width:auto"> Enviarles también su usuario y contraseña por mail (requiere SMTP configurado)</label>
     <div style="display:flex;gap:10px;flex-wrap:wrap">
