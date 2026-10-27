@@ -92,7 +92,64 @@ function formularioPorCodigo(string $codigo): ?array {
     return formulariosCatalogo()[$codigo] ?? null;
 }
 function formulariosDeSector(string $slug): array {
-    return array_values(array_filter(formulariosCatalogo(), fn($f) => $f['sector'] === $slug));
+    return array_values(array_filter(formulariosCatalogo(), fn($f) => $f['sector'] === $slug && !esHerramientaDeTrabajo($f['codigo'])));
+}
+/**
+ * Herramientas de trabajo del sector (no son formularios para completar uno por uno):
+ * se abren con un botón propio en la página del sector y no figuran en la lista de formularios.
+ */
+function herramientasDeTrabajo(): array {
+    return [
+        'rrhh' => ['codigo' => 'operaciones-diagrama-trabajo', 'titulo' => 'Diagrama de trabajo', 'icono' => '📅'],
+        'mantenimiento' => ['codigo' => 'operaciones-stock-herramientas', 'titulo' => 'Stock de herramientas', 'icono' => '🧰'],
+    ];
+}
+function herramientaDeSector(string $slug): ?array {
+    return herramientasDeTrabajo()[$slug] ?? null;
+}
+function esHerramientaDeTrabajo(string $codigo): bool {
+    foreach (herramientasDeTrabajo() as $h) if ($h['codigo'] === $codigo) return true;
+    return false;
+}
+/** Fragmento SQL para dejar fuera los registros de las herramientas de trabajo de los listados de formularios. */
+function sqlSinHerramientas(string $columna = 'r.formulario'): string {
+    $codigos = array_map(fn($h) => "'" . $h['codigo'] . "'", herramientasDeTrabajo());
+    return $columna . ' NOT IN (' . implode(',', $codigos) . ')';
+}
+/** URL de entrada directa a la herramienta de trabajo del sector. */
+function urlHerramientaSector(string $slug): string {
+    return app_url('/php/formularios/herramienta.php') . '?sector=' . urlencode($slug);
+}
+/**
+ * Formularios que puede completar el RESPONSABLE DE CUALQUIER SECTOR (no solo los del sector dueño).
+ * El registro queda en el sector dueño (ej. Compras) y lo aprueba el responsable de ese sector.
+ */
+function formulariosAbiertosAResponsables(): array {
+    return ['compras-pedido-materiales'];
+}
+/**
+ * Checklists operativos de equipos (son de Mantenimiento pero los completa el equipo de OPERACIONES:
+ * responsables y operadores, entre ellos Basoalto, Belizón, Costallat, Grier y los operadores).
+ * Los aprueba el responsable de Mantenimiento.
+ */
+function formulariosOperativosDeOperaciones(): array {
+    return ['mantenimiento-checklist-vehicular', 'mantenimiento-checklist-hidrogrua', 'mantenimiento-checklist-unidad-slickline'];
+}
+/** ¿Puede el usuario completar ESTE formulario? (permiso del sector, o responsable de cualquier sector si el formulario esta abierto). */
+function puedeCompletarFormulario(PDO $pdo, string $codigoFormulario, int $sectorId): bool {
+    // El código y el sector deben coincidir antes de aplicar las excepciones.
+    $form = formularioPorCodigo($codigoFormulario);
+    $sector = $form ? sectorPorSlug($pdo, $form['sector']) : null;
+    if (!$sector || (int)$sector['id'] !== $sectorId) return false;
+    if (puedeCompletarSector($pdo, $sectorId)) return true;
+    if (!puedeVerSector($pdo, $sectorId)) return false;
+    if (in_array($codigoFormulario, formulariosOperativosDeOperaciones(), true)) {
+        $opsId = null;
+        foreach (sectoresInfo($pdo) as $s) if ($s['slug'] === 'operaciones') $opsId = (int)$s['id'];
+        return $opsId !== null && in_array(misRolesSector($pdo)[$opsId] ?? null, ['responsable', 'operador'], true);
+    }
+    if (!in_array($codigoFormulario, formulariosAbiertosAResponsables(), true)) return false;
+    return in_array('responsable', misRolesSector($pdo), true);
 }
 function rutaFormulario(array $f): string {
     return dirname(__DIR__, 2) . '/formularios/' . $f['archivo'];
@@ -110,9 +167,13 @@ function sectorPorSlug(PDO $pdo, string $slug): ?array {
 function permisosRegistro(PDO $pdo, array $reg): array {
     $sid = (int)$reg['sector_id'];
     $uid = (int)($_SESSION['usuario_id'] ?? 0);
-    $completar = puedeCompletarSector($pdo, $sid);
+    $completar = puedeCompletarFormulario($pdo, (string)$reg['formulario'], $sid);
     $aprobar = puedeAprobarSector($pdo, $sid);
     $esAutor = (int)($reg['creado_por'] ?? 0) === $uid;
+    if (esHerramientaDeTrabajo((string)$reg['formulario'])) {
+        return ['ver' => puedeVerSector($pdo, $sid), 'editar' => $completar,
+            'enviar' => false, 'aprobar' => false, 'reabrir' => false, 'eliminar' => false];
+    }
     $editable = in_array($reg['estado'], ['borrador', 'rechazado'], true);
     return [
         'ver'      => puedeVerSector($pdo, $sid),
@@ -141,14 +202,13 @@ function formulariosPanel(PDO $pdo, string $slug): void {
         $filtroBorradores = " AND (r.estado <> 'borrador' OR r.creado_por = ?)";
         $params[] = (int)($_SESSION['usuario_id'] ?? 0);
     }
-    $st = $pdo->prepare("SELECT r.*, u.nombre AS autor FROM formularios_registros r LEFT JOIN usuarios u ON u.id = r.creado_por WHERE r.eliminado_lote IS NULL AND r.sector_id = ?$filtroBorradores ORDER BY r.actualizado_en DESC LIMIT 8");
+    $st = $pdo->prepare("SELECT r.*, u.nombre AS autor FROM formularios_registros r LEFT JOIN usuarios u ON u.id = r.creado_por WHERE r.eliminado_lote IS NULL AND r.sector_id = ? AND " . sqlSinHerramientas() . "$filtroBorradores ORDER BY r.actualizado_en DESC LIMIT 8");
     $st->execute($params);
     $ultimos = $st->fetchAll();
     $cat = formulariosCatalogo();
-    $pend = $pdo->prepare("SELECT COUNT(*) FROM formularios_registros WHERE eliminado_lote IS NULL AND sector_id = ? AND estado = 'enviado'");
+    $pend = $pdo->prepare("SELECT COUNT(*) FROM formularios_registros WHERE eliminado_lote IS NULL AND sector_id = ? AND estado = 'enviado' AND " . sqlSinHerramientas('formulario'));
     $pend->execute([$sid]);
     $pendientes = (int)$pend->fetchColumn();
-    $puedeCompletar = puedeCompletarSector($pdo, $sid);
     $hub = app_url('/php/formularios/index.php') . '?sector=' . urlencode($slug);
     ?>
     <div class="module-toolbar" id="formularios">
@@ -168,7 +228,7 @@ function formulariosPanel(PDO $pdo, string $slug): void {
           <?php if ($f['codigo_sgi']): ?><span class="fx-code"><?=h($f['codigo_sgi'])?></span><?php endif; ?>
           <h3><?=h($f['titulo'])?></h3>
         </div>
-        <?php if ($puedeCompletar): ?>
+        <?php if (puedeCompletarFormulario($pdo, $f['codigo'], $sid)): ?>
           <a class="btn primary" href="<?=h(app_url('/php/formularios/llenar.php') . '?f=' . urlencode($f['codigo']))?>">Completar nuevo</a>
         <?php else: ?>
           <a class="btn secondary" href="<?=h($hub . '&f=' . urlencode($f['codigo']))?>">Ver registros</a>
@@ -199,32 +259,11 @@ function formulariosPanel(PDO $pdo, string $slug): void {
     <?php endif;
 }
 
-/** Apartado propio de planificación o inventario dentro del sector. */
-function seccionTrabajoSector(PDO $pdo, string $slug): void {
-    $codigo = match ($slug) {
-        'rrhh' => 'operaciones-diagrama-trabajo',
-        'mantenimiento' => 'operaciones-stock-herramientas',
-        default => null,
-    };
-    if (!$codigo) return;
+/** Botón de entrada a la herramienta de trabajo del sector (Diagrama de trabajo / Stock de herramientas). */
+function botonHerramientaSector(PDO $pdo, string $slug): void {
+    $h = herramientaDeSector($slug);
+    if (!$h) return;
     $sector = sectorPorSlug($pdo, $slug);
     if (!$sector || !puedeVerSector($pdo, (int)$sector['id'])) return;
-    $titulo = $slug === 'rrhh' ? 'Diagrama de trabajo' : 'Stock de herramientas';
-    $id = $slug === 'rrhh' ? 'diagrama-trabajo' : 'stock-herramientas';
-    $descripcion = $slug === 'rrhh'
-        ? 'Organizá el cronograma mensual de trabajo del personal.'
-        : 'Consultá y actualizá el inventario de herramientas de Mantenimiento.';
-    $hub = app_url('/php/formularios/index.php') . '?sector=' . urlencode($slug) . '&f=' . urlencode($codigo);
-    ?>
-    <section class="module-card" id="<?=h($id)?>" aria-labelledby="<?=h($id)?>-titulo">
-      <h2 id="<?=h($id)?>-titulo"><?=h($titulo)?></h2>
-      <p><?=h($descripcion)?></p>
-      <div class="top-actions">
-        <a class="btn secondary" href="<?=h($hub)?>">Ver registros</a>
-        <?php if (puedeCompletarSector($pdo, (int)$sector['id'])): ?>
-          <a class="btn primary" href="<?=h(app_url('/php/formularios/llenar.php') . '?f=' . urlencode($codigo))?>">Crear registro</a>
-        <?php endif; ?>
-      </div>
-    </section>
-    <?php
+    ?><a class="btn primary" href="<?=h(urlHerramientaSector($slug))?>"><?=h($h['icono'])?> <?=h($h['titulo'])?></a><?php
 }

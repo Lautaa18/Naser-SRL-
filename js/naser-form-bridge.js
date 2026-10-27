@@ -16,6 +16,8 @@
   var aplicando = false;
 
   function post(msg) {
+    // Modo sin conexión (archivo descargado): no hay sistema padre, los avisos los atiende la barra del archivo
+    if (cfg.offline) { if (typeof window.__naserOfflineMsg === 'function') { try { window.__naserOfflineMsg(msg); } catch (e) {} } return; }
     try { window.parent.postMessage(msg, parentOrigin); } catch (e) {}
   }
 
@@ -55,6 +57,19 @@
       else out[c.key] = el.value;
     });
     return out;
+  }
+
+  // Valores iniciales del formulario (antes de cargar lo guardado): sirven para saber si alguien completo algo
+  var valoresBase = null;
+  function valorVacio(v) { return v === '' || v === null || v === undefined || v === false || (Array.isArray(v) && !v.length); }
+  function hayContenido() {
+    // Los formularios con estado nativo ya pueden haber restaurado los datos antes de iniciar el puente.
+    if (cfg.fields && Object.keys(cfg.fields).some(function(k){ return !valorVacio(cfg.fields[k]); })) return true;
+    if (!valoresBase) return true;
+    var ahora = recolectar();
+    return Object.keys(ahora).some(function (k) {
+      return !valorVacio(ahora[k]) && JSON.stringify(ahora[k]) !== JSON.stringify(valoresBase[k]);
+    });
   }
 
   function disparar(el) {
@@ -149,35 +164,34 @@
     }, true);
   });
 
+  // Lee los datos del formulario (con validación opcional). Devuelve lo que se informa al sistema.
+  function procesarCollect(d) {
+    if (!cfg.readonly && typeof window.naserBeforeCollect === 'function') {
+      cfg.collecting = true;
+      try {
+        if (window.naserBeforeCollect() === false) return { valid: false };
+      } finally { cfg.collecting = false; }
+    }
+    if (d.validate) {
+      if (typeof window.naserValidate === 'function' && window.naserValidate() === false) return { valid: false };
+      var invalid = campos().find(function (el) { return !el.disabled && el.willValidate && !el.checkValidity(); });
+      if (invalid) { invalid.reportValidity(); return { valid: false }; }
+      // No se puede enviar a aprobacion un formulario en blanco
+      if (!hayContenido()) return { valid: false, motivo: 'vacio' };
+    }
+    volcarEstadoPropio();
+    var storage = (window.__naserLS && window.__naserLS.__dump) ? window.__naserLS.__dump() : {};
+    return { valid: true, fields: recolectar(), storage: storage, sugerencia: sugerencia() };
+  }
+  window.__naserCollect = function (validate) { return procesarCollect({ validate: !!validate }); };
+
   window.addEventListener('message', function (e) {
     if (e.origin !== parentOrigin || e.source !== window.parent || !e.data || typeof e.data !== 'object') return;
     var d = e.data;
     if (d.type === 'naser:collect') {
-      if (!cfg.readonly && typeof window.naserBeforeCollect === 'function') {
-        cfg.collecting = true;
-        try {
-          if (window.naserBeforeCollect() === false) {
-            post({ type: 'naser:collected', reqId: d.reqId, valid: false });
-            return;
-          }
-        } finally { cfg.collecting = false; }
-      }
-      if (d.validate) {
-        if (typeof window.naserValidate === 'function' && window.naserValidate() === false) {
-          post({ type: 'naser:collected', reqId: d.reqId, valid: false });
-          return;
-        }
-        var invalid = campos().find(function (el) { return !el.disabled && el.willValidate && !el.checkValidity(); });
-        if (invalid) {
-          invalid.reportValidity();
-          post({ type: 'naser:collected', reqId: d.reqId, valid: false });
-          return;
-        }
-      }
-      volcarEstadoPropio();
-      var storage = (window.__naserLS && window.__naserLS.__dump) ? window.__naserLS.__dump() : {};
-      post({ type: 'naser:collected', reqId: d.reqId, valid: true, fields: recolectar(), storage: storage, sugerencia: sugerencia() });
-    } else if (d.type === 'naser:print') {
+      var res = procesarCollect(d);
+      post(Object.assign({ type: 'naser:collected', reqId: d.reqId }, res));
+    } else if (d.type === 'naser:print' && cfg.canDownload !== false) {
       window.print();
     }
   });
@@ -196,6 +210,7 @@
         if (/imprimir|pdf|exportar|descargar/i.test(el.textContent || el.value || '')) el.hidden=true;
       });
     }
+    try { valoresBase = recolectar(); } catch (e) { valoresBase = null; }
     aplicar(cfg.fields || null);
     if (cfg.readonly) bloquear();
     informarAltura();

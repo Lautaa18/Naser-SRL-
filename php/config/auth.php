@@ -2,12 +2,21 @@
 require_once __DIR__ . '/app.php';
 if (session_status() !== PHP_SESSION_ACTIVE) {
     $https = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || (($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') === 'https');
+    // La sesión dura 8 h sin actividad (por defecto PHP la borra a los 24 min y salía "sesión expirada")
+    ini_set('session.gc_maxlifetime', '28800');
     session_set_cookie_params(['lifetime' => 0, 'path' => '/', 'secure' => $https, 'httponly' => true, 'samesite' => 'Lax']);
     session_start();
 }
 
 function validarSesionActual(PDO $pdo): bool {
     if (empty($_SESSION['usuario_id'])) return false;
+    $ahora = time();
+    $ultimaActividad = (int)($_SESSION['ultima_actividad'] ?? $ahora);
+    if ($ultimaActividad > $ahora || $ahora - $ultimaActividad >= 28800) {
+        $_SESSION = [];
+        session_regenerate_id(true);
+        return false;
+    }
     $st = $pdo->prepare('SELECT id, nombre, email, rol, activo, password, debe_cambiar_password FROM usuarios WHERE id = ?');
     $st->execute([(int)$_SESSION['usuario_id']]);
     $u = $st->fetch();
@@ -21,23 +30,46 @@ function validarSesionActual(PDO $pdo): bool {
     $_SESSION['email'] = $u['email'];
     $_SESSION['rol'] = $u['rol'];
     $_SESSION['debe_cambiar_password'] = (bool)$u['debe_cambiar_password'];
+    $_SESSION['ultima_actividad'] = $ahora;
     return true;
 }
 
+/** Las pantallas y las peticiones de formularios comparten la misma validación. */
+function naser_requiere_json(): bool {
+    return isset($_SERVER['HTTP_X_CSRF_TOKEN'])
+        || str_contains((string)($_SERVER['HTTP_ACCEPT'] ?? ''), 'application/json')
+        || str_contains((string)($_SERVER['CONTENT_TYPE'] ?? ''), 'application/json')
+        || basename((string)($_SERVER['SCRIPT_NAME'] ?? '')) === 'api.php';
+}
+function naser_respuesta_sesion_expirada(): never {
+    if (naser_requiere_json()) {
+        http_response_code(401);
+        header('Content-Type: application/json; charset=utf-8');
+        header('Cache-Control: no-store');
+        exit(json_encode(['ok' => false, 'error' => 'Tu sesión terminó o tu cuenta cambió. Volvé a ingresar; tus cambios siguen en esta pantalla.'], JSON_UNESCAPED_UNICODE));
+    }
+    header('Location: ' . app_url('/php/login.php'));
+    exit;
+}
 function requireLogin(): void {
     global $pdo;
     if (!empty($_SESSION['usuario_id'])) {
+        $conexionYaCargada = isset($pdo) && $pdo instanceof PDO;
         require_once __DIR__ . '/db.php';
-        validarSesionActual($pdo);
+        // Al cargar db.php en una petición web se valida allí la sesión.
+        // Si la conexión ya existía (o es CLI), hacer la misma comprobación aquí.
+        if ($conexionYaCargada || PHP_SAPI === 'cli') validarSesionActual($pdo);
     }
-    if (empty($_SESSION['usuario_id'])) {
-        header('Location: ' . app_url('/php/login.php'));
-        exit;
-    }
+    if (empty($_SESSION['usuario_id'])) naser_respuesta_sesion_expirada();
     // Primer ingreso o contraseña reseteada: obligar a cambiarla
     if (!empty($_SESSION['debe_cambiar_password'])) {
         $script = basename($_SERVER['SCRIPT_NAME'] ?? '');
         if (!in_array($script, ['perfil.php', 'logout.php'], true)) {
+            if (naser_requiere_json()) {
+                http_response_code(403);
+                header('Content-Type: application/json; charset=utf-8');
+                exit(json_encode(['ok' => false, 'error' => 'Tenés que cambiar tu contraseña en Mi perfil antes de continuar.', 'cambiar_password' => true], JSON_UNESCAPED_UNICODE));
+            }
             header('Location: ' . app_url('/php/perfil.php') . '?primer_ingreso=1');
             exit;
         }
@@ -58,8 +90,9 @@ function requireAdmin(): void {
      - operador:    ve y completa formularios
      - observador:  solo ve
    Reglas:
-     - Todos ven todos los sectores, salvo los "restringidos"
-       (ej: Operaciones), que solo ven sus integrantes.
+     - Todos ven todos los sectores, salvo RRHH, Finanzas y los
+       marcados como restringidos, que solo ven sus integrantes.
+       Operaciones es visible para todo el personal.
      - Burbuja colaborativa: los responsables de un sector de la
        burbuja pueden editar y completar en todos los sectores de
        esa burbuja, pero solo aprueba el responsable del area.
@@ -73,7 +106,11 @@ function sectoresInfo(PDO $pdo): array {
     $cache = [];
     $rows = $pdo->query('SELECT s.id, s.nombre, s.slug, s.orden, s.burbuja_id, s.restringido, COALESCE(b.colaborativa,0) AS colaborativa, b.nombre AS burbuja
                          FROM sectores s LEFT JOIN burbujas b ON b.id = s.burbuja_id ORDER BY s.orden, s.nombre')->fetchAll();
-    foreach ($rows as $r) $cache[(int)$r['id']] = $r;
+    foreach ($rows as $r) {
+        // El SGI no es un sector de trabajo: es el apartado de documentacion. Asi se muestra en todo el sistema.
+        if ($r['slug'] === 'sgi') $r['nombre'] = 'SGI (documentación)';
+        $cache[(int)$r['id']] = $r;
+    }
     return $cache;
 }
 /** Roles del usuario logueado: [sector_id => 'responsable'|'operador'|'observador']. */
@@ -173,16 +210,21 @@ function usuariosConRol(PDO $pdo, int $sectorId, string $rol = 'responsable'): a
     $st->execute([$sectorId, $rol]);
     return $st->fetchAll();
 }
-/** Guarda el rol de un usuario en un sector (null = quitar). Mantiene puede_ver/puede_editar sincronizados. */
+/** Guarda el rol (null = quitar). Conserva capacidades explícitas si el rol no cambia. */
 function asignarRolSector(PDO $pdo, int $usuarioId, int $sectorId, ?string $rol): void {
     if ($rol === null || $rol === '') {
         $pdo->prepare('DELETE FROM usuario_sector WHERE usuario_id = ? AND sector_id = ?')->execute([$usuarioId, $sectorId]);
         return;
     }
     if (!in_array($rol, ['responsable', 'operador', 'observador'], true)) throw new InvalidArgumentException('Rol inválido');
-    $pdo->prepare('INSERT INTO usuario_sector (usuario_id, sector_id, puede_ver, puede_editar, rol_sector) VALUES (?,?,1,?,?)
-                   ON DUPLICATE KEY UPDATE puede_ver = 1, puede_editar = VALUES(puede_editar), rol_sector = VALUES(rol_sector)')
-        ->execute([$usuarioId, $sectorId, $rol === 'responsable' ? 1 : 0, $rol]);
+    $responsable = $rol === 'responsable' ? 1 : 0;
+    $pdo->prepare('INSERT INTO usuario_sector (usuario_id, sector_id, puede_ver, puede_editar, puede_aprobar, puede_descargar, rol_sector) VALUES (?,?,1,?,?,1,?)
+                   ON DUPLICATE KEY UPDATE puede_ver = 1,
+                     puede_editar = IF(rol_sector = VALUES(rol_sector), puede_editar, VALUES(puede_editar)),
+                     puede_aprobar = IF(rol_sector = VALUES(rol_sector), puede_aprobar, VALUES(puede_aprobar)),
+                     puede_descargar = IF(rol_sector = VALUES(rol_sector), puede_descargar, VALUES(puede_descargar)),
+                     rol_sector = VALUES(rol_sector)')
+        ->execute([$usuarioId, $sectorId, $responsable, $responsable, $rol]);
 }
 /** Texto corto del rol para mostrar en el menu. */
 function etiquetaRolUsuario(PDO $pdo): string {
@@ -208,8 +250,53 @@ function csrf_token(): string {
 }
 function csrf_field(): string { return '<input type="hidden" name="csrf" value="'.h(csrf_token()).'">'; }
 function verify_csrf(): void {
-    $enviado = $_POST['csrf'] ?? ($_SERVER['HTTP_X_CSRF_TOKEN'] ?? '');
-    if ($_SERVER['REQUEST_METHOD'] === 'POST' && !hash_equals($_SESSION['csrf'] ?? '', (string)$enviado)) {
-        http_response_code(403); exit('Sesión expirada. Volvé atrás y reintentá.');
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') return;
+    $enviado = (string)($_POST['csrf'] ?? ($_SERVER['HTTP_X_CSRF_TOKEN'] ?? ''));
+    $esperado = (string)($_SESSION['csrf'] ?? '');
+    // Un token vacio nunca es valido (antes "vacio == vacio" dejaba pasar el envio sin token)
+    if ($esperado === '' || $enviado === '' || !hash_equals($esperado, $enviado)) {
+        http_response_code(403);
+        if (naser_requiere_json()) {
+            header('Content-Type: application/json; charset=utf-8');
+            exit(json_encode(['ok' => false, 'error' => 'Sesión expirada. Volvé a ingresar y repetí la acción; tus cambios siguen en esta pantalla.'], JSON_UNESCAPED_UNICODE));
+        }
+        exit('<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><body style="font-family:sans-serif;max-width:480px;margin:15vh auto;padding:0 16px"><h2>La página estuvo abierta demasiado tiempo</h2><p>Por seguridad, la sesión de esa pantalla venció. No se perdió nada: volvé a cargar la página y repetí la acción.</p><p><a href="' . h(app_url('/php/login.php')) . '" style="display:inline-block;padding:10px 18px;background:#1f4e8c;color:#fff;border-radius:6px;text-decoration:none">Ir a ingresar</a></p></body>');
     }
+}
+
+/**
+ * IP real de quien visita. Detras de Caddy o Cloudflare Tunnel, REMOTE_ADDR es la IP del proxy
+ * (la misma para todos), asi que solo en ese caso (proxy en red privada/local) se toma la IP
+ * que informa el proxy.
+ */
+function naser_client_ip(): string {
+    $remote = (string)($_SERVER['REMOTE_ADDR'] ?? '');
+    $remotoEsProxy = $remote !== '' && filter_var($remote, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) === false;
+    if ($remotoEsProxy) {
+        foreach (['HTTP_CF_CONNECTING_IP', 'HTTP_X_FORWARDED_FOR'] as $cab) {
+            if (empty($_SERVER[$cab])) continue;
+            $primera = trim(explode(',', (string)$_SERVER[$cab])[0]);
+            if (filter_var($primera, FILTER_VALIDATE_IP)) return $primera;
+        }
+    }
+    return $remote;
+}
+
+/** Cierra la sesion y borra la cookie. */
+function naser_cerrar_sesion(): void {
+    $_SESSION = [];
+    if (ini_get('session.use_cookies')) {
+        $p = session_get_cookie_params();
+        setcookie(session_name(), '', time() - 42000, $p['path'], $p['domain'], $p['secure'], $p['httponly']);
+    }
+    if (session_status() === PHP_SESSION_ACTIVE) session_destroy();
+}
+
+/**
+ * Revalida la sesion contra la base en cada pedido: si la cuenta se desactivo o se borro, se corta
+ * la sesion en el momento. Un cambio de clave revoca las sesiones anteriores; el rol se refresca.
+ */
+function naser_validar_sesion(PDO $pdo): void {
+    if (empty($_SESSION['usuario_id'])) return;
+    if (!validarSesionActual($pdo)) naser_respuesta_sesion_expirada();
 }

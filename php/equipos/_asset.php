@@ -33,7 +33,7 @@ foreach ($formCodes as $code) {
 $docs = [];
 if ($allowedIds) {
     $ph = implode(',', array_fill(0, count($allowedIds), '?'));
-    $st = $pdo->prepare("SELECT d.*, s.nombre sector FROM documentos d JOIN sectores s ON s.id=d.sector_id WHERE d.activo=1 AND d.sector_id IN ($ph) ORDER BY d.fecha_actualizacion DESC LIMIT 12");
+    $st = $pdo->prepare("SELECT d.*, s.nombre sector FROM documentos d JOIN sectores s ON s.id=d.sector_id WHERE d.activo=1 AND d.eliminado_lote IS NULL AND d.sector_id IN ($ph) ORDER BY d.fecha_actualizacion DESC LIMIT 12");
     $st->execute($allowedIds);
     $docs = $st->fetchAll();
 }
@@ -89,7 +89,7 @@ if ($allowedIds) {
               <?php if ($form['codigo_sgi'] !== ''): ?><span class="fx-code"><?=h($form['codigo_sgi'])?></span><?php endif; ?>
             </div>
             <div class="fx-card-actions">
-              <?php if (puedeCompletarSector($pdo, $form['sector_id'])): ?><a class="btn primary" href="<?=h($fill)?>">Completar nuevo</a><?php endif; ?>
+              <?php if (puedeCompletarFormulario($pdo, $form['codigo'], (int)$form['sector_id'])): ?><a class="btn primary" href="<?=h($fill)?>">Completar nuevo</a><?php endif; ?>
               <a class="btn secondary" href="<?=h($hub)?>">Ver registros</a>
             </div>
           </article>
@@ -105,7 +105,7 @@ if ($allowedIds) {
       <article class="document-card">
         <span class="type-badge"><?=h($doc['sector'])?></span><h3><?=h($doc['titulo'])?></h3>
         <p><?=h($doc['descripcion'] ?: 'Documento relacionado.')?></p>
-        <?php if ($doc['archivo']): ?><div class="doc-actions"><a class="btn primary" target="_blank" rel="noopener" href="<?=h(naser_upload_url($doc['archivo']))?>">Abrir documento</a></div><?php endif; ?>
+        <?php if ($doc['archivo'] && puedeDescargarSector($pdo, (int)$doc['sector_id'])): ?><div class="doc-actions"><a class="btn primary" target="_blank" rel="noopener" href="<?=h(naser_upload_url($doc['archivo']))?>">Abrir documento</a></div><?php endif; ?>
       </article>
     <?php endforeach; ?>
   </section>

@@ -3,7 +3,7 @@ require_once __DIR__ . '/schema_modulos.php';
 require_once __DIR__ . '/mejoras.php';
 
 // Cambiar este numero cada vez que se agregan tablas/columnas en schema_modulos.php
-const NASER_SCHEMA_VERSION = '2026.10.27-1';
+const NASER_SCHEMA_VERSION = '2026.10.27-2';
 
 function hasColumn(PDO $pdo, string $table, string $column): bool
 {
@@ -554,13 +554,15 @@ function naser_bootstrap(PDO $pdo): void
     }
 
 
-    // En producción las credenciales iniciales deben configurarse explícitamente.
+    // La cuenta con clave conocida solo existe en desarrollo. En producción se puede
+    // crear el primer administrador por variables explícitas o desde crear_usuarios.php.
     $adminEmail = app_is_dev() ? 'admin@naser.test' : trim((string)getenv('INITIAL_ADMIN_EMAIL'));
     $adminPassword = app_is_dev() ? 'Admin123!' : (string)getenv('INITIAL_ADMIN_PASSWORD');
     $hayAdmins = (int)$pdo->query("SELECT COUNT(*) FROM usuarios WHERE rol='admin' AND activo=1")->fetchColumn() > 0;
-    if ((!$adminId && app_is_dev()) || (!$hayAdmins && !app_is_dev())) {
-        if (!filter_var($adminEmail, FILTER_VALIDATE_EMAIL) || strlen($adminPassword) < 12) {
-            if (!app_is_dev()) throw new RuntimeException('Configurá INITIAL_ADMIN_EMAIL e INITIAL_ADMIN_PASSWORD (mínimo 12 caracteres) para crear el primer administrador.');
+    $inicialConfigurado = $adminEmail !== '' || $adminPassword !== '';
+    if ((!$adminId && app_is_dev()) || (!$hayAdmins && !app_is_dev() && $inicialConfigurado)) {
+        if (!app_is_dev() && (!filter_var($adminEmail, FILTER_VALIDATE_EMAIL) || strlen($adminPassword) < 12)) {
+            throw new RuntimeException('Configurá INITIAL_ADMIN_EMAIL e INITIAL_ADMIN_PASSWORD (mínimo 12 caracteres) o dejá ambos vacíos para usar php/tools/crear_usuarios.php.');
         }
 
         $st = $pdo->prepare("
@@ -1059,6 +1061,14 @@ function naser_bootstrap(PDO $pdo): void
         END
         SET r.sector_id = s.id
         WHERE r.formulario IN ('operaciones-diagrama-trabajo', 'operaciones-stock-herramientas')");
+
+    // Una sola vez: Operaciones deja de ser un sector restringido (lo ve todo el personal; opera solo su equipo).
+    // Si despues se vuelve a marcar como restringido desde Usuarios y permisos, no se toca de nuevo.
+    $yaAbierto = $pdo->query("SELECT valor FROM sistema_config WHERE clave = 'operaciones_visible_para_todos'")->fetchColumn();
+    if ($yaAbierto === false) {
+        $pdo->exec("UPDATE sectores SET restringido = 0 WHERE slug = 'operaciones'");
+        $pdo->exec("INSERT INTO sistema_config (clave, valor) VALUES ('operaciones_visible_para_todos', '1')");
+    }
 
     $pdo->prepare("INSERT INTO sistema_config (clave, valor) VALUES ('schema_version', ?) ON DUPLICATE KEY UPDATE valor = VALUES(valor)")
         ->execute([NASER_SCHEMA_VERSION]);

@@ -241,7 +241,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['ajax'])) {
 
         jsonOut(['ok'=>false, 'error'=>'Acción no válida.'], 400);
     } catch (RuntimeException $e) {
-        jsonOut(['ok'=>false, 'error'=>$e->getMessage()], 422);
+        jsonOut(['ok'=>false, 'error'=>mensaje_error($e)], 422);
     } catch (Throwable $e) {
         error_log('RRHH ajax POST: ' . $e->getMessage());
         jsonOut(['ok'=>false, 'error'=>'Error interno. Intentá de nuevo.'], 500);
@@ -288,7 +288,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $flash['msg'] = 'Registro eliminado.';
             }
         } catch (RuntimeException $e) {
-            $flash['err'] = $e->getMessage();
+            $flash['err'] = mensaje_error($e);
         } catch (Throwable $e) {
             error_log('RRHH guardar: ' . $e->getMessage());
             $flash['err'] = 'No se pudo guardar el registro.';
@@ -456,7 +456,7 @@ $jsonFlags = JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_
 <section class="module-hero"><p class="eyebrow">SERVICIOS NASER SRL · RECURSOS HUMANOS</p><h1>Gestión de Recursos Humanos</h1><p>Licencias, vencimientos, capacitaciones y seguimiento del personal.</p></section>
 <div class="module-tabs">
   <a href="<?=app_url('/php/sector.php?sector='.$slug)?>">📁 Documentación</a>
-  <a href="#diagrama-trabajo">Diagrama de trabajo</a>
+  <a href="<?=h(urlHerramientaSector($slug))?>">📅 Diagrama de trabajo</a>
   <a href="#formularios">📋 Formularios / Checklists</a>
   <a href="#gestion">⚙ Gestión</a>
   <a href="#calendario">📅 Calendario</a>
@@ -478,7 +478,6 @@ $jsonFlags = JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_
 </section>
 
 <!-- SECCIÓN: FORMULARIOS DIGITALES (se guardan en la base de datos) -->
-<?php seccionTrabajoSector($pdo, 'rrhh'); ?>
 <?php formulariosPanel($pdo, 'rrhh'); ?>
 
 <!-- SECCIÓN: GESTIÓN DE VENCIMIENTOS Y LICENCIAS -->

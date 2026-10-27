@@ -6,6 +6,7 @@ requireLogin();
 require_once __DIR__ . '/config/db.php';
 require __DIR__ . '/config/layout.php';
 require_once __DIR__ . '/config/formularios_catalogo.php';
+require_once __DIR__ . '/config/documentos_storage.php';
 
 /* =========================================================
    DATOS RECIBIDOS
@@ -53,6 +54,7 @@ if (!puedeVerSector($pdo, (int) $s['id'])) {
 }
 
 $canEdit = puedeEditarSector($pdo, (int) $s['id']);
+$canDownload = puedeDescargarSector($pdo, (int) $s['id']);
 
 
 /* =========================================================
@@ -64,12 +66,20 @@ $breadcrumbs = [];
 
 if ($cid) {
 
+    try {
+        validarCarpetaSector($pdo, (int)$s['id'], $cid);
+    } catch (RuntimeException $e) {
+        http_response_code(404);
+        exit('Carpeta no encontrada o no disponible.');
+    }
+
     $st = $pdo->prepare(
         'SELECT *
          FROM carpetas
          WHERE id = ?
          AND sector_id = ?
          AND activa = 1
+         AND eliminado_lote IS NULL
          LIMIT 1'
     );
 
@@ -110,6 +120,8 @@ if ($cid) {
              FROM carpetas
              WHERE id = ?
              AND sector_id = ?
+             AND activa = 1
+             AND eliminado_lote IS NULL
              LIMIT 1'
         );
 
@@ -135,6 +147,7 @@ if ($cid) {
          WHERE sector_id = ?
          AND carpeta_padre_id = ?
          AND activa = 1
+         AND eliminado_lote IS NULL
          ORDER BY orden, nombre'
     );
 
@@ -151,6 +164,7 @@ if ($cid) {
          WHERE sector_id = ?
          AND carpeta_padre_id IS NULL
          AND activa = 1
+         AND eliminado_lote IS NULL
          ORDER BY orden, nombre'
     );
 
@@ -171,6 +185,7 @@ $sql = '
     FROM documentos d
     WHERE d.sector_id = ?
     AND d.activo = 1
+    AND d.eliminado_lote IS NULL
 ';
 
 $params = [
@@ -243,6 +258,16 @@ $sql .= '
         d.titulo
 ';
 
+
+// Paginado: carpetas con cientos de archivos hacian paginas de 1 MB+
+$porPagina = 100;
+$pagina = max(1, (int)($_GET['pagina'] ?? 1));
+$stTotal = $pdo->prepare('SELECT COUNT(*) FROM (' . $sql . ') t');
+$stTotal->execute($params);
+$totalDocs = (int)$stTotal->fetchColumn();
+$totalPaginas = max(1, (int)ceil($totalDocs / $porPagina));
+if ($pagina > $totalPaginas) $pagina = $totalPaginas;
+$sql .= ' LIMIT ' . $porPagina . ' OFFSET ' . (($pagina - 1) * $porPagina);
 
 $st = $pdo->prepare($sql);
 
@@ -351,6 +376,7 @@ function documentUrl(string $archivo): string
                 <?php if (formulariosDeSector($slug)): ?>
                     <a class="btn primary" href="<?= h(app_url('/php/formularios/index.php') . '?sector=' . urlencode($slug)) ?>">✎ Formularios</a>
                 <?php endif; ?>
+                <?php botonHerramientaSector($pdo, $slug); ?>
 
 
                 <!-- SOLO RESPONSABLE DEL SECTOR O ADMIN -->
@@ -382,7 +408,6 @@ function documentUrl(string $archivo): string
 
         </header>
 
-        <?php if (!$cid): seccionTrabajoSector($pdo, $slug); endif; ?>
 
 
         <!-- =================================================
@@ -604,7 +629,7 @@ function documentUrl(string $archivo): string
 
             <span class="count-pill">
 
-                <?= count($docs) ?> archivo(s)
+                <?= $totalDocs ?> archivo(s)
 
             </span>
 
@@ -706,7 +731,7 @@ function documentUrl(string $archivo): string
 
                     </small>
 
-                    <?php if ($archivo !== ''): ?>
+                    <?php if ($archivo !== '' && $canDownload): ?>
 
                         <div class="doc-actions">
 
@@ -752,6 +777,20 @@ function documentUrl(string $archivo): string
                 </article>
 
             <?php endforeach; ?>
+
+            <?php if ($totalPaginas > 1):
+                $qsBase = array_filter(['sector' => $s['slug'], 'carpeta' => $cid, 'q' => $q, 'tipo' => $tipo], fn($v) => $v !== null && $v !== '');
+            ?>
+                <nav style="display:flex;gap:10px;align-items:center;justify-content:center;margin:18px 0;flex-wrap:wrap">
+                    <?php if ($pagina > 1): ?>
+                        <a class="btn" href="?<?= h(http_build_query($qsBase + ['pagina' => $pagina - 1])) ?>">← Anterior</a>
+                    <?php endif; ?>
+                    <span>Página <?= $pagina ?> de <?= $totalPaginas ?></span>
+                    <?php if ($pagina < $totalPaginas): ?>
+                        <a class="btn" href="?<?= h(http_build_query($qsBase + ['pagina' => $pagina + 1])) ?>">Siguiente →</a>
+                    <?php endif; ?>
+                </nav>
+            <?php endif; ?>
 
         </section>
 

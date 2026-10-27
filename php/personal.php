@@ -80,11 +80,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     } catch (Throwable $e) {
         if($pdo->inTransaction())$pdo->rollBack();
-        $err = str_contains($e->getMessage(), 'Duplicate') ? 'Ya existe un empleado con ese legajo.' : $e->getMessage();
+        $err = str_contains($e->getMessage(), 'Duplicate') ? 'Ya existe un empleado con ese legajo.' : mensaje_error($e);
     }
 }
 
-$sectores = sectoresInfo($pdo);
+$sectores = array_filter(sectoresInfo($pdo), fn($s) => $s['slug'] !== 'sgi');   // el SGI no es un sector de trabajo
 $id = (int)($_GET['id'] ?? 0);
 $nuevo = isset($_GET['nuevo']) && $editar;
 
@@ -97,6 +97,7 @@ if ($id || $nuevo) {
         $st->execute([$id]);
         $emp = $st->fetch();
         if (!$emp) { http_response_code(404); exit('Empleado no encontrado.'); }
+        if (!$verDatos && empty($emp['sector_id'])) { http_response_code(403); exit('No tenés acceso a esta ficha de personal.'); }
         $st = $pdo->prepare('SELECT * FROM empleados_habilitaciones WHERE empleado_id = ?');
         $st->execute([$id]);
         foreach ($st->fetchAll() as $hb) $habs[$hb['tipo']] = $hb;
@@ -175,7 +176,7 @@ else {
       <label>Sector del sistema<select name="sector_id" <?=$ro?>><option value="">—</option><?php foreach ($sectores as $s): ?><option value="<?=(int)$s['id']?>" <?= (int)($emp['sector_id'] ?? 0) === (int)$s['id'] ? 'selected' : '' ?>><?=h($s['nombre'])?></option><?php endforeach; ?></select></label>
       <label>Cargo / función<input name="cargo" value="<?=$val('cargo')?>" <?=$ro?>></label>
       <label>Fecha de ingreso<input type="date" name="fecha_ingreso" value="<?=$val('fecha_ingreso')?>" <?=$ro?>></label>
-      <label>Fecha de nacimiento <?php if (!empty($emp['fecha_nacimiento'])): ?><small class="muted">(<?=edadDesde($emp['fecha_nacimiento'])?> años)</small><?php endif; ?><input type="date" name="fecha_nacimiento" value="<?=$val('fecha_nacimiento')?>" <?=$ro?>></label>
+      <label>Fecha de nacimiento <?php if (!empty($emp['fecha_nacimiento']) && fechaPersonalValida((string)$emp['fecha_nacimiento'])): ?><small class="muted">(<?=edadDesde($emp['fecha_nacimiento'])?> años)</small><?php endif; ?><input type="date" name="fecha_nacimiento" value="<?=$val('fecha_nacimiento')?>" <?=$ro?>></label>
       <label>Convenio<input name="convenio" value="<?=$val('convenio')?>" <?=$ro?>></label>
       <label>Encuadre<input name="encuadre" value="<?=$val('encuadre')?>" <?=$ro?>></label>
       <label>Categoría<input name="categoria" value="<?=$val('categoria')?>" <?=$ro?>></label>
@@ -198,7 +199,7 @@ else {
     <div class="table-wrap"><table>
       <thead><tr><th>Habilitación</th><th>Detalle / categoría</th><th>Realizado</th><th>Vence</th><th>Estado</th></tr></thead>
       <tbody>
-      <?php foreach ($tipos as $t => $label): $hb = $habs[$t] ?? []; [$cls, $txt] = estadoVencimiento($hb['fecha_vencimiento'] ?? null); ?>
+      <?php foreach ($tipos as $t => $label): $hb = $habs[$t] ?? []; $fechaEstado = (string)($hb['fecha_vencimiento'] ?? ''); [$cls, $txt] = $fechaEstado !== '' && !fechaPersonalValida($fechaEstado) ? ['sin', 'Fecha inválida'] : estadoVencimiento($fechaEstado ?: null); ?>
         <tr><td><strong><?=h($label)?></strong></td>
           <td><input name="hab[<?=$t?>][det]" value="<?=h($hb['detalle'] ?? '')?>" <?=$ro?>></td>
           <td><input type="date" name="hab[<?=$t?>][real]" value="<?=h($hb['fecha_realizacion'] ?? '')?>" <?=$ro?>></td>

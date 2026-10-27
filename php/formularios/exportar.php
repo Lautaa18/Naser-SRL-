@@ -8,7 +8,7 @@ if ($slug !== '' && (!$sector || !puedeDescargarSector($pdo, (int)$sector['id'])
 $visiblesIds = array_map(fn($s) => (int)$s['id'], array_filter(sectoresVisibles($pdo),fn($s)=>puedeDescargarSector($pdo,(int)$s['id'])));
 $uid = (int)$_SESSION['usuario_id'];
 
-$where = ['r.eliminado_lote IS NULL']; $params = [];
+$where = ['r.eliminado_lote IS NULL', sqlSinHerramientas()]; $params = [];
 if ($sector) { $where[] = 'r.sector_id = ?'; $params[] = (int)$sector['id']; }
 else { $where[] = $visiblesIds ? 'r.sector_id IN (' . implode(',', $visiblesIds) . ')' : '0'; }
 if (($f = (string)($_GET['f'] ?? '')) !== '') { $where[] = 'r.formulario = ?'; $params[] = $f; }

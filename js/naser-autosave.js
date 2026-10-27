@@ -9,6 +9,7 @@
   var sessionPanel = document.getElementById('fxSession');
   var panel = document.getElementById('fxConflict'), dlg = document.getElementById('fxDialog');
   var ocupado = false, reqs = {}, reqN = 0, revisionLocal = 0, timer = null, dirtySince = 0, retries = 0;
+  var downloadToken = null;
   var blocked = false, conflictId = null, guardarPendiente = false, copyToken = null, duplicateToken = null, validacionPendiente = false;
   function token() {
     if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
@@ -38,8 +39,8 @@
     else if (d.type === 'naser:dirty') cambio();
     else if (d.type === 'naser:collected' && reqs[d.reqId]) { var resolve = reqs[d.reqId]; delete reqs[d.reqId]; resolve(d); }
     else if (d.type === 'naser:save-request' && puedeEditar && !blocked) accion('guardar');
-    else if (d.type === 'naser:submit-request' && puedeEditar && !blocked) accion('enviar');
-    else if (d.type === 'naser:new-request' && puedeEditar && !ocupado) {
+    else if (d.type === 'naser:submit-request' && !cfg.directo && puedeEditar && !blocked) accion('enviar');
+    else if (d.type === 'naser:new-request' && !cfg.directo && puedeEditar && !ocupado) {
       if (dirty.hidden || confirm('¿Comenzar un formulario nuevo? Los cambios pendientes del actual se perderán.')) { dirty.hidden = true; window.location.href = cfg.editorUrl + '?f=' + encodeURIComponent(cfg.formulario); }
     }
   });
@@ -63,6 +64,10 @@
     });
   }
   async function enviarApi(payload) {
+    if (cfg.directo) {
+      if (payload.accion !== 'guardar') throw new Error('La herramienta solo admite guardar cambios.');
+      payload.accion = 'herramienta_guardar';
+    }
     payload.id = payload.accion === 'guardar_copia' ? (conflictId || id) : id;
     payload.formulario = cfg.formulario; payload.revision = serverRevision;
     payload.client_token = payload.accion === 'guardar_copia' ? (copyToken || (copyToken = token())) : (payload.accion === 'duplicar' ? (duplicateToken || (duplicateToken = token())) : clientToken);
@@ -77,11 +82,11 @@
   }
   function actualizarRegistro(j, eraNuevo) {
     id = j.id; serverRevision = j.revision;
-    history.replaceState(null, '', location.pathname + '?id=' + id);
+    history.replaceState(null, '', cfg.directo ? cfg.directUrl : (location.pathname + '?id=' + id));
     var e = document.getElementById('fxEstado'); e.textContent = j.estado_label; e.className = 'fx-estado fx-' + j.estado;
     var h1 = document.querySelector('.fx-head h1'), numero = h1.querySelector('small');
     if (!numero) { numero = document.createElement('small'); h1.appendChild(numero); } numero.textContent = ' #' + id;
-    if (eraNuevo) ['duplicar', 'eliminar'].forEach(function (a) {
+    if (eraNuevo && !cfg.directo) ['duplicar', 'eliminar'].forEach(function (a) {
       if (a === 'eliminar' && !j.permisos.eliminar) return;
       if (document.querySelector('[data-accion="' + a + '"]')) return;
       var b = document.createElement('button'); b.type = 'button'; b.className = 'btn ' + (a === 'eliminar' ? 'danger' : 'secondary'); b.dataset.accion = a; b.textContent = a === 'eliminar' ? 'Eliminar' : 'Duplicar'; document.querySelector('.fx-toolbar-side').appendChild(b);
@@ -93,6 +98,8 @@
     if (activar) { msg.setAttribute('tabindex', '-1'); msg.focus(); }
   }
   async function accion(nombre, automatico) {
+    if (nombre === 'descargar_borrador') { descargarBorrador(); return; }
+    if (cfg.directo && ['guardar', 'imprimir'].indexOf(nombre) < 0) return;
     if (nombre === 'imprimir' && !cfg.descargar) return;
     if (nombre === 'imprimir') { frame.contentWindow.postMessage({ type: 'naser:print' }, window.location.origin); return; }
     if (blocked && nombre !== 'guardar_copia') { if (!automatico) aviso('Primero resolvé el aviso de conflicto o de permisos. Tus cambios siguen en pantalla.', 'err'); return; }
@@ -154,10 +161,11 @@
     }
   }
   document.getElementById('fxToolbar').addEventListener('click', function (e) { var b = e.target.closest('[data-accion]'); if (b) accion(b.getAttribute('data-accion')); });
+  panel.addEventListener('click', function (e) { var b = e.target.closest('[data-accion]'); if (b) accion(b.getAttribute('data-accion')); });
   document.getElementById('fxGuardarCopia').addEventListener('click', function () { accion('guardar_copia'); });
   document.getElementById('fxAbrirActual').addEventListener('click', function () {
     if (!conflictId) return;
-    if (dirty.hidden || confirm('¿Abrir la versión actual del servidor? Los cambios pendientes de esta pantalla se perderán. Podés guardarlos como copia antes.')) { dirty.hidden = true; window.location.href = cfg.editorUrl + '?id=' + conflictId; }
+    if (dirty.hidden || confirm(cfg.directo ? '¿Abrir la versión actual de la herramienta? Descargá primero tus cambios para conservarlos.' : '¿Abrir la versión actual del servidor? Los cambios pendientes de esta pantalla se perderán. Podés guardarlos como copia antes.')) { dirty.hidden = true; window.location.href = cfg.directo ? cfg.directUrl : (cfg.editorUrl + '?id=' + conflictId); }
   });
   document.getElementById('fxReanudar').addEventListener('click', async function () {
     if (ocupado) return;
@@ -175,17 +183,18 @@
       if (!dirty.hidden) accion('guardar'); else estado('Sesión recuperada. Sin cambios pendientes.', 'saved');
     } catch (err) { blocked = true; estado('Guardado detenido. Tus cambios siguen en pantalla.', 'error'); aviso(err.message, 'err'); }
   });
-  document.getElementById('fxDescargarBorrador').addEventListener('click', async function () {
-    if (ocupado) return;
+  async function descargarBorrador() {
+    if (ocupado || !cfg.descargar) return;
     try {
       var d = await recolectar(false);
       if (d.valid === false) throw new Error('Corregí los datos indicados en el formulario antes de descargar el borrador.');
-      var contenido = { formulario: cfg.formulario, referencia: refInput.value, registro_origen: id, revision_origen: serverRevision, datos: d.fields, storage: d.storage, descargado_en: new Date().toISOString() };
+      var contenido = { naser_offline: 1, offline_id: downloadToken || (downloadToken = token()), generado: new Date().toISOString(), formulario: cfg.formulario, referencia: refInput.value, registro_origen: id, revision_origen: serverRevision, datos: d.fields, storage: d.storage, descargado_en: new Date().toISOString() };
       var archivo = new Blob([JSON.stringify(contenido, null, 2)], { type: 'application/json' });
       var url = URL.createObjectURL(archivo), link = document.createElement('a'); link.href = url; link.download = 'borrador-naser-' + cfg.formulario + '.json'; link.click(); setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
       aviso('Se descargó una copia de tus cambios. El registro del servidor conserva su versión actual.', 'ok');
     } catch (err) { aviso(err.message, 'err'); }
-  });
+  }
+  document.getElementById('fxDescargarBorrador').addEventListener('click', descargarBorrador);
   var params = new URLSearchParams(location.search);
   if (params.get('ok')) { aviso('✔ ' + params.get('ok')); history.replaceState(null, '', location.pathname + '?id=' + id); }
   estado(puedeEditar ? (id ? 'Guardado. Sin cambios pendientes.' : 'Todavía no guardado.') : 'Modo consulta', puedeEditar && !id ? 'pending' : 'saved');

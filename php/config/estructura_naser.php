@@ -71,11 +71,11 @@ function estructuraNaser(): array {
             'finanzas' => ['noelia', 'carina', 'victor', 'ariel.costallat', 'osvaldo', 'ariel.ibanez'],
             'rrhh'     => ['noelia', 'carina', 'victor', 'ariel.costallat', 'osvaldo', 'ariel.ibanez'],
             'ventas'   => ['noelia', 'carina', 'victor', 'ariel.costallat', 'osvaldo', 'ariel.ibanez'],
-            'operaciones' => ['victor'],   // Gerencia puede mirar Operaciones (sector restringido)
+            'operaciones' => ['victor'],   // Gerencia mira Operaciones (como observador)
         ],
 
         // Sectores que SOLO ven sus integrantes (el resto de los sectores los ven todos)
-        'restringidos' => ['operaciones'],
+        'restringidos' => ['rrhh', 'finanzas'],   // Operaciones lo ve todo el personal; solo su equipo completa formularios
 
         // Burbujas: en una burbuja colaborativa, los responsables de cualquiera de sus sectores
         // pueden editar y completar formularios en todos ellos, pero aprueba solo el responsable del área.
@@ -182,7 +182,11 @@ function aplicarEstructuraNaser(PDO $pdo, bool $enviarMails = false, bool $desac
             $st->execute([$uid]);
             foreach ($st->fetchAll() as $r) $antes[$slugDe[(int)$r['sector_id']] ?? ''] = $r['rol_sector'];
 
-            $pdo->prepare('DELETE FROM usuario_sector WHERE usuario_id = ?')->execute([$uid]);
+            // Reaplicar la estructura no debe rehabilitar capacidades que el administrador revocó.
+            // El mismo rol conserva sus permisos explícitos; un rol nuevo recibe sus valores iniciales.
+            foreach ($antes as $slug => $rol) {
+                if (!isset($deseado[$clave][$slug]) && isset($sectores[$slug])) asignarRolSector($pdo, $uid, $sectores[$slug], null);
+            }
             foreach ($deseado[$clave] ?? [] as $slug => $rol) asignarRolSector($pdo, $uid, $sectores[$slug], $rol);
 
             $dif = [];

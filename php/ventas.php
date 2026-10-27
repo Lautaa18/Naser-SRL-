@@ -664,7 +664,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } catch (Throwable $e) {
         if ($pdo->inTransaction()) $pdo->rollBack();
         if ($ticketUploadFullPath && is_file($ticketUploadFullPath)) @unlink($ticketUploadFullPath);
-        $err = $e->getMessage();
+        $err = mensaje_error($e);
     }
 }
 

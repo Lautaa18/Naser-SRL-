@@ -65,10 +65,11 @@ docker compose ps
 
 ## Cuenta principal
 
-- Correo: `admin@naser.test`
-- Contraseña: `Admin123!`
-
-El resto está en `CUENTAS_PRUEBA.txt`.
+- **En tu PC (`APP_ENV=dev`)**: al crear la base se genera una cuenta demo de prueba (usuario y clave en `php/config/bootstrap.php`).
+- **En el servidor (`APP_ENV=production`)** no existe ninguna cuenta demo. El primer super usuario se crea desde la terminal:
+  `docker compose exec web php php/tools/crear_usuarios.php`
+  (crea a todo el personal de la estructura y muestra las contraseñas temporales).
+- Para darle contraseña a todo el personal: **Usuarios y permisos → Contraseñas para el personal** (genera una temporal para cada persona y permite descargar el Excel).
 
 ## Prueba funcional antes de presentar
 
@@ -146,8 +147,8 @@ La conexión de base también se maneja por variables `DB_HOST`, `DB_NAME`, `DB_
 ### Permisos
 - **Super usuario** (rol admin): ve, edita y aprueba todo; administra y elimina usuarios.
 - Por sector: **Responsable** (edita, gestiona y aprueba), **Operador** (ve y completa formularios), **Observador** (ve).
-- Todos ven todos los sectores, salvo los **restringidos** (Operaciones), que solo ven sus integrantes.
-- **Burbuja colaborativa** (Burbuja 2: Finanzas, RRHH, Compras, Ventas): los responsables de cualquiera de esos sectores pueden editar y completar en todos, pero aprueba solo el responsable del área.
+- Operaciones es visible para todo el personal. RRHH y Finanzas son privados; los sectores marcados como **restringidos** solo son visibles para sus integrantes.
+- **Burbuja colaborativa**: permite colaborar en los sectores visibles según la asignación; RRHH y Finanzas requieren pertenencia directa. Los permisos de gestionar, aprobar y descargar son independientes, y una asignación directa limitada prevalece sobre la colaboración. Aprueba el responsable habilitado del área.
 - La estructura de NASER (personas, responsables, observadores, burbujas) está en `php/config/estructura_naser.php`. Se aplica desde **Usuarios y permisos → Aplicar estructura NASER**. Crea los usuarios `nombre.apellido@gruponaser.com.ar` con contraseña temporal (se cambia en el primer ingreso).
 
 ### Avisos y mails
@@ -170,3 +171,6 @@ bash tools/smoke_test.sh tu.usuario@gruponaser.com.ar 'tu-contraseña'
 - Licencias de conducir, manejo defensivo, CNRT, izaje, trabajo en altura y exámenes médicos quedan con su vencimiento y se avisan solos.
 - Los datos del personal NO se guardan en el repositorio (quedan solo en la base de datos).
 - En **Usuarios y permisos → Aplicar estructura** se puede tildar "Crear operadores desde el Personal": crea un usuario operador para cada empleado operativo con mail @gruponaser.com.ar.
+
+
+Las mejoras e integración del 27/10/2026, sus comprobaciones y la activación de servicios están documentadas en [MEJORAS_2026-10-27.md](MEJORAS_2026-10-27.md).

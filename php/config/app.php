@@ -30,6 +30,10 @@ if (!defined('NASER_ERRORS_CONFIGURED')) {
         ini_set('display_errors', '0');
         set_exception_handler(function (Throwable $e): void {
             error_log('[NASER] ' . get_class($e) . ': ' . $e->getMessage() . ' en ' . $e->getFile() . ':' . $e->getLine());
+            if (PHP_SAPI === 'cli') {
+                fwrite(STDERR, "No se pudo completar la operación. Revisá logs/php-errors.log.\n");
+                exit(1);
+            }
             if (!headers_sent()) http_response_code(500);
             echo '<!doctype html><meta charset="utf-8"><title>Error | NASER SGI</title>'
                . '<div style="font-family:Segoe UI,Arial,sans-serif;max-width:520px;margin:80px auto;padding:24px;border:1px solid #dfe7e1;border-radius:14px">'
@@ -56,4 +60,17 @@ function asset(string $path): string {
 }
 function h(?string $value): string {
     return htmlspecialchars((string)$value, ENT_QUOTES, 'UTF-8');
+}
+
+/**
+ * Texto de error seguro para mostrar en pantalla. Los avisos propios del sistema (RuntimeException)
+ * se muestran tal cual; los errores de la base de datos u otros se guardan en el log y se muestra
+ * un mensaje generico (no se filtran nombres de tablas ni columnas). En desarrollo se ve el detalle.
+ */
+function mensaje_error(Throwable $e): string {
+    if (app_is_dev()) return $e->getMessage();
+    if (!($e instanceof PDOException) && ($e instanceof RuntimeException || $e instanceof InvalidArgumentException)) return $e->getMessage();
+    error_log('[NASER] ' . get_class($e) . ': ' . $e->getMessage() . ' en ' . $e->getFile() . ':' . $e->getLine());
+    if ($e instanceof PDOException && (int)($e->errorInfo[1] ?? 0) === 1062) return 'Ese dato ya existe (está duplicado).';
+    return 'No se pudo completar la operación. Revisá los datos e intentá de nuevo.';
 }

@@ -100,6 +100,8 @@ function naser_folder_parts(
              FROM carpetas
              WHERE id = ?
              AND sector_id = ?
+             AND activa = 1
+             AND eliminado_lote IS NULL
              LIMIT 1'
         );
 
