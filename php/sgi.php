@@ -49,6 +49,21 @@ if ($ids) {
     $recent = $stRecent->fetchAll();
 }
 
+// 2b. Documentos cargados en los pasos de Compras (solo de los sectores que el usuario puede ver)
+$docsCompras = [];
+$etapasCompra = [1 => 'Pedido', 2 => 'Solicitud de presupuesto', 3 => 'Orden de compra', 4 => 'Factura', 5 => 'Pago', 6 => 'Entrega / Recepción'];
+if ($ids) {
+    try {
+        $ph2 = implode(',', array_fill(0, count($ids), '?'));
+        $stC = $pdo->prepare("SELECT d.*, c.codigo, s.nombre AS sector FROM compras_documentos d
+                              JOIN compras c ON c.id = d.compra_id
+                              JOIN sectores s ON s.id = c.sector_id
+                              WHERE c.sector_id IN ($ph2) ORDER BY d.id DESC LIMIT 15");
+        $stC->execute($ids);
+        $docsCompras = $stC->fetchAll();
+    } catch (Throwable $e) { $docsCompras = []; }
+}
+
 // 3. Obtención de carpetas del sector SGI
 $sgi = $pdo->query("SELECT id FROM sectores WHERE slug = 'sgi' LIMIT 1")->fetchColumn();
 $folders = [];
@@ -116,6 +131,36 @@ if ($sgi) {
                 <div class="empty">Todavía no hay carpetas SGI.</div>
             <?php endif; ?>
         </section>
+
+        <?php if ($docsCompras): ?>
+        <section class="table-panel" style="margin-bottom:24px">
+            <div class="section-head">
+                <div>
+                    <p class="eyebrow">COMPRAS</p>
+                    <h2>Documentos de Compras</h2>
+                </div>
+            </div>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr><th>Pedido</th><th>Paso</th><th>Tipo</th><th>Archivo</th><th>Fecha</th></tr>
+                    </thead>
+                    <tbody>
+                    <?php foreach ($docsCompras as $d): ?>
+                        <tr>
+                            <td><strong><?= h($d['codigo']) ?></strong></td>
+                            <td><?= h($etapasCompra[(int)$d['etapa']] ?? ('Paso ' . (int)$d['etapa'])) ?></td>
+                            <td><?= h($d['tipo_documento'] ?? 'Adjunto') ?></td>
+                            <td><a href="<?= app_url('/uploads/' . h($d['ruta_archivo'])) ?>" target="_blank">📄 <?= h($d['nombre_archivo']) ?></a></td>
+                            <td><?= h(date('d/m/Y H:i', strtotime((string)$d['fecha_subida']))) ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+            <p style="margin-top:10px"><a href="<?= app_url('/php/compras.php#documentos') ?>">Ver todos en Compras ›</a></p>
+        </section>
+        <?php endif; ?>
 
         <div class="sgi-bottom">
             <section class="table-panel">
