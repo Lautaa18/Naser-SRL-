@@ -147,7 +147,7 @@ La conexión de base también se maneja por variables `DB_HOST`, `DB_NAME`, `DB_
 ### Permisos
 - **Super usuario** (rol admin): ve, edita y aprueba todo; administra y elimina usuarios.
 - Por sector: **Responsable** (edita, gestiona y aprueba), **Operador** (ve y completa formularios), **Observador** (ve).
-- Operaciones es visible para todo el personal. RRHH y Finanzas son privados; los sectores marcados como **restringidos** solo son visibles para sus integrantes.
+- Los operadores sin responsabilidad en otro sector solo ven Operaciones, Mantenimiento, HSEQ y SGI; las restricciones explícitas siguen vigentes. Las pantallas de gestión requieren el permiso de gestionar. Para los demás roles, Operaciones es visible para todo el personal. RRHH y Finanzas son privados; los sectores marcados como **restringidos** solo son visibles para sus integrantes.
 - **Burbuja colaborativa**: permite colaborar en los sectores visibles según la asignación; RRHH y Finanzas requieren pertenencia directa. Los permisos de gestionar, aprobar y descargar son independientes, y una asignación directa limitada prevalece sobre la colaboración. Aprueba el responsable habilitado del área.
 - La estructura de NASER (personas, responsables, observadores, burbujas) está en `php/config/estructura_naser.php`. Se aplica desde **Usuarios y permisos → Aplicar estructura NASER**. Crea los usuarios `nombre.apellido@gruponaser.com.ar` con contraseña temporal (se cambia en el primer ingreso).
 

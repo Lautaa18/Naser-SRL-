@@ -92,7 +92,8 @@ function requireAdmin(): void {
    Reglas:
      - Todos ven todos los sectores, salvo RRHH, Finanzas y los
        marcados como restringidos, que solo ven sus integrantes.
-       Operaciones es visible para todo el personal.
+       Los operadores sin responsabilidades solo ven Operaciones,
+       Mantenimiento, HSEQ y SGI; también respetan sectores restringidos.
      - Burbuja colaborativa: los responsables de un sector de la
        burbuja pueden editar y completar en todos los sectores de
        esa burbuja, pero solo aprueba el responsable del area.
@@ -141,11 +142,21 @@ function esResponsableEnBurbuja(PDO $pdo, int $sectorId): bool {
     }
     return false;
 }
+/** Operador "puro": tiene rol de operador y no es responsable de ningun sector (ni super usuario). */
+function esSoloOperador(PDO $pdo): bool {
+    if (esAdmin()) return false;
+    $roles = array_values(misRolesSector($pdo));
+    return in_array('operador', $roles, true) && !in_array('responsable', $roles, true);
+}
+/** Unicos sectores que ve un operador (ademas del SGI). */
+const SECTORES_DE_OPERADOR = ['operaciones', 'mantenimiento', 'hseq'];
+
 function puedeVerSector(PDO $pdo, int $sectorId): bool {
     if (esAdmin()) return true;
     $s = sectoresInfo($pdo)[$sectorId] ?? null;
     if (!$s) return false;
     if ($s['slug'] === 'sgi') return true;
+    if (esSoloOperador($pdo) && !in_array($s['slug'], SECTORES_DE_OPERADOR, true)) return false;
     if ((int)$s['restringido'] || in_array($s['slug'], ['rrhh','finanzas'], true)) return isset(misRolesSector($pdo)[$sectorId]);
     return true;
 }

@@ -26,7 +26,7 @@ function tiposHabilitacion(): array {
 function puedeVerPersonal(PDO $pdo): bool {
     if (esAdmin()) return true;
     $rrhh = sectorIdPorSlug($pdo, 'rrhh');
-    return $rrhh && rolEnSector($pdo, $rrhh) !== null;
+    return $rrhh && puedeVerSector($pdo, $rrhh) && rolEnSector($pdo, $rrhh) !== null;
 }
 /** Responsables operativos: ven las habilitaciones (sin datos personales). */
 function puedeVerHabilitaciones(PDO $pdo): bool {

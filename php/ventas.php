@@ -25,6 +25,10 @@ if (!puedeVerSector($pdo, $sid)) {
 }
 
 $canEdit = puedeEditarSector($pdo, $sid);
+if (!$canEdit) {
+    http_response_code(403);
+    exit('La gestión de Ventas es solo para sus responsables.');
+}
 $uid = (int)($_SESSION['usuario_id'] ?? 0);
 $msg = '';
 $err = '';

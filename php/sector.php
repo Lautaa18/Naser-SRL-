@@ -361,8 +361,9 @@ function documentUrl(string $archivo): string
 
             <div class="top-actions">
 
-                <!-- BOTONES ESPECIALES POR SECTOR -->
-                <?php if ($slug === 'hseq'): ?>
+                <!-- BOTONES ESPECIALES POR SECTOR (la gestión es solo para responsables) -->
+                <?php if (!$canEdit): ?>
+                <?php elseif ($slug === 'hseq'): ?>
                     <a class="btn primary" href="<?= app_url('/php/hseq.php') ?>">Gestión HSEQ</a>
                 <?php elseif ($slug === 'rrhh'): ?>
                     <a class="btn primary" href="<?= app_url('/php/rrhh.php') ?>">Gestión RRHH</a>
