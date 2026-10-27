@@ -2,7 +2,7 @@
 require_once __DIR__ . '/schema_modulos.php';
 
 // Cambiar este numero cada vez que se agregan tablas/columnas en schema_modulos.php
-const NASER_SCHEMA_VERSION = '2026.10.08-2';
+const NASER_SCHEMA_VERSION = '2026.10.23-2';
 
 function hasColumn(PDO $pdo, string $table, string $column): bool
 {
@@ -543,9 +543,9 @@ function naser_bootstrap(PDO $pdo): void
     $adminId = (int)$st->fetchColumn();
 
 
-    // La cuenta admin@naser.test solo se crea en desarrollo o si no existe ningun administrador
-    $hayAdmins = (int)$pdo->query("SELECT COUNT(*) FROM usuarios WHERE rol='admin' AND activo=1")->fetchColumn() > 0;
-    if (!$adminId && (app_is_dev() || !$hayAdmins)) {
+    // La cuenta demo admin@naser.test (con clave conocida) SOLO se crea en desarrollo.
+    // En produccion el primer super usuario se crea desde la terminal: php php/tools/crear_usuarios.php
+    if (!$adminId && app_is_dev()) {
 
         $st = $pdo->prepare("
             INSERT INTO usuarios (
@@ -1030,6 +1030,23 @@ function naser_bootstrap(PDO $pdo): void
     naser_schema_modulos($pdo);
     // Tablas de RRHH, Finanzas y Ventas (archivos de /sql)
     naser_schema_sql($pdo);
+
+    // Conservar códigos e historial al cambiar los registros de sector.
+    $pdo->exec("UPDATE formularios_registros r
+        JOIN sectores s ON s.slug = CASE r.formulario
+            WHEN 'operaciones-diagrama-trabajo' THEN 'rrhh'
+            WHEN 'operaciones-stock-herramientas' THEN 'mantenimiento'
+        END
+        SET r.sector_id = s.id
+        WHERE r.formulario IN ('operaciones-diagrama-trabajo', 'operaciones-stock-herramientas')");
+
+    // Una sola vez: Operaciones deja de ser un sector restringido (lo ve todo el personal; opera solo su equipo).
+    // Si despues se vuelve a marcar como restringido desde Usuarios y permisos, no se toca de nuevo.
+    $yaAbierto = $pdo->query("SELECT valor FROM sistema_config WHERE clave = 'operaciones_visible_para_todos'")->fetchColumn();
+    if ($yaAbierto === false) {
+        $pdo->exec("UPDATE sectores SET restringido = 0 WHERE slug = 'operaciones'");
+        $pdo->exec("INSERT INTO sistema_config (clave, valor) VALUES ('operaciones_visible_para_todos', '1')");
+    }
 
     $pdo->prepare("INSERT INTO sistema_config (clave, valor) VALUES ('schema_version', ?) ON DUPLICATE KEY UPDATE valor = VALUES(valor)")
         ->execute([NASER_SCHEMA_VERSION]);

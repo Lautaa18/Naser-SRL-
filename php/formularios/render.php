@@ -16,16 +16,19 @@ if (!$form) { http_response_code(404); exit('Formulario no encontrado.'); }
 $sector = sectorPorSlug($pdo, $form['sector']);
 if (!$sector || !puedeVerSector($pdo, (int)$sector['id'])) { http_response_code(403); exit('Sin acceso.'); }
 
-if ($reg && $reg['estado'] === 'borrador' && (int)$reg['creado_por'] !== (int)$_SESSION['usuario_id'] && !puedeEditarSector($pdo, (int)$reg['sector_id'])) {
+$esHerramienta = esHerramientaDeTrabajo($form['codigo']);
+if (!$esHerramienta && $reg && $reg['estado'] === 'borrador' && (int)$reg['creado_por'] !== (int)$_SESSION['usuario_id'] && !puedeEditarSector($pdo, (int)$reg['sector_id'])) {
     http_response_code(403); exit('Este formulario es un borrador de otra persona.');
 }
 if ($reg) {
-    $perm = permisosRegistro($pdo, $reg);
-    $readonly = !$perm['editar'] || isset($_GET['solo_lectura']);
+    // Las herramientas de trabajo no tienen circuito de aprobación: edita quien puede completar el sector.
+    $readonly = $esHerramienta
+        ? (!puedeCompletarFormulario($pdo, $form['codigo'], (int)$sector['id']) || isset($_GET['solo_lectura']))
+        : (!permisosRegistro($pdo, $reg)['editar'] || isset($_GET['solo_lectura']));
     $fields = json_decode((string)$reg['datos_json'], true) ?: new stdClass();
     $storage = json_decode((string)$reg['storage_json'], true) ?: new stdClass();
 } else {
-    $readonly = !puedeCompletarSector($pdo, (int)$sector['id']);
+    $readonly = !puedeCompletarFormulario($pdo, $form['codigo'], (int)$sector['id']);
     $fields = new stdClass();
     $storage = new stdClass();
 }
@@ -92,6 +95,10 @@ window.__NASER_FORM__ = $cfg;
 HTML;
 $head .= "\n<link rel=\"stylesheet\" href=\"" . h(asset('/css/form-movil.css')) . "\">";
 $bridge = '<script src="' . h(asset('/js/naser-form-bridge.js')) . '"></script>';
+if (in_array($codigo, ['operaciones-diagrama-trabajo', 'operaciones-stock-herramientas'], true)) {
+    // Instalar antes del puente genérico para reconocer también las acciones dinámicas.
+    $bridge = '<script src="' . h(asset('/js/naser-collection-form.js')) . '"></script>' . $bridge;
+}
 $responsive = '<link rel="stylesheet" href="' . h(asset('/css/formularios-responsive.css')) . '">';
 
 if (preg_match('/<head[^>]*>/i', $html, $m, PREG_OFFSET_CAPTURE)) {

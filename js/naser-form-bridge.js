@@ -16,6 +16,8 @@
   var aplicando = false;
 
   function post(msg) {
+    // Modo sin conexión (archivo descargado): no hay sistema padre, los avisos los atiende la barra del archivo
+    if (cfg.offline) { if (typeof window.__naserOfflineMsg === 'function') { try { window.__naserOfflineMsg(msg); } catch (e) {} } return; }
     try { window.parent.postMessage(msg, parentOrigin); } catch (e) {}
   }
 
@@ -55,6 +57,17 @@
       else out[c.key] = el.value;
     });
     return out;
+  }
+
+  // Valores iniciales del formulario (antes de cargar lo guardado): sirven para saber si alguien completo algo
+  var valoresBase = null;
+  function valorVacio(v) { return v === '' || v === null || v === undefined || v === false || (Array.isArray(v) && !v.length); }
+  function hayContenido() {
+    if (!valoresBase) return true;
+    var ahora = recolectar();
+    return Object.keys(ahora).some(function (k) {
+      return !valorVacio(ahora[k]) && JSON.stringify(ahora[k]) !== JSON.stringify(valoresBase[k]);
+    });
   }
 
   function disparar(el) {
@@ -117,8 +130,11 @@
   }
 
   function bloquear() {
-    document.querySelectorAll('input,select,textarea,fieldset').forEach(function (el) { el.disabled = true; });
+    document.querySelectorAll('input,select,textarea,fieldset').forEach(function (el) {
+      if (!el.hasAttribute('data-naser-readonly-control')) el.disabled = true;
+    });
     Array.prototype.forEach.call(document.querySelectorAll('button,[role="button"],input[type="button"],input[type="submit"]'), function (b) {
+      if (b.hasAttribute('data-naser-readonly-control')) return;
       if (!/imprimir|pdf|exportar|descargar/i.test(b.textContent || b.value || b.getAttribute('aria-label') || '')) { b.disabled = true; b.style.opacity = '.45'; b.style.pointerEvents = 'none'; }
     });
     document.body.classList.add('naser-readonly');
@@ -141,28 +157,38 @@
   }, true);
 
   ['input', 'change'].forEach(function (ev) {
-    document.addEventListener(ev, function () { if (!aplicando) post({ type: 'naser:dirty' }); }, true);
+    document.addEventListener(ev, function (event) {
+      if (!aplicando && !cfg.readonly && !event.target.closest('[data-naser-ignore]')) post({ type: 'naser:dirty' });
+    }, true);
   });
+
+  // Lee los datos del formulario (con validación opcional). Devuelve lo que se informa al sistema.
+  function procesarCollect(d) {
+    if (!cfg.readonly && typeof window.naserBeforeCollect === 'function') {
+      cfg.collecting = true;
+      try {
+        if (window.naserBeforeCollect() === false) return { valid: false };
+      } finally { cfg.collecting = false; }
+    }
+    if (d.validate) {
+      if (typeof window.naserValidate === 'function' && window.naserValidate() === false) return { valid: false };
+      var invalid = campos().find(function (el) { return !el.disabled && el.willValidate && !el.checkValidity(); });
+      if (invalid) { invalid.reportValidity(); return { valid: false }; }
+      // No se puede enviar a aprobacion un formulario en blanco
+      if (!hayContenido()) return { valid: false, motivo: 'vacio' };
+    }
+    volcarEstadoPropio();
+    var storage = (window.__naserLS && window.__naserLS.__dump) ? window.__naserLS.__dump() : {};
+    return { valid: true, fields: recolectar(), storage: storage, sugerencia: sugerencia() };
+  }
+  window.__naserCollect = function (validate) { return procesarCollect({ validate: !!validate }); };
 
   window.addEventListener('message', function (e) {
     if (e.origin !== parentOrigin || e.source !== window.parent || !e.data || typeof e.data !== 'object') return;
     var d = e.data;
     if (d.type === 'naser:collect') {
-      if (d.validate) {
-        if (typeof window.naserValidate === 'function' && window.naserValidate() === false) {
-          post({ type: 'naser:collected', reqId: d.reqId, valid: false });
-          return;
-        }
-        var invalid = campos().find(function (el) { return !el.disabled && el.willValidate && !el.checkValidity(); });
-        if (invalid) {
-          invalid.reportValidity();
-          post({ type: 'naser:collected', reqId: d.reqId, valid: false });
-          return;
-        }
-      }
-      volcarEstadoPropio();
-      var storage = (window.__naserLS && window.__naserLS.__dump) ? window.__naserLS.__dump() : {};
-      post({ type: 'naser:collected', reqId: d.reqId, valid: true, fields: recolectar(), storage: storage, sugerencia: sugerencia() });
+      var res = procesarCollect(d);
+      post(Object.assign({ type: 'naser:collected', reqId: d.reqId }, res));
     } else if (d.type === 'naser:print') {
       window.print();
     }
@@ -177,6 +203,7 @@
   }
 
   function iniciar() {
+    try { valoresBase = recolectar(); } catch (e) { valoresBase = null; }
     aplicar(cfg.fields || null);
     if (cfg.readonly) bloquear();
     informarAltura();

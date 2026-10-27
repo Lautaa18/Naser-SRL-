@@ -87,6 +87,53 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             volver('Se generó una contraseña temporal para ' . $u['nombre'] . '.', [$c], 'u' . $id);
         }
 
+        if ($a === 'generar_claves') {
+            // Contraseña temporal nueva para varias personas a la vez (cada una la cambia al primer ingreso)
+            $alcance = ($_POST['alcance'] ?? '') === 'todos' ? 'todos' : 'sin_ingreso';
+            $q = $pdo->prepare('SELECT id, nombre, email FROM usuarios WHERE activo = 1 AND id <> ?' . ($alcance === 'sin_ingreso' ? ' AND ultimo_acceso IS NULL' : '') . ' ORDER BY nombre');
+            $q->execute([$yoId]);
+            $destinatarios = $q->fetchAll();
+            if (!$destinatarios) throw new RuntimeException($alcance === 'sin_ingreso' ? 'No hay usuarios activos que todavía no hayan ingresado.' : 'No hay otros usuarios activos.');
+            // Clave general (opcional): la misma para todos los destinatarios; igual la tienen que cambiar al ingresar
+            $claveGeneral = trim((string)($_POST['clave_general'] ?? ''));
+            if ($claveGeneral !== '') {
+                if (!preg_match('/^[A-Za-z0-9]{4,30}$/', $claveGeneral)) throw new RuntimeException('La clave general tiene que ser solo letras y números (sin espacios ni símbolos), entre 4 y 30 caracteres.');
+            }
+            $enviarMails = isset($_POST['enviar_mails']);
+            if ($enviarMails) require_once __DIR__ . '/../config/mailer.php';
+            $lote = [];
+            $pdo->beginTransaction();
+            foreach ($destinatarios as $d) {
+                $pass = $claveGeneral !== '' ? $claveGeneral : passwordTemporal();
+                $pdo->prepare('UPDATE usuarios SET password = ?, debe_cambiar_password = 1 WHERE id = ?')->execute([password_hash($pass, PASSWORD_DEFAULT), (int)$d['id']]);
+                $pdo->prepare('DELETE FROM login_intentos WHERE email = ?')->execute([strtolower($d['email'])]);
+                $fila = ['nombre' => $d['nombre'], 'email' => $d['email'], 'password' => $pass];
+                if ($enviarMails) {
+                    $fila['mail'] = enviar_mail($d['email'], 'Tu acceso a NASER SGI', mail_plantilla('Tu acceso a NASER SGI', '<p>Usuario: <strong>' . htmlspecialchars($d['email']) . '</strong></p><p>Contraseña temporal: <strong>' . htmlspecialchars($pass) . '</strong></p><p>Al ingresar te va a pedir que la cambies por una propia.</p>', app_absolute_url('/php/login.php'), 'Ingresar'));
+                }
+                $lote[] = $fila;
+            }
+            $pdo->commit();
+            registrarActividad($pdo, 'generar_claves', count($lote) . ' usuario(s), alcance ' . $alcance);
+            if (($_POST['salida'] ?? '') === 'csv') {
+                // Se entrega directo en la descarga: no queda guardado en el servidor
+                $urlLogin = rtrim((string)(getenv('APP_URL') ?: ''), '/') . app_url('/php/login.php');
+                header('Content-Type: text/csv; charset=utf-8');
+                header('Content-Disposition: attachment; filename="claves_temporales_' . date('Y-m-d') . '.csv"');
+                header('Cache-Control: no-store');
+                $out = fopen('php://output', 'w');
+                fwrite($out, "\xEF\xBB\xBF");
+                fputcsv($out, ['Nombre y apellido', 'Usuario (mail)', 'Contraseña temporal', 'Ingreso'], ';', '"', '\\');
+                foreach ($lote as $f) {
+                    $celdas = array_map(fn($x) => (is_string($x) && $x !== '' && strpbrk($x[0], '=+-@') !== false) ? "'" . $x : $x, [$f['nombre'], $f['email'], $f['password'], $urlLogin]);
+                    fputcsv($out, $celdas, ';', '"', '\\');
+                }
+                fclose($out);
+                exit;
+            }
+            volver('Se generaron ' . count($lote) . ' contraseña(s) temporal(es)' . '. Cada persona tiene que cambiarla al ingresar.', $lote);
+        }
+
         if ($a === 'estado') {
             if ($id === $yoId) throw new RuntimeException('No podés desactivar tu propia cuenta.');
             $st = $pdo->prepare('SELECT rol, activo FROM usuarios WHERE id = ?'); $st->execute([$id]); $u = $st->fetch();
@@ -101,10 +148,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $st = $pdo->prepare('SELECT nombre, email, rol, activo FROM usuarios WHERE id = ?'); $st->execute([$id]); $u = $st->fetch();
             if (!$u) throw new RuntimeException('Usuario inexistente.');
             if ($u['rol'] === 'admin' && (int)$u['activo'] === 1 && adminsActivos($pdo) <= 1) throw new RuntimeException('No se puede eliminar el último super usuario.');
+            // Si cargó formularios o envió mensajes, borrarlo deja esos datos sin autor: se pide desactivar.
+            $q = $pdo->prepare('SELECT COUNT(*) FROM formularios_registros WHERE creado_por = ? OR enviado_por = ? OR revisado_por = ? OR actualizado_por = ?');
+            $q->execute([$id, $id, $id, $id]);
+            $nForms = (int)$q->fetchColumn();
+            $q = $pdo->prepare('SELECT COUNT(*) FROM mensajes WHERE de_usuario_id = ? OR para_usuario_id = ?');
+            $q->execute([$id, $id]);
+            $nMsgs = (int)$q->fetchColumn();
+            if ($nForms || $nMsgs) {
+                throw new RuntimeException('No se puede eliminar a ' . $u['nombre'] . ': participó en ' . $nForms . ' formulario(s) y en ' . $nMsgs . ' mensaje(s) que quedarían sin autor o sin destinatario. Usá "Desactivar": pierde el acceso y se conserva todo el historial.');
+            }
             $pdo->prepare('DELETE FROM notificaciones WHERE usuario_id = ?')->execute([$id]);
+            $pdo->prepare('DELETE FROM mensajes_leidos WHERE usuario_id = ?')->execute([$id]);
             $pdo->prepare('DELETE FROM usuarios WHERE id = ?')->execute([$id]);
             registrarActividad($pdo, 'eliminar_usuario', $u['email']);
-            volver('Usuario ' . $u['nombre'] . ' eliminado. Los formularios que cargó se conservan.');
+            volver('Usuario ' . $u['nombre'] . ' eliminado.');
         }
 
         if ($a === 'sectores') {
@@ -124,10 +182,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             volver('Sectores y burbujas actualizados.', [], 'sectores');
         }
     } catch (Throwable $e) {
-        $err = str_contains($e->getMessage(), 'Duplicate') ? 'Ese correo ya está registrado.' : $e->getMessage();
+        $err = str_contains($e->getMessage(), 'Duplicate') ? 'Ese correo ya está registrado.' : mensaje_error($e);
     }
 }
 
+$nActivos = (int)$pdo->query('SELECT COUNT(*) FROM usuarios WHERE activo = 1')->fetchColumn();
+$nSinIngreso = (int)$pdo->query('SELECT COUNT(*) FROM usuarios WHERE activo = 1 AND ultimo_acceso IS NULL')->fetchColumn();
 $usuarios = $pdo->query("SELECT * FROM usuarios ORDER BY activo DESC, FIELD(rol,'admin') DESC, nombre")->fetchAll();
 $rolesPorUsuario = [];
 foreach ($pdo->query('SELECT usuario_id, sector_id, rol_sector FROM usuario_sector')->fetchAll() as $r) $rolesPorUsuario[(int)$r['usuario_id']][(int)$r['sector_id']] = $r['rol_sector'];
@@ -178,6 +238,22 @@ function matrizRoles(array $sectores, array $roles, array $ROLES): void { ?>
     <label style="display:flex;gap:6px;align-items:center;font-weight:600"><input type="checkbox" name="desactivar_prueba" style="width:auto"> Desactivar cuentas de prueba (@naser.test)</label>
     <label style="display:flex;gap:6px;align-items:center;font-weight:600" title="Crea un usuario operador para cada empleado activo de Operaciones/Mantenimiento/HSEQ con mail @gruponaser.com.ar (cargados en Personal)"><input type="checkbox" name="operadores_personal" style="width:auto"> Crear operadores desde el Personal (<?= (int)$pdo->query("SELECT COUNT(*) FROM empleados WHERE activo=1 AND sector_id IS NOT NULL AND email_corporativo LIKE '%@gruponaser.com.ar'")->fetchColumn() ?> con mail corporativo)</label>
     <button class="btn primary">Aplicar estructura NASER</button>
+  </form>
+</section>
+
+<section class="form-panel" style="margin-bottom:18px">
+  <h2>Contraseñas para el personal</h2>
+  <p class="muted">Genera una contraseña temporal para cada persona (<?=$nSinIngreso?> de <?=$nActivos?> usuarios activos todavía no ingresaron). Cada uno la tiene que cambiar por una propia al entrar. Las contraseñas anteriores dejan de funcionar y <strong>se muestran una sola vez</strong>: copialas o descargá el Excel.</p>
+  <form method="post" style="display:grid;gap:10px" onsubmit="return confirm('¿Generar contraseñas nuevas? Las anteriores de esas personas dejan de funcionar.')"><?=csrf_field()?>
+    <input type="hidden" name="accion" value="generar_claves">
+    <label style="display:flex;gap:8px;align-items:center;font-weight:600"><input type="radio" name="alcance" value="sin_ingreso" checked style="width:auto"> Solo a quienes todavía no ingresaron (recomendado)</label>
+    <label style="display:flex;gap:8px;align-items:center;font-weight:600"><input type="radio" name="alcance" value="todos" style="width:auto"> A todos los usuarios activos (menos a mí) — también a quienes ya eligieron su propia clave</label>
+    <label style="display:grid;gap:4px;font-weight:600">Clave general (opcional)<input name="clave_general" pattern="[A-Za-z0-9]{4,30}" maxlength="30" autocomplete="off" placeholder="Dejá vacío para una clave distinta por persona"><small class="muted" style="font-weight:400">Letras y números, 4 a 30 caracteres, sin espacios (cuanto más fácil, más corto tiene que ser el plazo para usarla). Si la completás, todos los del alcance elegido entran con esa misma clave y el sistema les exige cambiarla al ingresar. Mientras alguien no entre, cualquiera que la conozca podría usar su cuenta: usala solo unos días y con la opción "solo a quienes no ingresaron".</small></label>
+    <label style="display:flex;gap:8px;align-items:center;font-weight:600"><input type="checkbox" name="enviar_mails" style="width:auto"> Enviarles también su usuario y contraseña por mail (requiere SMTP configurado)</label>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <button class="btn primary" name="salida" value="pantalla">Generar y mostrar en pantalla</button>
+      <button class="btn secondary" name="salida" value="csv">Generar y descargar Excel (CSV)</button>
+    </div>
   </form>
 </section>
 

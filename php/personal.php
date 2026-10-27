@@ -68,11 +68,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             volverPersonal($a === 'baja' ? 'Empleado dado de baja.' : 'Empleado reactivado.', '?id=' . $id);
         }
     } catch (Throwable $e) {
-        $err = str_contains($e->getMessage(), 'Duplicate') ? 'Ya existe un empleado con ese legajo.' : $e->getMessage();
+        $err = str_contains($e->getMessage(), 'Duplicate') ? 'Ya existe un empleado con ese legajo.' : mensaje_error($e);
     }
 }
 
-$sectores = sectoresInfo($pdo);
+$sectores = array_filter(sectoresInfo($pdo), fn($s) => $s['slug'] !== 'sgi');   // el SGI no es un sector de trabajo
 $id = (int)($_GET['id'] ?? 0);
 $nuevo = isset($_GET['nuevo']) && $editar;
 

@@ -32,6 +32,37 @@ $limpiarJson = function ($v): ?string {
 };
 $referencia = mb_substr(trim((string)($in['referencia'] ?? '')), 0, 200);
 
+// ---------- HERRAMIENTAS DE TRABAJO (Diagrama de trabajo, Stock de herramientas) ----------
+// Guardado directo sobre un único registro compartido por sector: sin borrador, envío ni aprobación.
+if ($accion === 'herramienta_guardar') {
+    $form = formularioPorCodigo((string)($in['formulario'] ?? ''));
+    if (!$form || !esHerramientaDeTrabajo($form['codigo'])) fallar('Herramienta desconocida.');
+    $sector = sectorPorSlug($pdo, $form['sector']);
+    if (!$sector || !puedeCompletarFormulario($pdo, $form['codigo'], (int)$sector['id'])) fallar('No tenés permiso para modificar esta herramienta.', 403);
+    $sid = (int)$sector['id'];
+    $st = $pdo->prepare('SELECT id, actualizado_en FROM formularios_registros WHERE formulario = ? AND sector_id = ? ORDER BY actualizado_en DESC, id DESC LIMIT 1');
+    $st->execute([$form['codigo'], $sid]);
+    $actual = $st->fetch();
+    $datosJson = $limpiarJson($in['datos'] ?? new stdClass());
+    $storageJson = $limpiarJson($in['storage'] ?? new stdClass());
+    if (!$actual) {
+        $pdo->prepare("INSERT INTO formularios_registros (formulario, sector_id, estado, datos_json, storage_json, creado_por, actualizado_por) VALUES (?,?,?,?,?,?,?)")
+            ->execute([$form['codigo'], $sid, 'aprobado', $datosJson, $storageJson, $uid, $uid]);
+        $id = (int)$pdo->lastInsertId();
+        registrarActividad($pdo, 'herramienta_creada', $form['titulo']);
+    } else {
+        // Si otra persona guardó después de que se abrió esta pantalla, no se pisa su trabajo.
+        if ((int)$actual['id'] !== $id || (string)$actual['actualizado_en'] !== (string)($in['base'] ?? '')) {
+            fallar('Otra persona modificó esta pantalla mientras la tenías abierta. Recargá la página para ver los cambios antes de seguir.', 409);
+        }
+        $pdo->prepare("UPDATE formularios_registros SET datos_json = ?, storage_json = ?, actualizado_por = ?, estado = 'aprobado' WHERE id = ?")
+            ->execute([$datosJson, $storageJson, $uid, $id]);
+    }
+    $st = $pdo->prepare('SELECT actualizado_en FROM formularios_registros WHERE id = ?');
+    $st->execute([$id]);
+    responder(['ok' => true, 'id' => $id, 'version' => (string)$st->fetchColumn(), 'mensaje' => 'Guardado.']);
+}
+
 $reg = $id ? cargarRegistro($pdo, $id) : null;
 if ($id && !$reg) fallar('El registro no existe (puede que lo hayan eliminado).', 404);
 if ($reg && !puedeVerSector($pdo, (int)$reg['sector_id'])) fallar('No tenés acceso a este sector.', 403);
@@ -59,7 +90,7 @@ switch ($accion) {
             $form = formularioPorCodigo((string)($in['formulario'] ?? ''));
             if (!$form) fallar('Formulario desconocido.');
             $sector = sectorPorSlug($pdo, $form['sector']);
-            if (!$sector || !puedeCompletarSector($pdo, (int)$sector['id'])) fallar('No tenés permiso para completar formularios de este sector.', 403);
+            if (!$sector || !puedeCompletarFormulario($pdo, $form['codigo'], (int)$sector['id'])) fallar('No tenés permiso para completar formularios de este sector.', 403);
             $pdo->prepare('INSERT INTO formularios_registros (formulario, sector_id, estado, creado_por, actualizado_por) VALUES (?,?,?,?,?)')
                 ->execute([$form['codigo'], (int)$sector['id'], 'borrador', $uid, $uid]);
             $id = (int)$pdo->lastInsertId();
@@ -82,6 +113,9 @@ switch ($accion) {
         // ---------- ENVIAR A APROBACIÓN ----------
         $perm = permisosRegistro($pdo, $reg);
         if (!$perm['enviar']) fallar('No podés enviar este formulario.', 403);
+        $datosEnviados = json_decode((string)($reg['datos_json'] ?? ''), true);
+        $conContenido = is_array($datosEnviados) && array_filter($datosEnviados, fn($v) => !($v === '' || $v === null || $v === false || $v === []));
+        if (!$conContenido) fallar('El formulario está en blanco: completá los datos antes de enviarlo a aprobación.');
         $pdo->prepare("UPDATE formularios_registros SET estado = 'enviado', enviado_por = ?, enviado_en = NOW(), comentario_revision = NULL WHERE id = ?")->execute([$uid, $id]);
         historialFormulario($pdo, $id, 'enviado', trim((string)($in['comentario'] ?? '')) ?: null);
         $form = formularioPorCodigo($reg['formulario']);
@@ -126,7 +160,7 @@ switch ($accion) {
     // ---------- DUPLICAR ----------
     case 'duplicar':
         if (!$reg) fallar('Falta el registro.');
-        if (!puedeCompletarSector($pdo, (int)$reg['sector_id'])) fallar('No tenés permiso para completar formularios de este sector.', 403);
+        if (!puedeCompletarFormulario($pdo, (string)$reg['formulario'], (int)$reg['sector_id'])) fallar('No tenés permiso para completar formularios de este sector.', 403);
         $pdo->prepare("INSERT INTO formularios_registros (formulario, sector_id, referencia, estado, datos_json, storage_json, creado_por, actualizado_por) VALUES (?,?,?,?,?,?,?,?)")
             ->execute([$reg['formulario'], $reg['sector_id'], $reg['referencia'] ? mb_substr('Copia de ' . $reg['referencia'], 0, 200) : null, 'borrador', $reg['datos_json'], $reg['storage_json'], $uid, $uid]);
         $nuevoId = (int)$pdo->lastInsertId();
@@ -143,6 +177,30 @@ switch ($accion) {
         registrarActividad($pdo, 'formulario_eliminado', ($form['titulo'] ?? $reg['formulario']) . " #$id");
         $slug = sectoresInfo($pdo)[(int)$reg['sector_id']]['slug'] ?? '';
         responder(['ok' => true, 'redirect' => app_url('/php/formularios/index.php') . '?sector=' . urlencode($slug), 'mensaje' => 'Formulario eliminado.']);
+
+    // ---------- IMPORTAR archivo completado sin conexión (en el campo) ----------
+    case 'importar':
+        $arc = $in['archivo'] ?? null;
+        if (!is_array($arc) || ($arc['naser_offline'] ?? null) !== 1 || !is_array($arc['datos'] ?? null)) fallar('Ese archivo no es un formulario de NASER completado sin conexión.');
+        $form = formularioPorCodigo((string)($arc['formulario'] ?? ''));
+        if (!$form) fallar('El formulario del archivo ya no existe en el sistema.');
+        $sector = sectorPorSlug($pdo, $form['sector']);
+        if (!$sector || !puedeCompletarFormulario($pdo, $form['codigo'], (int)$sector['id'])) fallar('No tenés permiso para completar formularios de este sector.', 403);
+        $offId = preg_replace('/[^A-Za-z0-9\-]/', '', (string)($arc['offline_id'] ?? ''));
+        if ($offId !== '') {
+            $st = $pdo->prepare("SELECT h.registro_id FROM formularios_historial h WHERE h.comentario LIKE ? LIMIT 1");
+            $st->execute(['%[' . $offId . ']%']);
+            $ya = $st->fetchColumn();
+            if ($ya) responder(['ok' => true, 'repetido' => true, 'id' => (int)$ya, 'titulo' => $form['titulo'], 'mensaje' => 'Ya estaba importado.']);
+        }
+        $referencia = mb_substr(trim((string)($arc['referencia'] ?? '')), 0, 200);
+        $pdo->prepare('INSERT INTO formularios_registros (formulario, sector_id, referencia, estado, datos_json, storage_json, creado_por, actualizado_por) VALUES (?,?,?,?,?,?,?,?)')
+            ->execute([$form['codigo'], (int)$sector['id'], $referencia ?: null, 'borrador', $limpiarJson($arc['datos']), $limpiarJson(is_array($arc['storage'] ?? null) ? $arc['storage'] : new stdClass()), $uid, $uid]);
+        $nuevoId = (int)$pdo->lastInsertId();
+        $generado = preg_replace('/[^0-9T:+\-.Z]/', '', (string)($arc['generado'] ?? ''));
+        historialFormulario($pdo, $nuevoId, 'creado', 'Importado desde archivo sin conexión' . ($generado ? " (completado $generado)" : '') . ($offId !== '' ? " [$offId]" : ''));
+        registrarActividad($pdo, 'formulario_importado', $form['titulo'] . " #$nuevoId");
+        responder(['ok' => true, 'id' => $nuevoId, 'titulo' => $form['titulo'], 'referencia' => $referencia, 'url' => app_url($urlRegistro($nuevoId)), 'mensaje' => 'Importado como borrador.']);
 
     default:
         fallar('Acción desconocida.');

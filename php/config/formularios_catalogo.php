@@ -64,20 +64,22 @@ function formulariosCatalogo(): array {
         ['mantenimiento-checklist-vehicular','mantenimiento','mantenimiento/checklist-vehicular.html','Checklist Vehicular — Unidad Liviana', ''],
         ['mantenimiento-checklist-hidrogrua','mantenimiento','mantenimiento/checklist-hidrogrua.html','Checklist Hidrogrúa', ''],
 
+        ['operaciones-diagrama-trabajo','rrhh','operaciones/diagrama-trabajo.html','Diagrama de trabajo — Cronograma mensual', ''],
+        ['operaciones-stock-herramientas','mantenimiento','operaciones/stock-herramientas.html','Stock de herramientas', 'POSN08-F1'],
         ['operaciones-inspeccion-equipo','operaciones','operaciones/inspeccion-equipo.html','Inspección de Equipo — Checklist de Preparación', ''],
         ['operaciones-control-slickline','operaciones','operaciones/control-slickline.html','Control Operativo Slickline', 'SGI-OP-SLK-001'],
-        ['operaciones-montaje-well-testing','operaciones','Operaciones/Check List de Montaje de Equipo de Well Testing.html','Check List de Montaje de Equipo de Well Testing', 'POSN03-F2'],
-        ['operaciones-evaluacion-riesgos','operaciones','Operaciones/Evaluacion de riesgo y operativos.html','Evaluación de Riesgos Operativos', 'POSN04-F5'],
-        ['operaciones-ingreso-egreso-locacion','operaciones','Operaciones/INGRESO Y EGRESO DE LOCACION.html','Ingreso y Egreso de Locación', 'PGSN12-F1'],
-        ['operaciones-listado-operaciones','operaciones','Operaciones/listado de operaciones.html','Listado de Operaciones', 'POSN08-F2'],
-        ['operaciones-planificacion-semanal','operaciones','Operaciones/Planificacion semanal.html','Planificación Semanal', 'POSN04-F1'],
-        ['operaciones-propuesta-economica','operaciones','Operaciones/PROPUESTA ECONOMICA DE SERVICIO.html','Propuesta Económica de Servicio', 'PGSN11-F2'],
-        ['operaciones-control-generador','operaciones','Operaciones/REGISTRO DE CONTROL DE GENERADOR.html','Registro de Control de Generador', 'POSN03-F4'],
-        ['operaciones-supervision-well-testing','operaciones','Operaciones/REGISTRO DE SUPERVISION DE SERVICIO DE WELL TESTING.html','Registro de Supervisión de Servicio de Well Testing', 'POSN03-F1'],
-        ['operaciones-relevamiento-datos','operaciones','Operaciones/RELEVAMIENTO MANUAL DE DATOS.html','Relevamiento Manual de Datos', 'POSN03-F3'],
-        ['operaciones-remito','operaciones','Operaciones/Remito naser.html','Remito NASER', 'POSN04-F4'],
-        ['operaciones-tren-herramientas','operaciones','Operaciones/tren de herramienta.html','Tren de Herramientas de Slick Line', 'POSN04-F3'],
-        ['operaciones-visita-equipos','operaciones','Operaciones/visita de equipo.html','Visita a Equipos', 'POSN08-F3'],
+        ['operaciones-montaje-well-testing','operaciones','operaciones/Check List de Montaje de Equipo de Well Testing.html','Check List de Montaje de Equipo de Well Testing', 'POSN03-F2'],
+        ['operaciones-evaluacion-riesgos','operaciones','operaciones/Evaluacion de riesgo y operativos.html','Evaluación de Riesgos Operativos', 'POSN04-F5'],
+        ['operaciones-ingreso-egreso-locacion','operaciones','operaciones/INGRESO Y EGRESO DE LOCACION.html','Ingreso y Egreso de Locación', 'PGSN12-F1'],
+        ['operaciones-listado-operaciones','operaciones','operaciones/listado de operaciones.html','Listado de Operaciones', 'POSN08-F2'],
+        ['operaciones-planificacion-semanal','operaciones','operaciones/Planificacion semanal.html','Planificación Semanal', 'POSN04-F1'],
+        ['operaciones-propuesta-economica','operaciones','operaciones/PROPUESTA ECONOMICA DE SERVICIO.html','Propuesta Económica de Servicio', 'PGSN11-F2'],
+        ['operaciones-control-generador','operaciones','operaciones/REGISTRO DE CONTROL DE GENERADOR.html','Registro de Control de Generador', 'POSN03-F4'],
+        ['operaciones-supervision-well-testing','operaciones','operaciones/REGISTRO DE SUPERVISION DE SERVICIO DE WELL TESTING.html','Registro de Supervisión de Servicio de Well Testing', 'POSN03-F1'],
+        ['operaciones-relevamiento-datos','operaciones','operaciones/RELEVAMIENTO MANUAL DE DATOS.html','Relevamiento Manual de Datos', 'POSN03-F3'],
+        ['operaciones-remito','operaciones','operaciones/Remito naser.html','Remito NASER', 'POSN04-F4'],
+        ['operaciones-tren-herramientas','operaciones','operaciones/tren de herramienta.html','Tren de Herramientas de Slick Line', 'POSN04-F3'],
+        ['operaciones-visita-equipos','operaciones','operaciones/visita de equipo.html','Visita a Equipos', 'POSN08-F3'],
     ];
     $cat = [];
     foreach ($lista as [$codigo, $sector, $archivo, $titulo, $sgi]) {
@@ -90,7 +92,60 @@ function formularioPorCodigo(string $codigo): ?array {
     return formulariosCatalogo()[$codigo] ?? null;
 }
 function formulariosDeSector(string $slug): array {
-    return array_values(array_filter(formulariosCatalogo(), fn($f) => $f['sector'] === $slug));
+    return array_values(array_filter(formulariosCatalogo(), fn($f) => $f['sector'] === $slug && !esHerramientaDeTrabajo($f['codigo'])));
+}
+/**
+ * Herramientas de trabajo del sector (no son formularios para completar uno por uno):
+ * se abren con un botón propio en la página del sector y no figuran en la lista de formularios.
+ */
+function herramientasDeTrabajo(): array {
+    return [
+        'rrhh' => ['codigo' => 'operaciones-diagrama-trabajo', 'titulo' => 'Diagrama de trabajo', 'icono' => '📅'],
+        'mantenimiento' => ['codigo' => 'operaciones-stock-herramientas', 'titulo' => 'Stock de herramientas', 'icono' => '🧰'],
+    ];
+}
+function herramientaDeSector(string $slug): ?array {
+    return herramientasDeTrabajo()[$slug] ?? null;
+}
+function esHerramientaDeTrabajo(string $codigo): bool {
+    foreach (herramientasDeTrabajo() as $h) if ($h['codigo'] === $codigo) return true;
+    return false;
+}
+/** Fragmento SQL para dejar fuera los registros de las herramientas de trabajo de los listados de formularios. */
+function sqlSinHerramientas(string $columna = 'r.formulario'): string {
+    $codigos = array_map(fn($h) => "'" . $h['codigo'] . "'", herramientasDeTrabajo());
+    return $columna . ' NOT IN (' . implode(',', $codigos) . ')';
+}
+/** URL de entrada directa a la herramienta de trabajo del sector. */
+function urlHerramientaSector(string $slug): string {
+    return app_url('/php/formularios/herramienta.php') . '?sector=' . urlencode($slug);
+}
+/**
+ * Formularios que puede completar el RESPONSABLE DE CUALQUIER SECTOR (no solo los del sector dueño).
+ * El registro queda en el sector dueño (ej. Compras) y lo aprueba el responsable de ese sector.
+ */
+function formulariosAbiertosAResponsables(): array {
+    return ['compras-pedido-materiales'];
+}
+/**
+ * Checklists operativos de equipos (son de Mantenimiento pero los completa el equipo de OPERACIONES:
+ * responsables y operadores, entre ellos Basoalto, Belizón, Costallat, Grier y los operadores).
+ * Los aprueba el responsable de Mantenimiento.
+ */
+function formulariosOperativosDeOperaciones(): array {
+    return ['mantenimiento-checklist-vehicular', 'mantenimiento-checklist-hidrogrua', 'mantenimiento-checklist-unidad-slickline'];
+}
+/** ¿Puede el usuario completar ESTE formulario? (permiso del sector, o responsable de cualquier sector si el formulario esta abierto). */
+function puedeCompletarFormulario(PDO $pdo, string $codigoFormulario, int $sectorId): bool {
+    if (puedeCompletarSector($pdo, $sectorId)) return true;
+    if (!puedeVerSector($pdo, $sectorId)) return false;
+    if (in_array($codigoFormulario, formulariosOperativosDeOperaciones(), true)) {
+        $opsId = null;
+        foreach (sectoresInfo($pdo) as $s) if ($s['slug'] === 'operaciones') $opsId = (int)$s['id'];
+        return $opsId !== null && in_array(misRolesSector($pdo)[$opsId] ?? null, ['responsable', 'operador'], true);
+    }
+    if (!in_array($codigoFormulario, formulariosAbiertosAResponsables(), true)) return false;
+    return in_array('responsable', misRolesSector($pdo), true);
 }
 function rutaFormulario(array $f): string {
     return dirname(__DIR__, 2) . '/formularios/' . $f['archivo'];
@@ -108,7 +163,7 @@ function sectorPorSlug(PDO $pdo, string $slug): ?array {
 function permisosRegistro(PDO $pdo, array $reg): array {
     $sid = (int)$reg['sector_id'];
     $uid = (int)($_SESSION['usuario_id'] ?? 0);
-    $completar = puedeCompletarSector($pdo, $sid);
+    $completar = puedeCompletarFormulario($pdo, (string)$reg['formulario'], $sid);
     $aprobar = puedeAprobarSector($pdo, $sid);
     $esAutor = (int)($reg['creado_por'] ?? 0) === $uid;
     $editable = in_array($reg['estado'], ['borrador', 'rechazado'], true);
@@ -139,14 +194,13 @@ function formulariosPanel(PDO $pdo, string $slug): void {
         $filtroBorradores = " AND (r.estado <> 'borrador' OR r.creado_por = ?)";
         $params[] = (int)($_SESSION['usuario_id'] ?? 0);
     }
-    $st = $pdo->prepare("SELECT r.*, u.nombre AS autor FROM formularios_registros r LEFT JOIN usuarios u ON u.id = r.creado_por WHERE r.sector_id = ?$filtroBorradores ORDER BY r.actualizado_en DESC LIMIT 8");
+    $st = $pdo->prepare("SELECT r.*, u.nombre AS autor FROM formularios_registros r LEFT JOIN usuarios u ON u.id = r.creado_por WHERE r.sector_id = ? AND " . sqlSinHerramientas() . "$filtroBorradores ORDER BY r.actualizado_en DESC LIMIT 8");
     $st->execute($params);
     $ultimos = $st->fetchAll();
     $cat = formulariosCatalogo();
-    $pend = $pdo->prepare("SELECT COUNT(*) FROM formularios_registros WHERE sector_id = ? AND estado = 'enviado'");
+    $pend = $pdo->prepare("SELECT COUNT(*) FROM formularios_registros WHERE sector_id = ? AND estado = 'enviado' AND " . sqlSinHerramientas('formulario'));
     $pend->execute([$sid]);
     $pendientes = (int)$pend->fetchColumn();
-    $puedeCompletar = puedeCompletarSector($pdo, $sid);
     $hub = app_url('/php/formularios/index.php') . '?sector=' . urlencode($slug);
     ?>
     <div class="module-toolbar" id="formularios">
@@ -166,7 +220,7 @@ function formulariosPanel(PDO $pdo, string $slug): void {
           <?php if ($f['codigo_sgi']): ?><span class="fx-code"><?=h($f['codigo_sgi'])?></span><?php endif; ?>
           <h3><?=h($f['titulo'])?></h3>
         </div>
-        <?php if ($puedeCompletar): ?>
+        <?php if (puedeCompletarFormulario($pdo, $f['codigo'], $sid)): ?>
           <a class="btn primary" href="<?=h(app_url('/php/formularios/llenar.php') . '?f=' . urlencode($f['codigo']))?>">Completar nuevo</a>
         <?php else: ?>
           <a class="btn secondary" href="<?=h($hub . '&f=' . urlencode($f['codigo']))?>">Ver registros</a>
@@ -195,4 +249,13 @@ function formulariosPanel(PDO $pdo, string $slug): void {
       </table>
     </div>
     <?php endif;
+}
+
+/** Botón de entrada a la herramienta de trabajo del sector (Diagrama de trabajo / Stock de herramientas). */
+function botonHerramientaSector(PDO $pdo, string $slug): void {
+    $h = herramientaDeSector($slug);
+    if (!$h) return;
+    $sector = sectorPorSlug($pdo, $slug);
+    if (!$sector || !puedeVerSector($pdo, (int)$sector['id'])) return;
+    ?><a class="btn primary" href="<?=h(urlHerramientaSector($slug))?>"><?=h($h['icono'])?> <?=h($h['titulo'])?></a><?php
 }

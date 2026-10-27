@@ -12,6 +12,8 @@ if ($id) {
     $form = formularioPorCodigo((string)($_GET['f'] ?? ''));
 }
 if (!$form) { http_response_code(404); exit('Formulario no encontrado.'); }
+// Las herramientas de trabajo no son formularios: se abren desde el botón del sector.
+if (esHerramientaDeTrabajo($form['codigo'])) { header('Location: ' . urlHerramientaSector($form['sector'])); exit; }
 $sector = sectorPorSlug($pdo, $form['sector']);
 if (!$sector || !puedeVerSector($pdo, (int)$sector['id'])) { http_response_code(403); exit('No tenés acceso a este sector.'); }
 $sid = (int)$sector['id'];
@@ -22,7 +24,7 @@ if ($reg && $reg['estado'] === 'borrador' && (int)$reg['creado_por'] !== (int)$_
 if ($reg) {
     $perm = permisosRegistro($pdo, $reg);
 } else {
-    if (!puedeCompletarSector($pdo, $sid)) { http_response_code(403); exit('No tenés permiso para completar formularios de este sector.'); }
+    if (!puedeCompletarFormulario($pdo, $form['codigo'], $sid)) { http_response_code(403); exit('No tenés permiso para completar formularios de este sector.'); }
     $perm = ['ver' => true, 'editar' => true, 'enviar' => true, 'aprobar' => false, 'reabrir' => false, 'eliminar' => false];
 }
 $estado = $reg['estado'] ?? 'nuevo';
@@ -82,7 +84,7 @@ $accionesHist = ['creado' => 'Creó el formulario', 'guardado' => 'Guardó cambi
   </div>
   <div class="fx-toolbar-side">
     <button class="btn secondary" data-accion="imprimir">🖨 Imprimir / PDF</button>
-    <?php if ($reg && puedeCompletarSector($pdo, $sid)): ?><button class="btn secondary" data-accion="duplicar">⧉ Duplicar</button><?php endif; ?>
+    <?php if ($reg && puedeCompletarFormulario($pdo, $form['codigo'], $sid)): ?><button class="btn secondary" data-accion="duplicar">⧉ Duplicar</button><?php endif; ?>
     <?php if ($perm['eliminar']): ?><button class="btn danger" data-accion="eliminar">🗑 Eliminar</button><?php endif; ?>
   </div>
 </div>
@@ -186,7 +188,7 @@ $accionesHist = ['creado' => 'Creó el formulario', 'guardado' => 'Guardó cambi
       var revisionGuardada = revision;
       if (nombre === 'guardar' || nombre === 'enviar') {
         var d = await recolectar(nombre === 'enviar');
-        if (d.valid === false) { aviso('Completá los campos obligatorios y corregí los datos indicados antes de enviar.', 'err'); return; }
+        if (d.valid === false) { aviso(d.motivo === 'vacio' ? 'El formulario está en blanco: completá los datos antes de enviarlo a aprobación.' : 'Completá los campos obligatorios y corregí los datos indicados antes de enviar.', 'err'); return; }
         payload.datos = d.fields; payload.storage = d.storage;
         if (!refInput.value.trim() && d.sugerencia) refInput.value = d.sugerencia;
         payload.referencia = refInput.value.trim();

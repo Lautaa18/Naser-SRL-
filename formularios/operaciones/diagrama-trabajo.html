@@ -1,0 +1,1779 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Diagrama de trabajo | NASER</title></head><body>
+<!-- =========================================================
+ NASER SRL · CRONOGRAMA MENSUAL DE TRABAJO
+ Gestión de trabajadores + estados diarios + días trabajados
+ HTML + CSS + JAVASCRIPT EN UN SOLO BLOQUE
+========================================================= -->
+<section id="naser-cronograma-mensual" class="naser-cronograma">
+<style>
+#naser-cronograma-mensual{
+  --negro:#0b0b0b;--negro2:#171717;--blanco:#fff;--gris:#f3f4f6;
+  --borde:#d8dadd;--texto:#171717;--verde:#16843d;--verde-suave:#e4f5e9;
+  --amarillo:#e4aa00;--amarillo-suave:#fff3c4;--rojo:#c62828;
+  --rojo-suave:#ffe4e4;--azul:#1f5f8b;--azul-suave:#e7f1f8;
+  --violeta:#6d4c9b;--violeta-suave:#efe8f8;--naranja:#d2691e;--naranja-suave:#fff0e5;
+  --celeste:#2878a8;--celeste-suave:#e5f3fb;--gris2:#777;--gris-suave:#efefef;
+  font-family:Arial,Helvetica,sans-serif;color:var(--texto);background:var(--gris);
+  border:1px solid #ddd;border-radius:18px;overflow:hidden
+}
+#naser-cronograma-mensual *{box-sizing:border-box}
+#naser-cronograma-mensual .hero{
+  background:linear-gradient(135deg,#090909,#171717);color:#fff;padding:26px 28px;
+  display:flex;justify-content:space-between;gap:20px;align-items:center;flex-wrap:wrap
+}
+#naser-cronograma-mensual .hero h2{margin:0;font-size:28px;letter-spacing:.3px}
+#naser-cronograma-mensual .hero p{margin:6px 0 0;color:#cfcfcf}
+#naser-cronograma-mensual .rev{
+  border:1px solid #555;border-radius:10px;padding:9px 13px;font-weight:700
+}
+#naser-cronograma-mensual .body{padding:22px}
+#naser-cronograma-mensual .panel{
+  background:#fff;border:1px solid var(--borde);border-radius:14px;padding:16px;margin-bottom:16px
+}
+#naser-cronograma-mensual .section-title{
+  margin:0 0 12px;background:#111;color:#fff;padding:10px 12px;
+  border-radius:9px;font-size:13px;letter-spacing:.2px
+}
+#naser-cronograma-mensual input,
+#naser-cronograma-mensual select,
+#naser-cronograma-mensual textarea,
+#naser-cronograma-mensual button{font:inherit}
+#naser-cronograma-mensual input,
+#naser-cronograma-mensual select,
+#naser-cronograma-mensual textarea{
+  width:100%;border:1px solid #c9cbd0;border-radius:9px;padding:10px 11px;background:#fff;color:#111
+}
+#naser-cronograma-mensual input,#naser-cronograma-mensual select{height:42px}
+#naser-cronograma-mensual textarea{min-height:74px;resize:vertical}
+#naser-cronograma-mensual label{
+  display:block;font-size:11px;font-weight:800;color:#555;margin:0 0 5px
+}
+#naser-cronograma-mensual button{
+  border:0;border-radius:9px;padding:10px 14px;font-weight:700;cursor:pointer
+}
+#naser-cronograma-mensual .btn-dark{background:#111;color:#fff}
+#naser-cronograma-mensual .btn-light{background:#eceef0;color:#111}
+#naser-cronograma-mensual .btn-green{background:var(--verde);color:#fff}
+#naser-cronograma-mensual .btn-blue{background:var(--azul);color:#fff}
+#naser-cronograma-mensual .btn-red{
+  background:#fff;color:var(--rojo);border:1px solid #e0b1b1
+}
+
+#naser-cronograma-mensual .stats{
+  display:grid;grid-template-columns:repeat(4,minmax(165px,1fr));gap:12px;margin-bottom:16px
+}
+#naser-cronograma-mensual .stat{
+  width:100%;text-align:left;background:#fff;border:1px solid var(--borde);
+  border-radius:14px;padding:15px;transition:.18s;cursor:pointer;min-height:86px
+}
+#naser-cronograma-mensual .stat:hover{
+  transform:translateY(-2px);box-shadow:0 6px 16px #00000010
+}
+#naser-cronograma-mensual .stat.active{
+  outline:2px solid #111;outline-offset:1px
+}
+#naser-cronograma-mensual .stat small{
+  display:block;font-weight:800;color:#666;line-height:1.2
+}
+#naser-cronograma-mensual .stat b{display:block;font-size:24px;margin-top:5px}
+#naser-cronograma-mensual .stat span{
+  display:block;font-size:9px;color:#888;margin-top:3px;font-weight:700
+}
+#naser-cronograma-mensual .stat.green{border-left:6px solid var(--verde)}
+#naser-cronograma-mensual .stat.blue{border-left:6px solid var(--azul)}
+#naser-cronograma-mensual .stat.yellow{border-left:6px solid var(--amarillo)}
+#naser-cronograma-mensual .stat.red{border-left:6px solid var(--rojo)}
+#naser-cronograma-mensual .stat.violet{border-left:6px solid var(--violeta)}
+#naser-cronograma-mensual .stat.orange{border-left:6px solid var(--naranja)}
+#naser-cronograma-mensual .stat.gray{border-left:6px solid #777}
+#naser-cronograma-mensual .stat.dark{border-left:6px solid #111}
+
+#naser-cronograma-mensual .notice{
+  background:#f8f8f8;border-left:4px solid #111;border-radius:8px;
+  padding:10px 12px;font-size:12px;color:#555;line-height:1.45
+}
+#naser-cronograma-mensual .notice.ok{
+  border-left-color:var(--verde);background:var(--verde-suave);color:#12632e
+}
+#naser-cronograma-mensual .notice.warn{
+  border-left-color:var(--amarillo);background:var(--amarillo-suave);color:#755600
+}
+
+#naser-cronograma-mensual .toolbar{
+  display:grid;grid-template-columns:1.4fr 2fr 1fr 1fr;gap:10px
+}
+#naser-cronograma-mensual .quick{
+  display:flex;gap:8px;flex-wrap:wrap;margin-top:12px
+}
+
+/* panel plegable */
+#naser-cronograma-mensual .fold-panel{border:2px solid #111}
+#naser-cronograma-mensual .fold-toggle{
+  width:100%;display:flex;align-items:center;justify-content:space-between;background:#fff;padding:0;text-align:left
+}
+#naser-cronograma-mensual .fold-left{display:flex;align-items:center;gap:12px}
+#naser-cronograma-mensual .fold-icon{
+  width:38px;height:38px;border-radius:50%;display:grid;place-items:center;
+  background:#111;color:#fff;font-size:24px;font-weight:900
+}
+#naser-cronograma-mensual .fold-title{font-size:18px;font-weight:900}
+#naser-cronograma-mensual .fold-sub{font-size:12px;color:#666;margin-top:3px;font-weight:400}
+#naser-cronograma-mensual .fold-arrow{font-size:22px;font-weight:900;transition:.2s}
+#naser-cronograma-mensual .fold-body{
+  display:none;margin-top:14px;padding-top:16px;border-top:1px solid #ddd
+}
+#naser-cronograma-mensual .fold-panel.open .fold-body{display:block}
+#naser-cronograma-mensual .fold-panel.open .fold-arrow{transform:rotate(180deg)}
+
+#naser-cronograma-mensual .form-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:10px
+}
+#naser-cronograma-mensual .span2{grid-column:span 2}
+#naser-cronograma-mensual .span4{grid-column:1/-1}
+#naser-cronograma-mensual .actions{
+  display:flex;gap:8px;flex-wrap:wrap;margin-top:12px
+}
+#naser-cronograma-mensual .msg{
+  display:none;margin-top:10px;padding:10px 12px;border-radius:9px;font-size:12px;font-weight:700
+}
+#naser-cronograma-mensual .msg.ok{display:block;background:#e4f5e9;color:#12632e}
+#naser-cronograma-mensual .msg.err{display:block;background:#ffe5e5;color:#9b1717}
+
+/* gestión empleados */
+#naser-cronograma-mensual .worker-list{
+  margin-top:14px;border:1px solid var(--borde);border-radius:12px;overflow:auto;max-height:360px
+}
+#naser-cronograma-mensual .worker-list table{min-width:920px}
+#naser-cronograma-mensual .origin{
+  display:inline-flex;padding:4px 7px;border-radius:999px;font-size:9px;font-weight:900
+}
+#naser-cronograma-mensual .origin.base{background:var(--azul-suave);color:#174f75}
+#naser-cronograma-mensual .origin.manual{background:var(--verde-suave);color:#12632e}
+#naser-cronograma-mensual .manage-actions{display:flex;gap:6px;flex-wrap:wrap;white-space:nowrap}
+#naser-cronograma-mensual .manage-actions button{padding:6px 8px;font-size:10px}
+
+/* leyenda */
+#naser-cronograma-mensual .legend{
+  display:flex;gap:8px;flex-wrap:wrap;font-size:10px;color:#555;margin-top:10px
+}
+#naser-cronograma-mensual .legend-item{
+  display:inline-flex;align-items:center;gap:5px;border:1px solid #ddd;border-radius:999px;padding:5px 8px;background:#fff
+}
+#naser-cronograma-mensual .swatch{width:10px;height:10px;border-radius:3px;display:inline-block}
+#naser-cronograma-mensual .sw-work{background:var(--verde)}
+#naser-cronograma-mensual .sw-med{background:var(--rojo)}
+#naser-cronograma-mensual .sw-art{background:var(--naranja)}
+#naser-cronograma-mensual .sw-lic{background:var(--violeta)}
+#naser-cronograma-mensual .sw-vac{background:var(--azul)}
+#naser-cronograma-mensual .sw-franco{background:#777}
+#naser-cronograma-mensual .sw-empty{background:#ddd}
+
+
+/* navegador plegable por mes */
+
+/* historial por años */
+#naser-cronograma-mensual .year-archive{
+  display:grid;
+  grid-template-columns:48px minmax(180px,1fr) 48px;
+  gap:10px;
+  align-items:end;
+  margin-bottom:14px
+}
+#naser-cronograma-mensual .year-archive .year-center{
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:8px;
+  align-items:end
+}
+#naser-cronograma-mensual .year-archive input{
+  text-align:center;
+  font-weight:900;
+  font-size:17px
+}
+#naser-cronograma-mensual .year-step{
+  height:42px;
+  background:#111;
+  color:#fff;
+  font-size:20px;
+  padding:0
+}
+#naser-cronograma-mensual .current-year-btn{
+  height:42px;
+  white-space:nowrap
+}
+#naser-cronograma-mensual .year-history{
+  margin-top:12px;
+  border-top:1px solid #e5e5e5;
+  padding-top:12px
+}
+#naser-cronograma-mensual .year-history-title{
+  font-size:10px;
+  font-weight:900;
+  color:#666;
+  margin-bottom:8px
+}
+#naser-cronograma-mensual .year-chips{
+  display:flex;
+  gap:7px;
+  flex-wrap:wrap
+}
+#naser-cronograma-mensual .year-chip{
+  background:#f1f1f1;
+  border:1px solid #ddd;
+  color:#333;
+  padding:7px 10px;
+  font-size:10px
+}
+#naser-cronograma-mensual .year-chip.selected{
+  background:#111;
+  color:#fff;
+  border-color:#111
+}
+#naser-cronograma-mensual .month-btn{
+  min-height:58px;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  justify-content:center
+}
+#naser-cronograma-mensual .month-btn .month-name{
+  font-weight:900;
+  font-size:10px
+}
+#naser-cronograma-mensual .month-btn .month-records{
+  font-size:9px;
+  margin-top:4px;
+  opacity:.75
+}
+
+#naser-cronograma-mensual .month-nav-panel{border:2px solid #111}
+#naser-cronograma-mensual .month-nav-top{
+  display:grid;grid-template-columns:44px 1fr 44px;gap:10px;align-items:center;margin-bottom:14px
+}
+#naser-cronograma-mensual .year-btn{
+  height:42px;border-radius:10px;background:#111;color:#fff;font-size:18px;padding:0
+}
+#naser-cronograma-mensual .year-display{
+  height:42px;border:1px solid var(--borde);border-radius:10px;
+  display:flex;align-items:center;justify-content:center;font-weight:900;background:#fafafa
+}
+#naser-cronograma-mensual .month-buttons{
+  display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:16px
+}
+#naser-cronograma-mensual .month-btn{
+  background:#f4f4f4;color:#222;border:1px solid #ddd;padding:9px 7px;font-size:11px
+}
+#naser-cronograma-mensual .month-btn.selected{
+  background:#111;color:#fff;border-color:#111
+}
+#naser-cronograma-mensual .mini-calendar{
+  border:1px solid var(--borde);border-radius:12px;overflow:hidden;background:#fff
+}
+#naser-cronograma-mensual .mini-weekdays,
+#naser-cronograma-mensual .mini-days{
+  display:grid;grid-template-columns:repeat(7,1fr)
+}
+#naser-cronograma-mensual .mini-weekdays div{
+  background:#111;color:#fff;text-align:center;padding:8px 4px;
+  font-size:10px;font-weight:900;border-right:1px solid #333
+}
+#naser-cronograma-mensual .mini-day{
+  min-height:62px;border-right:1px solid #eee;border-bottom:1px solid #eee;
+  padding:7px;background:#fff;text-align:left;position:relative
+}
+#naser-cronograma-mensual button.mini-day{border-radius:0}
+#naser-cronograma-mensual .mini-day.other{
+  background:#f7f7f7;color:#bbb;cursor:default
+}
+#naser-cronograma-mensual .mini-day.current{
+  background:#f4fbf6;box-shadow:inset 0 0 0 2px var(--verde)
+}
+#naser-cronograma-mensual .mini-day.has-records::after{
+  content:"";position:absolute;right:7px;top:8px;width:7px;height:7px;border-radius:50%;background:var(--verde)
+}
+#naser-cronograma-mensual .mini-date{
+  display:block;font-size:12px;font-weight:900
+}
+#naser-cronograma-mensual .mini-count{
+  display:block;font-size:9px;color:#777;margin-top:5px;line-height:1.25
+}
+#naser-cronograma-mensual .month-nav-hint{
+  margin-top:10px;font-size:11px;color:#666
+}
+
+/* calendario mensual */
+#naser-cronograma-mensual .month-head{
+  display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px
+}
+#naser-cronograma-mensual .month-head h3{margin:0;font-size:16px}
+#naser-cronograma-mensual .calendar-wrap{
+  overflow:auto;border:1px solid var(--borde);border-radius:12px;background:#fff
+}
+#naser-cronograma-mensual table{
+  width:100%;border-collapse:separate;border-spacing:0;background:#fff
+}
+#naser-cronograma-mensual .calendar-table{min-width:2450px}
+#naser-cronograma-mensual th{
+  position:sticky;top:0;z-index:3;background:#111;color:#fff;
+  text-align:center;padding:8px 5px;font-size:10px;white-space:nowrap
+}
+#naser-cronograma-mensual th.worker-col{
+  position:sticky;left:0;z-index:5;min-width:270px;text-align:left;padding-left:10px
+}
+#naser-cronograma-mensual th.total-col{
+  position:sticky;right:0;z-index:5;min-width:95px
+}
+#naser-cronograma-mensual td{
+  border-bottom:1px solid #e7e7e7;border-right:1px solid #eee;
+  padding:5px;vertical-align:middle;font-size:11px;text-align:center
+}
+#naser-cronograma-mensual td.worker{
+  position:sticky;left:0;z-index:2;background:#fff;text-align:left;min-width:270px;padding:8px
+}
+#naser-cronograma-mensual td.total{
+  position:sticky;right:0;z-index:2;background:#fff;font-weight:900;min-width:95px
+}
+#naser-cronograma-mensual tbody tr:hover td{background:#fafafa}
+#naser-cronograma-mensual tbody tr:hover td.worker,
+#naser-cronograma-mensual tbody tr:hover td.total{background:#fafafa}
+#naser-cronograma-mensual .worker-name{font-weight:900;font-size:12px}
+#naser-cronograma-mensual .worker-meta{font-size:10px;color:#666;line-height:1.4;margin-top:3px}
+#naser-cronograma-mensual .day-head{min-width:65px}
+#naser-cronograma-mensual .day-head.weekend{background:#262626}
+#naser-cronograma-mensual .day-num{display:block;font-size:12px;font-weight:900}
+#naser-cronograma-mensual .day-name{display:block;font-size:8px;color:#cfcfcf;margin-top:2px}
+#naser-cronograma-mensual .day-cell{
+  min-width:54px;min-height:48px;border-radius:8px;padding:6px 4px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+  border:1px dashed #d5d5d5;background:#fafafa;cursor:pointer
+}
+#naser-cronograma-mensual .day-cell:hover{outline:2px solid #1112}
+#naser-cronograma-mensual .day-cell.empty{color:#aaa}
+#naser-cronograma-mensual .day-cell.trabajo{background:var(--verde-suave);border:1px solid #9fcaaa;color:#12632e}
+#naser-cronograma-mensual .day-cell.certificado{background:var(--rojo-suave);border:1px solid #e3a1a1;color:#9f1515}
+#naser-cronograma-mensual .day-cell.art{background:var(--naranja-suave);border:1px solid #e5b48f;color:#9b4d13}
+#naser-cronograma-mensual .day-cell.licencia{background:var(--violeta-suave);border:1px solid #c5addc;color:#5f3f86}
+#naser-cronograma-mensual .day-cell.vacaciones{background:var(--azul-suave);border:1px solid #a9cce2;color:#174f75}
+#naser-cronograma-mensual .day-cell.franco_comp{background:var(--gris-suave);border:1px solid #c8c8c8;color:#555}
+#naser-cronograma-mensual .cell-main{font-weight:900;font-size:9px;line-height:1.15}
+#naser-cronograma-mensual .cell-sub{font-size:8px;line-height:1.15}
+#naser-cronograma-mensual .cell-time{font-size:8px;color:#555}
+#naser-cronograma-mensual .empty-state{padding:34px;text-align:center;color:#666}
+
+/* resumen empleados */
+#naser-cronograma-mensual .summary-table{min-width:1050px}
+#naser-cronograma-mensual .summary-table th{text-align:left}
+#naser-cronograma-mensual .summary-table td{text-align:left;padding:9px}
+#naser-cronograma-mensual .num{text-align:center!important;font-weight:900}
+
+@media(max-width:1100px){
+  #naser-cronograma-mensual .stats{grid-template-columns:repeat(2,1fr)}
+  #naser-cronograma-mensual .toolbar,#naser-cronograma-mensual .form-grid{grid-template-columns:repeat(2,1fr)}
+  #naser-cronograma-mensual .month-buttons{grid-template-columns:repeat(4,1fr)}
+}
+@media(max-width:650px){
+  #naser-cronograma-mensual .body{padding:12px}
+  #naser-cronograma-mensual .stats,#naser-cronograma-mensual .toolbar,#naser-cronograma-mensual .form-grid{grid-template-columns:1fr}
+  #naser-cronograma-mensual .span2,#naser-cronograma-mensual .span4{grid-column:auto}
+  #naser-cronograma-mensual .month-buttons{grid-template-columns:repeat(3,1fr)}
+  #naser-cronograma-mensual .mini-day{min-height:52px;padding:5px}
+  #naser-cronograma-mensual .mini-count{font-size:8px}
+  #naser-cronograma-mensual .year-archive{grid-template-columns:42px 1fr 42px}
+  #naser-cronograma-mensual .year-archive .year-center{grid-template-columns:1fr}
+}
+</style>
+
+<div class="hero">
+  <div>
+    <h2>CRONOGRAMA MENSUAL DE TRABAJO</h2>
+    <p>Días trabajados, servicios, horarios, licencias y ausencias del personal</p>
+  </div>
+  <div class="rev">NASER SRL · PERSONAL</div>
+</div>
+
+<div class="body">
+
+  <div class="stats">
+    <button type="button" class="stat dark" data-counter-filter="all">
+      <small>TRABAJADORES ACTIVOS</small><b id="stWorkers">0</b><span>Todos los empleados</span>
+    </button>
+    <button type="button" class="stat green" data-counter-filter="trabajo">
+      <small>EMPLEADOS CON DÍAS TRABAJADOS</small><b id="stWorkedEmployees">0</b><span id="stWorkedDaysText">0 días cargados</span>
+    </button>
+    <button type="button" class="stat yellow" data-counter-filter="Slickline">
+      <small>SLICKLINE</small><b id="stSlickline">0</b><span>Empleados en el mes</span>
+    </button>
+    <button type="button" class="stat violet" data-counter-filter="Well Testing">
+      <small>WELL TESTING</small><b id="stWellTesting">0</b><span>Empleados en el mes</span>
+    </button>
+    <button type="button" class="stat blue" data-counter-filter="Eventos">
+      <small>EVENTOS</small><b id="stEventos">0</b><span>Empleados en el mes</span>
+    </button>
+    <button type="button" class="stat red" data-counter-filter="certificado">
+      <small>CERTIFICADO MÉDICO</small><b id="stCertificado">0</b><span>Empleados en el mes</span>
+    </button>
+    <button type="button" class="stat orange" data-counter-filter="art">
+      <small>ART</small><b id="stArt">0</b><span>Empleados en el mes</span>
+    </button>
+    <button type="button" class="stat violet" data-counter-filter="licencia">
+      <small>LICENCIA ESPECIAL</small><b id="stLicencia">0</b><span>Empleados en el mes</span>
+    </button>
+    <button type="button" class="stat blue" data-counter-filter="vacaciones">
+      <small>VACACIONES</small><b id="stVacaciones">0</b><span>Empleados en el mes</span>
+    </button>
+    <button type="button" class="stat gray" data-counter-filter="franco_comp">
+      <small>FRANCO COMPENSATORIO</small><b id="stFranco">0</b><span>Empleados en el mes</span>
+    </button>
+  </div>
+
+  <div class="panel">
+    <div id="sourceNotice" class="notice">Cargando personal...</div>
+  </div>
+
+  <!-- GESTIÓN DE TRABAJADORES -->
+  <div class="panel fold-panel" id="workerPanel">
+    <button type="button" class="fold-toggle" id="toggleWorkers" data-naser-readonly-control>
+      <span class="fold-left">
+        <span class="fold-icon" id="workerIcon">+</span>
+        <span>
+          <span class="fold-title">GESTIONAR TRABAJADORES</span>
+          <span class="fold-sub">Agregar empleados, editar sus datos o quitarlos del cronograma.</span>
+        </span>
+      </span>
+      <span class="fold-arrow">⌄</span>
+    </button>
+
+    <div class="fold-body">
+      <input type="hidden" id="editWorkerId">
+
+      <div class="section-title">ALTA / EDICIÓN DE TRABAJADOR</div>
+
+      <div class="form-grid">
+        <div>
+          <label>LEGAJO *</label>
+          <input id="wLegajo" placeholder="N° de legajo">
+        </div>
+        <div class="span2">
+          <label>APELLIDO Y NOMBRE *</label>
+          <input id="wNombre" placeholder="Apellido y nombre">
+        </div>
+        <div>
+          <label>DNI</label>
+          <input id="wDni" placeholder="DNI">
+        </div>
+        <div>
+          <label>SECTOR / UNIDAD DE NEGOCIO</label>
+          <select id="wUnidad">
+            <option value="">Seleccionar sector</option>
+            <option value="Slickline">Slickline</option>
+            <option value="Well Testing">Well Testing</option>
+            <option value="Eventos">Eventos</option>
+          </select>
+        </div>
+        <div>
+          <label>SERVICIO</label>
+          <input id="wServicio" placeholder="Servicio">
+        </div>
+        <div class="span2">
+          <label>CARGO / FUNCIÓN</label>
+          <input id="wCargo" placeholder="Cargo o función">
+        </div>
+      </div>
+
+      <div class="actions">
+        <button type="button" class="btn-green" id="saveWorker">Agregar trabajador</button>
+        <button type="button" class="btn-light" id="clearWorker">Limpiar campos</button>
+        <button type="button" class="btn-light" id="cancelWorkerEdit" style="display:none">Cancelar edición</button>
+        <button type="button" class="btn-blue" id="restoreBaseWorkers">Restaurar personal PGSN02-F4</button>
+      </div>
+
+      <div class="msg" id="workerMsg"></div>
+
+      <div class="worker-list">
+        <table>
+          <thead>
+            <tr>
+              <th>LEGAJO</th><th>APELLIDO Y NOMBRE</th><th>UNIDAD</th><th>SERVICIO</th><th>CARGO</th><th>ORIGEN</th><th>ACCIONES</th>
+            </tr>
+          </thead>
+          <tbody id="workerManageBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARGA DE DÍA -->
+  <div class="panel fold-panel" id="dayPanel">
+    <button type="button" class="fold-toggle" id="toggleDay">
+      <span class="fold-left">
+        <span class="fold-icon" id="dayIcon">+</span>
+        <span>
+          <span class="fold-title">CARGAR DÍA DEL EMPLEADO</span>
+          <span class="fold-sub">Carga un día o varios días corridos de trabajo, certificado, ART, licencia, vacaciones o franco.</span>
+        </span>
+      </span>
+      <span class="fold-arrow">⌄</span>
+    </button>
+
+    <div class="fold-body">
+      <input type="hidden" id="editDayId">
+
+      <div class="form-grid">
+        <div class="span2">
+          <label>TRABAJADOR *</label>
+          <select id="workerSelect"><option value="">Seleccionar trabajador</option></select>
+        </div>
+        <div>
+          <label>FECHA DE INICIO *</label>
+          <input type="date" id="workDate">
+        </div>
+
+        <div>
+          <label>CANTIDAD DE DÍAS CORRIDOS *</label>
+          <input type="number" id="consecutiveDays" min="1" max="31" step="1" value="1">
+          <div style="font-size:9px;color:#777;margin-top:4px">
+            Ej.: 1 = un solo día · 7 = siete días consecutivos
+          </div>
+        </div>
+
+        <div>
+          <label>ESTADO *</label>
+          <select id="dayStatus">
+            <option value="trabajo">Día trabajado</option>
+            <option value="certificado">Certificado médico</option>
+            <option value="art">ART</option>
+            <option value="licencia">Licencia especial</option>
+            <option value="vacaciones">Vacaciones</option>
+            <option value="franco_comp">Franco compensatorio</option>
+          </select>
+        </div>
+
+        <div id="serviceField">
+          <label>SERVICIO / ÁREA *</label>
+          <select id="workService">
+            <option value="">Seleccionar</option>
+            <option value="Slickline">Slickline</option>
+            <option value="Well Testing">Well Testing</option>
+            <option value="Eventos">Eventos</option>
+          </select>
+        </div>
+
+        <div id="startField">
+          <label>HORA DE INICIO</label>
+          <input type="time" id="startTime">
+        </div>
+
+        <div id="endField">
+          <label>HORA DE FIN</label>
+          <input type="time" id="endTime">
+        </div>
+
+        <div id="locationField">
+          <label>UBICACIÓN / UNIDAD</label>
+          <input id="location" placeholder="Ej. Base, locación, SL-31...">
+        </div>
+
+        <div class="span4">
+          <label>OBSERVACIONES</label>
+          <textarea id="notes" placeholder="Detalle adicional del día"></textarea>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button type="button" class="btn-green" id="saveDay">Guardar día</button>
+        <button type="button" class="btn-light" id="clearDay">Limpiar campos</button>
+        <button type="button" class="btn-light" id="cancelDayEdit" style="display:none">Cancelar edición</button>
+      </div>
+      <div class="msg" id="dayMsg"></div>
+    </div>
+  </div>
+
+  <!-- NAVEGADOR PLEGABLE POR AÑO Y MES -->
+  <div class="panel fold-panel month-nav-panel" id="monthNavPanel">
+    <button type="button" class="fold-toggle" id="toggleMonthNav" data-naser-readonly-control>
+      <span class="fold-left">
+        <span class="fold-icon" id="monthNavIcon">+</span>
+        <span>
+          <span class="fold-title">AÑOS Y MESES DEL CRONOGRAMA</span>
+          <span class="fold-sub">Consultá años anteriores o futuros y elegí cualquiera de los 12 meses.</span>
+        </span>
+      </span>
+      <span class="fold-arrow">⌄</span>
+    </button>
+
+    <div class="fold-body">
+      <div class="section-title">SELECCIONAR AÑO</div>
+
+      <div class="year-archive">
+        <button type="button" class="year-step" id="prevYear" aria-label="Año anterior" data-naser-readonly-control>‹</button>
+
+        <div class="year-center">
+          <div>
+            <label>AÑO</label>
+            <input type="number" id="yearInput" min="2000" max="2100" step="1" data-naser-readonly-control>
+          </div>
+          <button type="button" class="btn-light current-year-btn" id="currentYearBtn" data-naser-readonly-control>
+            Año actual
+          </button>
+        </div>
+
+        <button type="button" class="year-step" id="nextYear" aria-label="Año siguiente" data-naser-readonly-control>›</button>
+      </div>
+
+      <div class="section-title">12 MESES DEL AÑO</div>
+      <div class="month-buttons" id="monthButtons"></div>
+
+      <div class="mini-calendar">
+        <div class="mini-weekdays">
+          <div>LUN</div><div>MAR</div><div>MIÉ</div><div>JUE</div><div>VIE</div><div>SÁB</div><div>DOM</div>
+        </div>
+        <div class="mini-days" id="miniDays"></div>
+      </div>
+
+      <div class="month-nav-hint">
+        Cada año conserva sus propios registros. Podés consultar años pasados o cargar años futuros sin perder información.
+      </div>
+
+      <div class="year-history">
+        <div class="year-history-title">AÑOS CON INFORMACIÓN / ACCESO RÁPIDO</div>
+        <div class="year-chips" id="yearChips"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MES / FILTROS -->
+  <div class="panel">
+    <div class="toolbar">
+      <div>
+        <label>MES A VISUALIZAR</label>
+        <input type="month" id="monthPicker" data-naser-readonly-control>
+      </div>
+      <div>
+        <label>BUSCAR TRABAJADOR</label>
+        <input id="searchWorker" type="search" placeholder="Nombre, legajo, cargo..." data-naser-readonly-control>
+      </div>
+      <div>
+        <label>UNIDAD</label>
+        <select id="filterUnit" data-naser-readonly-control><option value="">Todas las unidades</option></select>
+      </div>
+      <div>
+        <label>SERVICIO</label>
+        <select id="filterService" data-naser-readonly-control><option value="">Todos los servicios</option></select>
+      </div>
+    </div>
+
+    <div class="quick">
+      <button type="button" class="btn-dark" id="showAll" data-naser-readonly-control>Ver todo</button>
+      <button type="button" class="btn-light" id="onlyWithRecords" data-naser-readonly-control>Solo con registros</button>
+      <button type="button" class="btn-light" id="clearFilters" data-naser-readonly-control>Limpiar filtros</button>
+      <button type="button" class="btn-green" id="exportCsv" data-naser-readonly-control>Exportar CSV</button>
+    </div>
+
+    <div class="legend">
+      <span class="legend-item"><span class="swatch sw-work"></span>Día trabajado</span>
+      <span class="legend-item"><span class="swatch sw-med"></span>Certificado médico</span>
+      <span class="legend-item"><span class="swatch sw-art"></span>ART</span>
+      <span class="legend-item"><span class="swatch sw-lic"></span>Licencia especial</span>
+      <span class="legend-item"><span class="swatch sw-vac"></span>Vacaciones</span>
+      <span class="legend-item"><span class="swatch sw-franco"></span>Franco compensatorio</span>
+      <span class="legend-item"><span class="swatch sw-empty"></span>Sin cargar</span>
+    </div>
+  </div>
+
+  <!-- CALENDARIO MENSUAL -->
+  <div class="panel">
+    <div class="month-head">
+      <div>
+        <h3 id="monthTitle">CRONOGRAMA MENSUAL</h3>
+        <div id="calendarHint" style="font-size:11px;color:#666;margin-top:4px">
+          Hacé clic sobre cualquier día cargado para editarlo.
+        </div>
+      </div>
+      <div style="font-size:11px;color:#666">
+        Todos los días del mes visibles
+      </div>
+    </div>
+
+    <div class="calendar-wrap">
+      <table class="calendar-table">
+        <thead id="calendarHead"></thead>
+        <tbody id="calendarBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- RESUMEN -->
+  <div class="panel">
+    <div class="section-title">DÍAS TRABAJADOS DE TODOS LOS EMPLEADOS</div>
+    <div class="calendar-wrap">
+      <table class="summary-table">
+        <thead>
+          <tr>
+            <th>LEGAJO</th>
+            <th>APELLIDO Y NOMBRE</th>
+            <th>UNIDAD</th>
+            <th>SLICKLINE</th>
+            <th>WELL TESTING</th>
+            <th>EVENTOS</th>
+            <th>TOTAL DÍAS TRABAJADOS</th>
+            <th>CERT. MÉDICO</th>
+            <th>ART</th>
+            <th>LIC. ESPECIAL</th>
+            <th>VACACIONES</th>
+            <th>FRANCO COMP.</th>
+          </tr>
+        </thead>
+        <tbody id="summaryBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<script>
+(function(){
+  const root=document.getElementById("naser-cronograma-mensual");
+  if(!root)return;
+
+  const $=id=>document.getElementById(id);
+  const readonly=!!(window.__NASER_FORM__ && window.__NASER_FORM__.readonly);
+
+  root.querySelectorAll('[data-counter-filter]').forEach(button=>{
+    button.setAttribute('data-naser-readonly-control','');
+  });
+  if(readonly){
+    $("calendarHint").textContent="Consultá los días cargados y el resumen de cada mes.";
+  }
+
+  const BASE_WORKERS_KEY="naser_pgsn02_f4_trabajadores_v1";
+  const MANUAL_WORKERS_KEY="naser_cronograma_trabajadores_manual_v3";
+  const HIDDEN_BASE_KEY="naser_cronograma_trabajadores_ocultos_v3";
+  const RECORDS_KEY="naser_cronograma_mensual_registros_v3";
+  const NAV_YEAR_KEY="naser_cronograma_anio_seleccionado_v1";
+
+  let baseWorkers=[];
+  let manualWorkers=[];
+  let hiddenBaseIds=[];
+  let workers=[];
+  let records=[];
+  let onlyWithRecords=false;
+  let counterFilter="all";
+  let navYear=null;
+
+  const monthNames=[
+    "ENERO","FEBRERO","MARZO","ABRIL","MAYO","JUNIO",
+    "JULIO","AGOSTO","SEPTIEMBRE","OCTUBRE","NOVIEMBRE","DICIEMBRE"
+  ];
+  const dayNames=["DOM","LUN","MAR","MIÉ","JUE","VIE","SÁB"];
+
+
+  function currentSystemYear(){
+    return new Date().getFullYear();
+  }
+
+  function yearsInRecords(){
+    return [...new Set(
+      records
+        .map(r=>Number(String(r.date||"").slice(0,4)))
+        .filter(y=>Number.isInteger(y) && y>=2000 && y<=2100)
+    )].sort((a,b)=>a-b);
+  }
+
+  function availableYears(){
+    const now=currentSystemYear();
+    const saved=yearsInRecords();
+    const minSaved=saved.length?saved[0]:now;
+    const maxSaved=saved.length?saved[saved.length-1]:now;
+
+    const min=Math.max(2000,Math.min(now-5,minSaved));
+    const max=Math.min(2100,Math.max(now+10,maxSaved));
+
+    const arr=[];
+    for(let y=min;y<=max;y++)arr.push(y);
+    return arr;
+  }
+
+  function setNavYear(year){
+    year=Math.max(2000,Math.min(2100,Number(year)||currentSystemYear()));
+    navYear=year;
+    if(!readonly)localStorage.setItem(NAV_YEAR_KEY,String(year));
+    $("yearInput").value=year;
+  }
+
+
+  function safeParse(key,fallback){
+    try{
+      const v=JSON.parse(localStorage.getItem(key)||"null");
+      return v===null?fallback:v;
+    }catch(e){return fallback}
+  }
+
+  function esc(v){
+    return String(v??"").replace(/[&<>"']/g,m=>({
+      "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+    }[m]));
+  }
+
+  function baseId(w){
+    return "base:"+String(w._id||w.legajo||w.nombre||"");
+  }
+
+  function normalizeBase(w){
+    return {
+      _id:baseId(w),source:"base",
+      legajo:w.legajo||"",nombre:w.nombre||"",dni:w.dni||"",
+      unidadNegocio:w.unidadNegocio||"",servicio:w.servicio||"",cargo:w.cargo||""
+    };
+  }
+
+  function normalizeManual(w){
+    return {
+      _id:w._id,source:"manual",
+      legajo:w.legajo||"",nombre:w.nombre||"",dni:w.dni||"",
+      unidadNegocio:w.unidadNegocio||"",servicio:w.servicio||"",cargo:w.cargo||""
+    };
+  }
+
+  function rebuildWorkers(){
+    const activeBase=baseWorkers.map(normalizeBase).filter(w=>!hiddenBaseIds.includes(w._id));
+    const activeManual=manualWorkers.map(normalizeManual);
+
+    const manualLegajos=new Set(
+      activeManual.map(w=>String(w.legajo).trim().toLowerCase()).filter(Boolean)
+    );
+
+    workers=[
+      ...activeBase.filter(w=>!manualLegajos.has(String(w.legajo).trim().toLowerCase())),
+      ...activeManual
+    ].sort((a,b)=>(a.nombre||"").localeCompare(b.nombre||""));
+  }
+
+  function loadData(){
+    baseWorkers=safeParse(BASE_WORKERS_KEY,[]);
+    manualWorkers=safeParse(MANUAL_WORKERS_KEY,[]);
+    hiddenBaseIds=safeParse(HIDDEN_BASE_KEY,[]);
+    records=safeParse(RECORDS_KEY,[]);
+
+    if(!Array.isArray(baseWorkers))baseWorkers=[];
+    if(!Array.isArray(manualWorkers))manualWorkers=[];
+    if(!Array.isArray(hiddenBaseIds))hiddenBaseIds=[];
+    if(!Array.isArray(records))records=[];
+
+    rebuildWorkers();
+  }
+
+  function saveWorkers(){
+    if(readonly)return;
+    localStorage.setItem(MANUAL_WORKERS_KEY,JSON.stringify(manualWorkers));
+    localStorage.setItem(HIDDEN_BASE_KEY,JSON.stringify(hiddenBaseIds));
+  }
+
+  function saveRecords(){
+    if(readonly)return;
+    localStorage.setItem(RECORDS_KEY,JSON.stringify(records));
+  }
+
+  function unique(v){
+    return [...new Set(v.filter(Boolean))].sort((a,b)=>a.localeCompare(b));
+  }
+
+  function fillFilter(id,values,label){
+    const el=$(id),cur=el.value;
+    el.innerHTML=`<option value="">${label}</option>`+
+      unique(values).map(x=>`<option value="${esc(x)}">${esc(x)}</option>`).join("");
+    el.value=cur;
+  }
+
+  function findWorker(id){
+    return workers.find(w=>w._id===String(id));
+  }
+
+  function monthValue(){
+    let v=$("monthPicker").value;
+    if(!/^\d{4}-\d{2}$/.test(v)){
+      const n=new Date();
+      v=`${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,"0")}`;
+      $("monthPicker").value=v;
+    }
+    return v;
+  }
+
+  function monthParts(){
+    const [y,m]=monthValue().split("-").map(Number);
+    return {year:y,month:m};
+  }
+
+  function daysInMonth(y,m){
+    return new Date(y,m,0).getDate();
+  }
+
+  function dateKey(y,m,d){
+    return `${y}-${String(m).padStart(2,"0")}-${String(d).padStart(2,"0")}`;
+  }
+
+  function recordFor(workerId,date){
+    return records.find(r=>r.workerId===workerId && r.date===date);
+  }
+
+  function monthRecords(){
+    const prefix=monthValue()+"-";
+    return records.filter(r=>r.date.startsWith(prefix));
+  }
+
+  function uniqueWorkersFor(predicate){
+    return new Set(monthRecords().filter(predicate).map(r=>r.workerId).filter(id=>findWorker(id))).size;
+  }
+
+  function recordMatchesCounter(r){
+    if(counterFilter==="all")return true;
+    if(counterFilter==="trabajo")return r.status==="trabajo";
+    if(["Slickline","Well Testing","Eventos"].includes(counterFilter)){
+      return r.status==="trabajo" && r.service===counterFilter;
+    }
+    return r.status===counterFilter;
+  }
+
+  function workerMatchesCounter(workerId){
+    if(counterFilter==="all")return true;
+    return monthRecords().some(r=>r.workerId===workerId && recordMatchesCounter(r));
+  }
+
+
+  function statusLabel(status){
+    return {
+      trabajo:"TRABAJO",
+      certificado:"CERT. MÉD.",
+      art:"ART",
+      licencia:"LIC. ESP.",
+      vacaciones:"VACACIONES",
+      franco_comp:"FRANCO COMP."
+    }[status]||status;
+  }
+
+  function shortService(service){
+    return service==="Slickline"?"SL":
+           service==="Well Testing"?"WT":
+           service==="Eventos"?"EV":"";
+  }
+
+  function parseMinutes(t){
+    if(!t||!/^\d{2}:\d{2}$/.test(t))return null;
+    const [h,m]=t.split(":").map(Number);
+    return h*60+m;
+  }
+
+  function durationHours(start,end){
+    const a=parseMinutes(start),b=parseMinutes(end);
+    if(a===null||b===null)return 0;
+    let diff=b-a;
+    if(diff<0)diff+=1440;
+    return diff/60;
+  }
+
+  function updateNotice(){
+    const activeBase=workers.filter(w=>w.source==="base").length;
+    const manual=workers.filter(w=>w.source==="manual").length;
+    const el=$("sourceNotice");
+
+    if(workers.length){
+      el.className="notice ok";
+      el.innerHTML=`Personal disponible: <strong>${workers.length}</strong>. Desde PGSN02-F4: <strong>${activeBase}</strong> · Agregados en cronograma: <strong>${manual}</strong>.`;
+    }else{
+      el.className="notice warn";
+      el.innerHTML="No hay personal cargado. Podés agregar empleados directamente desde “Gestionar trabajadores”.";
+    }
+  }
+
+  function populateWorkers(){
+    const cur=$("workerSelect").value;
+    $("workerSelect").innerHTML='<option value="">Seleccionar trabajador</option>'+
+      workers.map(w=>`<option value="${esc(w._id)}">${esc(w.nombre)} · Legajo ${esc(w.legajo||"—")}</option>`).join("");
+    if(workers.some(w=>w._id===cur))$("workerSelect").value=cur;
+
+    fillFilter("filterUnit",workers.map(w=>w.unidadNegocio),"Todas las unidades");
+    fillFilter("filterService",workers.map(w=>w.servicio),"Todos los servicios");
+  }
+
+  function openPanel(panelId,iconId){
+    const p=$(panelId);
+    if(!p.classList.contains("open")){
+      p.classList.add("open");
+      $(iconId).textContent="−";
+    }
+  }
+
+  function message(id,text,ok=true){
+    const el=$(id);
+    el.textContent=text;
+    el.className="msg "+(ok?"ok":"err");
+    setTimeout(()=>el.className="msg",3000);
+  }
+
+  /* ======================
+     GESTIÓN TRABAJADORES
+  ====================== */
+  function resetWorkerForm(){
+    $("editWorkerId").value="";
+    ["wLegajo","wNombre","wDni","wUnidad","wServicio","wCargo"].forEach(id=>$(id).value="");
+    $("saveWorker").textContent="Agregar trabajador";
+    $("cancelWorkerEdit").style.display="none";
+  }
+
+  function renderWorkerManager(){
+    const body=$("workerManageBody");
+    if(!workers.length){
+      body.innerHTML='<tr><td colspan="7" class="empty-state">No hay trabajadores cargados.</td></tr>';
+      return;
+    }
+
+    body.innerHTML=workers.map(w=>`
+      <tr>
+        <td><b>${esc(w.legajo||"—")}</b></td>
+        <td>${esc(w.nombre||"—")}</td>
+        <td>${esc(w.unidadNegocio||"—")}</td>
+        <td>${esc(w.servicio||"—")}</td>
+        <td>${esc(w.cargo||"—")}</td>
+        <td><span class="origin ${w.source==="base"?"base":"manual"}">${w.source==="base"?"PGSN02-F4":"CRONOGRAMA"}</span></td>
+        <td>
+          <div class="manage-actions">
+            <button type="button" class="btn-dark" data-worker-edit="${esc(w._id)}">Editar</button>
+            <button type="button" class="btn-red" data-worker-delete="${esc(w._id)}">Eliminar</button>
+          </div>
+        </td>
+      </tr>
+    `).join("");
+  }
+
+  $("saveWorker").addEventListener("click",()=>{
+    if(readonly)return;
+    const editId=$("editWorkerId").value;
+    const legajo=$("wLegajo").value.trim();
+    const nombre=$("wNombre").value.trim();
+
+    if(!legajo||!nombre){
+      message("workerMsg","Legajo y Apellido y Nombre son obligatorios.",false);
+      return;
+    }
+
+    const duplicate=workers.find(w=>
+      String(w.legajo).trim().toLowerCase()===legajo.toLowerCase() && w._id!==editId
+    );
+    if(duplicate){
+      message("workerMsg","Ya existe un trabajador con ese legajo.",false);
+      return;
+    }
+
+    const data={
+      legajo,nombre,
+      dni:$("wDni").value.trim(),
+      unidadNegocio:$("wUnidad").value.trim(),
+      servicio:$("wServicio").value.trim(),
+      cargo:$("wCargo").value.trim()
+    };
+
+    if(editId){
+      const current=findWorker(editId);
+      if(!current)return;
+
+      if(current.source==="manual"){
+        const idx=manualWorkers.findIndex(w=>w._id===editId);
+        if(idx>=0)manualWorkers[idx]={...manualWorkers[idx],...data};
+      }else{
+        if(!hiddenBaseIds.includes(editId))hiddenBaseIds.push(editId);
+        const manualRecord={_id:"manual:"+Date.now(),...data};
+        manualWorkers.push(manualRecord);
+        records.forEach(r=>{if(r.workerId===editId)r.workerId=manualRecord._id});
+      }
+
+      saveWorkers();saveRecords();resetWorkerForm();refreshAll();
+      message("workerMsg","Trabajador actualizado correctamente.");
+      return;
+    }
+
+    manualWorkers.push({_id:"manual:"+Date.now(),...data});
+    saveWorkers();resetWorkerForm();refreshAll();
+    message("workerMsg","Trabajador agregado correctamente.");
+  });
+
+  $("workerManageBody").addEventListener("click",e=>{
+    if(readonly)return;
+    const btn=e.target.closest("button");
+    if(!btn)return;
+
+    if(btn.dataset.workerEdit){
+      const w=findWorker(btn.dataset.workerEdit);
+      if(!w)return;
+      openPanel("workerPanel","workerIcon");
+      $("editWorkerId").value=w._id;
+      $("wLegajo").value=w.legajo||"";
+      $("wNombre").value=w.nombre||"";
+      $("wDni").value=w.dni||"";
+      $("wUnidad").value=w.unidadNegocio||"";
+      $("wServicio").value=w.servicio||"";
+      $("wCargo").value=w.cargo||"";
+      $("saveWorker").textContent="Guardar cambios";
+      $("cancelWorkerEdit").style.display="";
+    }
+
+    if(btn.dataset.workerDelete){
+      const w=findWorker(btn.dataset.workerDelete);
+      if(!w)return;
+      const count=records.filter(r=>r.workerId===w._id).length;
+      if(!confirm(`¿Eliminar a "${w.nombre}" del cronograma?${count?` También se eliminarán ${count} registro(s) diario(s).`:""}`))return;
+
+      if(w.source==="manual"){
+        manualWorkers=manualWorkers.filter(x=>x._id!==w._id);
+      }else{
+        if(!hiddenBaseIds.includes(w._id))hiddenBaseIds.push(w._id);
+      }
+      records=records.filter(r=>r.workerId!==w._id);
+      saveWorkers();saveRecords();refreshAll();
+      message("workerMsg","Trabajador eliminado del cronograma.");
+    }
+  });
+
+  $("clearWorker").addEventListener("click",resetWorkerForm);
+  $("cancelWorkerEdit").addEventListener("click",resetWorkerForm);
+  $("restoreBaseWorkers").addEventListener("click",()=>{
+    if(readonly)return;
+    if(!confirm("¿Restaurar todos los trabajadores ocultados del PGSN02-F4?"))return;
+    hiddenBaseIds=[];
+    saveWorkers();refreshAll();
+    message("workerMsg","Personal PGSN02-F4 restaurado.");
+  });
+
+  /* ======================
+     REGISTROS DIARIOS
+  ====================== */
+  function updateStatusFields(){
+    const isWork=$("dayStatus").value==="trabajo";
+    ["serviceField","startField","endField","locationField"].forEach(id=>{
+      $(id).style.display=isWork?"":"none";
+    });
+
+    if(!isWork){
+      $("workService").value="";
+      $("startTime").value="";
+      $("endTime").value="";
+      $("location").value="";
+    }
+  }
+
+  function resetDayForm(){
+    $("editDayId").value="";
+    $("workerSelect").value="";
+    $("workDate").value="";
+    $("consecutiveDays").value="1";
+    $("consecutiveDays").disabled=false;
+    $("dayStatus").value="trabajo";
+    $("workService").value="";
+    $("startTime").value="";
+    $("endTime").value="";
+    $("location").value="";
+    $("notes").value="";
+    $("saveDay").textContent="Guardar día";
+    $("cancelDayEdit").style.display="none";
+    updateStatusFields();
+  }
+
+  $("dayStatus").addEventListener("change",updateStatusFields);
+  $("clearDay").addEventListener("click",resetDayForm);
+  $("cancelDayEdit").addEventListener("click",resetDayForm);
+
+  function addCalendarDays(dateString,amount){
+    const parts=String(dateString).split("-").map(Number);
+    if(parts.length!==3 || parts.some(Number.isNaN))return "";
+    const d=new Date(Date.UTC(parts[0],parts[1]-1,parts[2]));
+    d.setUTCDate(d.getUTCDate()+amount);
+    return [
+      d.getUTCFullYear(),
+      String(d.getUTCMonth()+1).padStart(2,"0"),
+      String(d.getUTCDate()).padStart(2,"0")
+    ].join("-");
+  }
+
+  $("saveDay").addEventListener("click",()=>{
+    if(readonly)return;
+    const editId=$("editDayId").value;
+    const workerId=$("workerSelect").value;
+    const date=$("workDate").value;
+    const status=$("dayStatus").value;
+
+    let consecutiveDays=Number($("consecutiveDays").value||1);
+    if(!Number.isInteger(consecutiveDays))consecutiveDays=1;
+    consecutiveDays=Math.max(1,Math.min(31,consecutiveDays));
+
+    if(!workerId||!date){
+      message("dayMsg","Seleccioná trabajador y fecha de inicio.",false);
+      return;
+    }
+
+    if(status==="trabajo"&&!$("workService").value){
+      message("dayMsg","Seleccioná Slickline, Well Testing o Eventos.",false);
+      return;
+    }
+
+    /* Cuando se edita un registro existente se modifica únicamente ese día. */
+    if(editId){
+      const duplicate=records.find(r=>r.workerId===workerId&&r.date===date&&r.id!==editId);
+      if(duplicate){
+        message("dayMsg","Ese empleado ya tiene otro registro para esa fecha.",false);
+        return;
+      }
+
+      const rec={
+        id:editId,
+        workerId,date,status,
+        service:status==="trabajo"?$("workService").value:"",
+        start:status==="trabajo"?$("startTime").value:"",
+        end:status==="trabajo"?$("endTime").value:"",
+        location:status==="trabajo"?$("location").value.trim():"",
+        notes:$("notes").value.trim()
+      };
+
+      const idx=records.findIndex(r=>r.id===editId);
+      if(idx>=0)records[idx]=rec;
+
+      saveRecords();
+
+      const ym=date.slice(0,7);
+      if(ym){
+        $("monthPicker").value=ym;
+        setNavYear(Number(date.slice(0,4)));
+      }
+
+      resetDayForm();
+      renderAll();
+      message("dayMsg","Registro actualizado.");
+      return;
+    }
+
+    /* Crear todas las fechas del bloque consecutivo. */
+    const dates=[];
+    for(let i=0;i<consecutiveDays;i++){
+      dates.push(addCalendarDays(date,i));
+    }
+
+    /* Validación previa: no se crea nada si alguna fecha ya está ocupada. */
+    const conflicts=dates.filter(d=>
+      records.some(r=>r.workerId===workerId&&r.date===d)
+    );
+
+    if(conflicts.length){
+      const shown=conflicts.slice(0,5).join(", ");
+      message(
+        "dayMsg",
+        `No se cargó el bloque: ${conflicts.length} fecha(s) ya tienen registro (${shown}${conflicts.length>5?"...":""}). Editá esos días o elegí un rango sin registros.`,
+        false
+      );
+      return;
+    }
+
+    const baseTime=Date.now();
+
+    dates.forEach((currentDate,index)=>{
+      records.push({
+        id:"D"+baseTime+"_"+index,
+        workerId,
+        date:currentDate,
+        status,
+        service:status==="trabajo"?$("workService").value:"",
+        start:status==="trabajo"?$("startTime").value:"",
+        end:status==="trabajo"?$("endTime").value:"",
+        location:status==="trabajo"?$("location").value.trim():"",
+        notes:$("notes").value.trim()
+      });
+    });
+
+    saveRecords();
+
+    const ym=date.slice(0,7);
+    if(ym){
+      $("monthPicker").value=ym;
+      setNavYear(Number(date.slice(0,4)));
+    }
+
+    resetDayForm();
+    renderAll();
+
+    if(consecutiveDays===1){
+      message("dayMsg","Día guardado correctamente.");
+    }else{
+      const lastDate=dates[dates.length-1];
+      message(
+        "dayMsg",
+        `${consecutiveDays} días corridos cargados correctamente: ${date} al ${lastDate}.`
+      );
+    }
+  });
+
+  function editRecord(id){
+    if(readonly)return;
+    const r=records.find(x=>x.id===id);
+    if(!r)return;
+    openPanel("dayPanel","dayIcon");
+    $("editDayId").value=r.id;
+    $("workerSelect").value=r.workerId;
+    $("workDate").value=r.date;
+    $("consecutiveDays").value="1";
+    $("consecutiveDays").disabled=true;
+    $("dayStatus").value=r.status;
+    $("workService").value=r.service||"";
+    $("startTime").value=r.start||"";
+    $("endTime").value=r.end||"";
+    $("location").value=r.location||"";
+    $("notes").value=r.notes||"";
+    $("saveDay").textContent="Guardar cambios";
+    $("cancelDayEdit").style.display="";
+    updateStatusFields();
+    $("dayPanel").scrollIntoView({behavior:"smooth",block:"start"});
+  }
+
+  /* ======================
+     FILTROS / CALENDARIO
+  ====================== */
+  function filteredWorkers(){
+    const q=$("searchWorker").value.trim().toLowerCase();
+    const unit=$("filterUnit").value;
+    const service=$("filterService").value;
+    const mr=monthRecords();
+
+    return workers.filter(w=>{
+      const hay=[w.nombre,w.legajo,w.cargo,w.unidadNegocio,w.servicio].join(" ").toLowerCase();
+      const hasMonth=mr.some(r=>r.workerId===w._id);
+      return (!q||hay.includes(q))
+        &&(!unit||w.unidadNegocio===unit)
+        &&(!service||w.servicio===service)
+        &&(!onlyWithRecords||hasMonth)
+        &&workerMatchesCounter(w._id);
+    });
+  }
+
+  function workerMonthStats(workerId){
+    const rs=monthRecords().filter(r=>r.workerId===workerId);
+    const worked=rs.filter(r=>r.status==="trabajo");
+    return {
+      slickline:worked.filter(r=>r.service==="Slickline").length,
+      wellTesting:worked.filter(r=>r.service==="Well Testing").length,
+      eventos:worked.filter(r=>r.service==="Eventos").length,
+      worked:worked.length,
+      certificado:rs.filter(r=>r.status==="certificado").length,
+      art:rs.filter(r=>r.status==="art").length,
+      licencia:rs.filter(r=>r.status==="licencia").length,
+      vacaciones:rs.filter(r=>r.status==="vacaciones").length,
+      franco:rs.filter(r=>r.status==="franco_comp").length
+    };
+  }
+
+  function renderCalendarHead(){
+    const {year,month}=monthParts();
+    const n=daysInMonth(year,month);
+
+    $("monthTitle").textContent=`CRONOGRAMA · ${monthNames[month-1]} ${year}`;
+
+    let h='<tr><th class="worker-col">TRABAJADOR</th>';
+    for(let d=1;d<=n;d++){
+      const dow=new Date(year,month-1,d).getDay();
+      h+=`<th class="day-head ${dow===0||dow===6?"weekend":""}">
+        <span class="day-num">${d}</span><span class="day-name">${dayNames[dow]}</span>
+      </th>`;
+    }
+    h+='<th class="total-col">DÍAS TRAB.</th></tr>';
+    $("calendarHead").innerHTML=h;
+  }
+
+  function renderCell(w,date){
+    const r=recordFor(w._id,date);
+
+    if(!r){
+      return `<div class="day-cell empty" data-empty-worker="${esc(w._id)}" data-empty-date="${date}">
+        <span class="cell-main">—</span>
+      </div>`;
+    }
+
+    if(r.status==="trabajo"){
+      return `<div class="day-cell trabajo" data-record-id="${esc(r.id)}" title="${esc(r.notes||"")}">
+        <span class="cell-main">${esc(shortService(r.service))}</span>
+        <span class="cell-sub">${esc(r.service)}</span>
+        ${r.start||r.end?`<span class="cell-time">${esc(r.start||"")} ${r.end?"-"+esc(r.end):""}</span>`:""}
+      </div>`;
+    }
+
+    return `<div class="day-cell ${esc(r.status)}" data-record-id="${esc(r.id)}" title="${esc(r.notes||"")}">
+      <span class="cell-main">${esc(statusLabel(r.status))}</span>
+    </div>`;
+  }
+
+  function renderCalendar(){
+    renderCalendarHead();
+    const list=filteredWorkers();
+    const {year,month}=monthParts();
+    const n=daysInMonth(year,month);
+
+    if(!list.length){
+      $("calendarBody").innerHTML=`<tr><td colspan="${n+2}" class="empty-state">No hay trabajadores para mostrar.</td></tr>`;
+      return;
+    }
+
+    $("calendarBody").innerHTML=list.map(w=>{
+      const st=workerMonthStats(w._id);
+      let cells="";
+      for(let d=1;d<=n;d++){
+        cells+=`<td>${renderCell(w,dateKey(year,month,d))}</td>`;
+      }
+
+      return `<tr>
+        <td class="worker">
+          <div class="worker-name">${esc(w.nombre||"Sin nombre")}</div>
+          <div class="worker-meta">
+            Legajo: ${esc(w.legajo||"—")}<br>
+            ${esc(w.cargo||"Sin cargo")} · ${esc(w.unidadNegocio||"Sin unidad")}
+          </div>
+        </td>
+        ${cells}
+        <td class="total">${st.worked}</td>
+      </tr>`;
+    }).join("");
+  }
+
+  $("calendarBody").addEventListener("click",e=>{
+    if(readonly)return;
+    const cell=e.target.closest(".day-cell");
+    if(!cell)return;
+
+    if(cell.dataset.recordId){
+      editRecord(cell.dataset.recordId);
+      return;
+    }
+
+    if(cell.dataset.emptyWorker&&cell.dataset.emptyDate){
+      openPanel("dayPanel","dayIcon");
+      resetDayForm();
+      $("workerSelect").value=cell.dataset.emptyWorker;
+      $("workDate").value=cell.dataset.emptyDate;
+      $("dayPanel").scrollIntoView({behavior:"smooth",block:"start"});
+    }
+  });
+
+  function renderSummary(){
+    const body=$("summaryBody");
+    const list=filteredWorkers();
+
+    if(!list.length){
+      body.innerHTML='<tr><td colspan="12" class="empty-state">Sin datos para mostrar.</td></tr>';
+      return;
+    }
+
+    body.innerHTML=list.map(w=>{
+      const s=workerMonthStats(w._id);
+      return `<tr>
+        <td>${esc(w.legajo||"—")}</td>
+        <td><b>${esc(w.nombre||"—")}</b></td>
+        <td>${esc(w.unidadNegocio||"—")}</td>
+        <td class="num">${s.slickline}</td>
+        <td class="num">${s.wellTesting}</td>
+        <td class="num">${s.eventos}</td>
+        <td class="num">${s.worked}</td>
+        <td class="num">${s.certificado}</td>
+        <td class="num">${s.art}</td>
+        <td class="num">${s.licencia}</td>
+        <td class="num">${s.vacaciones}</td>
+        <td class="num">${s.franco}</td>
+      </tr>`;
+    }).join("");
+  }
+
+  function renderStats(){
+    const mr=monthRecords().filter(r=>findWorker(r.workerId));
+    const worked=mr.filter(r=>r.status==="trabajo");
+
+    $("stWorkers").textContent=workers.length;
+    $("stWorkedEmployees").textContent=uniqueWorkersFor(r=>r.status==="trabajo");
+    $("stWorkedDaysText").textContent=`${worked.length} día${worked.length!==1?"s":""} cargado${worked.length!==1?"s":""}`;
+
+    $("stSlickline").textContent=uniqueWorkersFor(r=>r.status==="trabajo"&&r.service==="Slickline");
+    $("stWellTesting").textContent=uniqueWorkersFor(r=>r.status==="trabajo"&&r.service==="Well Testing");
+    $("stEventos").textContent=uniqueWorkersFor(r=>r.status==="trabajo"&&r.service==="Eventos");
+
+    $("stCertificado").textContent=uniqueWorkersFor(r=>r.status==="certificado");
+    $("stArt").textContent=uniqueWorkersFor(r=>r.status==="art");
+    $("stLicencia").textContent=uniqueWorkersFor(r=>r.status==="licencia");
+    $("stVacaciones").textContent=uniqueWorkersFor(r=>r.status==="vacaciones");
+    $("stFranco").textContent=uniqueWorkersFor(r=>r.status==="franco_comp");
+
+    root.querySelectorAll("[data-counter-filter]").forEach(btn=>{
+      btn.classList.toggle("active",btn.dataset.counterFilter===counterFilter);
+    });
+  }
+
+  function renderMonthNavigator(){
+    const {year,month}=monthParts();
+
+    if(navYear===null){
+      const stored=Number(localStorage.getItem(NAV_YEAR_KEY));
+      setNavYear(stored>=2000 && stored<=2100 ? stored : year);
+    }else{
+      $("yearInput").value=navYear;
+    }
+
+    const recordsByMonth={};
+    records.forEach(r=>{
+      const match=String(r.date||"").match(/^(\d{4})-(\d{2})-/);
+      if(!match || Number(match[1])!==navYear)return;
+      const monthNum=Number(match[2]);
+      recordsByMonth[monthNum]=(recordsByMonth[monthNum]||0)+1;
+    });
+
+    $("monthButtons").innerHTML=monthNames.map((name,index)=>{
+      const monthNum=index+1;
+      const selected=navYear===year && monthNum===month;
+      const count=recordsByMonth[monthNum]||0;
+
+      return `<button type="button"
+        class="month-btn ${selected?"selected":""}"
+        data-nav-month="${monthNum}" data-naser-readonly-control>
+        <span class="month-name">${name}</span>
+        <span class="month-records">${count} registro${count!==1?"s":""}</span>
+      </button>`;
+    }).join("");
+
+    // Si el año seleccionado coincide con el mes abierto, mostramos ese mes.
+    // Si no, mostramos enero hasta que el usuario elija un mes.
+    const calendarMonth=navYear===year ? month : 1;
+    const first=new Date(navYear,calendarMonth-1,1);
+    const total=daysInMonth(navYear,calendarMonth);
+    const mondayOffset=(first.getDay()+6)%7;
+    const cells=[];
+
+    for(let i=0;i<mondayOffset;i++)cells.push(null);
+    for(let d=1;d<=total;d++)cells.push(d);
+    while(cells.length%7!==0)cells.push(null);
+
+    const prefix=`${navYear}-${String(calendarMonth).padStart(2,"0")}-`;
+    const selectedRecords=records.filter(r=>String(r.date||"").startsWith(prefix));
+
+    const today=new Date();
+    const isCurrent=
+      today.getFullYear()===navYear &&
+      today.getMonth()+1===calendarMonth;
+
+    $("miniDays").innerHTML=cells.map(d=>{
+      if(!d)return `<div class="mini-day other"></div>`;
+
+      const date=dateKey(navYear,calendarMonth,d);
+      const count=selectedRecords.filter(r=>r.date===date).length;
+      const current=isCurrent && today.getDate()===d;
+
+      return `<button type="button"
+        class="mini-day ${current?"current":""} ${count?"has-records":""}"
+        data-mini-date="${date}" data-naser-readonly-control>
+        <span class="mini-date">${d}</span>
+        <span class="mini-count">${count?`${count} registro${count!==1?"s":""}`:"Sin registros"}</span>
+      </button>`;
+    }).join("");
+
+    const years=availableYears();
+    const yearsWithData=new Set(yearsInRecords());
+
+    $("yearChips").innerHTML=years.map(y=>{
+      const hasData=yearsWithData.has(y);
+      return `<button type="button"
+        class="year-chip ${y===navYear?"selected":""}"
+        data-nav-year="${y}" data-naser-readonly-control>
+        ${y}${hasData?" · datos":""}
+      </button>`;
+    }).join("");
+  }
+
+  function renderAll(){
+    updateNotice();
+    populateWorkers();
+    renderWorkerManager();
+    renderCalendar();
+    renderSummary();
+    renderStats();
+    renderMonthNavigator();
+  }
+
+  function refreshAll(){
+    rebuildWorkers();
+    renderAll();
+  }
+
+
+  /* ======================
+     CONTADORES / NAVEGACIÓN
+  ====================== */
+  root.querySelector(".stats").addEventListener("click",e=>{
+    const btn=e.target.closest("[data-counter-filter]");
+    if(!btn)return;
+
+    const value=btn.dataset.counterFilter;
+    counterFilter=(counterFilter===value && value!=="all")?"all":value;
+    renderCalendar();
+    renderSummary();
+    renderStats();
+  });
+
+  $("toggleMonthNav").addEventListener("click",()=>{
+    const open=$("monthNavPanel").classList.toggle("open");
+    $("monthNavIcon").textContent=open?"−":"+";
+    if(open)renderMonthNavigator();
+  });
+
+  $("prevYear").addEventListener("click",()=>{
+    setNavYear((navYear??currentSystemYear())-1);
+    renderMonthNavigator();
+  });
+
+  $("nextYear").addEventListener("click",()=>{
+    setNavYear((navYear??currentSystemYear())+1);
+    renderMonthNavigator();
+  });
+
+  $("currentYearBtn").addEventListener("click",()=>{
+    const y=currentSystemYear();
+    setNavYear(y);
+
+    const m=new Date().getMonth()+1;
+    $("monthPicker").value=`${y}-${String(m).padStart(2,"0")}`;
+    counterFilter="all";
+    renderAll();
+  });
+
+  $("yearInput").addEventListener("change",()=>{
+    setNavYear($("yearInput").value);
+    renderMonthNavigator();
+  });
+
+  $("monthButtons").addEventListener("click",e=>{
+    const btn=e.target.closest("[data-nav-month]");
+    if(!btn)return;
+
+    const m=Number(btn.dataset.navMonth);
+    $("monthPicker").value=`${navYear}-${String(m).padStart(2,"0")}`;
+    counterFilter="all";
+    if(!readonly)localStorage.setItem(NAV_YEAR_KEY,String(navYear));
+    renderAll();
+  });
+
+  $("yearChips").addEventListener("click",e=>{
+    const btn=e.target.closest("[data-nav-year]");
+    if(!btn)return;
+    setNavYear(Number(btn.dataset.navYear));
+    renderMonthNavigator();
+  });
+
+  $("miniDays").addEventListener("click",e=>{
+    const btn=e.target.closest("[data-mini-date]");
+    if(!btn)return;
+
+    const date=btn.dataset.miniDate;
+    $("monthPicker").value=date.slice(0,7);
+    setNavYear(Number(date.slice(0,4)));
+
+    if(readonly){
+      renderAll();
+      return;
+    }
+
+    openPanel("dayPanel","dayIcon");
+    resetDayForm();
+    $("workDate").value=date;
+
+    renderAll();
+    $("dayPanel").scrollIntoView({behavior:"smooth",block:"start"});
+  });
+
+
+  /* ======================
+     EXPORTAR
+  ====================== */
+  $("exportCsv").addEventListener("click",()=>{
+    const rows=[[
+      "LEGAJO","APELLIDO Y NOMBRE","DNI","UNIDAD","SERVICIO/CARGO","FECHA","ESTADO",
+      "AREA TRABAJO","INICIO","FIN","HORAS","UBICACION","OBSERVACIONES"
+    ]];
+
+    monthRecords().forEach(r=>{
+      const w=findWorker(r.workerId);
+      if(!w)return;
+
+      rows.push([
+        w.legajo||"",w.nombre||"",w.dni||"",w.unidadNegocio||"",
+        [w.servicio,w.cargo].filter(Boolean).join(" / "),
+        r.date,statusLabel(r.status),r.service||"",r.start||"",r.end||"",
+        r.status==="trabajo"?durationHours(r.start,r.end).toFixed(2):"",
+        r.location||"",r.notes||""
+      ]);
+    });
+
+    const csv=rows.map(row=>
+      row.map(v=>`"${String(v??"").replace(/"/g,'""')}"`).join(";")
+    ).join("\n");
+
+    const blob=new Blob(["\ufeff"+csv],{type:"text/csv;charset=utf-8;"});
+    const a=document.createElement("a");
+    a.href=URL.createObjectURL(blob);
+    a.download=`NASER_Cronograma_${monthValue()}.csv`;
+    a.click();
+    URL.revokeObjectURL(a.href);
+  });
+
+  /* ======================
+     EVENTOS UI
+  ====================== */
+  $("toggleWorkers").addEventListener("click",()=>{
+    const o=$("workerPanel").classList.toggle("open");
+    $("workerIcon").textContent=o?"−":"+";
+  });
+
+  $("toggleDay").addEventListener("click",()=>{
+    const o=$("dayPanel").classList.toggle("open");
+    $("dayIcon").textContent=o?"−":"+";
+  });
+
+  $("monthPicker").addEventListener("change",()=>{
+    setNavYear(monthParts().year);
+    counterFilter="all";
+    renderAll();
+  });
+  ["searchWorker","filterUnit","filterService"].forEach(id=>{
+    $(id).addEventListener(id==="searchWorker"?"input":"change",()=>{
+      renderCalendar();renderSummary();
+    });
+  });
+
+  $("showAll").addEventListener("click",()=>{
+    onlyWithRecords=false;renderCalendar();renderSummary();
+  });
+  $("onlyWithRecords").addEventListener("click",()=>{
+    onlyWithRecords=true;renderCalendar();renderSummary();
+  });
+  $("clearFilters").addEventListener("click",()=>{
+    onlyWithRecords=false;
+    counterFilter="all";
+    $("searchWorker").value="";
+    $("filterUnit").value="";
+    $("filterService").value="";
+    renderCalendar();renderSummary();renderStats();
+  });
+
+  /* ======================
+     INICIO
+  ====================== */
+  loadData();
+
+  const now=new Date();
+  $("monthPicker").value=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,"0")}`;
+
+  const storedNavYear=Number(localStorage.getItem(NAV_YEAR_KEY));
+  setNavYear(storedNavYear>=2000 && storedNavYear<=2100 ? storedNavYear : now.getFullYear());
+
+  resetWorkerForm();
+  resetDayForm();
+  renderAll();
+})();
+</script>
+</section>
+</body></html>

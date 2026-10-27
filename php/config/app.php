@@ -52,3 +52,16 @@ function asset(string $path): string {
 function h(?string $value): string {
     return htmlspecialchars((string)$value, ENT_QUOTES, 'UTF-8');
 }
+
+/**
+ * Texto de error seguro para mostrar en pantalla. Los avisos propios del sistema (RuntimeException)
+ * se muestran tal cual; los errores de la base de datos u otros se guardan en el log y se muestra
+ * un mensaje generico (no se filtran nombres de tablas ni columnas). En desarrollo se ve el detalle.
+ */
+function mensaje_error(Throwable $e): string {
+    if (app_is_dev()) return $e->getMessage();
+    if (!($e instanceof PDOException) && ($e instanceof RuntimeException || $e instanceof InvalidArgumentException)) return $e->getMessage();
+    error_log('[NASER] ' . get_class($e) . ': ' . $e->getMessage() . ' en ' . $e->getFile() . ':' . $e->getLine());
+    if ($e instanceof PDOException && (int)($e->errorInfo[1] ?? 0) === 1062) return 'Ese dato ya existe (está duplicado).';
+    return 'No se pudo completar la operación. Revisá los datos e intentá de nuevo.';
+}

@@ -18,12 +18,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $st = $pdo->prepare('SELECT password FROM usuarios WHERE id = ?');
         $st->execute([$uid]);
         $hash = (string)$st->fetchColumn();
-        if (!password_verify($actual, $hash)) $err = 'La contraseña actual no es correcta.';
+        // Maximo 5 intentos fallidos de la clave actual cada 15 minutos (comparte la tabla del login)
+        $claveIntento = 'perfil:' . $uid;
+        $q = $pdo->prepare('SELECT COUNT(*) FROM login_intentos WHERE email = ? AND creado_en > (NOW() - INTERVAL 15 MINUTE)');
+        $q->execute([$claveIntento]);
+        if ((int)$q->fetchColumn() >= 5) $err = 'Demasiados intentos con la contraseña actual. Esperá 15 minutos e intentá de nuevo.';
+        elseif (!password_verify($actual, $hash)) {
+            $pdo->prepare('INSERT INTO login_intentos(email,ip) VALUES(?,?)')->execute([$claveIntento, substr(naser_client_ip(), 0, 45)]);
+            $err = 'La contraseña actual no es correcta.';
+        }
         elseif (strlen($nueva) < 8) $err = 'La nueva contraseña debe tener al menos 8 caracteres.';
         elseif (!preg_match('/[A-Za-z]/', $nueva) || !preg_match('/\d/', $nueva)) $err = 'La nueva contraseña debe tener letras y números.';
         elseif ($nueva !== $repetir) $err = 'Las contraseñas nuevas no coinciden.';
         elseif (password_verify($nueva, $hash)) $err = 'La nueva contraseña tiene que ser distinta de la actual.';
         else {
+            $pdo->prepare('DELETE FROM login_intentos WHERE email = ?')->execute([$claveIntento]);
             $pdo->prepare('UPDATE usuarios SET password = ?, debe_cambiar_password = 0 WHERE id = ?')->execute([password_hash($nueva, PASSWORD_DEFAULT), $uid]);
             unset($_SESSION['debe_cambiar_password']);
             session_regenerate_id(true);
@@ -66,7 +75,8 @@ $roles = misRolesSector($pdo);
     <?php foreach (sectoresInfo($pdo) as $s): $sid = (int)$s['id']; if (!puedeVerSector($pdo, $sid)) continue; $r = $roles[$sid] ?? null; ?>
       <tr><td><?=h($s['nombre'])?><?= $s['burbuja'] ? ' <small class="muted">· ' . h($s['burbuja']) . '</small>' : '' ?></td>
       <td><?= $r ? '<span class="tag ' . h($r) . '">' . h(nombreRolSector($r)) . '</span>' : '<span class="muted">—</span>' ?></td>
-      <td><?= implode(' · ', array_filter(['Ver', puedeCompletarSector($pdo, $sid) ? 'Completar' : null, puedeEditarSector($pdo, $sid) ? 'Editar' : null, puedeAprobarSector($pdo, $sid) ? 'Aprobar' : null])) ?></td></tr>
+      <td><?= $s['slug'] === 'sgi' ? implode(' · ', array_filter(['Ver documentación', puedeEditarSector($pdo, $sid) ? 'Cargar y editar documentos' : null]))
+        : implode(' · ', array_filter(['Ver', puedeCompletarSector($pdo, $sid) ? 'Completar' : null, puedeEditarSector($pdo, $sid) ? 'Editar' : null, puedeAprobarSector($pdo, $sid) ? 'Aprobar' : null])) ?></td></tr>
     <?php endforeach; ?>
     </tbody></table>
     <h2 style="margin-top:22px">Avisos por mail</h2>

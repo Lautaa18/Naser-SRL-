@@ -24,3 +24,8 @@ try {
 
 require_once __DIR__ . '/bootstrap.php';
 naser_bootstrap($pdo);
+
+// Si hay una sesion abierta, confirmar que la cuenta sigue activa (y refrescar el rol)
+if (PHP_SAPI !== 'cli' && function_exists('naser_validar_sesion') && !empty($_SESSION['usuario_id'])) {
+    naser_validar_sesion($pdo);
+}

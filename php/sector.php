@@ -244,6 +244,16 @@ $sql .= '
 ';
 
 
+// Paginado: carpetas con cientos de archivos hacian paginas de 1 MB+
+$porPagina = 100;
+$pagina = max(1, (int)($_GET['pagina'] ?? 1));
+$stTotal = $pdo->prepare('SELECT COUNT(*) FROM (' . $sql . ') t');
+$stTotal->execute($params);
+$totalDocs = (int)$stTotal->fetchColumn();
+$totalPaginas = max(1, (int)ceil($totalDocs / $porPagina));
+if ($pagina > $totalPaginas) $pagina = $totalPaginas;
+$sql .= ' LIMIT ' . $porPagina . ' OFFSET ' . (($pagina - 1) * $porPagina);
+
 $st = $pdo->prepare($sql);
 
 $st->execute($params);
@@ -351,6 +361,7 @@ function documentUrl(string $archivo): string
                 <?php if (formulariosDeSector($slug)): ?>
                     <a class="btn primary" href="<?= h(app_url('/php/formularios/index.php') . '?sector=' . urlencode($slug)) ?>">✎ Formularios</a>
                 <?php endif; ?>
+                <?php botonHerramientaSector($pdo, $slug); ?>
 
 
                 <!-- SOLO RESPONSABLE DEL SECTOR O ADMIN -->
@@ -381,6 +392,7 @@ function documentUrl(string $archivo): string
             </div>
 
         </header>
+
 
 
         <!-- =================================================
@@ -602,7 +614,7 @@ function documentUrl(string $archivo): string
 
             <span class="count-pill">
 
-                <?= count($docs) ?> archivo(s)
+                <?= $totalDocs ?> archivo(s)
 
             </span>
 
@@ -750,6 +762,20 @@ function documentUrl(string $archivo): string
                 </article>
 
             <?php endforeach; ?>
+
+            <?php if ($totalPaginas > 1):
+                $qsBase = array_filter(['sector' => $s['slug'], 'carpeta' => $cid, 'q' => $q, 'tipo' => $tipo], fn($v) => $v !== null && $v !== '');
+            ?>
+                <nav style="display:flex;gap:10px;align-items:center;justify-content:center;margin:18px 0;flex-wrap:wrap">
+                    <?php if ($pagina > 1): ?>
+                        <a class="btn" href="?<?= h(http_build_query($qsBase + ['pagina' => $pagina - 1])) ?>">← Anterior</a>
+                    <?php endif; ?>
+                    <span>Página <?= $pagina ?> de <?= $totalPaginas ?></span>
+                    <?php if ($pagina < $totalPaginas): ?>
+                        <a class="btn" href="?<?= h(http_build_query($qsBase + ['pagina' => $pagina + 1])) ?>">Siguiente →</a>
+                    <?php endif; ?>
+                </nav>
+            <?php endif; ?>
 
         </section>
 
