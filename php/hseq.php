@@ -9,6 +9,7 @@ $sectorHseq = sectorPorSlug($pdo, 'hseq');
 if (!$sectorHseq) { http_response_code(404); exit('No se encontró el sector HSEQ.'); }
 $sid = (int)$sectorHseq['id'];
 if (!puedeVerSector($pdo, $sid)) { http_response_code(403); exit('No tenés permiso para acceder al sector HSEQ.'); }
+if (!puedeEditarSector($pdo, $sid)) { http_response_code(403); exit('La gestión de HSEQ es solo para sus responsables.'); }
 $uid = (int)$_SESSION['usuario_id'];
 $puedeGestionar = puedeEditarSector($pdo, $sid);
 $puedeCompletar = puedeCompletarSector($pdo, $sid);
