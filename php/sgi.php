@@ -42,26 +42,42 @@ if ($ids) {
                   JOIN sectores s ON s.id = d.sector_id 
                   LEFT JOIN carpetas c ON c.id = d.carpeta_id 
                   WHERE d.activo = 1 AND d.sector_id IN ($ph) 
-                  ORDER BY d.id DESC LIMIT 10";
+                  ORDER BY d.id DESC LIMIT 20";
                   
     $stRecent = $pdo->prepare($sqlRecent);
     $stRecent->execute($ids);
     $recent = $stRecent->fetchAll();
 }
 
-// 2b. Documentos cargados en los pasos de Compras (solo de los sectores que el usuario puede ver)
-$docsCompras = [];
+// 2b. Archivos cargados en los demás módulos (Compras, Finanzas, Ventas), de los sectores que el usuario puede ver
+$archivosModulos = [];
 $etapasCompra = [1 => 'Pedido', 2 => 'Solicitud de presupuesto', 3 => 'Orden de compra', 4 => 'Factura', 5 => 'Pago', 6 => 'Entrega / Recepción'];
 if ($ids) {
-    try {
-        $ph2 = implode(',', array_fill(0, count($ids), '?'));
-        $stC = $pdo->prepare("SELECT d.*, c.codigo, s.nombre AS sector FROM compras_documentos d
-                              JOIN compras c ON c.id = d.compra_id
-                              JOIN sectores s ON s.id = c.sector_id
-                              WHERE c.sector_id IN ($ph2) ORDER BY d.id DESC LIMIT 15");
-        $stC->execute($ids);
-        $docsCompras = $stC->fetchAll();
-    } catch (Throwable $e) { $docsCompras = []; }
+    $ph2 = implode(',', array_fill(0, count($ids), '?'));
+    $consultas = [
+        ['Compras', "SELECT CONCAT('Pedido ', c.codigo, ' · ', COALESCE(d.tipo_documento, 'Adjunto')) AS titulo, d.ruta_archivo AS ruta, d.nombre_archivo AS nombre, d.fecha_subida AS fecha, s.nombre AS sector
+                     FROM compras_documentos d JOIN compras c ON c.id = d.compra_id JOIN sectores s ON s.id = c.sector_id
+                     WHERE c.sector_id IN ($ph2) ORDER BY d.id DESC LIMIT 30"],
+        ['Finanzas', "SELECT f.requisito AS titulo, f.archivo_adjunto AS ruta, f.archivo_adjunto AS nombre, f.actualizado_en AS fecha, s.nombre AS sector
+                      FROM finanzas_checklist f JOIN sectores s ON s.id = f.sector_id
+                      WHERE f.sector_id IN ($ph2) AND f.archivo_adjunto IS NOT NULL AND f.archivo_adjunto <> '' ORDER BY f.id DESC LIMIT 30"],
+        ['Ventas', "SELECT v.titulo AS titulo, v.archivo_path AS ruta, v.archivo_path AS nombre, v.creado_en AS fecha, s.nombre AS sector
+                    FROM ventas_presentaciones v JOIN sectores s ON s.id = v.sector_id
+                    WHERE v.sector_id IN ($ph2) ORDER BY v.id DESC LIMIT 30"],
+    ];
+    foreach ($consultas as [$modulo, $sqlM]) {
+        try {
+            $stM = $pdo->prepare($sqlM);
+            $stM->execute($ids);
+            foreach ($stM->fetchAll() as $r) { $r['modulo'] = $modulo; $archivosModulos[] = $r; }
+        } catch (Throwable $e) { /* la tabla de ese módulo todavía no existe */ }
+    }
+    usort($archivosModulos, fn($a, $b) => strcmp((string)$b['fecha'], (string)$a['fecha']));
+    $archivosModulos = array_slice($archivosModulos, 0, 30);
+}
+function sgiUrlArchivo(string $ruta): string {
+    $partes = array_map('rawurlencode', explode('/', ltrim(str_replace('\\', '/', $ruta), '/')));
+    return app_url('/uploads/' . implode('/', $partes));
 }
 
 // 3. Obtención de carpetas del sector SGI
@@ -132,33 +148,32 @@ if ($sgi) {
             <?php endif; ?>
         </section>
 
-        <?php if ($docsCompras): ?>
+        <?php if ($archivosModulos): ?>
         <section class="table-panel" style="margin-bottom:24px">
             <div class="section-head">
                 <div>
-                    <p class="eyebrow">COMPRAS</p>
-                    <h2>Documentos de Compras</h2>
+                    <p class="eyebrow">OTROS SECTORES</p>
+                    <h2>Archivos cargados en Compras, Finanzas y Ventas</h2>
                 </div>
             </div>
             <div class="table-wrap">
                 <table>
                     <thead>
-                        <tr><th>Pedido</th><th>Paso</th><th>Tipo</th><th>Archivo</th><th>Fecha</th></tr>
+                        <tr><th>Documento</th><th>Módulo</th><th>Sector</th><th>Archivo</th><th>Fecha</th></tr>
                     </thead>
                     <tbody>
-                    <?php foreach ($docsCompras as $d): ?>
+                    <?php foreach ($archivosModulos as $d): ?>
                         <tr>
-                            <td><strong><?= h($d['codigo']) ?></strong></td>
-                            <td><?= h($etapasCompra[(int)$d['etapa']] ?? ('Paso ' . (int)$d['etapa'])) ?></td>
-                            <td><?= h($d['tipo_documento'] ?? 'Adjunto') ?></td>
-                            <td><a href="<?= app_url('/uploads/' . h($d['ruta_archivo'])) ?>" target="_blank">📄 <?= h($d['nombre_archivo']) ?></a></td>
-                            <td><?= h(date('d/m/Y H:i', strtotime((string)$d['fecha_subida']))) ?></td>
+                            <td><strong><?= h($d['titulo']) ?></strong></td>
+                            <td><?= h($d['modulo']) ?></td>
+                            <td><?= h($d['sector']) ?></td>
+                            <td><a href="<?= h(sgiUrlArchivo((string)$d['ruta'])) ?>" target="_blank">📄 <?= h(basename((string)$d['nombre'])) ?></a></td>
+                            <td><?= $d['fecha'] ? h(date('d/m/Y H:i', strtotime((string)$d['fecha']))) : '' ?></td>
                         </tr>
                     <?php endforeach; ?>
                     </tbody>
                 </table>
             </div>
-            <p style="margin-top:10px"><a href="<?= app_url('/php/compras.php#documentos') ?>">Ver todos en Compras ›</a></p>
         </section>
         <?php endif; ?>
 
@@ -189,7 +204,7 @@ if ($sgi) {
                             <?php endif; ?>
                             <?php foreach ($recent as $d): ?>
                                 <tr>
-                                    <td><strong><?= h($d['titulo']) ?></strong></td>
+                                    <td><?php if (!empty($d['archivo'])): ?><a href="<?= h(sgiUrlArchivo((string)$d['archivo'])) ?>" target="_blank"><strong><?= h($d['titulo']) ?></strong></a><?php else: ?><strong><?= h($d['titulo']) ?></strong><?php endif; ?></td>
                                     <td><?= h($d['sector']) ?></td>
                                     <td><?= h($d['carpeta'] ?? 'Sin carpeta') ?></td>
                                     <td><?= h($d['version'] ?? '1.0') ?></td>
