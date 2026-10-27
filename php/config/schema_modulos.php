@@ -60,12 +60,14 @@ function naser_schema_modulos(PDO $pdo): void
         proveedor VARCHAR(150) DEFAULT 'Pendiente',
         monto DECIMAL(12,2) DEFAULT 0.00,
         moneda VARCHAR(5) DEFAULT 'ARS',
+        formulario_registro_id INT NULL,
         etapa INT DEFAULT 1,
         estado_logistico VARCHAR(100) DEFAULT 'Pedido cargado',
         creado_por INT,
         actualizado_por INT,
         fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP,
-        actualizado_en DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+        actualizado_en DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        UNIQUE KEY uq_compras_formulario_registro (formulario_registro_id)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
 
     $pdo->exec("CREATE TABLE IF NOT EXISTS compras_documentos (
@@ -75,6 +77,7 @@ function naser_schema_modulos(PDO $pdo): void
         nombre_archivo VARCHAR(255) NOT NULL,
         ruta_archivo VARCHAR(255) NOT NULL,
         tipo_documento VARCHAR(100) DEFAULT 'Adjunto',
+        datos_json LONGTEXT NULL,
         creado_por INT,
         fecha_subida DATETIME DEFAULT CURRENT_TIMESTAMP
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
@@ -122,8 +125,19 @@ function naser_schema_modulos(PDO $pdo): void
     if (!hasColumn($pdo, 'compras', 'moneda')) {
         $pdo->exec("ALTER TABLE compras ADD COLUMN moneda VARCHAR(5) DEFAULT 'ARS' AFTER monto");
     }
+    if (!hasColumn($pdo, 'compras', 'formulario_registro_id')) {
+        $pdo->exec("ALTER TABLE compras ADD COLUMN formulario_registro_id INT NULL AFTER moneda");
+    }
+    $st = $pdo->prepare('SELECT COUNT(*) FROM information_schema.STATISTICS WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME=? AND INDEX_NAME=?');
+    $st->execute(['compras', 'uq_compras_formulario_registro']);
+    if (!(int)$st->fetchColumn()) {
+        $pdo->exec('ALTER TABLE compras ADD UNIQUE KEY uq_compras_formulario_registro (formulario_registro_id)');
+    }
     if (!hasColumn($pdo, 'compras_documentos', 'tipo_documento')) {
         $pdo->exec("ALTER TABLE compras_documentos ADD COLUMN tipo_documento VARCHAR(100) DEFAULT 'Adjunto'");
+    }
+    if (!hasColumn($pdo, 'compras_documentos', 'datos_json')) {
+        $pdo->exec("ALTER TABLE compras_documentos ADD COLUMN datos_json LONGTEXT NULL AFTER tipo_documento");
     }
     if (!hasColumn($pdo, 'compras_documentos', 'creado_por')) {
         $pdo->exec("ALTER TABLE compras_documentos ADD COLUMN creado_por INT NULL");

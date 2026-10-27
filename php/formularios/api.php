@@ -171,6 +171,12 @@ switch ($accion) {
     case 'eliminar':
         if (!$reg) fallar('Falta el registro.');
         if (!permisosRegistro($pdo, $reg)['eliminar']) fallar('No tenés permiso para eliminar este formulario.', 403);
+        if ($reg['formulario'] === 'compras-pedido-materiales') {
+            $st = $pdo->prepare('SELECT codigo FROM compras WHERE formulario_registro_id = ? LIMIT 1');
+            $st->execute([$id]);
+            $compraVinculada = $st->fetchColumn();
+            if ($compraVinculada) fallar('Este pedido ya está vinculado a la compra ' . $compraVinculada . '. Eliminá el seguimiento de Compras antes de borrar el formulario.', 409);
+        }
         $pdo->prepare('DELETE FROM formularios_historial WHERE registro_id = ?')->execute([$id]);
         $pdo->prepare('DELETE FROM formularios_registros WHERE id = ?')->execute([$id]);
         $form = formularioPorCodigo($reg['formulario']);
