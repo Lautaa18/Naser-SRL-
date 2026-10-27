@@ -1,149 +1,116 @@
 <?php
-// API de formularios: guardar, enviar a aprobación, aprobar, rechazar, reabrir, duplicar, eliminar.
-// Recibe JSON por POST (con cabecera X-CSRF-Token) y responde JSON.
+// Cambios transaccionales con control de versión; los borradores nuevos son idempotentes.
 require __DIR__ . '/_init.php';
-
-header('Content-Type: application/json; charset=utf-8');
-
-function responder(array $data, int $code = 200): never {
-    http_response_code($code);
-    echo json_encode($data, JSON_UNESCAPED_UNICODE);
-    exit;
+require_once __DIR__ . '/../config/mejoras.php';
+header('Content-Type: application/json; charset=utf-8');header('Cache-Control: no-store');
+class FormApiError extends RuntimeException {
+    public function __construct(string $mensaje, public int $status=400, public array $detalle=[]) { parent::__construct($mensaje); }
 }
-function fallar(string $msg, int $code = 400): never { responder(['ok' => false, 'error' => $msg], $code); }
-
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') fallar('Método no permitido.', 405);
-verify_csrf();
-
-$in = json_decode((string)file_get_contents('php://input'), true);
-if (!is_array($in)) fallar('Datos inválidos.');
-
-$accion = (string)($in['accion'] ?? '');
-$id = (int)($in['id'] ?? 0);
-$uid = (int)$_SESSION['usuario_id'];
-$yo = (string)($_SESSION['nombre'] ?? 'Un usuario');
-
-$limpiarJson = function ($v): ?string {
-    if ($v === null) return null;
-    $j = json_encode($v, JSON_UNESCAPED_UNICODE);
-    if ($j === false) fallar('No se pudieron leer los datos del formulario.');
-    if (strlen($j) > 8 * 1024 * 1024) fallar('El formulario es demasiado grande.');
-    return $j;
-};
-$referencia = mb_substr(trim((string)($in['referencia'] ?? '')), 0, 200);
-
-$reg = $id ? cargarRegistro($pdo, $id) : null;
-if ($id && !$reg) fallar('El registro no existe (puede que lo hayan eliminado).', 404);
-if ($reg && !puedeVerSector($pdo, (int)$reg['sector_id'])) fallar('No tenés acceso a este sector.', 403);
-if ($reg && $reg['estado'] === 'borrador' && (int)$reg['creado_por'] !== $uid && !puedeEditarSector($pdo, (int)$reg['sector_id'])) {
-    fallar('Este formulario es un borrador de otra persona.', 403);
+function responder(array $data,int $code=200):never{http_response_code($code);echo json_encode($data,JSON_UNESCAPED_UNICODE);exit;}
+function fallar(string $msg,int $code=400,array $detalle=[]):never{throw new FormApiError($msg,$code,$detalle);}
+function jsonFormulario($valor):string{
+    if(!is_array($valor)&&!is_object($valor))fallar('Los campos del formulario tienen un formato inválido.');
+    $json=json_encode($valor,JSON_UNESCAPED_UNICODE);
+    if($json===false||strlen($json)>8*1024*1024)fallar('El formulario es demasiado grande o contiene datos inválidos.');return $json;
 }
-
-// ---------- helpers ----------
-$urlRegistro = fn(int $rid) => '/php/formularios/llenar.php?id=' . $rid;
-$guardarDatos = function (int $rid) use ($pdo, $in, $uid, $referencia, $limpiarJson) {
-    $pdo->prepare('UPDATE formularios_registros SET datos_json = ?, storage_json = ?, referencia = ?, actualizado_por = ? WHERE id = ?')
-        ->execute([$limpiarJson($in['datos'] ?? new stdClass()), $limpiarJson($in['storage'] ?? new stdClass()), $referencia ?: null, $uid, $rid]);
-};
-$respuestaRegistro = function (int $rid, string $mensaje) use ($pdo) {
-    $r = cargarRegistro($pdo, $rid);
-    responder(['ok' => true, 'id' => $rid, 'estado' => $r['estado'], 'estado_label' => estadoFormularioLabel($r['estado']), 'permisos' => permisosRegistro($pdo, $r), 'mensaje' => $mensaje]);
-};
-
-switch ($accion) {
-
-    // ---------- GUARDAR (crea el registro si es nuevo) ----------
-    case 'guardar':
-    case 'enviar':
-        if (!$reg) {
-            $form = formularioPorCodigo((string)($in['formulario'] ?? ''));
-            if (!$form) fallar('Formulario desconocido.');
-            $sector = sectorPorSlug($pdo, $form['sector']);
-            if (!$sector || !puedeCompletarSector($pdo, (int)$sector['id'])) fallar('No tenés permiso para completar formularios de este sector.', 403);
-            $pdo->prepare('INSERT INTO formularios_registros (formulario, sector_id, estado, creado_por, actualizado_por) VALUES (?,?,?,?,?)')
-                ->execute([$form['codigo'], (int)$sector['id'], 'borrador', $uid, $uid]);
-            $id = (int)$pdo->lastInsertId();
-            $guardarDatos($id);
-            historialFormulario($pdo, $id, 'creado');
-            registrarActividad($pdo, 'formulario_creado', $form['titulo'] . " #$id");
-            $reg = cargarRegistro($pdo, $id);
-        } else {
-            $perm = permisosRegistro($pdo, $reg);
-            if (!$perm['editar']) fallar($reg['estado'] === 'enviado' ? 'El formulario está pendiente de aprobación y no se puede modificar.' : 'No tenés permiso para modificar este formulario.', 403);
-            $guardarDatos($id);
-            // Para no llenar el historial: un "guardado" cada 10 minutos por usuario
-            $st = $pdo->prepare("SELECT COUNT(*) FROM formularios_historial WHERE registro_id = ? AND usuario_id = ? AND accion IN ('guardado','creado') AND creado_en > NOW() - INTERVAL 10 MINUTE");
-            $st->execute([$id, $uid]);
-            if (!(int)$st->fetchColumn()) historialFormulario($pdo, $id, 'guardado');
-            $reg = cargarRegistro($pdo, $id);
-        }
-        if ($accion === 'guardar') $respuestaRegistro($id, 'Guardado en el sistema.');
-
-        // ---------- ENVIAR A APROBACIÓN ----------
-        $perm = permisosRegistro($pdo, $reg);
-        if (!$perm['enviar']) fallar('No podés enviar este formulario.', 403);
-        $pdo->prepare("UPDATE formularios_registros SET estado = 'enviado', enviado_por = ?, enviado_en = NOW(), comentario_revision = NULL WHERE id = ?")->execute([$uid, $id]);
-        historialFormulario($pdo, $id, 'enviado', trim((string)($in['comentario'] ?? '')) ?: null);
-        $form = formularioPorCodigo($reg['formulario']);
-        $sectorNombre = sectoresInfo($pdo)[(int)$reg['sector_id']]['nombre'] ?? '';
-        $responsables = array_column(usuariosConRol($pdo, (int)$reg['sector_id'], 'responsable'), 'id');
-        if (!$responsables) $responsables = array_column($pdo->query("SELECT id FROM usuarios WHERE rol='admin' AND activo=1")->fetchAll(), 'id');
-        $responsables = array_diff($responsables, [$uid]);
-        $titulo = 'Para aprobar: ' . ($form['titulo'] ?? 'Formulario') . ($reg['referencia'] ? ' — ' . $reg['referencia'] : '');
-        $n = notificar($pdo, $responsables, $titulo, "$yo completó el formulario \"" . ($form['titulo'] ?? '') . "\" de $sectorNombre y lo envió para tu aprobación.", $urlRegistro($id), 'aprobacion');
-        registrarActividad($pdo, 'formulario_enviado', ($form['titulo'] ?? '') . " #$id");
-        $respuestaRegistro($id, $n ? "Enviado. Se avisó a $n responsable(s) del sector." : 'Enviado para aprobación.');
-
-    // ---------- APROBAR / RECHAZAR ----------
-    case 'aprobar':
-    case 'rechazar':
-        if (!$reg) fallar('Falta el registro.');
-        $perm = permisosRegistro($pdo, $reg);
-        if (!$perm['aprobar']) fallar('Solo el responsable del área puede aprobar o rechazar este formulario.', 403);
-        $comentario = trim((string)($in['comentario'] ?? ''));
-        if ($accion === 'rechazar' && $comentario === '') fallar('Escribí el motivo del rechazo para que lo puedan corregir.');
-        $nuevo = $accion === 'aprobar' ? 'aprobado' : 'rechazado';
-        $pdo->prepare('UPDATE formularios_registros SET estado = ?, revisado_por = ?, revisado_en = NOW(), comentario_revision = ? WHERE id = ?')
-            ->execute([$nuevo, $uid, $comentario ?: null, $id]);
-        historialFormulario($pdo, $id, $nuevo, $comentario ?: null);
-        $form = formularioPorCodigo($reg['formulario']);
-        $dest = array_diff(array_unique([(int)$reg['creado_por'], (int)$reg['enviado_por']]), [$uid, 0]);
-        $titulo = ($nuevo === 'aprobado' ? 'Aprobado: ' : 'Rechazado: ') . ($form['titulo'] ?? 'Formulario') . ($reg['referencia'] ? ' — ' . $reg['referencia'] : '');
-        $msg = $nuevo === 'aprobado' ? "$yo aprobó el formulario." : "$yo rechazó el formulario. Motivo: $comentario";
-        notificar($pdo, $dest, $titulo, $msg . ($nuevo === 'aprobado' && $comentario ? " Comentario: $comentario" : ''), $urlRegistro($id), $nuevo);
-        registrarActividad($pdo, 'formulario_' . $nuevo, ($form['titulo'] ?? '') . " #$id");
-        $respuestaRegistro($id, $nuevo === 'aprobado' ? 'Formulario aprobado.' : 'Formulario rechazado. Se avisó a quien lo cargó.');
-
-    // ---------- REABRIR ----------
-    case 'reabrir':
-        if (!$reg) fallar('Falta el registro.');
-        if (!permisosRegistro($pdo, $reg)['reabrir']) fallar('No tenés permiso para reabrir este formulario.', 403);
-        $pdo->prepare("UPDATE formularios_registros SET estado = 'borrador' WHERE id = ?")->execute([$id]);
-        historialFormulario($pdo, $id, 'reabierto', trim((string)($in['comentario'] ?? '')) ?: null);
-        notificar($pdo, array_diff([(int)$reg['creado_por']], [$uid]), 'Formulario reabierto para edición', "$yo reabrió el formulario #$id para que se pueda modificar.", $urlRegistro($id), 'info');
-        $respuestaRegistro($id, 'El formulario volvió a borrador y se puede editar.');
-
-    // ---------- DUPLICAR ----------
-    case 'duplicar':
-        if (!$reg) fallar('Falta el registro.');
-        if (!puedeCompletarSector($pdo, (int)$reg['sector_id'])) fallar('No tenés permiso para completar formularios de este sector.', 403);
-        $pdo->prepare("INSERT INTO formularios_registros (formulario, sector_id, referencia, estado, datos_json, storage_json, creado_por, actualizado_por) VALUES (?,?,?,?,?,?,?,?)")
-            ->execute([$reg['formulario'], $reg['sector_id'], $reg['referencia'] ? mb_substr('Copia de ' . $reg['referencia'], 0, 200) : null, 'borrador', $reg['datos_json'], $reg['storage_json'], $uid, $uid]);
-        $nuevoId = (int)$pdo->lastInsertId();
-        historialFormulario($pdo, $nuevoId, 'creado', "Copia del registro #$id");
-        responder(['ok' => true, 'id' => $nuevoId, 'redirect' => app_url($urlRegistro($nuevoId)), 'mensaje' => 'Se creó una copia en borrador.']);
-
-    // ---------- ELIMINAR ----------
-    case 'eliminar':
-        if (!$reg) fallar('Falta el registro.');
-        if (!permisosRegistro($pdo, $reg)['eliminar']) fallar('No tenés permiso para eliminar este formulario.', 403);
-        $pdo->prepare('DELETE FROM formularios_historial WHERE registro_id = ?')->execute([$id]);
-        $pdo->prepare('DELETE FROM formularios_registros WHERE id = ?')->execute([$id]);
-        $form = formularioPorCodigo($reg['formulario']);
-        registrarActividad($pdo, 'formulario_eliminado', ($form['titulo'] ?? $reg['formulario']) . " #$id");
-        $slug = sectoresInfo($pdo)[(int)$reg['sector_id']]['slug'] ?? '';
-        responder(['ok' => true, 'redirect' => app_url('/php/formularios/index.php') . '?sector=' . urlencode($slug), 'mensaje' => 'Formulario eliminado.']);
-
-    default:
-        fallar('Acción desconocida.');
+function contenidoIgual(string $a,string $b):bool{
+    $normalizar=function($v)use(&$normalizar){if(is_array($v)){if(!array_is_list($v))ksort($v);foreach($v as &$x)$x=$normalizar($x);}return $v;};
+    return $normalizar(json_decode($a,true))===$normalizar(json_decode($b,true));
 }
+$avisos=[];
+try{
+ if($_SERVER['REQUEST_METHOD']==='GET'&&isset($_GET['sesion']))responder(['ok'=>true,'usuario_id'=>(int)$_SESSION['usuario_id'],'csrf'=>csrf_token()]);
+ if($_SERVER['REQUEST_METHOD']!=='POST')fallar('Método no permitido.',405);
+ verify_csrf();
+ $in=json_decode((string)file_get_contents('php://input'),true);if(!is_array($in))fallar('Datos inválidos.');
+ $accion=is_string($in['accion']??null)?$in['accion']:'';
+ if(!in_array($accion,['guardar','enviar','aprobar','rechazar','reabrir','duplicar','guardar_copia','eliminar'],true))fallar('Acción desconocida.');
+ $id=max(0,(int)($in['id']??0));$uid=(int)$_SESSION['usuario_id'];$yo=(string)($_SESSION['nombre']??'Un usuario');
+ $referencia=mb_substr(trim(is_string($in['referencia']??null)?$in['referencia']:''),0,200);
+ $comentario=mb_substr(trim(is_string($in['comentario']??null)?$in['comentario']:''),0,2000);
+ $necesitaDatos=in_array($accion,['guardar','enviar','guardar_copia'],true);
+ $datos=$necesitaDatos?jsonFormulario($in['datos']??new stdClass()):null;$storage=$necesitaDatos?jsonFormulario($in['storage']??new stdClass()):null;
+ $crea=!$id||in_array($accion,['guardar_copia','duplicar'],true);
+ $token=null;
+ if($crea){$raw=$in['client_token']??'';if(!is_string($raw)||!preg_match('/^[A-Za-z0-9_-]{20,64}$/',$raw))fallar('Falta el identificador de guardado. Recargá el formulario antes de continuar.');$token=hash('sha256',$uid.':'.$raw);}
+ $urlRegistro=fn(int $rid)=>'/php/formularios/llenar.php?id='.$rid;
+ $pdo->beginTransaction();
+ $reg=$id?cargarRegistro($pdo,$id,true):null;
+ if($id&&!$reg)fallar('El registro ya no está disponible. Puede estar en la papelera.',404);
+ if($reg){
+  if(!puedeVerSector($pdo,(int)$reg['sector_id']))fallar('No tenés acceso a este sector.',403);
+  if($reg['estado']==='borrador'&&(int)$reg['creado_por']!==$uid&&!puedeEditarSector($pdo,(int)$reg['sector_id']))fallar('Este borrador pertenece a otra persona.',403);
+  // Guardar una copia conserva los cambios locales y nunca modifica el registro original.
+  if($accion!=='guardar_copia'&&(!isset($in['revision'])||!is_int($in['revision'])||$in['revision']<1||$in['revision']!==(int)$reg['revision']))fallar('El registro cambió desde que lo abriste. Conservá tus cambios como copia o abrí la versión actual.',409,['conflicto'=>true,'id'=>$id,'revision'=>(int)$reg['revision']]);
+ }
+ $form=$reg?formularioPorCodigo($reg['formulario']):formularioPorCodigo(is_string($in['formulario']??null)?$in['formulario']:'');
+ if(!$form)fallar('Formulario desconocido.');
+ $sector=sectorPorSlug($pdo,$form['sector']);if(!$sector||!puedeVerSector($pdo,(int)$sector['id']))fallar('No tenés acceso a este sector.',403);
+ $sid=(int)$sector['id'];if($reg&&(int)$reg['sector_id']!==$sid)fallar('El formulario pertenece a otro sector.',409,['conflicto'=>true]);
+ $nuevo=false;$repetido=false;$mensaje='';$redirect=null;$origenId=$id;
+ if($crea){
+  if(!in_array($accion,['guardar','enviar','guardar_copia','duplicar'],true))fallar('Falta el registro.');
+  if(!puedeCompletarSector($pdo,$sid))fallar('No tenés permiso para completar formularios de este sector.',403);
+  if($accion==='duplicar'&&!$reg)fallar('Falta el formulario a duplicar.');
+  if($accion==='duplicar'){$datos=(string)($reg['datos_json']??'{}');$storage=(string)($reg['storage_json']??'{}');$referencia=mb_substr('Copia de '.($reg['referencia']?:'#'.$id),0,200);}
+  elseif($accion==='guardar_copia')$referencia=mb_substr('Copia de '.($referencia?:($reg['referencia']??$form['titulo'])),0,200);
+  $st=$pdo->prepare('SELECT * FROM formularios_registros WHERE client_token=? FOR UPDATE');$st->execute([$token]);$anterior=$st->fetch();
+  $estadoInicial=$accion==='enviar'?'enviado':'borrador';
+  if($anterior){
+   $mismo=(int)$anterior['creado_por']===$uid&&$anterior['formulario']===$form['codigo']&&!$anterior['eliminado_lote']&&(int)$anterior['revision']===1&&$anterior['estado']===$estadoInicial&&($anterior['referencia']??'')===$referencia&&contenidoIgual((string)$anterior['datos_json'],$datos)&&contenidoIgual((string)$anterior['storage_json'],$storage);
+   if(!$mismo)fallar('Este borrador ya se guardó y luego cambió. Conservá tus cambios como una copia para evitar reemplazarlo.',409,['conflicto'=>true,'id'=>(int)$anterior['id'],'revision'=>(int)$anterior['revision']]);
+   $id=(int)$anterior['id'];$repetido=true;
+  }else{
+   $pdo->prepare("INSERT INTO formularios_registros(formulario,sector_id,referencia,estado,datos_json,storage_json,creado_por,actualizado_por,client_token,enviado_por,enviado_en) VALUES(?,?,?,?,?,?,?,?,?,?,?)")
+    ->execute([$form['codigo'],$sid,$referencia?:null,$estadoInicial,$datos,$storage,$uid,$uid,$token,$accion==='enviar'?$uid:null,$accion==='enviar'?date('Y-m-d H:i:s'):null]);
+   $id=(int)$pdo->lastInsertId();$nuevo=true;
+   historialFormulario($pdo,$id,'creado',$origenId?'Copia del registro #'.$origenId:null);registrarActividad($pdo,'formulario_creado',$form['titulo'].' #'.$id);
+  }
+  $reg=cargarRegistro($pdo,$id);
+ }else{
+  $perm=permisosRegistro($pdo,$reg);
+  if($accion==='guardar'||$accion==='enviar'){
+   if(!$perm['editar'])fallar('El formulario ya no admite cambios o no tenés permiso para editarlo.',403);
+   if($accion==='enviar'&&!$perm['enviar'])fallar('No podés enviar este formulario.',403);
+   $cambio=!contenidoIgual((string)($reg['datos_json']??'{}'),$datos)||!contenidoIgual((string)($reg['storage_json']??'{}'),$storage)||($reg['referencia']??'')!==$referencia;
+   if($cambio||$accion==='enviar'){
+    $extra=$accion==='enviar'?",estado='enviado',enviado_por=$uid,enviado_en=NOW(),revisado_por=NULL,revisado_en=NULL,comentario_revision=NULL":'';
+    $pdo->prepare('UPDATE formularios_registros SET datos_json=?,storage_json=?,referencia=?,actualizado_por=?,revision=revision+1'.$extra.' WHERE id=?')->execute([$datos,$storage,$referencia?:null,$uid,$id]);
+    $st=$pdo->prepare("SELECT COUNT(*) FROM formularios_historial WHERE registro_id=? AND usuario_id=? AND accion IN ('guardado','creado') AND creado_en>NOW()-INTERVAL 10 MINUTE");$st->execute([$id,$uid]);if(!(int)$st->fetchColumn())historialFormulario($pdo,$id,'guardado');
+   }
+  }elseif($accion==='aprobar'||$accion==='rechazar'){
+   if(!$perm['aprobar'])fallar('No tenés permiso para aprobar o rechazar este formulario.',403);
+   if($accion==='rechazar'&&$comentario==='')fallar('Escribí el motivo del rechazo.');
+   $estado=$accion==='aprobar'?'aprobado':'rechazado';$pdo->prepare('UPDATE formularios_registros SET estado=?,revisado_por=?,revisado_en=NOW(),comentario_revision=?,actualizado_por=?,revision=revision+1 WHERE id=?')->execute([$estado,$uid,$comentario?:null,$uid,$id]);
+   historialFormulario($pdo,$id,$estado,$comentario?:null);registrarActividad($pdo,'formulario_'.$estado,$form['titulo'].' #'.$id);
+  }elseif($accion==='reabrir'){
+   if(!$perm['reabrir'])fallar('No tenés permiso para reabrir este formulario.',403);
+   $pdo->prepare("UPDATE formularios_registros SET estado='borrador',revisado_por=NULL,revisado_en=NULL,comentario_revision=NULL,actualizado_por=?,revision=revision+1 WHERE id=?")->execute([$uid,$id]);historialFormulario($pdo,$id,'reabierto',$comentario?:null);
+  }elseif($accion==='eliminar'){
+   if(!$perm['eliminar'])fallar('No tenés permiso para eliminar este formulario.',403);
+   $lote=enviarPapelera($pdo,'formulario',$id,$sid,$form['titulo'].($reg['referencia']?' — '.$reg['referencia']:''));$pdo->prepare('UPDATE formularios_registros SET eliminado_lote=?,actualizado_por=?,revision=revision+1 WHERE id=?')->execute([$lote,$uid,$id]);historialFormulario($pdo,$id,'papelera');registrarActividad($pdo,'formulario_papelera',$form['titulo'].' #'.$id);
+   $redirect=app_url('/php/formularios/index.php').'?sector='.urlencode($sector['slug']);$mensaje='Formulario enviado a la papelera. Se puede recuperar.';
+  }
+ }
+ if(!$repetido){
+  $actual=$accion==='eliminar'?$reg:cargarRegistro($pdo,$id);$dest=[];$titulo='';$texto='';$tipo='info';
+  if($accion==='enviar'){
+   historialFormulario($pdo,$id,'enviado',$comentario?:null);registrarActividad($pdo,'formulario_enviado',$form['titulo'].' #'.$id);
+   $st=$pdo->prepare("SELECT u.id FROM usuario_sector us JOIN usuarios u ON u.id=us.usuario_id WHERE us.sector_id=? AND us.rol_sector='responsable' AND us.puede_aprobar=1 AND u.activo=1");$st->execute([$sid]);$dest=$st->fetchAll(PDO::FETCH_COLUMN);if(!$dest)$dest=$pdo->query("SELECT id FROM usuarios WHERE rol='admin' AND activo=1")->fetchAll(PDO::FETCH_COLUMN);
+   $titulo='Para aprobar: '.$form['titulo'];$texto=$yo.' completó el formulario de '.$sector['nombre'].' y lo envió para tu aprobación.';$tipo='aprobacion';$mensaje='Enviado para aprobación.';
+  }elseif($accion==='aprobar'||$accion==='rechazar'){
+   $dest=array_unique([(int)$reg['creado_por'],(int)$reg['enviado_por']]);$tipo=$accion==='aprobar'?'aprobado':'rechazado';$titulo=($accion==='aprobar'?'Aprobado: ':'Rechazado: ').$form['titulo'];$texto=$yo.($accion==='aprobar'?' aprobó el formulario.':' rechazó el formulario.').($comentario?' Comentario: '.$comentario:'');$mensaje=$accion==='aprobar'?'Formulario aprobado.':'Formulario rechazado. Se avisó a quien lo cargó.';
+  }elseif($accion==='reabrir'){$dest=[(int)$reg['creado_por']];$titulo='Formulario reabierto para edición';$texto=$yo.' reabrió el formulario #'.$id.'.';$mensaje='El formulario volvió a borrador y se puede editar.';}
+  $dest=array_values(array_diff(array_filter(array_map('intval',$dest)),[$uid]));
+  if($dest){$clave='form:'.$id.':r'.$actual['revision'].':'.$tipo;notificar($pdo,$dest,$titulo,$texto,$urlRegistro($id),$tipo,$clave,false);$avisos=[$dest,$titulo,$texto,$urlRegistro($id),$tipo,$clave,true,true];}
+ }
+ if($mensaje==='')$mensaje=$accion==='duplicar'||$accion==='guardar_copia'?'Se creó una copia en borrador.':'Guardado en el sistema.';
+ if($accion==='duplicar'||$accion==='guardar_copia')$redirect=app_url($urlRegistro($id));
+ $r=$accion==='eliminar'?null:cargarRegistro($pdo,$id);
+ $respuesta=['ok'=>true,'id'=>$id,'revision'=>$r?(int)$r['revision']:(int)$reg['revision']+1,'estado'=>$r['estado']??'papelera','estado_label'=>$r?estadoFormularioLabel($r['estado']):'En papelera','permisos'=>$r?permisosRegistro($pdo,$r):[],'mensaje'=>$mensaje,'repetido'=>$repetido];if($redirect)$respuesta['redirect']=$redirect;
+ $pdo->commit();
+ // Los correos se envían después de liberar los bloqueos; un fallo queda pendiente de reintento.
+ if($avisos){try{notificar($pdo,...$avisos);}catch(Throwable $e){error_log('[NASER] aviso formulario pendiente: '.$e->getMessage());}}
+ responder($respuesta);
+}catch(FormApiError $e){if($pdo->inTransaction())$pdo->rollBack();responder(['ok'=>false,'error'=>$e->getMessage()]+$e->detalle,$e->status);
+}catch(Throwable $e){if($pdo->inTransaction())$pdo->rollBack();error_log('[NASER] API formularios: '.$e->getMessage());$transitorio=$e instanceof PDOException&&in_array((int)($e->errorInfo[1]??0),[1205,1213],true);responder(['ok'=>false,'error'=>$transitorio?'El registro está ocupado. Reintentá en unos segundos.':'No se pudo guardar. Tus cambios siguen en esta pantalla; intentá nuevamente.'],$transitorio?503:500);}

@@ -317,7 +317,7 @@ function naser_schema_sql(PDO $pdo): void
     $orden = ['modulos_integrados', 'integracion_nativa', 'ajustes_solicitudes_reales', 'ventas_integracion', 'rrhh_formularios', 'mensajes'];
     foreach ($orden as $nombre) {
         $archivo = $dir . '/' . $nombre . '.sql';
-        if (!is_file($archivo)) continue;
+        if (!is_file($archivo)) throw new RuntimeException('Falta la migración obligatoria: ' . $nombre);
         $lineas = array_filter(
             preg_split('/\r\n|\r|\n/', (string)file_get_contents($archivo)),
             fn($l) => !preg_match('/^\s*--/', $l)
@@ -329,6 +329,7 @@ function naser_schema_sql(PDO $pdo): void
                 $pdo->exec($sentencia);
             } catch (Throwable $e) {
                 error_log('[NASER] sql/' . $nombre . '.sql: ' . $e->getMessage());
+                throw new RuntimeException('No se pudo completar la migración ' . $nombre, 0, $e);
             }
         }
     }

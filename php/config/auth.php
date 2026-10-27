@@ -6,7 +6,30 @@ if (session_status() !== PHP_SESSION_ACTIVE) {
     session_start();
 }
 
+function validarSesionActual(PDO $pdo): bool {
+    if (empty($_SESSION['usuario_id'])) return false;
+    $st = $pdo->prepare('SELECT id, nombre, email, rol, activo, password, debe_cambiar_password FROM usuarios WHERE id = ?');
+    $st->execute([(int)$_SESSION['usuario_id']]);
+    $u = $st->fetch();
+    if (!$u || !(int)$u['activo'] || !hash_equals((string)($_SESSION['credencial_version'] ?? ''), hash('sha256', $u['password']))) {
+        $_SESSION = [];
+        session_regenerate_id(true);
+        return false;
+    }
+    $pdo->exec('SET @naser_actor = ' . (int)$u['id']);
+    $_SESSION['nombre'] = $u['nombre'];
+    $_SESSION['email'] = $u['email'];
+    $_SESSION['rol'] = $u['rol'];
+    $_SESSION['debe_cambiar_password'] = (bool)$u['debe_cambiar_password'];
+    return true;
+}
+
 function requireLogin(): void {
+    global $pdo;
+    if (!empty($_SESSION['usuario_id'])) {
+        require_once __DIR__ . '/db.php';
+        validarSesionActual($pdo);
+    }
     if (empty($_SESSION['usuario_id'])) {
         header('Location: ' . app_url('/php/login.php'));
         exit;
@@ -86,7 +109,7 @@ function puedeVerSector(PDO $pdo, int $sectorId): bool {
     $s = sectoresInfo($pdo)[$sectorId] ?? null;
     if (!$s) return false;
     if ($s['slug'] === 'sgi') return true;
-    if ((int)$s['restringido']) return isset(misRolesSector($pdo)[$sectorId]);
+    if ((int)$s['restringido'] || in_array($s['slug'], ['rrhh','finanzas'], true)) return isset(misRolesSector($pdo)[$sectorId]);
     return true;
 }
 /** Completar formularios: responsable u operador del sector, o responsable de su burbuja colaborativa. */
@@ -94,22 +117,44 @@ function puedeCompletarSector(PDO $pdo, int $sectorId): bool {
     if (esAdmin()) return true;
     if (!puedeVerSector($pdo, $sectorId)) return false;
     $rol = misRolesSector($pdo)[$sectorId] ?? null;
-    return in_array($rol, ['responsable', 'operador'], true) || esResponsableEnBurbuja($pdo, $sectorId);
+    if ($rol !== null) return in_array($rol, ['responsable','operador'], true);
+    return esResponsableEnBurbuja($pdo, $sectorId);
 }
 /** Editar / gestionar el modulo del sector (registros, documentos). */
 function puedeEditarSector(PDO $pdo, int $sectorId): bool {
     if (esAdmin()) return true;
     if (!puedeVerSector($pdo, $sectorId)) return false;
-    return (misRolesSector($pdo)[$sectorId] ?? null) === 'responsable' || esResponsableEnBurbuja($pdo, $sectorId);
+    $roles = misRolesSector($pdo);
+    if (isset($roles[$sectorId])) return (bool)(permisosSectorActuales($pdo)[$sectorId]['puede_editar'] ?? false);
+    return esResponsableEnBurbuja($pdo, $sectorId);
 }
 /** Aprobar formularios: SOLO el responsable del area (o el super usuario). */
 function puedeAprobarSector(PDO $pdo, int $sectorId): bool {
     if (esAdmin()) return true;
-    return (misRolesSector($pdo)[$sectorId] ?? null) === 'responsable';
+    return puedeVerSector($pdo, $sectorId) && (misRolesSector($pdo)[$sectorId] ?? null) === 'responsable' && (bool)(permisosSectorActuales($pdo)[$sectorId]['puede_aprobar'] ?? false);
 }
+/** Capacidades explícitas, consultadas por petición. */
+function permisosSectorActuales(PDO $pdo): array {
+    static $cache = [];
+    $uid=(int)($_SESSION['usuario_id']??0);
+    if (!isset($cache[$uid])) {
+        $st=$pdo->prepare('SELECT sector_id,puede_editar,puede_aprobar,puede_descargar FROM usuario_sector WHERE usuario_id=?');
+        $st->execute([$uid]); $cache[$uid]=[];
+        foreach($st->fetchAll() as $r) $cache[$uid][(int)$r['sector_id']]=$r;
+    }
+    return $cache[$uid];
+}
+function puedeDescargarSector(PDO $pdo, int $sid): bool {
+    if (esAdmin()) return true;
+    if (!puedeVerSector($pdo,$sid)) return false;
+    $p=permisosSectorActuales($pdo);
+    return isset($p[$sid]) && (bool)$p[$sid]['puede_descargar'];
+}
+
 function puedeGestionarDocumentos(PDO $pdo): bool {
     if (esAdmin()) return true;
-    return in_array('responsable', misRolesSector($pdo), true);
+    foreach (sectoresInfo($pdo) as $sid => $sector) if (puedeEditarSector($pdo, (int)$sid)) return true;
+    return false;
 }
 function requireDocumentManager(PDO $pdo): void {
     requireLogin();

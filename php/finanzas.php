@@ -2,14 +2,17 @@
 require __DIR__ . '/config/auth.php';
 requireLogin();
 verify_csrf(); // protege todos los formularios POST de esta pagina
-require __DIR__ . '/config/db.php';
+require_once __DIR__ . '/config/db.php';
 require __DIR__ . '/config/layout.php';
 require __DIR__ . '/config/modulo.php';
 require_once __DIR__ . '/config/mailer.php';
+require_once __DIR__ . '/config/personal_maestro.php';
 
 $slug = 'finanzas';
 [$sector, $sid, $canEdit] = cargarModulo($pdo, $slug);
 $uid = (int)($_SESSION['usuario_id'] ?? 0);
+// Rechazar antes de emitir HTML para conservar el estado HTTP de autorización.
+if ($_SERVER['REQUEST_METHOD'] === 'POST') exigirEdicion($canEdit);
 $msg=''; $err='';
 
 function finanzasEstadoVencimiento(?string $fecha): array {
@@ -68,6 +71,7 @@ $uploadDirFinanzas = dirname(__DIR__) . '/uploads/finanzas';
 $subidaChecklistFullPath = null;
 
 if (isset($_GET['descargar_checklist'])) {
+    if (!puedeDescargarSector($pdo,$sid)) { http_response_code(403); exit('No tenés permiso para descargar archivos de este sector.'); }
     $idDescarga = (int)$_GET['descargar_checklist'];
     $st = $pdo->prepare('SELECT requisito,archivo_adjunto FROM finanzas_checklist WHERE id=? AND sector_id=? LIMIT 1');
     $st->execute([$idDescarga, $sid]);
@@ -120,16 +124,13 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
  try{
   $a=$_POST['accion']??'';
   if($a==='trabajador_guardar'){
-   $id=(int)($_POST['id']??0);$leg=trim($_POST['legajo']??'');$nom=trim($_POST['nombre']??'');$dni=trim($_POST['dni']??'');$cat=trim($_POST['categoria']??'');$vc=$_POST['venc_carnet']??'';$curso=trim($_POST['curso']??'');$vd=$_POST['venc_defensivo']??'';$email=trim($_POST['email']??'');$telefono=trim($_POST['telefono']??'');
-   if($leg===''||$nom===''||$dni===''||$vc===''||$vd==='')throw new RuntimeException('Completá los datos obligatorios.');
-   if($email!==''&&!filter_var($email,FILTER_VALIDATE_EMAIL))throw new RuntimeException('El correo del trabajador no es válido.');
-   if($id){$pdo->prepare('UPDATE finanzas_trabajadores SET legajo=?,nombre_completo=?,dni=?,email=?,telefono=?,categoria_carnet=?,vencimiento_carnet=?,curso_defensivo=?,vencimiento_defensivo=?,actualizado_por=?,actualizado_en=NOW() WHERE id=? AND sector_id=?')->execute([$leg,$nom,$dni,$email?:null,$telefono?:null,$cat,$vc,$curso,$vd,$uid,$id,$sid]);$msg='Trabajador actualizado.';}
-   else{$pdo->prepare('INSERT INTO finanzas_trabajadores(sector_id,legajo,nombre_completo,dni,sector,email,telefono,categoria_carnet,vencimiento_carnet,curso_defensivo,vencimiento_defensivo,creado_por,actualizado_por) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)')->execute([$sid,$leg,$nom,$dni,$sector['nombre'],$email?:null,$telefono?:null,$cat,$vc,$curso,$vd,$uid,$uid]);$msg='Trabajador registrado.';}
-   auditModulo($pdo,$uid,'finanzas_trabajador',$nom);
+   $resultado=guardarTrabajadorFinanzas($pdo,$sid,$uid,$_POST);
+   auditModulo($pdo,$uid,'finanzas_trabajador',$resultado['nombre']);
+   $msg='Seguimiento guardado. Los datos personales se leen de la ficha central.';
   }
 
   if($a==='trabajador_aviso_mail'){
-    $id=(int)($_POST['id']??0);$st=$pdo->prepare('SELECT * FROM finanzas_trabajadores WHERE id=? AND sector_id=? LIMIT 1');$st->execute([$id,$sid]);$persona=$st->fetch(PDO::FETCH_ASSOC);
+    $id=(int)($_POST['id']??0);$persona=trabajadorFinanzas($pdo,$id,$sid);
     if(!$persona||!filter_var((string)$persona['email'],FILTER_VALIDATE_EMAIL))throw new RuntimeException('El trabajador no tiene un correo válido cargado.');
     $estadoCarnet=finanzasEstadoVencimiento($persona['vencimiento_carnet']??null);$estadoCurso=finanzasEstadoVencimiento($persona['vencimiento_defensivo']??null);
     $cuerpo='<p>Hola '.h($persona['nombre_completo']).',</p><p>Este es el estado de tus vencimientos registrados:</p><ul><li>Carnet de conducir ('.h($persona['categoria_carnet']??'sin categoría').'): <strong>'.h($estadoCarnet[0]).'</strong> — '.h($persona['vencimiento_carnet']??'').'</li><li>Curso defensivo ('.h($persona['curso_defensivo']??'').'): <strong>'.h($estadoCurso[0]).'</strong> — '.h($persona['vencimiento_defensivo']??'').'</li></ul><p>Por favor, coordiná la renovación si alguno está próximo a vencer o vencido.</p>';
@@ -166,7 +167,7 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
   if($a==='eliminar'){ $tabla=$_POST['tabla']??'';$id=(int)($_POST['id']??0);$permitidas=['finanzas_trabajadores','finanzas_indicadores','finanzas_checklist'];if(!in_array($tabla,$permitidas,true))throw new RuntimeException('Operación inválida.');$adjunto=null;if($tabla==='finanzas_checklist'){$st=$pdo->prepare('SELECT archivo_adjunto FROM finanzas_checklist WHERE id=? AND sector_id=?');$st->execute([$id,$sid]);$adjunto=$st->fetchColumn()?:null;}$pdo->prepare("DELETE FROM $tabla WHERE id=? AND sector_id=?")->execute([$id,$sid]);if($adjunto){$path=finanzasRutaAdjunto($adjunto);if($path&&is_file($path))@unlink($path);}auditModulo($pdo,$uid,'finanzas_eliminar',"$tabla #$id");$msg='Registro eliminado.';}
  }catch(Throwable $e){if($subidaChecklistFullPath&&is_file($subidaChecklistFullPath))@unlink($subidaChecklistFullPath);$err=$e->getMessage();}
 }
-$trab=$pdo->prepare('SELECT f.*,u.nombre actualizado_nombre FROM finanzas_trabajadores f LEFT JOIN usuarios u ON u.id=f.actualizado_por WHERE f.sector_id=? ORDER BY f.nombre_completo');$trab->execute([$sid]);$trab=$trab->fetchAll();
+$trab=$pdo->prepare(consultaPersonalFinanzas().' WHERE f.sector_id=? ORDER BY CASE WHEN f.empleado_id IS NULL THEN f.nombre_completo ELSE e.apellido_nombre END');$trab->execute([$sid]);$trab=$trab->fetchAll();
 $inds=$pdo->prepare('SELECT * FROM finanzas_indicadores WHERE sector_id=? ORDER BY fecha_actualizacion DESC');$inds->execute([$sid]);$inds=$inds->fetchAll();
 $checks=$pdo->prepare('SELECT * FROM finanzas_checklist WHERE sector_id=? ORDER BY id DESC');$checks->execute([$sid]);$checks=$checks->fetchAll();
 $alertas=$pdo->prepare('SELECT * FROM finanzas_alertas WHERE sector_id=? ORDER BY fecha_envio DESC,id DESC');$alertas->execute([$sid]);$alertas=$alertas->fetchAll();
@@ -175,6 +176,8 @@ if($canEdit&&isset($_GET['editar_trabajador'])){foreach($trab as $row)if((int)$r
 if($canEdit&&isset($_GET['editar_checklist'])){foreach($checks as $row)if((int)$row['id']===(int)$_GET['editar_checklist']){$editCheck=$row;break;}}
 if($canEdit&&isset($_GET['editar_indicador'])){foreach($inds as $row)if((int)$row['id']===(int)$_GET['editar_indicador']){$editIndicador=$row;break;}}
 
+$personalFinanzas=$canEdit?personasDisponiblesFinanzas($pdo):[];
+$fichaEdit=!empty($editTrabajador['empleado_id'])?empleadoParaFinanzas($pdo,(int)$editTrabajador['empleado_id']):null;
 $promedioIndicadores = 0;
 $mejorIndicador = null;
 if ($inds) {
@@ -196,14 +199,19 @@ if ($inds) {
 </section>
 <?php if($canEdit):?>
 <section class="module-card" id="gestion">
- <h3><?=$editTrabajador?'Editar trabajador / vencimientos':'Registrar trabajador / vencimientos'?></h3>
+ <h3><?=$editTrabajador?'Editar seguimiento de conducción':'Agregar seguimiento de conducción'?></h3>
  <form method="post" class="module-form"><?=csrf_field()?>
   <input type="hidden" name="accion" value="trabajador_guardar"><input type="hidden" name="id" value="<?=(int)($editTrabajador['id']??0)?>">
-  <label>Legajo<input name="legajo" required value="<?=h($editTrabajador['legajo']??'')?>"></label>
-  <label>Nombre<input name="nombre" required value="<?=h($editTrabajador['nombre_completo']??'')?>"></label>
-  <label>DNI<input name="dni" required value="<?=h($editTrabajador['dni']??'')?>"></label>
-  <label>Correo de avisos<input type="email" name="email" value="<?=h($editTrabajador['email']??'')?>"></label>
-  <label>Teléfono / WhatsApp<input name="telefono" placeholder="+54..." value="<?=h($editTrabajador['telefono']??'')?>"></label>
+  <input type="hidden" name="registro_version" value="<?=h($editTrabajador?versionTrabajadorFinanzas($editTrabajador):'')?>">
+  <input type="hidden" name="ficha_version" id="finFichaVersion" value="<?=h($fichaEdit?versionEmpleadoFinanzas($fichaEdit):'')?>">
+  <?php if(!empty($editTrabajador['empleado_id'])):?>
+   <input type="hidden" name="empleado_id" value="<?=(int)$editTrabajador['empleado_id']?>">
+   <label class="full">Persona de la ficha central<input readonly value="<?=h(($fichaEdit['legajo']??'Sin ficha').' · '.($fichaEdit['apellido_nombre']??'La ficha central no está disponible'))?>"></label>
+   <?php if(!$fichaEdit || !(int)$fichaEdit['activo']):?><p class="full module-error">Esta persona no tiene una ficha activa. Pedile a RRHH que la revise antes de modificar el seguimiento.</p><?php endif;?>
+  <?php else:?>
+   <label class="full">Persona de la ficha central<select name="empleado_id" id="finEmpleado" required><option value="">Seleccionar por nombre y legajo</option><?php foreach($personalFinanzas as $persona):?><option value="<?=(int)$persona['id']?>" data-version="<?=h(versionEmpleadoFinanzas($persona))?>" data-categoria="<?=h($persona['categoria_carnet'])?>" data-vc="<?=h($persona['vencimiento_carnet'])?>" data-curso="<?=h($persona['curso_defensivo'])?>" data-vd="<?=h($persona['vencimiento_defensivo'])?>"><?=h($persona['legajo'].' · '.$persona['apellido_nombre'])?></option><?php endforeach;?></select></label>
+  <?php endif;?>
+  <p class="full checklist-hint">El nombre, legajo y contacto se mantienen en Personal. Acá podés actualizar los datos de conducción, que también quedarán disponibles en la ficha central.<?php if(puedeVerPersonal($pdo)):?> <a href="<?=app_url('/php/personal.php')?>">Abrir Personal</a><?php endif;?></p>
   <label>Categoría carnet<input name="categoria" value="<?=h($editTrabajador['categoria_carnet']??'')?>"></label>
   <label>Venc. carnet<input type="date" name="venc_carnet" required value="<?=h($editTrabajador['vencimiento_carnet']??'')?>"></label>
   <label>Curso defensivo<input name="curso" value="<?=h($editTrabajador['curso_defensivo']??'')?>"></label>
@@ -215,8 +223,8 @@ if ($inds) {
 <div class="module-toolbar" id="seguimiento"><h2>Personal y vencimientos</h2><span class="count-pill">Alertas automáticas al responsable del sector</span></div>
 <div class="table-wrapper"><table class="module-table"><thead><tr><th>Legajo</th><th>Nombre / contacto</th><th>DNI</th><th>Carnet de conducir</th><th>Curso defensivo</th><th>Responsable</th><?php if($canEdit):?><th>Acciones</th><?php endif;?></tr></thead><tbody>
 <?php foreach($trab as $r): $waMensaje='Aviso NASER Finanzas para '.$r['nombre_completo'].': carnet de conducir '.finanzasEstadoVencimiento($r['vencimiento_carnet'])[0].' ('.$r['vencimiento_carnet'].'); curso defensivo '.finanzasEstadoVencimiento($r['vencimiento_defensivo'])[0].' ('.$r['vencimiento_defensivo'].').'; $waUrl=finanzasWhatsappUrl($r['telefono']??null,$waMensaje); ?>
-<tr><td><?=h($r['legajo'])?></td><td><strong><?=h($r['nombre_completo'])?></strong><div class="finance-contact"><?=h($r['email']??'Sin correo')?> · <?=h($r['telefono']??'Sin teléfono')?></div></td><td><?=h($r['dni'])?></td><td><div><?=h($r['categoria_carnet']??'Carnet')?> · <?=h($r['vencimiento_carnet'])?></div><?=finanzasEstadoHtml($r['vencimiento_carnet'])?></td><td><div><?=h($r['curso_defensivo']?:'Curso defensivo')?> · <?=h($r['vencimiento_defensivo'])?></div><?=finanzasEstadoHtml($r['vencimiento_defensivo'])?></td><td><?=h($r['actualizado_nombre']??'Sistema')?></td>
-<?php if($canEdit):?><td><div class="finance-actions"><a class="btn secondary" href="<?=app_url('/php/finanzas.php?editar_trabajador='.(int)$r['id'].'#gestion')?>">Editar</a><?php if(filter_var((string)$r['email'],FILTER_VALIDATE_EMAIL)):?><form method="post"><?=csrf_field()?><input type="hidden" name="accion" value="trabajador_aviso_mail"><input type="hidden" name="id" value="<?=(int)$r['id']?>"><button class="btn secondary">Avisar por correo</button></form><?php endif;?><?php if($waUrl):?><a class="btn secondary" href="<?=h($waUrl)?>" target="_blank" rel="noopener">Avisar por WhatsApp</a><?php endif;?><form method="post" onsubmit="return confirm('¿Eliminar este trabajador?')"><?=csrf_field()?><input type="hidden" name="accion" value="eliminar"><input type="hidden" name="tabla" value="finanzas_trabajadores"><input type="hidden" name="id" value="<?=(int)$r['id']?>"><button class="btn secondary">Eliminar</button></form></div></td><?php endif;?></tr>
+<tr><td><?=h($r['legajo'])?></td><td><strong><?=h($r['nombre_completo']??'Ficha central no disponible')?></strong><?php if(!$r['empleado_id']):?><small class="module-error">Pendiente de vincular con Personal</small><?php elseif(!$r['maestro_existente'] || !(int)$r['empleado_activo']):?><small class="module-error">Ficha central inactiva o no disponible</small><?php endif;?><div class="finance-contact"><?=h($r['email']??'Sin correo')?> · <?=h($r['telefono']??'Sin teléfono')?></div></td><td><?=h($r['dni'])?></td><td><div><?=h($r['categoria_carnet']??'Carnet')?> · <?=h($r['vencimiento_carnet'])?></div><?=finanzasEstadoHtml($r['vencimiento_carnet'])?></td><td><div><?=h($r['curso_defensivo']?:'Curso defensivo')?> · <?=h($r['vencimiento_defensivo'])?></div><?=finanzasEstadoHtml($r['vencimiento_defensivo'])?></td><td><?=h($r['actualizado_nombre']??'Sistema')?></td>
+<?php if($canEdit):?><td><div class="finance-actions"><a class="btn secondary" href="<?=app_url('/php/finanzas.php?editar_trabajador='.(int)$r['id'].'#gestion')?>">Editar</a><?php if(filter_var((string)$r['email'],FILTER_VALIDATE_EMAIL)):?><form method="post"><?=csrf_field()?><input type="hidden" name="accion" value="trabajador_aviso_mail"><input type="hidden" name="id" value="<?=(int)$r['id']?>"><button class="btn secondary">Avisar por correo</button></form><?php endif;?><?php if($waUrl):?><a class="btn secondary" href="<?=h($waUrl)?>" target="_blank" rel="noopener">Avisar por WhatsApp</a><?php endif;?><form method="post" onsubmit="return confirm('¿Quitar este seguimiento de Finanzas? La ficha central de Personal se conserva.')"><?=csrf_field()?><input type="hidden" name="accion" value="eliminar"><input type="hidden" name="tabla" value="finanzas_trabajadores"><input type="hidden" name="id" value="<?=(int)$r['id']?>"><button class="btn secondary">Quitar seguimiento</button></form></div></td><?php endif;?></tr>
 <?php endforeach;?><?php if(!$trab):?><tr><td colspan="<?=$canEdit?7:6?>">Todavía no hay trabajadores cargados.</td></tr><?php endif;?></tbody></table></div>
 
 <?php if($canEdit):?><section class="module-grid">
@@ -225,12 +233,12 @@ if ($inds) {
  </form></div>
  <div class="module-card"><h3><?=$editCheck?'Editar checklist':'Nuevo requisito del checklist'?></h3><p class="checklist-hint">Adjuntá una planilla de Excel, un PDF o un Word para respaldar el requisito.</p><form method="post" enctype="multipart/form-data" class="module-form"><?=csrf_field()?>
   <input type="hidden" name="accion" value="check_guardar"><input type="hidden" name="id" value="<?=(int)($editCheck['id']??0)?>"><label class="full">Requisito<input name="requisito" required value="<?=h($editCheck['requisito']??'')?>"></label><label>Categoría<input name="categoria" value="<?=h($editCheck['categoria']??'')?>"></label><label>Frecuencia<input name="frecuencia" value="<?=h($editCheck['frecuencia']??'')?>"></label><label>Estado<select name="estado"><?php foreach(['PENDIENTE','APROBADO','OBSERVADO'] as $op):?><option <?=($editCheck['estado_auditoria']??'PENDIENTE')===$op?'selected':''?>><?=$op?></option><?php endforeach;?></select></label><label><span>Completado</span><input type="checkbox" name="completado" value="1" <?=!empty($editCheck['completado'])?'checked':''?>></label><label class="full">Excel / PDF / Word (máximo 10 MB)<input type="file" name="archivo_adjunto" accept=".xlsx,.xls,.pdf,.docx"></label>
-  <?php if(!empty($editCheck['archivo_adjunto'])):?><div class="full">Adjunto actual: <a href="<?=app_url('/php/finanzas.php?descargar_checklist='.(int)$editCheck['id'])?>"><?=h(basename($editCheck['archivo_adjunto']))?></a></div><?php endif;?><div class="finance-actions"><button class="btn primary"><?=$editCheck?'Guardar cambios':'Guardar requisito'?></button><?php if($editCheck):?><a class="btn secondary" href="<?=app_url('/php/finanzas.php#gestion')?>">Cancelar</a><?php endif;?></div>
+  <?php if(!empty($editCheck['archivo_adjunto']) && puedeDescargarSector($pdo,$sid)):?><div class="full">Adjunto actual: <a href="<?=app_url('/php/finanzas.php?descargar_checklist='.(int)$editCheck['id'])?>"><?=h(basename($editCheck['archivo_adjunto']))?></a></div><?php endif;?><div class="finance-actions"><button class="btn primary"><?=$editCheck?'Guardar cambios':'Guardar requisito'?></button><?php if($editCheck):?><a class="btn secondary" href="<?=app_url('/php/finanzas.php#gestion')?>">Cancelar</a><?php endif;?></div>
  </form></div>
 </section><?php endif;?>
 <div class="module-toolbar" id="checklist"><h2>Checklist de documentación y actas</h2><span class="count-pill"><?=count($checks)?> requisito(s)</span></div>
 <div class="table-wrapper"><table class="module-table"><thead><tr><th>Requisito</th><th>Categoría</th><th>Frecuencia</th><th>Estado</th><th>Completado</th><th>Archivo</th><?php if($canEdit):?><th>Acciones</th><?php endif;?></tr></thead><tbody>
-<?php foreach($checks as $c):?><tr><td><strong><?=h($c['requisito'])?></strong></td><td><?=h($c['categoria']??'')?></td><td><?=h($c['frecuencia']??'')?></td><td><?=h($c['estado_auditoria']??'PENDIENTE')?></td><td><?=!empty($c['completado'])?'Sí':'No'?></td><td><?php if(!empty($c['archivo_adjunto'])):?><a href="<?=app_url('/php/finanzas.php?descargar_checklist='.(int)$c['id'])?>">Descargar <?=h(strtoupper(pathinfo($c['archivo_adjunto'],PATHINFO_EXTENSION)))?></a><?php else:?>Sin adjunto<?php endif;?></td><?php if($canEdit):?><td><div class="finance-actions"><a class="btn secondary" href="<?=app_url('/php/finanzas.php?editar_checklist='.(int)$c['id'].'#gestion')?>">Editar</a><form method="post" onsubmit="return confirm('¿Eliminar este requisito y su adjunto?')"><?=csrf_field()?><input type="hidden" name="accion" value="eliminar"><input type="hidden" name="tabla" value="finanzas_checklist"><input type="hidden" name="id" value="<?=(int)$c['id']?>"><button class="btn secondary">Eliminar</button></form></div></td><?php endif;?></tr><?php endforeach;?><?php if(!$checks):?><tr><td colspan="<?=$canEdit?7:6?>">No hay requisitos cargados todavía. Podés cargar el checklist del sector y adjuntar la planilla Excel.</td></tr><?php endif;?></tbody></table></div>
+<?php foreach($checks as $c):?><tr><td><strong><?=h($c['requisito'])?></strong></td><td><?=h($c['categoria']??'')?></td><td><?=h($c['frecuencia']??'')?></td><td><?=h($c['estado_auditoria']??'PENDIENTE')?></td><td><?=!empty($c['completado'])?'Sí':'No'?></td><td><?php if(!empty($c['archivo_adjunto']) && puedeDescargarSector($pdo,$sid)):?><a href="<?=app_url('/php/finanzas.php?descargar_checklist='.(int)$c['id'])?>">Descargar <?=h(strtoupper(pathinfo($c['archivo_adjunto'],PATHINFO_EXTENSION)))?></a><?php else:?>Sin adjunto<?php endif;?></td><?php if($canEdit):?><td><div class="finance-actions"><a class="btn secondary" href="<?=app_url('/php/finanzas.php?editar_checklist='.(int)$c['id'].'#gestion')?>">Editar</a><form method="post" onsubmit="return confirm('¿Eliminar este requisito y su adjunto?')"><?=csrf_field()?><input type="hidden" name="accion" value="eliminar"><input type="hidden" name="tabla" value="finanzas_checklist"><input type="hidden" name="id" value="<?=(int)$c['id']?>"><button class="btn secondary">Eliminar</button></form></div></td><?php endif;?></tr><?php endforeach;?><?php if(!$checks):?><tr><td colspan="<?=$canEdit?7:6?>">No hay requisitos cargados todavía. Podés cargar el checklist del sector y adjuntar la planilla Excel.</td></tr><?php endif;?></tbody></table></div>
 
 <div class="module-toolbar" id="alertas"><h2>Alertas y avisos de vencimiento</h2><span class="count-pill"><?=count($alertas)?> aviso(s)</span></div>
 <section class="module-grid">
@@ -283,4 +291,13 @@ if ($inds) {
             <td><?=h($r['fecha_actualizacion'])?>
         </td><?php if($canEdit):?><td><div class="finance-actions"><a class="btn secondary" href="<?=app_url('/php/finanzas.php?editar_indicador='.(int)$r['id'].'#gestion')?>">Editar</a><form method="post"><?=csrf_field()?><input type="hidden" name="accion" value="eliminar"><input type="hidden" name="tabla" value="finanzas_indicadores"><input type="hidden" name="id" value="<?=(int)$r['id']?>"><button class="btn secondary">Eliminar</button></form></div></td><?php endif;?></tr><?php endforeach;?><?php if(!$inds):?><tr><td colspan="<?=$canEdit?4:3?>">No hay indicadores cargados.</td></tr><?php endif;?></tbody></table></div>
 
-</main></div></body></html>
+</main></div><script>
+(function(){
+ var select=document.getElementById('finEmpleado');if(!select)return;
+ select.addEventListener('change',function(){
+  var option=select.options[select.selectedIndex], form=select.form;
+  document.getElementById('finFichaVersion').value=option.dataset.version||'';
+  [['categoria','categoria'],['venc_carnet','vc'],['curso','curso'],['venc_defensivo','vd']].forEach(function(pair){form.elements[pair[0]].value=option.dataset[pair[1]]||'';});
+ });
+})();
+</script></body></html>

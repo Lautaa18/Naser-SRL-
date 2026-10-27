@@ -1,5 +1,5 @@
 <?php
-require __DIR__.'/../config/auth.php';requireAdmin();require __DIR__.'/../config/db.php';require __DIR__.'/../config/layout.php';
+require __DIR__.'/../config/auth.php';requireAdmin();require_once __DIR__.'/../config/db.php';require __DIR__.'/../config/layout.php';
 $uploads=dirname(__DIR__,2).'/uploads';$checks=[
  ['Base de datos',true,'Conexión PDO activa'],
  ['ZipArchive',class_exists('ZipArchive'),class_exists('ZipArchive')?'Disponible para importación ZIP':'No disponible'],

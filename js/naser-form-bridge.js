@@ -191,6 +191,11 @@
   }
 
   function iniciar() {
+    if (cfg.canDownload === false) {
+      document.querySelectorAll('button,a,input[type="button"]').forEach(function(el){
+        if (/imprimir|pdf|exportar|descargar/i.test(el.textContent || el.value || '')) el.hidden=true;
+      });
+    }
     aplicar(cfg.fields || null);
     if (cfg.readonly) bloquear();
     informarAltura();

@@ -9,7 +9,7 @@ if (($_SESSION['rol'] ?? '') !== 'admin') {
     exit;
 }
 
-require __DIR__ . '/../config/db.php';
+require_once __DIR__ . '/../config/db.php';
 
 $mensaje = '';
 $error = '';

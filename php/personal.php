@@ -2,7 +2,7 @@
 // PERSONAL: listado de empleados, legajo, habilitaciones con vencimiento e importacion del Excel
 require __DIR__ . '/config/auth.php';
 requireLogin();
-require __DIR__ . '/config/db.php';
+require_once __DIR__ . '/config/db.php';
 require __DIR__ . '/config/layout.php';
 require_once __DIR__ . '/config/empleados.php';
 verify_csrf();
@@ -20,6 +20,14 @@ function volverPersonal(string $msg, string $qs = ''): never {
     exit;
 }
 
+function fechaPersonalValida(string $f): bool { $d=DateTimeImmutable::createFromFormat('!Y-m-d',$f); return $d && $d->format('Y-m-d')===$f; }
+function versionFichaPersonal(PDO $pdo, int $id, bool $bloquear=false): string {
+    $st=$pdo->prepare('SELECT * FROM empleados WHERE id=?'.($bloquear?' FOR UPDATE':'')); $st->execute([$id]); $e=$st->fetch();
+    if(!$e) throw new RuntimeException('Empleado no encontrado.');
+    $st=$pdo->prepare('SELECT * FROM empleados_habilitaciones WHERE empleado_id=? ORDER BY tipo'.($bloquear?' FOR UPDATE':''));$st->execute([$id]);
+    return hash('sha256',json_encode([$e,$st->fetchAll()],JSON_UNESCAPED_UNICODE|JSON_THROW_ON_ERROR));
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         if (!$editar) throw new RuntimeException('Solo los responsables de RRHH pueden modificar el personal.');
@@ -33,12 +41,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             volverPersonal("Listado importado: {$r['nuevos']} empleado(s) nuevo(s), {$r['actualizados']} actualizado(s), {$r['habilitaciones']} habilitaciones con fecha" . ($r['bajas'] ? ", {$r['bajas']} pasado(s) a baja" : '') . '.');
         }
         if ($a === 'guardar') {
+            $pdo->beginTransaction();
             $id = (int)($_POST['id'] ?? 0);
+            if($id && !hash_equals(versionFichaPersonal($pdo,$id,true),(string)($_POST['ficha_version']??''))) throw new RuntimeException('Otra persona modificó esta ficha. Conservá tus cambios y recargá la ficha antes de guardar.');
             $campos = ['legajo', 'apellido_nombre', 'dni', 'cuil', 'servicio', 'cargo', 'fecha_ingreso', 'fecha_nacimiento', 'convenio', 'encuadre', 'categoria', 'telefono', 'domicilio', 'localidad', 'provincia', 'email_corporativo', 'email_personal', 'observaciones'];
             $v = [];
             foreach ($campos as $c) { $x = trim((string)($_POST[$c] ?? '')); $v[$c] = $x === '' ? null : $x; }
             if (!$v['legajo'] || !$v['apellido_nombre']) throw new RuntimeException('Legajo y nombre son obligatorios.');
-            foreach (['fecha_ingreso', 'fecha_nacimiento'] as $c) if ($v[$c] && !preg_match('/^\d{4}-\d{2}-\d{2}$/', $v[$c])) $v[$c] = null;
+            foreach (['fecha_ingreso','fecha_nacimiento'] as $c) if($v[$c] && !fechaPersonalValida($v[$c])) throw new RuntimeException('Fecha inválida: '.$c);
             $sector = (int)($_POST['sector_id'] ?? 0) ?: null;
             if ($id) {
                 $set = implode(', ', array_map(fn($c) => "$c = ?", $campos));
@@ -52,13 +62,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $venc = (string)($_POST['hab'][$t]['venc'] ?? '');
                 $real = (string)($_POST['hab'][$t]['real'] ?? '');
                 $det = trim((string)($_POST['hab'][$t]['det'] ?? ''));
-                $okV = preg_match('/^\d{4}-\d{2}-\d{2}$/', $venc); $okR = preg_match('/^\d{4}-\d{2}-\d{2}$/', $real);
+                $okV=fechaPersonalValida($venc);$okR=fechaPersonalValida($real);if(($venc!==''&&!$okV)||($real!==''&&!$okR))throw new RuntimeException('Hay una fecha de habilitación inválida.');
                 if (!$okV && !$okR) { $pdo->prepare('DELETE FROM empleados_habilitaciones WHERE empleado_id = ? AND tipo = ?')->execute([$id, $t]); continue; }
                 $pdo->prepare('INSERT INTO empleados_habilitaciones (empleado_id, tipo, detalle, fecha_realizacion, fecha_vencimiento) VALUES (?,?,?,?,?)
                                ON DUPLICATE KEY UPDATE detalle = VALUES(detalle), fecha_realizacion = VALUES(fecha_realizacion), fecha_vencimiento = VALUES(fecha_vencimiento)')
                     ->execute([$id, $t, $det ?: null, $okR ? $real : null, $okV ? $venc : null]);
             }
             registrarActividad($pdo, 'editar_empleado', "Legajo {$v['legajo']}");
+            $pdo->commit();
             volverPersonal('Datos guardados.', '?id=' . $id);
         }
         if ($a === 'baja' || $a === 'alta') {
@@ -68,6 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             volverPersonal($a === 'baja' ? 'Empleado dado de baja.' : 'Empleado reactivado.', '?id=' . $id);
         }
     } catch (Throwable $e) {
+        if($pdo->inTransaction())$pdo->rollBack();
         $err = str_contains($e->getMessage(), 'Duplicate') ? 'Ya existe un empleado con ese legajo.' : $e->getMessage();
     }
 }
@@ -88,6 +100,16 @@ if ($id || $nuevo) {
         $st = $pdo->prepare('SELECT * FROM empleados_habilitaciones WHERE empleado_id = ?');
         $st->execute([$id]);
         foreach ($st->fetchAll() as $hb) $habs[$hb['tipo']] = $hb;
+    }
+    $fichaVersion=$id?versionFichaPersonal($pdo,$id):'';
+    if($err && ($_POST['accion']??'')==='guardar') {
+        $fichaVersion=(string)($_POST['ficha_version']??'');
+        foreach(['legajo','apellido_nombre','dni','cuil','servicio','cargo','fecha_ingreso','fecha_nacimiento','convenio','encuadre','categoria','telefono','domicilio','localidad','provincia','email_corporativo','email_personal','observaciones','sector_id'] as $campo) {
+            if(isset($_POST[$campo])&&is_scalar($_POST[$campo]))$emp[$campo]=(string)$_POST[$campo];
+        }
+        foreach($tipos as $tipo=>$label) if(isset($_POST['hab'][$tipo])&&is_array($_POST['hab'][$tipo])) {
+            $habs[$tipo]=['fecha_vencimiento'=>(string)($_POST['hab'][$tipo]['venc']??''),'fecha_realizacion'=>(string)($_POST['hab'][$tipo]['real']??''),'detalle'=>(string)($_POST['hab'][$tipo]['det']??'')];
+        }
     }
     $ro = $editar ? '' : 'disabled';
     $val = fn(string $c) => h((string)($emp[$c] ?? ''));
@@ -127,7 +149,7 @@ else {
 </head><body><div class="app"><?php sidebar($pdo, 'personal'); ?><main class="content">
 
 <?php if ($msg): ?><div class="alert success"><?=h($msg)?></div><?php endif; ?>
-<?php if ($err): ?><div class="alert error"><?=h($err)?></div><?php endif; ?>
+<?php if ($err): ?><div class="alert error"><?=h($err)?><?php if($id):?> <a href="<?=h(app_url('/php/personal.php').'?id='.$id)?>" onclick="return confirm('¿Descartar lo escrito y abrir la ficha guardada?')">Abrir ficha guardada</a><?php endif;?></div><?php endif; ?>
 
 <?php if ($id || $nuevo): ?>
   <nav class="breadcrumbs"><a href="<?=h(app_url('/php/personal.php'))?>">Personal</a><span>›</span><span><?= $nuevo ? 'Nuevo empleado' : h($emp['apellido_nombre']) ?></span></nav>
@@ -140,7 +162,7 @@ else {
     <form method="post" onsubmit="return confirm('¿Confirmás?')"><?=csrf_field()?><input type="hidden" name="id" value="<?=(int)$emp['id']?>"><input type="hidden" name="accion" value="<?= (int)$emp['activo'] ? 'baja' : 'alta' ?>"><button class="btn <?= (int)$emp['activo'] ? 'danger' : 'secondary' ?>"><?= (int)$emp['activo'] ? 'Dar de baja' : 'Reactivar' ?></button></form>
   </div><?php endif; ?></header>
 
-  <form method="post" class="form-grid"><?=csrf_field()?><input type="hidden" name="accion" value="guardar"><input type="hidden" name="id" value="<?=(int)$emp['id']?>">
+  <form method="post" class="form-grid"><?=csrf_field()?><input type="hidden" name="accion" value="guardar"><input type="hidden" name="ficha_version" value="<?=h($fichaVersion)?>"><input type="hidden" name="id" value="<?=(int)$emp['id']?>">
   <?php if ($verDatos): ?>
   <section class="form-panel">
     <h2>Datos del legajo</h2>

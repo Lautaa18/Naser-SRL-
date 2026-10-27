@@ -1,6 +1,6 @@
 <?php
 require __DIR__.'/config/auth.php'; requireLogin();
-require __DIR__.'/config/db.php'; require __DIR__.'/config/layout.php';
+require_once __DIR__.'/config/db.php'; require __DIR__.'/config/layout.php';
 $sectores = sectoresVisibles($pdo);
 $editables = sectoresEditables($pdo);
 $campos = ['fecha'=>'Fecha', 'equipo'=>'Equipo', 'operador'=>'Operador', 'pozo'=>'Pozo', 'tareas'=>'Tareas', 'servicios_adicionales'=>'Servicios adicionales', 'ecp'=>'ECP', 'equipo_izaje'=>'Equipo de izaje', 'estado_operacion'=>'Estado de operación', 'herramientas_pesca'=>'Herramientas en pesca', 'observaciones'=>'Observaciones'];

@@ -4,7 +4,7 @@ if (PHP_SAPI !== 'cli') {
     exit('Solo CLI.');
 }
 
-require __DIR__.'/../config/db.php';
+require_once __DIR__.'/../config/db.php';
 require __DIR__.'/../config/storage.php';
 
 $uploads=dirname(__DIR__,2).'/uploads/';

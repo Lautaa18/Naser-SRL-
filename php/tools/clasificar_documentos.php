@@ -13,7 +13,7 @@
 // ==========================================================
 if (PHP_SAPI !== 'cli') { http_response_code(403); exit("Solo desde la terminal.\n"); }
 
-require __DIR__ . '/../config/db.php';
+require_once __DIR__ . '/../config/db.php';
 require __DIR__ . '/../config/clasificacion_sgi.php';
 
 const CARPETA_COPIAS = 'Documentación SGI';

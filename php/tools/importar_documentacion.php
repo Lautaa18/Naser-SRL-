@@ -4,7 +4,7 @@ if (PHP_SAPI !== 'cli') {
     exit("Este importador solo puede ejecutarse desde la terminal.\n");
 }
 
-require __DIR__ . '/../config/db.php';
+require_once __DIR__ . '/../config/db.php';
 
 $uploadsRoot = dirname(__DIR__, 2) . '/uploads';
 $options = getopt('', ['sector::','carpeta::']);

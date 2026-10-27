@@ -1,7 +1,7 @@
 <?php
 require __DIR__ . '/config/auth.php';
 requireLogin();
-require __DIR__ . '/config/db.php';
+require_once __DIR__ . '/config/db.php';
 require __DIR__ . '/config/layout.php';
 require_once __DIR__ . '/config/notificaciones.php';
 verify_csrf();
@@ -83,7 +83,7 @@ $ver = (int)($_GET['ver'] ?? 0);
 $hilo = [];
 if ($ver) {
     $hilo = hiloDe($pdo, $ver);
-    if (!$hilo || $hilo[0]['respuesta_a'] !== null && (int)$hilo[0]['id'] !== $ver) {
+    if ($hilo && $hilo[0]['respuesta_a'] !== null) {
         // si abrieron una respuesta, mostrar la conversacion completa
         $raiz = $hilo ? (int)$hilo[0]['respuesta_a'] : 0;
         $hilo = $raiz ? hiloDe($pdo, $raiz) : [];

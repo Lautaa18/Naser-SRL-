@@ -33,11 +33,12 @@ function app_absolute_url(string $path): string {
     return $base . app_url($path);
 }
 
-function mail_log(string $linea): void {
+function mail_log(string $linea): bool {
     $dir = dirname(__DIR__, 2) . '/logs';
-    if (is_dir($dir) && is_writable($dir)) {
-        @file_put_contents($dir . '/mail.log', '[' . date('Y-m-d H:i:s') . '] ' . $linea . "\n", FILE_APPEND);
+    if (is_dir($dir)) {
+        return @file_put_contents($dir . '/mail.log', '[' . date('Y-m-d H:i:s') . '] ' . $linea . "\n", FILE_APPEND | LOCK_EX) !== false;
     }
+    return false;
 }
 
 /**
@@ -48,8 +49,7 @@ function enviar_mail(string $para, string $asunto, string $html): bool {
     $c = mail_config();
     if ($c['transport'] === 'off' || !filter_var($para, FILTER_VALIDATE_EMAIL)) return false;
     if ($c['transport'] === 'log') {
-        mail_log("PARA: $para | ASUNTO: $asunto (MAIL_TRANSPORT=log: no se envio)");
-        return true;
+        return mail_log("PARA: $para | ASUNTO: $asunto (MAIL_TRANSPORT=log: no se envio)");
     }
     try {
         smtp_send($c, $para, $asunto, $html);

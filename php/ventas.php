@@ -2,7 +2,7 @@
 require __DIR__ . '/config/auth.php';
 requireLogin();
 verify_csrf(); // protege todos los formularios POST de esta pagina
-require __DIR__ . '/config/db.php';
+require_once __DIR__ . '/config/db.php';
 require __DIR__ . '/config/layout.php';
 require_once __DIR__ . '/config/formularios_catalogo.php';
 
@@ -159,6 +159,7 @@ $ticketUploadFullPath = null;
 
 /* Exportaciones de las cotizaciones guardadas. */
 if (isset($_GET['exportar_ticket']) || isset($_GET['exportar_ticket_csv'])) {
+    if (!puedeDescargarSector($pdo,$sid)) { http_response_code(403); exit('Sin permiso de descarga.'); }
     if (!$ticketTableReady) {
         http_response_code(503);
         exit('El generador de cotizaciones no está disponible.');

@@ -22,5 +22,7 @@ try {
     exit('Error de conexión a la base de datos. Verificá que Docker esté iniciado y que el servicio db esté activo.');
 }
 
+configurarZonaHorariaDB($pdo);
+$pdo->exec('SET @naser_actor = ' . (int)($_SESSION['usuario_id'] ?? 0));
 require_once __DIR__ . '/bootstrap.php';
 naser_bootstrap($pdo);

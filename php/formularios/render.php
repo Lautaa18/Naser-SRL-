@@ -56,7 +56,7 @@ $html = preg_replace_callback('/<body\b([^>]*)>/i', static function ($m) {
 }, $html, 1);
 
 $J = JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE;
-$cfg = json_encode(['readonly' => $readonly, 'fields' => $fields, 'hasNativeStorage' => (bool)(array)$storage], $J);
+$cfg = json_encode(['readonly' => $readonly, 'fields' => $fields, 'hasNativeStorage' => (bool)(array)$storage, 'canDownload' => puedeDescargarSector($pdo,(int)$sector['id'])], $J);
 $sto = json_encode($storage, $J);
 
 // Se reemplaza el localStorage del navegador por uno en memoria: asi cada registro

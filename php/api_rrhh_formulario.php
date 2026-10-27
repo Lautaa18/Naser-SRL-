@@ -2,7 +2,7 @@
 // Guarda un checklist / formulario de RRHH (POST desde rrhh.php)
 require __DIR__ . '/config/auth.php';
 requireLogin();
-require __DIR__ . '/config/db.php';
+require_once __DIR__ . '/config/db.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header('Location: ' . app_url('/php/rrhh.php'));

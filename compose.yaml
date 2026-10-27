@@ -28,7 +28,10 @@ services:
       DB_USER: ${DB_USER:-naser}
       DB_PASS: ${DB_PASS:-naser2026}
       APP_BASE: ${APP_BASE:-}
-      APP_ENV: ${APP_ENV:-dev}
+      APP_ENV: ${APP_ENV:-production}
+      APP_TIMEZONE: ${APP_TIMEZONE:-America/Argentina/Buenos_Aires}
+      INITIAL_ADMIN_EMAIL: ${INITIAL_ADMIN_EMAIL:-}
+      INITIAL_ADMIN_PASSWORD: ${INITIAL_ADMIN_PASSWORD:-}
       APP_URL: ${APP_URL:-http://localhost:8080}
       # Mails: en desarrollo van a Mailpit (http://localhost:8025). En produccion poner el SMTP real en .env
       MAIL_TRANSPORT: ${MAIL_TRANSPORT:-smtp}
@@ -113,14 +116,65 @@ services:
       DB_ROOT_PASS: ${DB_ROOT_PASS:-root2026}
       BACKUP_HORA: ${BACKUP_HORA:-2}
       BACKUP_DIAS: ${BACKUP_DIAS:-7}
-      TZ: America/Argentina/Buenos_Aires
+      TZ: ${APP_TIMEZONE:-America/Argentina/Buenos_Aires}
     volumes:
       - ./backups:/backups
       - ./uploads:/uploads:ro
       - ./docker/backup.sh:/backup.sh:ro
+      - ./logs/estado:/estado
     depends_on:
       db:
         condition: service_healthy
+
+  # Revisión de avisos sin depender de visitas al sitio.
+  tareas:
+    build: .
+    container_name: naser_tareas
+    user: www-data
+    restart: unless-stopped
+    command: ["php", "php/tools/tareas.php"]
+    environment:
+      DB_HOST: ${DB_HOST:-db}
+      DB_NAME: ${DB_NAME:-naser_sgi_prueba}
+      DB_USER: ${DB_USER:-naser}
+      DB_PASS: ${DB_PASS:-naser2026}
+      APP_ENV: ${APP_ENV:-production}
+      APP_TIMEZONE: ${APP_TIMEZONE:-America/Argentina/Buenos_Aires}
+      INITIAL_ADMIN_EMAIL: ${INITIAL_ADMIN_EMAIL:-}
+      INITIAL_ADMIN_PASSWORD: ${INITIAL_ADMIN_PASSWORD:-}
+      APP_URL: ${APP_URL:-http://localhost:8080}
+      APP_BASE: ${APP_BASE:-}
+      MAIL_TRANSPORT: ${MAIL_TRANSPORT:-smtp}
+      SMTP_HOST: ${SMTP_HOST:-mailpit}
+      SMTP_PORT: ${SMTP_PORT:-1025}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASS: ${SMTP_PASS:-}
+      SMTP_SECURE: ${SMTP_SECURE:-}
+      MAIL_FROM: ${MAIL_FROM:-sgi@gruponaser.com.ar}
+      MAIL_FROM_NAME: ${MAIL_FROM_NAME:-NASER SGI}
+      TAREAS_INTERVALO: ${TAREAS_INTERVALO:-300}
+      TZ: ${APP_TIMEZONE:-America/Argentina/Buenos_Aires}
+    volumes:
+      - ./:/var/www/html
+      - ./naser.ini:/usr/local/etc/php/conf.d/zz-naser.ini:ro
+    depends_on:
+      db:
+        condition: service_healthy
+
+  # Restaura una copia sin compartir red, volumen ni credenciales con la base real.
+  verificador_backup:
+    image: mariadb:11
+    container_name: naser_verificador_backup
+    restart: unless-stopped
+    network_mode: "none"
+    entrypoint: ["bash", "/verificar-backup.sh"]
+    environment:
+      VERIFICAR_CADA_SEGUNDOS: ${VERIFICAR_CADA_SEGUNDOS:-86400}
+      TZ: ${APP_TIMEZONE:-America/Argentina/Buenos_Aires}
+    volumes:
+      - ./backups:/backups:ro
+      - ./logs/estado:/estado
+      - ./docker/verificar-backup.sh:/verificar-backup.sh:ro
 
 volumes:
   naser_db_data:

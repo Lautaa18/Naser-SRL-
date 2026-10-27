@@ -141,11 +141,11 @@ function formulariosPanel(PDO $pdo, string $slug): void {
         $filtroBorradores = " AND (r.estado <> 'borrador' OR r.creado_por = ?)";
         $params[] = (int)($_SESSION['usuario_id'] ?? 0);
     }
-    $st = $pdo->prepare("SELECT r.*, u.nombre AS autor FROM formularios_registros r LEFT JOIN usuarios u ON u.id = r.creado_por WHERE r.sector_id = ?$filtroBorradores ORDER BY r.actualizado_en DESC LIMIT 8");
+    $st = $pdo->prepare("SELECT r.*, u.nombre AS autor FROM formularios_registros r LEFT JOIN usuarios u ON u.id = r.creado_por WHERE r.eliminado_lote IS NULL AND r.sector_id = ?$filtroBorradores ORDER BY r.actualizado_en DESC LIMIT 8");
     $st->execute($params);
     $ultimos = $st->fetchAll();
     $cat = formulariosCatalogo();
-    $pend = $pdo->prepare("SELECT COUNT(*) FROM formularios_registros WHERE sector_id = ? AND estado = 'enviado'");
+    $pend = $pdo->prepare("SELECT COUNT(*) FROM formularios_registros WHERE eliminado_lote IS NULL AND sector_id = ? AND estado = 'enviado'");
     $pend->execute([$sid]);
     $pendientes = (int)$pend->fetchColumn();
     $puedeCompletar = puedeCompletarSector($pdo, $sid);

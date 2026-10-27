@@ -1,7 +1,7 @@
 <?php
-require __DIR__ . '/config/db.php';
+require_once __DIR__ . '/config/db.php';
 require __DIR__ . '/config/auth.php';
-if (!empty($_SESSION['usuario_id'])) { header('Location: '.app_url('/php/dashboard.php')); exit; }
+if (!empty($_SESSION['usuario_id']) && validarSesionActual($pdo)) { header('Location: '.app_url('/php/dashboard.php')); exit; }
 $error='';
 // Bloqueo temporal: 5 intentos fallidos en 15 minutos (por correo o por IP)
 const LOGIN_MAX_INTENTOS = 5;
@@ -24,7 +24,8 @@ if ($_SERVER['REQUEST_METHOD']==='POST') {
             $pdo->prepare('DELETE FROM login_intentos WHERE email=?')->execute([$email]);
             session_regenerate_id(true);
             $_SESSION['usuario_id']=(int)$u['id']; $_SESSION['nombre']=$u['nombre']; $_SESSION['email']=$u['email']; $_SESSION['rol']=$u['rol'];
-            if ((int)$u['debe_cambiar_password'] === 1) $_SESSION['debe_cambiar_password'] = true;
+            $_SESSION['credencial_version'] = hash('sha256', $u['password']);
+            $_SESSION['debe_cambiar_password'] = (bool)$u['debe_cambiar_password'];
             $pdo->prepare('UPDATE usuarios SET ultimo_acceso = NOW() WHERE id = ?')->execute([(int)$u['id']]);
             registrarActividad($pdo,'login','Inicio de sesión');
             header('Location: '.app_url('/php/dashboard.php')); exit;

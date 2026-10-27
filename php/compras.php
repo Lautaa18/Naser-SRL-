@@ -2,7 +2,7 @@
 require __DIR__ . '/config/auth.php';
 requireLogin();
 verify_csrf(); // protege todos los formularios POST de esta pagina
-require __DIR__ . '/config/db.php';
+require_once __DIR__ . '/config/db.php';
 require __DIR__ . '/config/layout.php';
 require __DIR__ . '/config/modulo.php';
 require_once __DIR__ . '/config/formularios_catalogo.php';

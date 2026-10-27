@@ -1,7 +1,7 @@
 <?php
 require __DIR__ . '/../config/auth.php';
 requireLogin();
-require __DIR__ . '/../config/db.php';
+require_once __DIR__ . '/../config/db.php';
 require __DIR__ . '/../config/layout.php';
 require_once __DIR__ . '/../config/formularios_catalogo.php';
 require_once __DIR__ . '/../config/storage.php';

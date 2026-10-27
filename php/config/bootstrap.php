@@ -1,8 +1,9 @@
 <?php
 require_once __DIR__ . '/schema_modulos.php';
+require_once __DIR__ . '/mejoras.php';
 
 // Cambiar este numero cada vez que se agregan tablas/columnas en schema_modulos.php
-const NASER_SCHEMA_VERSION = '2026.10.19-1';
+const NASER_SCHEMA_VERSION = '2026.10.27-1';
 
 function hasColumn(PDO $pdo, string $table, string $column): bool
 {
@@ -40,6 +41,12 @@ function naser_bootstrap(PDO $pdo): void
         // primera vez: la tabla todavia no existe
     }
 
+
+    $schemaLock='naser_schema_'.substr(hash('sha256',(string)$pdo->query('SELECT DATABASE()')->fetchColumn()),0,32);
+    $lockSt=$pdo->prepare('SELECT GET_LOCK(?,30)'); $lockSt->execute([$schemaLock]);
+    if((int)$lockSt->fetchColumn()!==1) throw new RuntimeException('Otra actualización del sistema está en curso. Reintentá en unos segundos.');
+    try {
+        try { if($pdo->query("SELECT valor FROM sistema_config WHERE clave='schema_version'")->fetchColumn()===NASER_SCHEMA_VERSION) return; } catch(PDOException $e) { if((int)($e->errorInfo[1]??0)!==1146)throw $e; }
 
     /*
     |--------------------------------------------------------------------------
@@ -298,7 +305,7 @@ function naser_bootstrap(PDO $pdo): void
             try {
                 $pdo->exec($sql);
             } catch (Throwable $e) {
-                // La migración ya puede existir.
+                throw $e;
             }
         }
     }
@@ -321,7 +328,7 @@ function naser_bootstrap(PDO $pdo): void
         ");
 
     } catch (Throwable $e) {
-        // Evita detener el sistema si la estructura ya está actualizada.
+        throw $e;
     }
 
 
@@ -541,11 +548,20 @@ function naser_bootstrap(PDO $pdo): void
 
 
     $adminId = (int)$st->fetchColumn();
+    // Esta columna debe existir antes de insertar el administrador inicial.
+    if (!hasColumn($pdo, 'usuarios', 'debe_cambiar_password')) {
+        $pdo->exec('ALTER TABLE usuarios ADD COLUMN debe_cambiar_password TINYINT(1) NOT NULL DEFAULT 0');
+    }
 
 
-    // La cuenta admin@naser.test solo se crea en desarrollo o si no existe ningun administrador
+    // En producción las credenciales iniciales deben configurarse explícitamente.
+    $adminEmail = app_is_dev() ? 'admin@naser.test' : trim((string)getenv('INITIAL_ADMIN_EMAIL'));
+    $adminPassword = app_is_dev() ? 'Admin123!' : (string)getenv('INITIAL_ADMIN_PASSWORD');
     $hayAdmins = (int)$pdo->query("SELECT COUNT(*) FROM usuarios WHERE rol='admin' AND activo=1")->fetchColumn() > 0;
-    if (!$adminId && (app_is_dev() || !$hayAdmins)) {
+    if ((!$adminId && app_is_dev()) || (!$hayAdmins && !app_is_dev())) {
+        if (!filter_var($adminEmail, FILTER_VALIDATE_EMAIL) || strlen($adminPassword) < 12) {
+            if (!app_is_dev()) throw new RuntimeException('Configurá INITIAL_ADMIN_EMAIL e INITIAL_ADMIN_PASSWORD (mínimo 12 caracteres) para crear el primer administrador.');
+        }
 
         $st = $pdo->prepare("
             INSERT INTO usuarios (
@@ -553,19 +569,21 @@ function naser_bootstrap(PDO $pdo): void
                 email,
                 password,
                 rol,
-                activo
+                activo,
+                debe_cambiar_password
             )
-            VALUES (?, ?, ?, ?, 1)
+            VALUES (?, ?, ?, ?, 1, ?)
         ");
 
         $st->execute([
             'Administrador General',
-            'admin@naser.test',
+            $adminEmail,
             password_hash(
-                'Admin123!',
+                $adminPassword,
                 PASSWORD_DEFAULT
             ),
-            'admin'
+            'admin',
+            app_is_dev() ? 0 : 1
         ]);
 
         $adminId = (int)$pdo->lastInsertId();
@@ -1031,6 +1049,8 @@ function naser_bootstrap(PDO $pdo): void
     // Tablas de RRHH, Finanzas y Ventas (archivos de /sql)
     naser_schema_sql($pdo);
 
+    naser_mejoras_schema($pdo);
+
     // Conservar códigos e historial al cambiar los registros de sector.
     $pdo->exec("UPDATE formularios_registros r
         JOIN sectores s ON s.slug = CASE r.formulario
@@ -1042,4 +1062,5 @@ function naser_bootstrap(PDO $pdo): void
 
     $pdo->prepare("INSERT INTO sistema_config (clave, valor) VALUES ('schema_version', ?) ON DUPLICATE KEY UPDATE valor = VALUES(valor)")
         ->execute([NASER_SCHEMA_VERSION]);
+    } finally { $unlock=$pdo->prepare('SELECT RELEASE_LOCK(?)');$unlock->execute([$schemaLock]); }
 }

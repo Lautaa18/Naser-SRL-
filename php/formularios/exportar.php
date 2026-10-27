@@ -4,11 +4,11 @@ require __DIR__ . '/_init.php';
 
 $slug = (string)($_GET['sector'] ?? '');
 $sector = $slug !== '' ? sectorPorSlug($pdo, $slug) : null;
-if ($slug !== '' && (!$sector || !puedeVerSector($pdo, (int)$sector['id']))) { http_response_code(403); exit('Sin acceso.'); }
-$visiblesIds = array_map(fn($s) => (int)$s['id'], sectoresVisibles($pdo));
+if ($slug !== '' && (!$sector || !puedeDescargarSector($pdo, (int)$sector['id']))) { http_response_code(403); exit('Sin acceso.'); }
+$visiblesIds = array_map(fn($s) => (int)$s['id'], array_filter(sectoresVisibles($pdo),fn($s)=>puedeDescargarSector($pdo,(int)$s['id'])));
 $uid = (int)$_SESSION['usuario_id'];
 
-$where = []; $params = [];
+$where = ['r.eliminado_lote IS NULL']; $params = [];
 if ($sector) { $where[] = 'r.sector_id = ?'; $params[] = (int)$sector['id']; }
 else { $where[] = $visiblesIds ? 'r.sector_id IN (' . implode(',', $visiblesIds) . ')' : '0'; }
 if (($f = (string)($_GET['f'] ?? '')) !== '') { $where[] = 'r.formulario = ?'; $params[] = $f; }

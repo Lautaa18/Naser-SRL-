@@ -4,7 +4,10 @@ require_once __DIR__ . '/notificaciones.php';
 
 function sidebar(PDO $pdo, string $active=''): void {
     $sectores = sectoresVisibles($pdo);
-    $canDocs = puedeGestionarDocumentos($pdo);
+    $canDocs = (bool)sectoresEditables($pdo);
+    $rrhhId = sectorIdPorSlug($pdo, 'rrhh');
+    $puedeConciliar = esAdmin() || ($rrhhId && rolEnSector($pdo, $rrhhId) === 'responsable' && puedeEditarSector($pdo, $rrhhId));
+    $operacionesId = sectorIdPorSlug($pdo, 'operaciones');
     tareasDiarias($pdo); // avisos de vencimientos (una vez por dia)
     $sinLeer = notificacionesSinLeer($pdo, (int)($_SESSION['usuario_id'] ?? 0));
     require_once __DIR__ . '/mensajes.php';
@@ -40,17 +43,20 @@ function sidebar(PDO $pdo, string $active=''): void {
     <?php foreach($sectores as $s): if($s['slug']==='sgi') continue; ?>
       <a class="<?=$active===$s['slug']?'active':''?>" href="<?=app_url('/php/sector.php?sector='.urlencode($s['slug']))?>"><?=h($s['nombre'])?></a>
     <?php endforeach; ?>
-    <a class="<?=$active==='operaciones'?'active':''?>" href="<?=app_url('/php/operaciones.php')?>"><span>⚙</span> Gestión operativa</a>
+    <?php if($operacionesId && puedeVerSector($pdo,$operacionesId)): ?><a class="<?=$active==='operaciones'?'active':''?>" href="<?=app_url('/php/operaciones.php')?>"><span>⚙</span> Gestión operativa</a><?php endif; ?>
     <?php if($canDocs): ?>
       <div class="nav-label">GESTIÓN DOCUMENTAL</div>
       <a class="<?=$active==='documentos'?'active':''?>" href="<?=app_url('/php/admin/documentos.php')?>">Cargar documentos</a>
       <a class="<?=$active==='carpetas'?'active':''?>" href="<?=app_url('/php/admin/carpetas.php')?>">Carpetas y subcarpetas</a>
+      <a class="<?=$active==='papelera'?'active':''?>" href="<?=app_url('/php/admin/papelera.php')?>">Papelera</a>
+      <a class="<?=$active==='auditoria'?'active':''?>" href="<?=app_url('/php/admin/auditoria.php')?>">Historial de cambios</a>
     <?php endif; ?>
+    <?php if($puedeConciliar): ?><a class="<?=$active==='personal_conciliacion'?'active':''?>" href="<?=app_url('/php/admin/personal_conciliacion.php')?>">Revisar fichas de personal</a><?php endif; ?>
     <?php if(esAdmin()): ?>
       <div class="nav-label">SUPER USUARIO</div>
       <a class="<?=$active==='usuarios'?'active':''?>" href="<?=app_url('/php/admin/usuarios.php')?>">Usuarios y permisos</a>
       <a class="<?=$active==='reportes'?'active':''?>" href="<?=app_url('/php/admin/reportes.php')?>">Reportes</a>
-      <a class="<?=$active==='auditoria'?'active':''?>" href="<?=app_url('/php/admin/auditoria.php')?>">Auditoría</a>
+      <a class="<?=$active==='proteccion'?'active':''?>" href="<?=app_url('/php/admin/proteccion.php')?>">Respaldos y alertas</a>
       <a href="<?=app_url('/php/tools/health.php')?>">Diagnóstico</a>
     <?php endif; ?>
   </nav>

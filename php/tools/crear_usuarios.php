@@ -14,7 +14,7 @@
 if (PHP_SAPI !== 'cli') { http_response_code(403); exit("Solo desde la terminal.\n"); }
 
 require __DIR__ . '/../config/auth.php';
-require __DIR__ . '/../config/db.php';
+require_once __DIR__ . '/../config/db.php';
 require_once __DIR__ . '/../config/estructura_naser.php';
 
 $opts = array_slice($argv, 1);

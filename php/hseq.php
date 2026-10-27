@@ -1,7 +1,7 @@
 <?php
 require __DIR__ . '/config/auth.php';
 requireLogin();
-require __DIR__ . '/config/db.php';
+require_once __DIR__ . '/config/db.php';
 require __DIR__ . '/config/layout.php';
 require_once __DIR__ . '/config/formularios_catalogo.php';
 
@@ -152,7 +152,7 @@ $visibilidadBorrador = $puedeGestionar ? '1=1' : '(r.estado <> \'borrador\' OR r
 $paramsInc = array_merge([$sid], $formulariosIncidente);
 $st = $pdo->prepare("SELECT r.id, r.formulario, r.referencia, r.estado, r.datos_json, r.storage_json, r.creado_en, r.enviado_en, r.actualizado_en, u.nombre AS autor
     FROM formularios_registros r LEFT JOIN usuarios u ON u.id=r.creado_por
-    WHERE r.sector_id=? AND r.formulario IN ($placeholdersInc) AND r.estado <> 'borrador'
+    WHERE r.eliminado_lote IS NULL AND r.sector_id=? AND r.formulario IN ($placeholdersInc) AND r.estado <> 'borrador'
     ORDER BY COALESCE(r.enviado_en,r.creado_en) DESC");
 $st->execute($paramsInc);
 $eventosIncidente = [];
@@ -238,23 +238,23 @@ $accidentesConBaja = count(array_filter($accidentes, fn($a) => (int)($a['datos_o
 $paramsAud = array_merge([$sid], $codigosAuditoria, $puedeGestionar ? [] : [$uid]);
 $st = $pdo->prepare("SELECT r.estado, COUNT(*) AS cantidad
     FROM formularios_registros r
-    WHERE r.sector_id=? AND r.formulario IN ($placeholdersAud) AND $visibilidadBorrador
+    WHERE r.eliminado_lote IS NULL AND r.sector_id=? AND r.formulario IN ($placeholdersAud) AND $visibilidadBorrador
       AND r.creado_en >= ? AND r.creado_en < DATE_ADD(?, INTERVAL 1 DAY)
     GROUP BY r.estado");
 $st->execute(array_merge($paramsAud, [$inicioAnio, $finAnio]));
 foreach ($st->fetchAll() as $fila) if (isset($auditoriasEstado[$fila['estado']])) $auditoriasEstado[$fila['estado']] = (int)$fila['cantidad'];
 $st = $pdo->prepare("SELECT r.id, r.formulario, r.referencia, r.estado, r.creado_en, r.enviado_en, r.revisado_en, u.nombre AS autor
     FROM formularios_registros r LEFT JOIN usuarios u ON u.id=r.creado_por
-    WHERE r.sector_id=? AND r.formulario IN ($placeholdersAud) AND $visibilidadBorrador
+    WHERE r.eliminado_lote IS NULL AND r.sector_id=? AND r.formulario IN ($placeholdersAud) AND $visibilidadBorrador
       AND r.creado_en >= ? AND r.creado_en < DATE_ADD(?, INTERVAL 1 DAY)
     ORDER BY r.creado_en DESC LIMIT 100");
 $st->execute(array_merge($paramsAud, [$inicioAnio, $finAnio]));
 $auditorias = $st->fetchAll();
 
-$st = $pdo->prepare('SELECT COUNT(*) FROM formularios_registros WHERE sector_id=? AND formulario IN (' . $placeholdersInc . ') AND estado=\'enviado\'');
+$st = $pdo->prepare('SELECT COUNT(*) FROM formularios_registros WHERE eliminado_lote IS NULL AND sector_id=? AND formulario IN (' . $placeholdersInc . ') AND estado=\'enviado\'');
 $st->execute(array_merge([$sid], $formulariosIncidente));
 $accidentesPendientes = (int)$st->fetchColumn();
-$st = $pdo->prepare('SELECT COUNT(*) FROM formularios_registros WHERE sector_id=? AND formulario IN (' . $placeholdersInc . ') AND estado=\'rechazado\'');
+$st = $pdo->prepare('SELECT COUNT(*) FROM formularios_registros WHERE eliminado_lote IS NULL AND sector_id=? AND formulario IN (' . $placeholdersInc . ') AND estado=\'rechazado\'');
 $st->execute(array_merge([$sid], $formulariosIncidente));
 $accidentesCorregir = (int)$st->fetchColumn();
 $accidentesMes = $accidentesMesActualReal;
@@ -311,6 +311,7 @@ $vencidos = count(array_filter($vencimientos, fn($v) => (int)$v['dias'] < 0));
 $porVencer = count(array_filter($vencimientos, fn($v) => (int)$v['dias'] >= 0));
 
 if (($_GET['exportar'] ?? '') === 'informe') {
+    if (!puedeDescargarSector($pdo,$sid)) { http_response_code(403); exit('Sin permiso de descarga.'); }
     $nombreArchivo = 'informe-hseq-' . $anio . '.csv';
     header('Content-Type: text/csv; charset=UTF-8');
     header('Content-Disposition: attachment; filename="' . $nombreArchivo . '"');

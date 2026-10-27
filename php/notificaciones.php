@@ -2,7 +2,7 @@
 // Notificaciones del usuario (compras, aprobaciones, rechazos y vencimientos)
 require __DIR__ . '/config/auth.php';
 requireLogin();
-require __DIR__ . '/config/db.php';
+require_once __DIR__ . '/config/db.php';
 require __DIR__ . '/config/layout.php';
 verify_csrf();
 $uid = (int)$_SESSION['usuario_id'];

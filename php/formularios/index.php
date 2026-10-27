@@ -13,7 +13,7 @@ $q = trim((string)($_GET['q'] ?? ''));
 $vista = (string)($_GET['vista'] ?? ''); // 'aprobar' | 'mios'
 $uid = (int)$_SESSION['usuario_id'];
 
-$where = []; $params = [];
+$where = ['r.eliminado_lote IS NULL']; $params = [];
 if ($sector) { $where[] = 'r.sector_id = ?'; $params[] = (int)$sector['id']; }
 else { $where[] = $visiblesIds ? 'r.sector_id IN (' . implode(',', $visiblesIds) . ')' : '0'; }
 if ($fFiltro !== '') { $where[] = 'r.formulario = ?'; $params[] = $fFiltro; }

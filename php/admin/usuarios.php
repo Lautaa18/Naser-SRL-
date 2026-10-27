@@ -2,7 +2,7 @@
 // Usuarios y permisos (solo super usuario)
 require __DIR__ . '/../config/auth.php';
 requireAdmin();
-require __DIR__ . '/../config/db.php';
+require_once __DIR__ . '/../config/db.php';
 require __DIR__ . '/../config/layout.php';
 require_once __DIR__ . '/../config/estructura_naser.php';
 verify_csrf();
@@ -24,6 +24,8 @@ function guardarRoles(PDO $pdo, int $uid, array $roles): void {
     foreach (sectoresInfo($pdo) as $s) {
         $r = (string)($roles[(int)$s['id']] ?? '');
         asignarRolSector($pdo, $uid, (int)$s['id'], $r === '' ? null : $r);
+        if ($r !== '') $pdo->prepare('UPDATE usuario_sector SET puede_editar=?,puede_aprobar=?,puede_descargar=? WHERE usuario_id=? AND sector_id=?')
+            ->execute([isset($_POST['capacidades'][$s['id']]['editar'])?1:0, isset($_POST['capacidades'][$s['id']]['aprobar'])?1:0, isset($_POST['capacidades'][$s['id']]['descargar'])?1:0, $uid, $s['id']]);
     }
 }
 function adminsActivos(PDO $pdo): int {
@@ -131,16 +133,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $usuarios = $pdo->query("SELECT * FROM usuarios ORDER BY activo DESC, FIELD(rol,'admin') DESC, nombre")->fetchAll();
 $rolesPorUsuario = [];
 foreach ($pdo->query('SELECT usuario_id, sector_id, rol_sector FROM usuario_sector')->fetchAll() as $r) $rolesPorUsuario[(int)$r['usuario_id']][(int)$r['sector_id']] = $r['rol_sector'];
+$capacidadesPorUsuario=[];
+foreach($pdo->query('SELECT usuario_id,sector_id,puede_editar,puede_aprobar,puede_descargar FROM usuario_sector')->fetchAll() as $r) $capacidadesPorUsuario[(int)$r['usuario_id']][(int)$r['sector_id']]=$r;
 $burbujas = $pdo->query('SELECT * FROM burbujas ORDER BY nombre')->fetchAll();
 $est = estructuraNaser();
 
-function matrizRoles(array $sectores, array $roles, array $ROLES): void { ?>
-  <table class="perm-matrix"><thead><tr><th>Sector</th><th>Rol</th></tr></thead><tbody>
-  <?php foreach ($sectores as $s): $sid = (int)$s['id']; $r = $roles[$sid] ?? ''; ?>
-    <tr><td><?=h($s['nombre'])?><?= (int)$s['restringido'] ? ' <small class="muted">🔒 restringido</small>' : '' ?></td>
-    <td><select name="roles[<?=$sid?>]"><?php foreach ($ROLES as $k => $v): ?><option value="<?=h($k)?>" <?= $r === $k ? 'selected' : '' ?>><?=h($v)?></option><?php endforeach; ?></select></td></tr>
-  <?php endforeach; ?>
-  </tbody></table>
+function matrizRoles(array $sectores, array $roles, array $ROLES, array $capacidades=[]): void { ?>
+  <div class="table-wrap"><table class="perm-matrix"><thead><tr><th>Sector</th><th>Consultar y completar</th><th>Gestionar</th><th>Aprobar</th><th>Descargar</th></tr></thead><tbody>
+  <?php foreach ($sectores as $s): $sid=(int)$s['id']; $r=$roles[$sid]??''; $p=$capacidades[$sid]??['puede_editar'=>0,'puede_aprobar'=>1,'puede_descargar'=>1]; ?>
+    <tr><td><?=h($s['nombre'])?><?=((int)$s['restringido']||in_array($s['slug'],['rrhh','finanzas'],true))?' 🔒':''?></td>
+    <td><select name="roles[<?=$sid?>]" onchange="var r=this.closest('tr');r.querySelector('[data-cap=editar]').checked=this.value==='responsable';r.querySelector('[data-cap=aprobar]').checked=this.value==='responsable';r.querySelector('[data-cap=descargar]').checked=this.value!=='';">
+    <?php foreach($ROLES as $k=>$v):?><option value="<?=h($k)?>" <?=$r===$k?'selected':''?>><?=h($v)?></option><?php endforeach;?></select></td>
+    <?php foreach(['editar'=>'Gestionar','aprobar'=>'Aprobar','descargar'=>'Descargar'] as $cap=>$label):?><td><input style="width:auto" type="checkbox" data-cap="<?=$cap?>" name="capacidades[<?=$sid?>][<?=$cap?>]" aria-label="<?=$label?> <?=h($s['nombre'])?>" <?=!empty($p['puede_'.$cap])?'checked':''?>></td><?php endforeach;?>
+    </tr>
+  <?php endforeach;?></tbody></table></div><p class="muted">Gestionar permite editar datos y documentos. Aprobar requiere además el rol Responsable. RRHH y Finanzas solo permiten consultar a integrantes asignados. Sin asignación no se permite descargar archivos.</p>
 <?php }
 ?><!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Usuarios y permisos | NASER SGI</title><link rel="stylesheet" href="<?=asset('/style.css')?>"></head>
@@ -211,7 +217,7 @@ function matrizRoles(array $sectores, array $roles, array $ROLES): void { ?>
           <div class="form-row"><label>Nombre y apellido<input name="nombre" value="<?=h($u['nombre'])?>" required></label><label>Correo<input type="email" name="email" value="<?=h($u['email'])?>" required></label></div>
           <label style="display:flex;gap:8px;align-items:center"><input type="checkbox" name="super" value="1" style="width:auto" <?= $u['rol'] === 'admin' ? 'checked' : '' ?>> Super usuario</label>
           <label>Nueva contraseña <small class="muted">(dejar vacío para no cambiarla)</small><input type="password" name="password" minlength="8" autocomplete="new-password"></label>
-          <?php matrizRoles($sectores, $roles, $ROLES); ?>
+          <?php matrizRoles($sectores, $roles, $ROLES, $capacidadesPorUsuario[(int)$u['id']]??[]); ?>
           <button class="btn primary">Guardar cambios</button>
         </form>
         <div class="user-actions">

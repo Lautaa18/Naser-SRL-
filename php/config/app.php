@@ -1,4 +1,9 @@
 <?php
+$zonaNaser=(string)(getenv('APP_TIMEZONE')?:'America/Argentina/Buenos_Aires');
+if(!in_array($zonaNaser,DateTimeZone::listIdentifiers(),true))$zonaNaser='America/Argentina/Buenos_Aires';
+date_default_timezone_set($zonaNaser);
+function configurarZonaHorariaDB(PDO $pdo): void { $pdo->prepare('SET time_zone = ?')->execute([date('P')]); }
+
 // ==========================================
 // Entorno: "dev" (desarrollo) o "production"
 // Se define con APP_ENV en el archivo .env
@@ -16,7 +21,7 @@ if (!defined('NASER_ERRORS_CONFIGURED')) {
     error_reporting(E_ALL);
     ini_set('log_errors', '1');
     $logDir = dirname(__DIR__, 2) . '/logs';
-    if (is_dir($logDir) && is_writable($logDir)) {
+    if (is_dir($logDir) && @file_put_contents($logDir . '/php-errors.log', '', FILE_APPEND | LOCK_EX) !== false) {
         ini_set('error_log', $logDir . '/php-errors.log');
     }
     if (app_is_dev()) {

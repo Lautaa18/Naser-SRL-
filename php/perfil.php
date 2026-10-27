@@ -2,7 +2,7 @@
 // Mi perfil: cambiar contraseña, preferencias de mail y ver mis permisos
 require __DIR__ . '/config/auth.php';
 requireLogin();
-require __DIR__ . '/config/db.php';
+require_once __DIR__ . '/config/db.php';
 require __DIR__ . '/config/layout.php';
 verify_csrf();
 $uid = (int)$_SESSION['usuario_id'];
@@ -24,7 +24,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         elseif ($nueva !== $repetir) $err = 'Las contraseñas nuevas no coinciden.';
         elseif (password_verify($nueva, $hash)) $err = 'La nueva contraseña tiene que ser distinta de la actual.';
         else {
-            $pdo->prepare('UPDATE usuarios SET password = ?, debe_cambiar_password = 0 WHERE id = ?')->execute([password_hash($nueva, PASSWORD_DEFAULT), $uid]);
+            $nuevoHash = password_hash($nueva, PASSWORD_DEFAULT);
+            $pdo->prepare('UPDATE usuarios SET password = ?, debe_cambiar_password = 0 WHERE id = ?')->execute([$nuevoHash, $uid]);
+            $_SESSION['credencial_version'] = hash('sha256', $nuevoHash);
             unset($_SESSION['debe_cambiar_password']);
             session_regenerate_id(true);
             registrarActividad($pdo, 'cambio_password', 'Cambió su contraseña');

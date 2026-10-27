@@ -9,7 +9,7 @@
  */
 require __DIR__ . '/config/auth.php';
 requireLogin();
-require __DIR__ . '/config/db.php';
+require_once __DIR__ . '/config/db.php';
 
 function descargaDenegada(int $code, string $msg): never {
     http_response_code($code);
@@ -32,24 +32,18 @@ if ($base === '.htaccess' || preg_match('/\.(php|phtml|phar|cgi|pl|py|sh)$/i', $
     descargaDenegada(404, 'Archivo no encontrado.');
 }
 
-// ¿A que sector pertenece? Primero por la carpeta (uploads/<sector>/...), si no por la tabla documentos.
-$sectorId = null;
-$slugs = [];
-foreach (sectoresInfo($pdo) as $id => $s) $slugs[strtolower((string)$s['slug'])] = (int)$id;
-$primero = strtolower(explode('/', $rel)[0]);
-if (str_contains($rel, '/') && isset($slugs[$primero])) {
-    $sectorId = $slugs[$primero];
-} else {
-    $st = $pdo->prepare('SELECT sector_id FROM documentos WHERE archivo = ? OR archivo = ? LIMIT 1');
-    $st->execute([$rel, $base]);
-    $v = $st->fetchColumn();
-    if ($v !== false && $v !== null) $sectorId = (int)$v;
-}
-
-if ($sectorId === null) {
-    if (!esAdmin()) descargaDenegada(403, 'No tenés permiso para ver este archivo.');
-} elseif (!puedeVerSector($pdo, $sectorId)) {   // SGI siempre visible para usuarios logueados
-    descargaDenegada(403, 'No tenés permiso para ver este archivo.');
+// La referencia activa manda sobre la ruta: un archivo en papelera no se entrega.
+$st=$pdo->prepare('SELECT d.archivo,d.sector_id,d.activo,d.eliminado_lote FROM documentos d WHERE d.archivo IS NOT NULL UNION ALL SELECT v.archivo,d.sector_id,d.activo,d.eliminado_lote FROM documento_versiones v JOIN documentos d ON d.id=v.documento_id');
+$st->execute(); $referencias=[];
+while($r=$st->fetch()) if(realpath($root.'/'.$r['archivo'])===$path) $referencias[]=$r;
+$autorizado=false;
+foreach($referencias as $r) if ((int)$r['activo'] && $r['eliminado_lote']===null && puedeDescargarSector($pdo,(int)$r['sector_id'])) $autorizado=true;
+if ($referencias && !$autorizado) descargaDenegada(403,'El archivo está en papelera o no tenés permiso de descarga.');
+if (!$referencias) {
+    $sectorId=null;
+    $primero=strtolower(explode('/',$rel)[0]);
+    foreach(sectoresInfo($pdo) as $sid=>$sector) if(str_contains($rel,'/') && strtolower($sector['slug'])===$primero) $sectorId=(int)$sid;
+    if ($sectorId===null ? !esAdmin() : !puedeDescargarSector($pdo,$sectorId)) descargaDenegada(403,'No tenés permiso para descargar este archivo.');
 }
 
 $mimes = [

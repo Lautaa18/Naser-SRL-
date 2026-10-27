@@ -15,6 +15,7 @@ if (!$form) { http_response_code(404); exit('Formulario no encontrado.'); }
 $sector = sectorPorSlug($pdo, $form['sector']);
 if (!$sector || !puedeVerSector($pdo, (int)$sector['id'])) { http_response_code(403); exit('No tenés acceso a este sector.'); }
 $sid = (int)$sector['id'];
+$puedeDescargar = puedeDescargarSector($pdo, $sid);
 
 if ($reg && $reg['estado'] === 'borrador' && (int)$reg['creado_por'] !== (int)$_SESSION['usuario_id'] && !puedeEditarSector($pdo, (int)$reg['sector_id'])) {
     http_response_code(403); exit('Este formulario es un borrador de otra persona.');
@@ -34,10 +35,11 @@ if ($reg) {
 }
 $srcIframe = app_url('/php/formularios/render.php') . ($reg ? '?id=' . $id : '?f=' . urlencode($form['codigo']));
 $hub = app_url('/php/formularios/index.php') . '?sector=' . urlencode($sector['slug']);
-$accionesHist = ['creado' => 'Creó el formulario', 'guardado' => 'Guardó cambios', 'enviado' => 'Envió para aprobación', 'aprobado' => 'Aprobó', 'rechazado' => 'Rechazó', 'reabierto' => 'Reabrió para edición'];
+$accionesHist = ['creado' => 'Creó el formulario', 'guardado' => 'Guardó cambios', 'enviado' => 'Envió para aprobación', 'aprobado' => 'Aprobó', 'rechazado' => 'Rechazó', 'reabierto' => 'Reabrió para edición', 'papelera' => 'Envió a la papelera'];
 ?><!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title><?=h($form['titulo'])?> | NASER SGI</title>
 <link rel="stylesheet" href="<?=asset('/style.css')?>">
+<style>.fx-save-status{font-size:13px;color:#4b6354}.fx-save-status.pending,.fx-save-status.saving{color:#8b5b12}.fx-save-status.error{color:#a13324}.fx-save-status.saved{color:#16643b}.fx-conflict[hidden]{display:none}.fx-conflict h2{font-size:18px;margin-top:0}.fx-transition .fx-frame-wrap{position:relative}.fx-transition .fx-frame-wrap:after{content:'Procesando…';position:absolute;inset:0;background:#ffffffaa;display:flex;align-items:flex-start;justify-content:center;padding-top:50px;font-weight:700;z-index:5}</style>
 </head><body><div class="app"><?php sidebar($pdo, $sector['slug']); ?><main class="content">
 
 <nav class="breadcrumbs"><a href="<?=h($hub)?>">Formularios · <?=h($sector['nombre'])?></a><span>›</span><span><?=h($form['titulo'])?></span></nav>
@@ -52,7 +54,8 @@ $accionesHist = ['creado' => 'Creó el formulario', 'guardado' => 'Guardó cambi
         <span>Cargado por <strong><?=h($reg['autor'] ?? '—')?></strong> el <?=h(date('d/m/Y H:i', strtotime($reg['creado_en'])))?></span>
         <?php if ($reg['revisor']): ?><span><?= $estado === 'aprobado' ? 'Aprobado' : 'Revisado' ?> por <strong><?=h($reg['revisor'])?></strong> el <?=h(date('d/m/Y H:i', strtotime($reg['revisado_en'])))?></span><?php endif; ?>
       <?php endif; ?>
-      <span id="fxDirty" class="fx-dirty" hidden>● Cambios sin guardar</span>
+      <span id="fxDirty" class="fx-dirty" hidden>● Cambios pendientes</span>
+      <span id="fxSaveStatus" class="fx-save-status" role="status" aria-live="polite"></span>
     </div>
   </div>
   <label class="fx-ref">Referencia <small>(trabajador, proveedor, pozo…)</small>
@@ -81,13 +84,15 @@ $accionesHist = ['creado' => 'Creó el formulario', 'guardado' => 'Guardó cambi
     <?php if ($perm['reabrir']): ?><button class="btn secondary" data-accion="reabrir">↺ Reabrir para edición</button><?php endif; ?>
   </div>
   <div class="fx-toolbar-side">
-    <button class="btn secondary" data-accion="imprimir">🖨 Imprimir / PDF</button>
+    <?php if ($puedeDescargar): ?><button class="btn secondary" data-accion="imprimir">🖨 Imprimir / PDF</button><?php endif; ?>
     <?php if ($reg && puedeCompletarSector($pdo, $sid)): ?><button class="btn secondary" data-accion="duplicar">⧉ Duplicar</button><?php endif; ?>
     <?php if ($perm['eliminar']): ?><button class="btn danger" data-accion="eliminar">🗑 Eliminar</button><?php endif; ?>
   </div>
 </div>
 <div id="fxMsg" class="fx-msg" role="status" aria-live="polite"></div>
 
+<section id="fxConflict" class="alert error fx-conflict" hidden aria-labelledby="fxConflictTitulo"><h2 id="fxConflictTitulo">Hay una versión más reciente</h2><p>Tus cambios siguen en esta pantalla. Podés conservarlos en un borrador separado, sin reemplazar la versión del servidor.</p><div class="top-actions"><button type="button" id="fxGuardarCopia" class="btn primary">Guardar mis cambios como copia</button><button type="button" id="fxAbrirActual" class="btn secondary">Abrir versión actual</button></div></section>
+<section id="fxSession" class="alert error fx-conflict" hidden aria-labelledby="fxSessionTitulo"><h2 id="fxSessionTitulo">El guardado está detenido</h2><p>Revisá tu sesión y tus permisos. Tus cambios siguen en esta pantalla. Si necesitás ingresar de nuevo o cambiar la contraseña, hacelo en otra pestaña y después reanudá el guardado con la misma cuenta.</p><div class="top-actions"><a id="fxSessionLink" class="btn secondary" href="<?=h(app_url('/php/login.php'))?>" target="_blank" rel="noopener">Revisar mi sesión en otra pestaña</a><button type="button" id="fxReanudar" class="btn primary">Reanudar guardado</button><button type="button" id="fxDescargarBorrador" class="btn secondary">Descargar mis cambios</button></div><small>La descarga contiene los datos de este formulario.</small></section>
 <div class="fx-frame-wrap"><iframe id="fxFrame" src="<?=h($srcIframe)?>" title="<?=h($form['titulo'])?>"></iframe></div>
 
 <?php if ($historial): ?>
@@ -112,121 +117,7 @@ $accionesHist = ['creado' => 'Creó el formulario', 'guardado' => 'Guardó cambi
 
 </main></div>
 <script>
-(function(){
-  var API = <?=json_encode(app_url('/php/formularios/api.php'))?>;
-  var CSRF = <?=json_encode(csrf_token())?>;
-  var FORM = <?=json_encode($form['codigo'])?>;
-  var id = <?=$id ?: 'null'?>;
-  var puedeEditar = <?=$perm['editar'] ? 'true' : 'false'?>;
-  var frame = document.getElementById('fxFrame');
-  var msg = document.getElementById('fxMsg');
-  var dirty = document.getElementById('fxDirty');
-  var refInput = document.getElementById('fxReferencia');
-  var ocupado = false, reqs = {}, reqN = 0, revision = 0;
-
-  function aviso(texto, tipo){ msg.textContent = texto; msg.className = 'fx-msg ' + (tipo || 'ok'); if (tipo !== 'err') setTimeout(function(){ if (msg.textContent === texto) msg.className = 'fx-msg'; }, 5000); }
-
-  window.addEventListener('message', function(e){
-    if (e.origin !== window.location.origin || e.source !== frame.contentWindow || !e.data) return;
-    var d = e.data;
-    if (d.type === 'naser:height' && Number.isFinite(d.height)) frame.style.height = Math.max(300, d.height + 16) + 'px';
-    else if (d.type === 'naser:dirty' && puedeEditar) { revision++; dirty.hidden = false; }
-    else if (d.type === 'naser:collected' && reqs[d.reqId]) { reqs[d.reqId](d); delete reqs[d.reqId]; }
-    else if (d.type === 'naser:save-request' && puedeEditar) accion('guardar');
-    else if (d.type === 'naser:submit-request' && puedeEditar) accion('enviar');
-    else if (d.type === 'naser:new-request' && puedeEditar && !ocupado) {
-      if (dirty.hidden || confirm('¿Comenzar un formulario nuevo? Los cambios sin guardar del actual se perderán.')) {
-        dirty.hidden = true;
-        window.location.href = <?=json_encode(app_url('/php/formularios/llenar.php'))?> + '?f=' + encodeURIComponent(FORM);
-      }
-    }
-  });
-  refInput.addEventListener('input', function(){ if (puedeEditar) { revision++; dirty.hidden = false; } });
-  window.addEventListener('beforeunload', function(e){ if (!dirty.hidden) { e.preventDefault(); e.returnValue = ''; } });
-
-  function recolectar(validar){
-    return new Promise(function(ok, mal){
-      var n = ++reqN; reqs[n] = ok;
-      frame.contentWindow.postMessage({ type: 'naser:collect', reqId: n, validate: !!validar }, window.location.origin);
-      setTimeout(function(){ if (reqs[n]) { delete reqs[n]; mal(new Error('El formulario no respondió. Recargá la página.')); } }, 5000);
-    });
-  }
-
-  var dlg = document.getElementById('fxDialog');
-  function pedirComentario(titulo, texto, obligatorio){
-    return new Promise(function(ok){
-      document.getElementById('fxDialogTitulo').textContent = titulo;
-      document.getElementById('fxDialogTexto').textContent = texto || '';
-      var ta = document.getElementById('fxDialogComentario'); ta.value = ''; ta.required = !!obligatorio;
-      dlg.returnValue = '';
-      dlg.onclose = function(){ ok(dlg.returnValue === 'ok' ? ta.value.trim() : null); };
-      dlg.showModal(); ta.focus();
-    });
-  }
-
-  function enviarApi(payload){
-    payload.id = id; payload.formulario = FORM;
-    return fetch(API, { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': CSRF }, body: JSON.stringify(payload), credentials: 'same-origin' })
-      .then(function(r){ return r.json().catch(function(){ throw new Error('Error del servidor (' + r.status + ').'); }); })
-      .then(function(j){ if (!j.ok) throw new Error(j.error || 'No se pudo completar la acción.'); return j; });
-  }
-
-  var guardarPendiente = false;
-  async function accion(nombre){
-    if (ocupado) { if (nombre === 'guardar') guardarPendiente = true; return; }
-    if (nombre === 'imprimir') { frame.contentWindow.postMessage({ type: 'naser:print' }, window.location.origin); return; }
-    var payload = { accion: nombre };
-    try {
-      if (nombre === 'enviar' && !confirm('¿Enviar el formulario al responsable del área para su aprobación? Mientras esté pendiente no se podrá modificar.')) return;
-      if (nombre === 'aprobar') { var c = await pedirComentario('Aprobar formulario', 'Podés dejar un comentario (opcional).', false); if (c === null) return; payload.comentario = c; }
-      if (nombre === 'rechazar') { var c2 = await pedirComentario('Rechazar formulario', 'Indicá qué hay que corregir. Se le avisará a quien lo cargó.', true); if (c2 === null) return; if (!c2) { aviso('Escribí el motivo del rechazo.', 'err'); return; } payload.comentario = c2; }
-      if (nombre === 'reabrir' && !confirm('¿Reabrir el formulario? Vuelve a borrador y se puede modificar.')) return;
-      if (nombre === 'eliminar' && !confirm('¿Eliminar este formulario? No se puede deshacer.')) return;
-      ocupado = true; document.body.classList.add('fx-busy');
-      var revisionGuardada = revision;
-      if (nombre === 'guardar' || nombre === 'enviar') {
-        var d = await recolectar(nombre === 'enviar');
-        if (d.valid === false) { aviso('Completá los campos obligatorios y corregí los datos indicados antes de enviar.', 'err'); return; }
-        payload.datos = d.fields; payload.storage = d.storage;
-        if (!refInput.value.trim() && d.sugerencia) refInput.value = d.sugerencia;
-        payload.referencia = refInput.value.trim();
-      }
-      var j = await enviarApi(payload);
-      dirty.hidden = revision === revisionGuardada;
-      if (j.redirect) { window.location.href = j.redirect; return; }
-      var nuevo = !id; id = j.id;
-      if (nombre === 'guardar') {
-        history.replaceState(null, '', location.pathname + '?id=' + id);
-        var estadoEl = document.getElementById('fxEstado');
-        estadoEl.textContent = j.estado_label; estadoEl.className = 'fx-estado fx-' + j.estado;
-        if (nuevo) {
-          var numero = document.createElement('small'); numero.textContent = ' #' + id;
-          document.querySelector('.fx-head h1').appendChild(numero);
-          ['duplicar', 'eliminar'].forEach(function(a){
-            if (a === 'eliminar' && !j.permisos.eliminar) return;
-            var btn = document.createElement('button'); btn.type = 'button';
-            btn.className = 'btn ' + (a === 'eliminar' ? 'danger' : 'secondary');
-            btn.dataset.accion = a; btn.textContent = a === 'eliminar' ? 'Eliminar' : 'Duplicar';
-            document.querySelector('.fx-toolbar-side').appendChild(btn);
-          });
-        }
-        aviso('✔ ' + j.mensaje); return;
-      }
-      aviso('✔ ' + j.mensaje);
-      setTimeout(function(){ window.location.href = <?=json_encode(app_url('/php/formularios/llenar.php'))?> + '?id=' + id + '&ok=' + encodeURIComponent(j.mensaje); }, nuevo && nombre === 'guardar' ? 200 : 600);
-    } catch (err) {
-      aviso(err.message, 'err');
-    } finally {
-      ocupado = false; document.body.classList.remove('fx-busy');
-      if (guardarPendiente) { guardarPendiente = false; setTimeout(function(){ accion('guardar'); }, 50); }
-    }
-  }
-
-  document.getElementById('fxToolbar').addEventListener('click', function(e){
-    var b = e.target.closest('[data-accion]'); if (b) accion(b.getAttribute('data-accion'));
-  });
-  var params = new URLSearchParams(location.search);
-  if (params.get('ok')) { aviso('✔ ' + params.get('ok')); history.replaceState(null, '', location.pathname + '?id=' + id); }
-})();
+window.__NASER_EDITOR__ = <?=json_encode(['api'=>app_url('/php/formularios/api.php'),'csrf'=>csrf_token(),'formulario'=>$form['codigo'],'id'=>$id?:null,'revision'=>(int)($reg['revision']??0),'clientToken'=>bin2hex(random_bytes(20)),'editar'=>(bool)$perm['editar'],'descargar'=>$puedeDescargar,'usuarioId'=>(int)$_SESSION['usuario_id'],'editorUrl'=>app_url('/php/formularios/llenar.php')],JSON_HEX_TAG|JSON_HEX_AMP|JSON_HEX_APOS|JSON_HEX_QUOT|JSON_UNESCAPED_UNICODE)?>;
 </script>
+<script src="<?=h(asset('/js/naser-autosave.js'))?>"></script>
 </body></html>
