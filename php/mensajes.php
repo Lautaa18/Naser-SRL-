@@ -14,6 +14,7 @@ $puedoComoSector = esAdmin() ? array_keys($sectores) : $mios;   // desde que sec
 $pesoRol = ['responsable' => 0, 'operador' => 1, 'observador' => 2];
 $misRoles = misRolesSector($pdo);
 usort($puedoComoSector, fn($x, $y) => ($pesoRol[$misRoles[$x] ?? ''] ?? 3) <=> ($pesoRol[$misRoles[$y] ?? ''] ?? 3));
+$deSector = (int)($puedoComoSector[0] ?? 0);   // los mensajes son siempre de persona a persona; el sector propio solo se muestra como firma
 $msg = $_SESSION['flash_msg_mensajes'] ?? ''; $err = '';
 unset($_SESSION['flash_msg_mensajes']);
 
@@ -81,13 +82,13 @@ function personasDestino(PDO $pdo, int $uid): array {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         $a = $_POST['accion'] ?? '';
-        $de = (int)($_POST['de_sector'] ?? 0);
+        $de = $deSector;
         $cuerpo = trim((string)($_POST['cuerpo'] ?? ''));
-        if (!in_array($de, $puedoComoSector, true)) throw new RuntimeException('Elegí desde qué sector escribís.');
+        if (!$de) throw new RuntimeException('Todavía no tenés un sector asignado, por eso no podés enviar mensajes. Pedile al administrador que te asigne uno.');
         if ($cuerpo === '' || mb_strlen($cuerpo) > 5000) throw new RuntimeException('Escribí el mensaje (hasta 5000 caracteres).');
 
         if ($a === 'enviar') {
-            $para = (string)($_POST['para'] ?? '');      // "u:ID" = una persona, "s:ID" = un sector entero
+            $para = (string)($_POST['para'] ?? '');      // "u:ID" = una persona (los mensajes a un sector entero ya no existen)
             $asunto = trim((string)($_POST['asunto'] ?? ''));
             if ($asunto === '' || mb_strlen($asunto) > 150) throw new RuntimeException('Escribí un asunto (hasta 150 caracteres).');
             if (preg_match('/^u:(\d+)$/', $para, $mm)) {
@@ -95,11 +96,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if (!$persona) throw new RuntimeException('Elegí a quién le escribís (esa persona no está disponible).');
                 $id = enviarMensaje($pdo, $uid, $de, null, (int)$persona['id'], $asunto, $cuerpo, null);
                 $_SESSION['flash_msg_mensajes'] = 'Mensaje enviado a ' . $persona['nombre'] . '.';
-            } elseif (preg_match('/^s:(\d+)$/', $para, $mm) && isset($sectores[(int)$mm[1]])) {
-                $id = enviarMensaje($pdo, $uid, $de, (int)$mm[1], null, $asunto, $cuerpo, null);
-                $_SESSION['flash_msg_mensajes'] = 'Mensaje enviado al sector ' . $sectores[(int)$mm[1]]['nombre'] . '.';
             } else {
-                throw new RuntimeException('Elegí a quién le escribís: una persona o un sector.');
+                throw new RuntimeException('Elegí a quién le escribís.');
             }
             header('Location: ' . app_url('/php/mensajes.php?ver=' . $id)); exit;
         }
@@ -107,18 +105,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $raiz = (int)($_POST['raiz'] ?? 0);
             $hilo = hiloDe($pdo, $raiz);
             if (!$hilo || (int)$hilo[0]['id'] !== $raiz || $hilo[0]['respuesta_a'] !== null || !puedeVerHilo($hilo, $uid, $mios)) throw new RuntimeException('Conversación no encontrada.');
+            if (!esHiloPrivado($hilo)) throw new RuntimeException('Este es un mensaje viejo enviado a un sector y ya no admite respuestas. Escribile a la persona desde Nuevo mensaje.');
             if (!puedeResponder($hilo, $uid)) throw new RuntimeException('No podés responder un mensaje que enviaste vos: tiene que contestar otra persona primero.');
             $ult = end($hilo);
-            if (esHiloPrivado($hilo)) {
-                // Conversacion entre dos personas: la respuesta va a la otra persona
-                $otro = (int)$ult['de_usuario_id'] === $uid ? (int)$ult['para_usuario_id'] : (int)$ult['de_usuario_id'];
-                if (!destinatarioValido($pdo, $uid, $otro)) throw new RuntimeException('Esa persona ya no está disponible para recibir mensajes.');
-                enviarMensaje($pdo, $uid, $de, null, $otro, 'Re: ' . $hilo[0]['asunto'], $cuerpo, $raiz);
-            } else {
-                // Si escribo desde el sector que recibio el ultimo mensaje, contesto al que lo envio; si no, va al sector que lo recibio
-                $para = ($de === (int)$ult['para_sector_id']) ? (int)$ult['de_sector_id'] : (int)$ult['para_sector_id'];
-                enviarMensaje($pdo, $uid, $de, $para, null, 'Re: ' . $hilo[0]['asunto'], $cuerpo, $raiz);
-            }
+            // Conversacion entre dos personas: la respuesta va a la otra persona
+            $otro = (int)$ult['de_usuario_id'] === $uid ? (int)$ult['para_usuario_id'] : (int)$ult['de_usuario_id'];
+            if (!destinatarioValido($pdo, $uid, $otro)) throw new RuntimeException('Esa persona ya no está disponible para recibir mensajes.');
+            enviarMensaje($pdo, $uid, $de, null, $otro, 'Re: ' . $hilo[0]['asunto'], $cuerpo, $raiz);
             $_SESSION['flash_msg_mensajes'] = 'Respuesta enviada.';
             header('Location: ' . app_url('/php/mensajes.php?ver=' . $raiz)); exit;
         }
@@ -172,7 +165,7 @@ function fechaMsg(string $f): string { return date('d/m/Y H:i', strtotime($f)); 
 <body><div class="app"><?php sidebar($pdo, 'mensajes'); ?>
 <main class="content">
 <header class="section-top"><div><p class="eyebrow">COMUNICACIÓN INTERNA</p><h1>Mensajes</h1>
-<p>Escribile a una persona (solo la ven ustedes dos) o a un sector entero (le llega a todos sus integrantes). Las respuestas quedan en la misma conversación.</p></div>
+<p>Escribile a una persona: solo la ven ustedes dos, ni siquiera el super usuario. Las respuestas quedan en la misma conversación.</p></div>
 <?php if ($hilo): ?><a class="btn secondary" href="<?= app_url('/php/mensajes.php') ?>">Volver a la bandeja</a><?php endif; ?></header>
 <?php if ($msg): ?><div class="alert success"><?= h($msg) ?></div><?php endif; ?>
 <?php if ($err): ?><div class="alert error"><?= h($err) ?></div><?php endif; ?>
@@ -185,15 +178,14 @@ function fechaMsg(string $f): string { return date('d/m/Y H:i', strtotime($f)); 
       <p style="margin:8px 0 0"><?= nl2br(h($m['cuerpo'])) ?></p>
     </div>
   <?php endforeach; ?></section>
-  <?php if ($puedoComoSector && !puedeResponder($hilo, $uid)): ?>
+  <?php if ($puedoComoSector && !esHiloPrivado($hilo)): ?>
+  <section class="form-panel"><p class="muted">Este mensaje se envió a un sector antes de que los mensajes pasaran a ser privados, y ya no admite respuestas. Para contestar, escribile a la persona desde Nuevo mensaje.</p></section>
+  <?php elseif ($puedoComoSector && !puedeResponder($hilo, $uid)): ?>
   <section class="form-panel"><p class="muted">Enviaste el último mensaje de esta conversación. Cuando otra persona responda, vas a poder contestarle desde acá.</p></section>
   <?php elseif ($puedoComoSector): ?>
   <section class="form-panel"><h2>Responder</h2>
   <form method="post" class="form-grid"><?= csrf_field() ?>
     <input type="hidden" name="accion" value="responder"><input type="hidden" name="raiz" value="<?= (int)$hilo[0]['id'] ?>">
-    <?php $ult = end($hilo); $porDefecto = in_array((int)$ult['para_sector_id'], $puedoComoSector, true) ? (int)$ult['para_sector_id'] : (int)$ult['de_sector_id'];
-          if (!in_array($porDefecto, $puedoComoSector, true)) $porDefecto = $puedoComoSector[0]; ?>
-    <label>Respondo desde<select name="de_sector"><?php foreach ($puedoComoSector as $sid): ?><option value="<?= $sid ?>" <?= $sid === $porDefecto ? 'selected' : '' ?>><?= h($sectores[$sid]['nombre']) ?></option><?php endforeach; ?></select></label>
     <label>Mensaje<textarea name="cuerpo" rows="4" maxlength="5000" required></textarea></label>
     <button class="btn primary">Enviar respuesta</button>
   </form></section>
@@ -203,13 +195,9 @@ function fechaMsg(string $f): string { return date('d/m/Y H:i', strtotime($f)); 
   <?php if (!$puedoComoSector): ?><p class="muted">Todavía no tenés un sector asignado, por eso no podés enviar mensajes. Pedile al administrador que te asigne uno.</p>
   <?php else: ?>
   <form method="post" class="form-grid"><?= csrf_field() ?><input type="hidden" name="accion" value="enviar">
-    <div class="form-row">
-      <label>Desde<select name="de_sector"><?php foreach ($puedoComoSector as $sid): ?><option value="<?= $sid ?>"><?= h($sectores[$sid]['nombre']) ?></option><?php endforeach; ?></select></label>
-      <label>Para<select name="para" required><option value="">Elegí una persona o un sector…</option>
-        <optgroup label="Una persona"><?php foreach (personasDestino($pdo, $uid) as $p): ?><option value="u:<?= (int)$p['id'] ?>"><?= h($p['nombre']) ?><?= $p['sectores'] ? ' — ' . h($p['sectores']) : '' ?></option><?php endforeach; ?></optgroup>
-        <optgroup label="Un sector entero (le llega a todos)"><?php foreach ($sectores as $sid => $s): ?><option value="s:<?= (int)$sid ?>"><?= h($s['nombre']) ?></option><?php endforeach; ?></optgroup>
-      </select></label>
-    </div>
+    <label>Para<select name="para" required><option value="">Elegí una persona…</option>
+      <?php foreach (personasDestino($pdo, $uid) as $p): ?><option value="u:<?= (int)$p['id'] ?>"><?= h($p['nombre']) ?><?= $p['sectores'] ? ' — ' . h($p['sectores']) : '' ?></option><?php endforeach; ?>
+    </select></label>
     <label>Asunto<input name="asunto" maxlength="150" required></label>
     <label>Mensaje<textarea name="cuerpo" rows="4" maxlength="5000" required></textarea></label>
     <button class="btn primary">Enviar mensaje</button>

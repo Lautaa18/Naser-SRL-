@@ -16,7 +16,9 @@ function cargarModulo(PDO $pdo, string $slug): array
     if (!$sector) { http_response_code(404); exit('Sector no encontrado.'); }
     $sid = (int)$sector['id'];
     if (!puedeVerSector($pdo, $sid)) { http_response_code(403); exit('No tenés acceso a este sector.'); }
-    return [$sector, $sid, puedeEditarSector($pdo, $sid)];
+    // La gestion de cada sector es solo para sus responsables (y el super usuario).
+    if (!puedeEditarSector($pdo, $sid)) { http_response_code(403); exit('La gestión de este sector es solo para sus responsables.'); }
+    return [$sector, $sid, true];
 }
 
 /** Registra una accion en la auditoria (tabla actividad). */

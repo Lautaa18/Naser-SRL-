@@ -88,11 +88,21 @@ function esResponsableEnBurbuja(PDO $pdo, int $sectorId): bool {
     }
     return false;
 }
+/** Operador "puro": tiene rol de operador y no es responsable de ningun sector (ni super usuario). */
+function esSoloOperador(PDO $pdo): bool {
+    if (esAdmin()) return false;
+    $roles = array_values(misRolesSector($pdo));
+    return in_array('operador', $roles, true) && !in_array('responsable', $roles, true);
+}
+/** Unicos sectores que ve un operador (ademas del SGI). */
+const SECTORES_DE_OPERADOR = ['operaciones', 'mantenimiento', 'hseq'];
+
 function puedeVerSector(PDO $pdo, int $sectorId): bool {
     if (esAdmin()) return true;
     $s = sectoresInfo($pdo)[$sectorId] ?? null;
     if (!$s) return false;
     if ($s['slug'] === 'sgi') return true;
+    if (esSoloOperador($pdo)) return in_array($s['slug'], SECTORES_DE_OPERADOR, true);
     if ((int)$s['restringido']) return isset(misRolesSector($pdo)[$sectorId]);
     return true;
 }
