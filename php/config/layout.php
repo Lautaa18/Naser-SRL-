@@ -51,13 +51,11 @@ function sidebar(PDO $pdo, string $active=''): void {
       <a class="<?=$active==='papelera'?'active':''?>" href="<?=app_url('/php/admin/papelera.php')?>">Papelera</a>
       <a class="<?=$active==='auditoria'?'active':''?>" href="<?=app_url('/php/admin/auditoria.php')?>">Historial de cambios</a>
     <?php endif; ?>
-    <?php if($puedeConciliar): ?><a class="<?=$active==='personal_conciliacion'?'active':''?>" href="<?=app_url('/php/admin/personal_conciliacion.php')?>">Revisar fichas de personal</a><?php endif; ?>
     <?php if(esAdmin()): ?>
       <div class="nav-label">SUPER USUARIO</div>
       <a class="<?=$active==='usuarios'?'active':''?>" href="<?=app_url('/php/admin/usuarios.php')?>">Usuarios y permisos</a>
       <a class="<?=$active==='reportes'?'active':''?>" href="<?=app_url('/php/admin/reportes.php')?>">Reportes</a>
       <a class="<?=$active==='proteccion'?'active':''?>" href="<?=app_url('/php/admin/proteccion.php')?>">Respaldos y alertas</a>
-      <a href="<?=app_url('/php/tools/health.php')?>">Diagnóstico</a>
     <?php endif; ?>
   </nav>
   <div class="sidebar-user">

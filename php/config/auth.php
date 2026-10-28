@@ -195,6 +195,8 @@ function permisosSectorActuales(PDO $pdo): array {
 function puedeDescargarSector(PDO $pdo, int $sid): bool {
     if (esAdmin()) return true;
     if (!puedeVerSector($pdo,$sid)) return false;
+    // La documentación del SGI la puede ver y abrir cualquier usuario con sesión iniciada.
+    if ((sectoresInfo($pdo)[$sid]['slug'] ?? '') === 'sgi') return true;
     $p=permisosSectorActuales($pdo);
     return isset($p[$sid]) && (bool)$p[$sid]['puede_descargar'];
 }
