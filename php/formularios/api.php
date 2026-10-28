@@ -128,6 +128,12 @@ try{
    $pdo->prepare("UPDATE formularios_registros SET estado='borrador',revisado_por=NULL,revisado_en=NULL,comentario_revision=NULL,actualizado_por=?,revision=revision+1 WHERE id=?")->execute([$uid,$id]);historialFormulario($pdo,$id,'reabierto',$comentario?:null);
   }elseif($accion==='eliminar'){
    if(!$perm['eliminar'])fallar('No tenés permiso para eliminar este formulario.',403);
+   if($reg['formulario']==='compras-pedido-materiales'){
+    // El registro de origen ya está bloqueado: la vinculación desde Compras usa el mismo bloqueo.
+    $st=$pdo->prepare('SELECT codigo FROM compras WHERE formulario_registro_id=? LIMIT 1 FOR UPDATE');
+    $st->execute([$id]);$compraVinculada=$st->fetchColumn();
+    if($compraVinculada!==false)fallar('Este pedido ya está vinculado a la compra '.$compraVinculada.'. Eliminá el seguimiento de Compras antes de borrar el formulario.',409);
+   }
    $lote=enviarPapelera($pdo,'formulario',$id,$sid,$form['titulo'].($reg['referencia']?' — '.$reg['referencia']:''));$pdo->prepare('UPDATE formularios_registros SET eliminado_lote=?,actualizado_por=?,revision=revision+1 WHERE id=?')->execute([$lote,$uid,$id]);historialFormulario($pdo,$id,'papelera');registrarActividad($pdo,'formulario_papelera',$form['titulo'].' #'.$id);
    $redirect=app_url('/php/formularios/index.php').'?sector='.urlencode($sector['slug']);$mensaje='Formulario enviado a la papelera. Se puede recuperar.';
   }

@@ -61,9 +61,11 @@ CREATE TABLE IF NOT EXISTS compras (
  proveedor VARCHAR(100) DEFAULT 'Pendiente',
  monto DECIMAL(12,2) DEFAULT 0.00,
  moneda VARCHAR(5) DEFAULT 'ARS',
+ formulario_registro_id INT NULL,
  etapa INT DEFAULT 1,
  estado_logistico VARCHAR(255) DEFAULT 'Pedido cargado',
- fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+ fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+ UNIQUE KEY uq_compras_formulario_registro (formulario_registro_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS compras_documentos (
@@ -73,6 +75,7 @@ CREATE TABLE IF NOT EXISTS compras_documentos (
  nombre_archivo VARCHAR(255) NOT NULL,
  ruta_archivo VARCHAR(500) NOT NULL,
  tipo_documento VARCHAR(100) DEFAULT 'Adjunto',
+ datos_json LONGTEXT NULL,
  creado_por INT NULL,
  fecha_subida TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
  CONSTRAINT fk_compra_doc FOREIGN KEY (compra_id) REFERENCES compras(id) ON DELETE CASCADE
