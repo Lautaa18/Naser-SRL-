@@ -26,22 +26,25 @@ foreach (['finanzas' => 'Finanzas', 'rrhh' => 'Recursos Humanos', 'compras' => '
 $cuentas['prueba.operador@naser.test'] = ['Prueba Operador', 'Operador de Operaciones (ve solo Operaciones, Mantenimiento, HSEQ y SGI)', ['operaciones' => 'operador']];
 $cuentas['prueba.observador@naser.test'] = ['Prueba Observador', 'Observador (mira Finanzas, RRHH, Ventas y Operaciones sin gestionar)',
     ['finanzas' => 'observador', 'rrhh' => 'observador', 'ventas' => 'observador', 'operaciones' => 'observador']];
+$cuentas['prueba.superusuario@naser.test'] = ['Prueba Super Usuario', 'Super usuario (ve y gestiona todo)', [], true];
 $cuentas['prueba.sinrol@naser.test'] = ['Prueba Sin Rol', 'Usuario sin sector asignado', []];
 
 $sectores = [];
 foreach ($pdo->query('SELECT id, slug FROM sectores')->fetchAll() as $s) $sectores[$s['slug']] = (int)$s['id'];
 
 $salida = [];
-foreach ($cuentas as $email => [$nombre, $desc, $roles]) {
+foreach ($cuentas as $email => $c) {
+    [$nombre, $desc, $roles] = $c;
+    $rolUsuario = !empty($c[3]) ? 'admin' : 'usuario';
     $pass = passwordTemporal();
     $hash = password_hash($pass, PASSWORD_DEFAULT);
     $st = $pdo->prepare('SELECT id FROM usuarios WHERE LOWER(email) = ?');
     $st->execute([$email]);
     $id = (int)$st->fetchColumn();
     if ($id) {
-        $pdo->prepare("UPDATE usuarios SET nombre = ?, password = ?, rol = 'usuario', activo = 1, debe_cambiar_password = 0 WHERE id = ?")->execute([$nombre, $hash, $id]);
+        $pdo->prepare("UPDATE usuarios SET nombre = ?, password = ?, rol = ?, activo = 1, debe_cambiar_password = 0 WHERE id = ?")->execute([$nombre, $hash, $rolUsuario, $id]);
     } else {
-        $pdo->prepare("INSERT INTO usuarios (nombre, email, password, rol, activo, debe_cambiar_password) VALUES (?,?,?,'usuario',1,0)")->execute([$nombre, $email, $hash]);
+        $pdo->prepare("INSERT INTO usuarios (nombre, email, password, rol, activo, debe_cambiar_password) VALUES (?,?,?,?,1,0)")->execute([$nombre, $email, $hash, $rolUsuario]);
         $id = (int)$pdo->lastInsertId();
     }
     // Dejar exactamente los roles definidos para esta cuenta
