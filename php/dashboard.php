@@ -40,14 +40,6 @@ $galeria=[
 ];
 ?><!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Panel principal | NASER SGI</title><link rel="stylesheet" href="<?=asset('/style.css')?>"><link rel="stylesheet" href="<?=asset('/css/mejoras.css')?>"></head><body><div class="app"><?php sidebar($pdo,'inicio');?><main class="content">
 <header class="topbar mej-home-head"><div><p class="eyebrow">MI TRABAJO · NASER</p><h1>Hola<?= $primero!==''?', '.h($primero):'' ?></h1><p>Estas son tus prioridades y accesos según los permisos de tu cuenta.</p></div><div class="top-actions"><span class="user-chip"><?=h(etiquetaRolUsuario($pdo))?></span></div></header>
-<section class="mej-work-summary" aria-label="Mis prioridades">
-<?php if($aprobables):?><a class="mej-work-card <?=$totalParaAprobar?'mej-attention':''?>" href="<?=app_url('/php/formularios/index.php?vista=aprobar')?>"><strong><?=$totalParaAprobar?></strong><span>Para aprobar</span><small>Formularios enviados a los sectores que podés aprobar.</small></a><?php endif;?>
-<a class="mej-work-card <?=$misRechazados?'mej-danger':''?>" href="<?=app_url('/php/formularios/index.php?vista=mios&estado=rechazado')?>"><strong><?=$misRechazados?></strong><span>Para corregir</span><small>Revisá los comentarios y volvé a enviar tus formularios.</small></a>
-<a class="mej-work-card" href="<?=app_url('/php/formularios/index.php?vista=mios&estado=borrador')?>"><strong><?=$misBorradores?></strong><span>Mis borradores</span><small>Retomá lo que dejaste pendiente de completar.</small></a>
-<a class="mej-work-card <?=$totalVencidos?'mej-danger':($totalProximos?'mej-attention':'')?>" href="#mis-vencimientos"><strong><?=$totalVencidos?></strong><span>Vencimientos pendientes</span><small><?=$totalProximos?> próximo(s) en los siguientes 7 días.</small></a>
-<a class="mej-work-card" href="<?=app_url('/php/notificaciones.php')?>"><strong><?=$misAvisos?></strong><span>Avisos sin leer</span><small>Consultá novedades y notificaciones de tu trabajo.</small></a>
-<?php if($proteccionResumen):?><a class="mej-work-card mej-admin <?=$proteccionResumen['nivel']==='error'?'mej-danger':($proteccionResumen['nivel']==='aviso'?'mej-attention':'')?>" href="<?=app_url('/php/admin/proteccion.php')?>"><span>Respaldos y alertas</span><small><?=h($proteccionResumen['texto'])?></small><span>Revisar estado →</span></a><?php endif;?>
-</section>
 <nav class="mej-quick-links" aria-label="Accesos a mi trabajo"><a class="btn secondary" href="<?=app_url('/php/formularios/index.php?vista=mios')?>">Mis formularios</a><?php foreach($sectoresReales as $sectorAcceso) botonHerramientaSector($pdo,$sectorAcceso['slug']);?><?php if(puedeVerHabilitaciones($pdo)):?><a class="btn secondary" href="<?=app_url('/php/personal.php')?>">Personal y habilitaciones</a><?php endif;?><?php if(sectoresEditables($pdo)):?><a class="btn secondary" href="<?=app_url('/php/admin/papelera.php')?>">Recuperar un elemento</a><?php endif;?></nav>
 <section class="dashboard-banner"><img src="<?=app_url('/img/Trabajo.jpeg')?>" alt="Operación NASER"><div class="dashboard-banner-overlay"></div><div class="dashboard-banner-copy"><img src="<?=app_url('/img/logo-naser.png')?>" alt="NASER"><div><span>DIVISIÓN PETRÓLEO</span><strong>Compromiso · Seguridad · Operación</strong></div></div></section>
 <section class="panel-grid">
@@ -58,10 +50,6 @@ $galeria=[
   <div class="table-panel">
     <div class="section-head" style="margin-top:0"><div><p class="eyebrow">MIS FORMULARIOS</p><h2>Borradores y para corregir</h2></div><a class="btn secondary small" href="<?=app_url('/php/formularios/index.php')?>?vista=mios">Ver todos</a></div>
     <?php if(!$misPendientes):?><p class="muted">No tenés formularios sin terminar.</p><?php else:?><ul class="mini-list"><?php foreach($misPendientes as $r):?><li><a href="<?=h(app_url('/php/formularios/llenar.php').'?id='.(int)$r['id'])?>"><?=h(($catD[$r['formulario']]['titulo']??$r['formulario']).($r['referencia']?' — '.$r['referencia']:''))?></a><span class="fx-estado fx-<?=h($r['estado'])?>"><?=h($r['estado']==='rechazado'?'Corregir':'Borrador')?></span></li><?php endforeach;?></ul><?php endif;?>
-  </div>
-  <div class="table-panel">
-    <div class="section-head" style="margin-top:0"><div><p class="eyebrow">VENCIDOS Y PRÓXIMOS 30 DÍAS</p><h2 id="mis-vencimientos">Mis vencimientos visibles</h2></div></div>
-    <?php if(!$vencs):?><p class="muted">No hay vencimientos próximos.</p><?php else:?><ul class="mini-list"><?php foreach($vencs as $v): $cls=$v['dias']<0?'vencido':($v['dias']<=7?'pronto':'ok');?><li><a href="<?=h(app_url($v['url']))?>"><?=h($v['titulo'].' · '.$v['detalle'])?></a><span class="dias-pill <?=$cls?>"><?= $v['dias']<0?'Vencido':($v['dias']===0?'Hoy':'en '.$v['dias'].' d')?> · <?=h(date('d/m/Y',strtotime($v['fecha'])))?></span></li><?php endforeach;?></ul><?php endif;?>
   </div>
   <div class="table-panel">
     <div class="section-head" style="margin-top:0"><div><p class="eyebrow">ESTE MES</p><h2>Formularios cargados por sector</h2></div><span class="count-pill"><?=$totAprobados?> aprobados en total</span></div>
