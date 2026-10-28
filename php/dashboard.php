@@ -40,7 +40,6 @@ $galeria=[
 ];
 ?><!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Panel principal | NASER SGI</title><link rel="stylesheet" href="<?=asset('/style.css')?>"><link rel="stylesheet" href="<?=asset('/css/mejoras.css')?>"></head><body><div class="app"><?php sidebar($pdo,'inicio');?><main class="content">
 <header class="topbar mej-home-head"><div><p class="eyebrow">MI TRABAJO · NASER</p><h1>Hola<?= $primero!==''?', '.h($primero):'' ?></h1><p>Estas son tus prioridades y accesos según los permisos de tu cuenta.</p></div><div class="top-actions"><span class="user-chip"><?=h(etiquetaRolUsuario($pdo))?></span></div></header>
-<nav class="mej-quick-links" aria-label="Accesos a mi trabajo"><a class="btn secondary" href="<?=app_url('/php/formularios/index.php?vista=mios')?>">Mis formularios</a><?php foreach($sectoresReales as $sectorAcceso) botonHerramientaSector($pdo,$sectorAcceso['slug']);?><?php if(puedeVerHabilitaciones($pdo)):?><a class="btn secondary" href="<?=app_url('/php/personal.php')?>">Personal y habilitaciones</a><?php endif;?><?php if(sectoresEditables($pdo)):?><a class="btn secondary" href="<?=app_url('/php/admin/papelera.php')?>">Recuperar un elemento</a><?php endif;?></nav>
 <section class="dashboard-banner"><img src="<?=app_url('/img/Trabajo.jpeg')?>" alt="Operación NASER"><div class="dashboard-banner-overlay"></div><div class="dashboard-banner-copy"><img src="<?=app_url('/img/logo-naser.png')?>" alt="NASER"><div><span>DIVISIÓN PETRÓLEO</span><strong>Compromiso · Seguridad · Operación</strong></div></div></section>
 <section class="panel-grid">
   <div class="table-panel">
@@ -51,7 +50,7 @@ $galeria=[
     <div class="section-head" style="margin-top:0"><div><p class="eyebrow">MIS FORMULARIOS</p><h2>Borradores y para corregir</h2></div><a class="btn secondary small" href="<?=app_url('/php/formularios/index.php')?>?vista=mios">Ver todos</a></div>
     <?php if(!$misPendientes):?><p class="muted">No tenés formularios sin terminar.</p><?php else:?><ul class="mini-list"><?php foreach($misPendientes as $r):?><li><a href="<?=h(app_url('/php/formularios/llenar.php').'?id='.(int)$r['id'])?>"><?=h(($catD[$r['formulario']]['titulo']??$r['formulario']).($r['referencia']?' — '.$r['referencia']:''))?></a><span class="fx-estado fx-<?=h($r['estado'])?>"><?=h($r['estado']==='rechazado'?'Corregir':'Borrador')?></span></li><?php endforeach;?></ul><?php endif;?>
   </div>
-  <div class="table-panel">
+  <div class="table-panel" style="grid-column:1/-1">
     <div class="section-head" style="margin-top:0"><div><p class="eyebrow">ESTE MES</p><h2>Formularios cargados por sector</h2></div><span class="count-pill"><?=$totAprobados?> aprobados en total</span></div>
     <div class="bar-chart"><?php foreach($sectores as $s): if(!formulariosDeSector($s['slug'])) continue; $c=$porSector[(int)$s['id']]??0;?><div class="bar-row"><span><?=h($s['nombre'])?></span><div class="bar-track"><div class="bar-fill" style="width:<?=round($c/$maxSector*100)?>%"></div></div><strong><?=$c?></strong></div><?php endforeach;?></div>
   </div>
